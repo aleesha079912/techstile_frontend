@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontpageui/routes/app_routes.dart';
-import 'dart:convert';x
+import 'package:techstile_frontend/routes/routes.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:get/get.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
@@ -27,7 +29,7 @@ class LoginScreen extends StatelessWidget {
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
       print(data);
-      Get.toNamed('/dashboard');
+      Get.toNamed(AppRoutes.dashboard);
     } else {
       print(response.statusCode);
       print(response.body);

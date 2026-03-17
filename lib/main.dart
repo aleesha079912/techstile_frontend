@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:frontpageui/routes/app_routes.dart';
+import 'package:get/get.dart';
+import 'package:techstile_frontend/routes/routes.dart';
 
 void main() {
   runApp(const ServEaseApp());
@@ -10,17 +11,11 @@ class ServEaseApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'ServEase',
-
-      // first screen
       initialRoute: AppRoutes.splash,
-
-      // all routes
-      routes: AppRoutes.routes,
-
-      // basic theme
+      getPages: AppRoutes.routes,
       theme: ThemeData(
         primaryColor: const Color(0xFF5B8DEF),
         scaffoldBackgroundColor: const Color(0xFFF5F6F8),
