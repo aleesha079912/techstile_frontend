@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:techstile_frontend/routes/auth_middleware.dart';
 import 'package:techstile_frontend/screens/splash.dart';
 import 'package:techstile_frontend/screens/login.dart';
 import 'package:techstile_frontend/screens/signup.dart';
@@ -15,6 +16,6 @@ class AppRoutes {
     GetPage(name: splash, page: () => SplashScreen()),
     GetPage(name: login, page: () => LoginScreen()),
     GetPage(name: signup, page: () => SignupScreen()),
-    GetPage(name: dashboard, page: () => const DashboardScreen()),
+    GetPage(name: dashboard, page: () => const DashboardScreen(), middlewares: [AuthMiddleware()]),
   ];
 }

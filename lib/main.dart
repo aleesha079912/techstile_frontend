@@ -3,17 +3,17 @@ import 'package:get/get.dart';
 import 'package:techstile_frontend/routes/routes.dart';
 
 void main() {
-  runApp(const ServEaseApp());
+  runApp(const TECHstile());
 }
 
-class ServEaseApp extends StatelessWidget {
-  const ServEaseApp({super.key});
+class TECHstile extends StatelessWidget {
+  const TECHstile({super.key});
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'ServEase',
+      title: 'TECHstile',
       initialRoute: AppRoutes.splash,
       getPages: AppRoutes.routes,
       theme: ThemeData(
