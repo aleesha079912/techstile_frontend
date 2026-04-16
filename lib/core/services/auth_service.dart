@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:get_storage/get_storage.dart';
 
 class AuthService {
-  static const String baseUrl = "http://127.0.0.1:3000";
+  static const String baseUrl = "https://wholesaleapp.sandbox.pk/api";
   static final box = GetStorage();
 
   static Future<Map<String, dynamic>> login(
@@ -20,7 +20,7 @@ class AuthService {
       final data = json.decode(response.body);
       print('Login response: $data');
 
-      if (response.statusCode == 200 && data['success'] == true) {
+      if (response.statusCode == 200 && data['message'] == "Login successful") {
         // ✅ SAVE TOKEN
         if (data['token'] != null) {
           box.write('token', data['token']);
@@ -88,7 +88,7 @@ class AuthService {
 
       final data = json.decode(response.body);
 
-      if (response.statusCode == 200 && data['success'] == true) {
+      if (response.statusCode == 200 && data['message'] == true) {
         return {'success': true, 'data': data};
       } else {
         return {'success': false, 'message': data['message']};

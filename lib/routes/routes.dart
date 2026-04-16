@@ -3,7 +3,7 @@ import 'package:techstile_frontend/routes/auth_middleware.dart';
 import 'package:techstile_frontend/screens/splash.dart';
 import 'package:techstile_frontend/screens/login.dart';
 import 'package:techstile_frontend/screens/signup.dart';
-import 'package:techstile_frontend/screens/dashboard.dart';
+import 'package:techstile_frontend/screens/add_factories.dart';
 
 class AppRoutes {
 
