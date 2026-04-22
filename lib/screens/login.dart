@@ -4,6 +4,8 @@ import 'package:techstile_frontend/core/services/auth_service.dart';
 import 'package:get/get.dart';
 
 class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
