@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:get/get.dart';
 /// Model: Factory Health Index
 class FactoryHealthData {
   final double healthIndex;
@@ -134,7 +134,8 @@ class OwnerDashboardService {
   // ---------------------------------------------------------------------------
 
   OwnerDashboardService._internal();
-  static final OwnerDashboardService instance = OwnerDashboardService._internal();
+  static final OwnerDashboardService instance =
+      OwnerDashboardService._internal();
   factory OwnerDashboardService() => instance;
 
   // ---------------------------------------------------------------------------
@@ -154,7 +155,8 @@ class OwnerDashboardService {
   // ---------------------------------------------------------------------------
 
   /// Live stream of dashboard snapshots.
-  Stream<OwnerDashboardSnapshot> get snapshotStream => _snapshotController.stream;
+  Stream<OwnerDashboardSnapshot> get snapshotStream =>
+      _snapshotController.stream;
 
   /// Last successfully loaded snapshot (may be null before first load).
   OwnerDashboardSnapshot? get cachedSnapshot => _cachedSnapshot;
@@ -163,7 +165,9 @@ class OwnerDashboardService {
   String? get errorMessage => _errorMessage;
 
   /// Initialise the service: performs first fetch and starts auto-refresh.
-  Future<void> init({Duration pollingInterval = const Duration(minutes: 5)}) async {
+  Future<void> init({
+    Duration pollingInterval = const Duration(minutes: 5),
+  }) async {
     await refresh();
     _pollingTimer?.cancel();
     _pollingTimer = Timer.periodic(pollingInterval, (_) => refresh());
@@ -251,11 +255,7 @@ class OwnerDashboardService {
   }
 
   ActiveLoomsData _fetchActiveLooms() {
-    return const ActiveLoomsData(
-      active: 18,
-      total: 22,
-      maintenanceDue: 4,
-    );
+    return const ActiveLoomsData(active: 18, total: 22, maintenanceDue: 4);
   }
 
   List<WasteMetric> _fetchWasteMetrics() {
@@ -281,8 +281,7 @@ class OwnerDashboardService {
     return const ProjectSpotlight(
       label: 'PROJECT SPOTLIGHT',
       title: 'Midnight Silk\nBatch #402',
-      description:
-          '98% Quality Score. Ready for dispatch to Milan workshop.',
+      description: '98% Quality Score. Ready for dispatch to Milan workshop.',
     );
   }
 
@@ -298,7 +297,15 @@ class OwnerDashboardService {
 
   /// Triggered when a bottom-nav tab is selected.
   void onNavTabSelected(int index) {
-    // 0 = Dashboard, 1 = Machines, 2 = Payments, 3 = Users
-    // TODO: handle navigation via your router/state-management solution.
+    print("Clicked index: $index");
+
+    if (index == 1) Get.toNamed('/machines');
+    if (index == 2) {
+      print("Navigating to 2");
+      Get.toNamed('/payments');
+    }
+    if (index == 3) {
+      Get.toNamed('/users');
+    }
   }
 }

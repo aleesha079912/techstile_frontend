@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:techstile_frontend/screens/dashboard/my_factories.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/my_factories.dart';
 
 class AddFactoryScreen extends StatefulWidget {
   const AddFactoryScreen({super.key});

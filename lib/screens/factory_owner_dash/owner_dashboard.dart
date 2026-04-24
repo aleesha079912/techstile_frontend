@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-
 import '../../core/services/owner_dashboard_service.dart';
 
 // ---------------------------------------------------------------------------
@@ -258,15 +257,21 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
         child: CircleAvatar(
           radius: 18,
           backgroundColor: _C.navy,
-          child: const Icon(Icons.person_outline_rounded,
-              color: _C.white, size: 18),
+          child: const Icon(
+            Icons.person_outline_rounded,
+            color: _C.white,
+            size: 18,
+          ),
         ),
       ),
       title: const Text('TextileOS', style: _T.appBarTitle),
       actions: [
         IconButton(
-          icon: const Icon(Icons.notifications_none_rounded,
-              color: _C.textPrimary, size: 22),
+          icon: const Icon(
+            Icons.notifications_none_rounded,
+            color: _C.textPrimary,
+            size: 22,
+          ),
           onPressed: () {},
         ),
         const SizedBox(width: 4),
@@ -280,10 +285,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
 
   Widget _buildLoader() {
     return const Center(
-      child: CircularProgressIndicator(
-        color: _C.navy,
-        strokeWidth: 2.5,
-      ),
+      child: CircularProgressIndicator(color: _C.navy, strokeWidth: 2.5),
     );
   }
 
@@ -370,8 +372,7 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
                       Text(
                         items[i].label,
                         style: _T.navLabel.copyWith(
-                          color:
-                              selected ? _C.teal : const Color(0xFF6A7AA1),
+                          color: selected ? _C.teal : const Color(0xFF6A7AA1),
                         ),
                       ),
                     ],
@@ -410,10 +411,7 @@ class _FactoryHealthCard extends StatelessWidget {
                   text: data.healthIndex.toStringAsFixed(1),
                   style: _T.heroNum,
                 ),
-                TextSpan(
-                  text: '%',
-                  style: _T.heroNum.copyWith(fontSize: 26),
-                ),
+                TextSpan(text: '%', style: _T.heroNum.copyWith(fontSize: 26)),
               ],
             ),
           ),
@@ -448,8 +446,11 @@ class _MonthlyProductionCard extends StatelessWidget {
               const Spacer(),
               Row(
                 children: [
-                  const Icon(Icons.trending_up_rounded,
-                      color: _C.teal, size: 16),
+                  const Icon(
+                    Icons.trending_up_rounded,
+                    color: _C.teal,
+                    size: 16,
+                  ),
                   const SizedBox(width: 4),
                   Text(
                     '${data.growthPercent.toStringAsFixed(0)}%',
@@ -546,8 +547,10 @@ class _FinancialFluxCard extends StatelessWidget {
                   children: [
                     Text('Financial Flux', style: _T.chartTitle),
                     SizedBox(height: 2),
-                    Text('Operating margin\ncomparison (Q3)',
-                        style: _T.chartSubtitle),
+                    Text(
+                      'Operating margin\ncomparison (Q3)',
+                      style: _T.chartSubtitle,
+                    ),
                   ],
                 ),
               ),
@@ -557,10 +560,7 @@ class _FinancialFluxCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          SizedBox(
-            height: 130,
-            child: _BarChart(bars: bars),
-          ),
+          SizedBox(height: 130, child: _BarChart(bars: bars)),
         ],
       ),
     );
@@ -713,10 +713,7 @@ class _ActiveLoomsCard extends StatelessWidget {
           const SizedBox(height: 20),
           Row(
             children: [
-              Text(
-                'Maintenance due',
-                style: _T.cardLabel,
-              ),
+              Text('Maintenance due', style: _T.cardLabel),
               const Spacer(),
               Text(
                 '${data.maintenanceDue} Machines',
@@ -731,7 +728,9 @@ class _ActiveLoomsCard extends StatelessWidget {
           ),
           const SizedBox(height: 14),
           GestureDetector(
-            onTap: onViewLog,
+ onTap: () {
+  // Get.offAll(() => const MachinesScreen());
+},
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 12),
@@ -821,8 +820,11 @@ class _WasteMinimizationCard extends StatelessWidget {
                   color: _C.bg,
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(Icons.add_rounded,
-                    color: _C.textSecondary, size: 16),
+                child: const Icon(
+                  Icons.add_rounded,
+                  color: _C.textSecondary,
+                  size: 16,
+                ),
               ),
             ],
           ),
@@ -854,9 +856,7 @@ class _WasteMetricRow extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
-              isEnergy
-                  ? Icons.bolt_rounded
-                  : Icons.water_drop_outlined,
+              isEnergy ? Icons.bolt_rounded : Icons.water_drop_outlined,
               color: _C.textPrimary,
               size: 20,
             ),

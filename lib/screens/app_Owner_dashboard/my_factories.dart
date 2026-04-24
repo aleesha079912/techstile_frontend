@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:techstile_frontend/screens/dashboard/add_factories.dart';
-import 'package:techstile_frontend/screens/dashboard/calculator_screen.dart';
-import 'package:techstile_frontend/screens/dashboard/notification_screen.dart';
-import 'package:techstile_frontend/screens/dashboard/setting_screen.dart';
-import 'package:techstile_frontend/screens/dashboard/owner_dashboard.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/add_factories.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/calculator_screen.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/notification_screen.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/setting_screen.dart';
+import 'package:techstile_frontend/screens/factory_owner_dash/owner_dashboard.dart';
 // ─── Constants ───────────────────────────────────────────────
 const _navy    = Color(0xFF1E3A8A);
 const _blue    = Color(0xFF2563EB);
