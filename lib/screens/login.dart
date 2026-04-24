@@ -38,7 +38,6 @@ class _LoginScreenState extends State<LoginScreen> {
       // ✅ store login state
       box.write('isLoggedIn', true);
       box.write('userName', userName);
-      box.write('token', result['data']['token']);
 
       Get.offAllNamed('/dashboard');
     } else {
