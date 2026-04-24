@@ -1,25 +1,28 @@
 import 'package:get/get.dart';
-import 'package:techstile_frontend/screens/dashboard/add_factories.dart';
-import 'package:techstile_frontend/screens/dashboard/calculator_screen.dart';
-import 'package:techstile_frontend/screens/dashboard/my_factories.dart';
-import 'package:techstile_frontend/screens/dashboard/notification_screen.dart';
-import 'package:techstile_frontend/screens/dashboard/setting_screen.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/add_factories.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/calculator_screen.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/my_factories.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/notification_screen.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/setting_screen.dart';
+import 'package:techstile_frontend/screens/factory_owner_dash/machine/machines.dart';
+import 'package:techstile_frontend/screens/factory_owner_dash/payments.dart';
+import 'package:techstile_frontend/screens/factory_owner_dash/users.dart';
 import 'package:techstile_frontend/screens/signup.dart';
 import 'package:techstile_frontend/screens/splash.dart';
 import 'package:techstile_frontend/screens/login.dart';
-import 'package:techstile_frontend/screens/signup.dart';
-import 'package:techstile_frontend/screens/add_factories.dart';
-class AppRoutes {
 
+class AppRoutes {
   static const splash = "/";
   static const login = "/login";
   static const signup = "/signup";
   static const dashboard = "/dashboard";
-  static const addFactory   = '/add-factory';
-  static const calculator   = '/calculator';
+  static const addFactory = '/add-factory';
+  static const calculator = '/calculator';
   static const notifications = '/notifications';
-  static const settings     = '/settings';
-
+  static const settings = '/settings';
+  static const machines = '/machines';
+  static const users = '/users';
+  static const payments = '/payments';
   static List<GetPage> routes = [
     GetPage(name: splash, page: () => SplashScreen()),
     GetPage(name: login, page: () => LoginScreen()),
@@ -52,5 +55,18 @@ class AppRoutes {
       page: () => const SettingsScreen(),
       transition: Transition.rightToLeftWithFade,
     ),
+     GetPage(
+      name: machines,
+      page: () => const MachinesScreen(),
+    ),
+    GetPage(
+  name: users,
+  page: () => const UsersScreen(),
+),
+   GetPage(
+  name: '/payments',
+  page: () => const PaymentsScreen(),
+),
+
   ];
 }

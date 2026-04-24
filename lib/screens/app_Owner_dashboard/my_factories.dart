@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:techstile_frontend/screens/dashboard/add_factories.dart';
-import 'package:techstile_frontend/screens/dashboard/calculator_screen.dart';
-import 'package:techstile_frontend/screens/dashboard/notification_screen.dart';
-import 'package:techstile_frontend/screens/dashboard/setting_screen.dart';
-
+import 'package:techstile_frontend/screens/app_Owner_dashboard/add_factories.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/calculator_screen.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/notification_screen.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/setting_screen.dart';
+import 'package:techstile_frontend/screens/factory_owner_dash/owner_dashboard.dart';
 // ─── Constants ───────────────────────────────────────────────
 const _navy    = Color(0xFF1E3A8A);
 const _blue    = Color(0xFF2563EB);
@@ -224,7 +224,7 @@ class _HomeTab extends StatelessWidget {
                 ),
                 childCount: controller.factories.length,
               ),
-            );
+              );
           }),
         ],
       ),
@@ -350,7 +350,7 @@ class _HomeTab extends StatelessWidget {
               color: _skyBlue,
               borderRadius: BorderRadius.circular(24),
             ),
-            child: const Icon(Icons.factory_outlined, color: _navy, size: 38),
+            child: const Icon(Icons.factory_outlined, color: Color.fromARGB(255, 30, 37, 138), size: 38),
           ),
           const SizedBox(height: 16),
           const Text(
@@ -487,7 +487,9 @@ class _FactoryCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         child: InkWell(
           borderRadius: BorderRadius.circular(18),
-          onTap: () {}, // next screen
+          onTap: () {
+             Get.off(() => const OwnerDashboardScreen());
+          }, // next screen
           child: Padding(
             padding: const EdgeInsets.all(14),
             child: Row(

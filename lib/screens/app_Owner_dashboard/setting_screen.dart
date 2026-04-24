@@ -335,7 +335,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Switch(
         value: value,
         onChanged: onChanged,
-        activeColor: _navy,
+        activeThumbColor: _navy,
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
     );
