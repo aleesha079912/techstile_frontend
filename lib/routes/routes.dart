@@ -7,12 +7,8 @@ import 'package:techstile_frontend/screens/dashboard/setting_screen.dart';
 import 'package:techstile_frontend/screens/signup.dart';
 import 'package:techstile_frontend/screens/splash.dart';
 import 'package:techstile_frontend/screens/login.dart';
-<<<<<<< HEAD
-=======
 import 'package:techstile_frontend/screens/signup.dart';
 import 'package:techstile_frontend/screens/add_factories.dart';
->>>>>>> 2bb741248ee0a0ea2629ed8935926c35221724ea
-
 class AppRoutes {
 
   static const splash = "/";
