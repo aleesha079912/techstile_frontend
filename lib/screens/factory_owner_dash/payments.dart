@@ -1,9 +1,15 @@
+import 'package:flutter/material.dart';
 
+<<<<<<< HEAD
 import 'package:flutter/material.dart';
 
 import '../../core/services/payments_service.dart';
 import '../../core/utils/theme.dart';
 import '../../../../widgets/bottom_nav_bar.dart';
+=======
+import '../../core/services/payments_service.dart';
+
+>>>>>>> a6c3accaa06c1ba6907f4b8463ca1cb4b30fc5ee
 // ── Colours ──────────────────────────────────────────────────────────────────
 class _C {
   static const bg = Color(0xFFF5F6FA);
@@ -53,8 +59,12 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       body: _svc.isLoading
           ? const Center(child: CircularProgressIndicator(color: _C.navy, strokeWidth: 2))
           : _body(),
+<<<<<<< HEAD
     //  bottomNavigationBar: const BottomNavBar(currentIndex: 2),
     bottomNavigationBar: const CustomBottomNav(currentIndex: 2),
+=======
+      bottomNavigationBar: _bottomNav(),
+>>>>>>> a6c3accaa06c1ba6907f4b8463ca1cb4b30fc5ee
     );
   }
 
@@ -128,6 +138,47 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
           ],
         ),
       );
+<<<<<<< HEAD
+=======
+
+  // ── Bottom Nav ─────────────────────────────────────────────────────────────
+  Widget _bottomNav() {
+    const tabs = [
+      (Icons.grid_view_rounded, 'DASHBOARD'),
+      (Icons.precision_manufacturing_outlined, 'MACHINES'),
+      (Icons.credit_card_outlined, 'PAYMENTS'),
+      (Icons.group_outlined, 'USERS'),
+    ];
+    const activeIndex = 2;
+
+    return Container(
+      color: _C.navy,
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          height: 62,
+          child: Row(
+            children: List.generate(tabs.length, (i) {
+              final selected = i == activeIndex;
+              final color = selected ? _C.teal : const Color(0xFF6A7AA1);
+              return Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(tabs[i].$1, size: 20, color: color),
+                    const SizedBox(height: 4),
+                    Text(tabs[i].$2,
+                        style: _ts(9, FontWeight.w500, color, ls: 0.4)),
+                  ],
+                ),
+              );
+            }),
+          ),
+        ),
+      ),
+    );
+  }
+>>>>>>> a6c3accaa06c1ba6907f4b8463ca1cb4b30fc5ee
 }
 
 // ── Worker Card ───────────────────────────────────────────────────────────────
@@ -404,4 +455,7 @@ class _CutoffCard extends StatelessWidget {
     );
   }
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> a6c3accaa06c1ba6907f4b8463ca1cb4b30fc5ee
