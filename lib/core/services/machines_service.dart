@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 class Machine {
   final String id;
   final String type;
@@ -38,5 +39,23 @@ class MachinesService {
         Machine(id: "LM-8422", type: "Rapier Loom", status: "Running"),
       ],
     );
+  }
+}
+
+
+class RegisterMachineService {
+  Future<bool> registerMachine(
+    String name,
+    String type,
+    String model,
+    DateTime? date,
+    String location,
+  ) async {
+    await Future.delayed(const Duration(seconds: 1));
+
+    debugPrint("Machine Registered:");
+    debugPrint("$name | $type | $model | $location");
+
+    return true;
   }
 }

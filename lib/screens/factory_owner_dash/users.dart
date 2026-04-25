@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/services/users_services.dart';
-
+import 'package:get/get.dart';
+import '../../../../widgets/bottom_nav_bar.dart';
 class UsersScreen extends StatefulWidget {
   const UsersScreen({super.key});
 
@@ -33,6 +34,12 @@ class _UsersScreenState extends State<UsersScreen> {
       backgroundColor: const Color(0xFFF3F4F6),
       appBar: AppBar(
         title: const Text("LOOMCONTROL"),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+              Get.offAllNamed('/owner-dashboard-screen');
+          },
+        ),
         actions: const [
           Icon(Icons.notifications_none),
           SizedBox(width: 12),
@@ -97,18 +104,18 @@ class _UsersScreenState extends State<UsersScreen> {
                       ),
                       child: Row(
                         children: [
-                          CircleAvatar(
-                            radius: 22,
-                            child: Text(u.name[0]),
-                          ),
+                          CircleAvatar(radius: 22, child: Text(u.name[0])),
                           const SizedBox(width: 10),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(u.name,
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold)),
+                                Text(
+                                  u.name,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                                 Text(u.role),
                               ],
                             ),
@@ -120,7 +127,7 @@ class _UsersScreenState extends State<UsersScreen> {
                                   ? Colors.green
                                   : Colors.grey,
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -149,12 +156,15 @@ class _UsersScreenState extends State<UsersScreen> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(selected!.name,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold)),
+                            Text(
+                              selected!.name,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                             Text("ID: ${selected!.id}"),
                           ],
-                        )
+                        ),
                       ],
                     ),
 
@@ -162,10 +172,7 @@ class _UsersScreenState extends State<UsersScreen> {
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text("SHIFT PROGRESS"),
-                        Text("65%"),
-                      ],
+                      children: const [Text("SHIFT PROGRESS"), Text("65%")],
                     ),
 
                     const SizedBox(height: 6),
@@ -184,13 +191,15 @@ class _UsersScreenState extends State<UsersScreen> {
                         onPressed: () {},
                         child: const Text("Assign to Machine"),
                       ),
-                    )
+                    ),
                   ],
                 ),
-              )
+              ),
           ],
         ),
       ),
+      // bottomNavigationBar: const BottomNavBar(currentIndex: 3),
+      bottomNavigationBar: const CustomBottomNav(currentIndex: 3),
     );
   }
 }

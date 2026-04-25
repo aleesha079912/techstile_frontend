@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:techstile_frontend/core/services/auth_service.dart';
 import 'package:get/get.dart';
+
+import 'package:techstile_frontend/core/services/auth_service.dart';
+import 'package:techstile_frontend/core/utils/theme.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -13,8 +15,9 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+
   bool _isLoading = false;
-  GetStorage box = GetStorage();
+  final GetStorage box = GetStorage();
 
   Future<void> _login() async {
     if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
@@ -34,8 +37,6 @@ class _LoginScreenState extends State<LoginScreen> {
     if (result['success']) {
       final userName = result['data']['user']['name'];
 
-      print(result['data']['token']);
-      // ✅ store login state
       box.write('isLoggedIn', true);
       box.write('userName', userName);
       box.write('token', result['data']['token']);
@@ -46,14 +47,30 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  InputDecoration inputDecoration({
+    required String hint,
+    required IconData icon,
+  }) {
+    return InputDecoration(
+      hintText: hint,
+      prefixIcon: Icon(icon, color: AppTheme.neutral),
+      filled: true,
+      fillColor: AppTheme.secondary,
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFF5F7FA),
+      backgroundColor: AppTheme.secondary,
       body: Center(
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 20),
-          padding: EdgeInsets.all(20),
+          margin: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),
@@ -63,146 +80,146 @@ class _LoginScreenState extends State<LoginScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-              /// LOGO TEXT
+              /// LOGO
               Row(
                 children: [
-                  Icon(Icons.bar_chart, color: Colors.blueGrey),
-                  SizedBox(width: 8),
+                  Icon(Icons.bar_chart, color: AppTheme.primary),
+                  const SizedBox(width: 8),
                   Text(
                     "LOOMCONTROL",
                     style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blueGrey),
+                      fontWeight: FontWeight.bold,
+                      color: AppTheme.primary,
+                    ),
                   ),
                 ],
               ),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
               /// TITLE
               Text(
                 "Access",
                 style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF0A2C5E)),
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.primary,
+                ),
               ),
 
               Container(
                 width: 40,
                 height: 3,
-                color: Colors.teal,
-                margin: EdgeInsets.symmetric(vertical: 8),
+                color: AppTheme.tertiary,
+                margin: const EdgeInsets.symmetric(vertical: 8),
               ),
 
               Text(
                 "Enter your credentials to manage active looms and production logs.",
-                style: TextStyle(color: Colors.grey),
+                style: TextStyle(color: AppTheme.neutral),
               ),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-              /// WORKER ID
-              Text("Email",
-                  style: TextStyle(fontSize: 12, color: Colors.grey)),
-
-              SizedBox(height: 5),
+              /// EMAIL
+              Text(
+                "Email",
+                style: TextStyle(fontSize: 12, color: AppTheme.neutral),
+              ),
+              const SizedBox(height: 5),
 
               TextField(
                 controller: _emailController,
-                decoration: InputDecoration(
-                  hintText: "Enter your Email",
-                  prefixIcon: Icon(Icons.email),
-                  filled: true,
-                  fillColor: Color(0xFFF1F3F6),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none),
+                decoration: inputDecoration(
+                  hint: "Enter your Email",
+                  icon: Icons.email,
                 ),
               ),
 
-              SizedBox(height: 15),
+              const SizedBox(height: 15),
 
               /// PASSWORD
-              Text("PIN / PASSWORD",
-                  style: TextStyle(fontSize: 12, color: Colors.grey)),
-
-              SizedBox(height: 5),
+              Text(
+                "PIN / PASSWORD",
+                style: TextStyle(fontSize: 12, color: AppTheme.neutral),
+              ),
+              const SizedBox(height: 5),
 
               TextField(
                 controller: _passwordController,
                 obscureText: true,
-                decoration: InputDecoration(
-                  hintText: "Enter your Password",
-                  prefixIcon: Icon(Icons.lock_outline),
-                  filled: true,
-                  fillColor: Color(0xFFF1F3F6),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none),
+                decoration: inputDecoration(
+                  hint: "Enter your Password",
+                  icon: Icons.lock_outline,
                 ),
               ),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-              /// BUTTON
+              /// LOGIN BUTTON
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: _isLoading ? null : _login,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromARGB(255, 41, 13, 141),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(28),
-                       ),
-                      elevation: 0,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.primary,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(28),
                     ),
-                   child: _isLoading
-                     ? CircularProgressIndicator(color: Colors.white)
-                     : Text(
-                    "Begin Shift  →",
-                    style: TextStyle(fontSize: 16),
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
                   ),
+                  child: _isLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text(
+                          "Begin Shift  →",
+                          style: TextStyle(fontSize: 16),
+                        ),
                 ),
               ),
 
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               Center(
                 child: Text(
                   "Forgot Password?",
-                  style: TextStyle(color: Colors.grey),
+                  style: TextStyle(color: AppTheme.neutral),
                 ),
               ),
 
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-              /// CONTACT
+              /// CONTACT SUPPORT
               Container(
-                padding: EdgeInsets.all(12),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: Color(0xFFF7F9FC),
+                  color: AppTheme.secondary,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.support_agent, color: Colors.teal),
-                    SizedBox(width: 10),
-                    Expanded(
+                    Icon(Icons.support_agent, color: AppTheme.tertiary),
+                    const SizedBox(width: 10),
+                    const Expanded(
                       child: Text("Contact Supervisor"),
                     ),
-                    Icon(Icons.arrow_forward_ios, size: 14),
+                    Icon(Icons.arrow_forward_ios,
+                        size: 14, color: AppTheme.neutral),
                   ],
                 ),
               ),
 
-              SizedBox(height: 10),
+              const SizedBox(height: 10),
 
               Center(
                 child: Text(
                   "© 2024 LOOMCONTROL INDUSTRIAL SYSTEMS\nVERSION 4.2.0-ALPHA",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 10, color: Colors.grey),
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: AppTheme.neutral,
+                  ),
                 ),
               ),
             ],
