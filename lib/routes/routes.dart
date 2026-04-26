@@ -5,6 +5,7 @@ import 'package:techstile_frontend/screens/app_Owner_dashboard/app_owner_dash.da
 import 'package:techstile_frontend/screens/app_Owner_dashboard/notification_screen.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/setting_screen.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/machine/machines.dart';
+// import 'package:techstile_frontend/screens/factory_owner_dash/machine/registermachine.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/owner_dashboard.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/payments.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/users.dart';
@@ -25,6 +26,7 @@ class AppRoutes {
   static const users = '/users';
   static const payments = '/payments';
   static const ownerdashboardscreen = '/owner-dashboard-screen';
+  // static const registermachine = '/registermachine';
   static List<GetPage> routes = [
     GetPage(name: splash, page: () => SplashScreen()),
     GetPage(name: login, page: () => LoginScreen()),
@@ -61,5 +63,6 @@ class AppRoutes {
     GetPage(name: users, page: () => const UsersScreen()),
     GetPage(name: payments, page: () => const PaymentsScreen()),
     GetPage(name: ownerdashboardscreen, page: () => const OwnerDashboardScreen()),
+    // GetPage(name: registermachine, page: () => const RegisterMachineScreen()),
   ];
 }

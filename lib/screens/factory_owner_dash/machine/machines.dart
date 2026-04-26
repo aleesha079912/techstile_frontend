@@ -1,8 +1,9 @@
 
 import 'package:flutter/material.dart';
+import 'package:techstile_frontend/screens/factory_owner_dash/machine/registermachine.dart';
 import '../../../../core/services/machines_service.dart';
 import '../../../../core/utils/theme.dart'; // 👈 import your theme
-// import '../../../../widgets/bottom_nav_bar.dart';
+import '../../../../widgets/bottom_nav_bar.dart';
 class MachinesScreen extends StatefulWidget {
   const MachinesScreen({super.key});
 
@@ -37,7 +38,12 @@ class _MachinesScreenState extends State<MachinesScreen> {
       backgroundColor: AppTheme.secondary, // ✅ from theme
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppTheme.primary, // ✅ from theme
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+    context,
+    MaterialPageRoute(builder: (context) => RegisterMachineScreen()),
+  );
+        },
         child: const Icon(Icons.add),
       ),
       body: SafeArea(
@@ -106,6 +112,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
           ),
         ),
       ),
+        bottomNavigationBar: const CustomBottomNav(currentIndex: 1),
     );
   }
 

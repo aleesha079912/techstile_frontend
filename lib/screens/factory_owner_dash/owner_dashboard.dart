@@ -2,7 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import '../../core/services/owner_dashboard_service.dart';
-
+import 'package:get/get.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/app_owner_dash.dart';
 // ---------------------------------------------------------------------------
 // Colour tokens (matches the navy / white / teal palette in the mockup)
 // ---------------------------------------------------------------------------
@@ -251,19 +252,49 @@ class _OwnerDashboardScreenState extends State<OwnerDashboardScreen>
       backgroundColor: _C.white,
       elevation: 0,
       surfaceTintColor: Colors.transparent,
-      leadingWidth: 52,
-      leading: Padding(
-        padding: const EdgeInsets.only(left: 16),
-        child: CircleAvatar(
-          radius: 18,
-          backgroundColor: _C.navy,
-          child: const Icon(
-            Icons.person_outline_rounded,
-            color: _C.white,
-            size: 18,
-          ),
-        ),
+      // leadingWidth: 52,
+      // leading: Padding(
+      //   padding: const EdgeInsets.only(left: 16),
+      //   child: CircleAvatar(
+      //     radius: 18,
+      //     backgroundColor: _C.navy,
+      //     child: const Icon(
+      //       Icons.person_outline_rounded,
+      //       color: _C.white,
+      //       size: 18,
+      //     ),
+      //   ),
+      // ),
+      leadingWidth: 100, // 👈 space increase karo
+
+leading: Row(
+  children: [
+    const SizedBox(width: 8),
+
+    // 🔙 BACK BUTTON
+    IconButton(
+      icon: const Icon(
+        Icons.arrow_back_ios_new_rounded,
+        color: _C.textPrimary,
+        size: 18,
       ),
+      onPressed: () {
+        Get.off(() => const OwnerDashboard());
+      },
+    ),
+
+    // 👤 PROFILE ICON
+    CircleAvatar(
+      radius: 16,
+      backgroundColor: _C.navy,
+      child: const Icon(
+        Icons.person_outline_rounded,
+        color: _C.white,
+        size: 18,
+      ),
+    ),
+  ],
+),
       title: const Text('TextileOS', style: _T.appBarTitle),
       actions: [
         IconButton(
