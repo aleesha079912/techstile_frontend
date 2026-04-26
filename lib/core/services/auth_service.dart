@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'package:get_storage/get_storage.dart';
 
 class AuthService {
-  static const String baseUrl = "https://localhost:8000/api";
+  static const String baseUrl = "http://localhost:8000/api";
+  
   static final box = GetStorage();
 
   static Future<Map<String, dynamic>> login(
@@ -17,7 +18,15 @@ class AuthService {
         body: json.encode({'email': email, 'password': password}),
       );
 
-      final data = json.decode(response.body);
+      dynamic data;
+try {
+  print("STATUS: ${response.statusCode}");
+print("BODY: ${response.body}");
+  data = json.decode(response.body);
+} catch (e) {
+  print("❌ Not JSON response: ${response.body}");
+  return {'success': false, 'message': 'Invalid server response'};
+}
       print('Login response: $data');
 
       if (response.statusCode == 200 && data['token'] != null) {

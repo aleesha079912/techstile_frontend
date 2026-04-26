@@ -1,15 +1,7 @@
 import 'package:flutter/material.dart';
-
-<<<<<<< HEAD
-import 'package:flutter/material.dart';
-
 import '../../core/services/payments_service.dart';
-import '../../core/utils/theme.dart';
+// import '../../core/utils/theme.dart';
 import '../../../../widgets/bottom_nav_bar.dart';
-=======
-import '../../core/services/payments_service.dart';
-
->>>>>>> a6c3accaa06c1ba6907f4b8463ca1cb4b30fc5ee
 // ── Colours ──────────────────────────────────────────────────────────────────
 class _C {
   static const bg = Color(0xFFF5F6FA);
@@ -59,12 +51,10 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       body: _svc.isLoading
           ? const Center(child: CircularProgressIndicator(color: _C.navy, strokeWidth: 2))
           : _body(),
-<<<<<<< HEAD
+
     //  bottomNavigationBar: const BottomNavBar(currentIndex: 2),
     bottomNavigationBar: const CustomBottomNav(currentIndex: 2),
-=======
-      bottomNavigationBar: _bottomNav(),
->>>>>>> a6c3accaa06c1ba6907f4b8463ca1cb4b30fc5ee
+
     );
   }
 
@@ -138,8 +128,6 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
           ],
         ),
       );
-<<<<<<< HEAD
-=======
 
   // ── Bottom Nav ─────────────────────────────────────────────────────────────
   Widget _bottomNav() {
@@ -178,7 +166,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       ),
     );
   }
->>>>>>> a6c3accaa06c1ba6907f4b8463ca1cb4b30fc5ee
+
 }
 
 // ── Worker Card ───────────────────────────────────────────────────────────────
@@ -455,7 +443,6 @@ class _CutoffCard extends StatelessWidget {
     );
   }
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> a6c3accaa06c1ba6907f4b8463ca1cb4b30fc5ee
+
+

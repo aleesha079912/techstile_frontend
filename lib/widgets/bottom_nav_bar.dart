@@ -1,58 +1,5 @@
 // import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
-// class BottomNavBar extends StatelessWidget {
-//   final int currentIndex;
-
-//   const BottomNavBar({super.key, required this.currentIndex});
-
-//   void onTap(int index) {
-//     switch (index) {
-//       case 0:
-//         Get.offAllNamed('/owner-dashboard-screen');
-//         break;
-//       case 1:
-//         Get.offAllNamed('/machines');
-//         break;
-//       case 2:
-//         Get.offAllNamed('/payments');
-//         break;
-//       case 3:
-//         Get.offAllNamed('/users');
-//         break;
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return BottomNavigationBar(
-//       currentIndex: currentIndex,
-//       onTap: onTap,
-//       selectedItemColor: const Color.fromARGB(255, 47, 33, 243),
-//       unselectedItemColor: const Color.fromARGB(255, 158, 158, 158),
-//       items: const [
-//         BottomNavigationBarItem(
-//           icon: Icon(Icons.dashboard),
-//           label: "Dashboard",
-//         ),
-//         BottomNavigationBarItem(
-//           icon: Icon(Icons.precision_manufacturing),
-//           label: "Machines",
-//         ),
-//         BottomNavigationBarItem(
-//           icon: Icon(Icons.payment),
-//           label: "Payments",
-//         ),
-//         BottomNavigationBarItem(
-//           icon: Icon(Icons.people),
-//           label: "Users",
-      
-//         ),
-//       ],
-//     );
-//   }
-// }
-
+// import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../screens/factory_owner_dash/owner_dashboard.dart';
 import '../screens/factory_owner_dash/machine/machines.dart';
