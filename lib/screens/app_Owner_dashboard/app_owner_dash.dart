@@ -2,23 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import 'package:techstile_frontend/core/utils/theme.dart';
+import 'package:techstile_frontend/core/services/factory_service.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/add_factories.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/calculator_screen.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/notification_screen.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/setting_screen.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/owner_dashboard.dart';
-
+import 'package:techstile_frontend/core/models/factory_model.dart';
 const _blue = Color(0xFF2563EB);
 const _skyBlue = Color(0xFFEFF6FF);
 const _white = Colors.white;
-
-class FactoryController extends GetxController {
-  var factories = <Map<String, String>>[].obs;
-
-  void addFactory(Map<String, String> data) => factories.add(data);
-
-  void removeFactory(int index) => factories.removeAt(index);
-}
 
 class OwnerDashboard extends StatefulWidget {
   const OwnerDashboard({super.key});
@@ -43,14 +36,9 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
 
     return Scaffold(
       backgroundColor: AppTheme.secondary,
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _pages,
-      ),
-      floatingActionButton:
-          _currentIndex == 0 ? _buildFAB() : null,
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.endFloat,
+      body: IndexedStack(index: _currentIndex, children: _pages),
+      floatingActionButton: _currentIndex == 0 ? _buildFAB() : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: _buildBottomNav(),
     );
   }
@@ -58,19 +46,14 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
   Widget _buildFAB() {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [AppTheme.primary, _blue],
-        ),
+        gradient: LinearGradient(colors: [AppTheme.primary, _blue]),
         borderRadius: BorderRadius.circular(16),
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
         onTap: () => Get.to(() => const AddFactoryScreen()),
         child: const Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 14,
-          ),
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -99,10 +82,7 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
       selectedItemColor: AppTheme.primary,
       unselectedItemColor: AppTheme.neutral,
       items: const [
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home_outlined),
-          label: "Home",
-        ),
+        BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: "Home"),
         BottomNavigationBarItem(
           icon: Icon(Icons.calculate_outlined),
           label: "Calculator",
@@ -135,37 +115,42 @@ class _HomeTab extends StatelessWidget {
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(16),
-              child: Obx(() => Text(
-                    "${controller.factories.length} registered",
-                    style: TextStyle(color: AppTheme.neutral),
-                  )),
+              child: Obx(
+                () => Text(
+                  "${"${controller.factoryList.length} registered"} ${controller.factoryList.length == 1 ? "factory" : "factories"}",
+                  style: TextStyle(color: AppTheme.neutral),
+                ),
+              ),
             ),
           ),
           Obx(() {
-            if (controller.factories.isEmpty) {
-              return SliverFillRemaining(
-                child: _buildEmptyState(),
-              );
-            }
+  if (controller.factoryList.isEmpty) {
+    return SliverFillRemaining(
+      child: _buildEmptyState(),
+    );
+  }
 
-            return SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) => Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 6,
-                  ),
-                  child: _FactoryCard(
-                    factory: controller.factories[index],
-                    index: index,
-                    onDelete: () =>
-                        controller.removeFactory(index),
-                  ),
-                ),
-                childCount: controller.factories.length,
-              ),
-            );
-          }),
+  return SliverList(
+    delegate: SliverChildBuilderDelegate(
+      (context, index) {
+        final factory = controller.factoryList[index];
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 6,
+          ),
+          child: _FactoryCard(
+            factory: factory,
+            index: index,
+            onDelete: () => controller.deleteFactory(factory.id),
+          ),
+        );
+      },
+      childCount: controller.factoryList.length,
+    ),
+  );
+}),
         ],
       ),
     );
@@ -176,9 +161,7 @@ class _HomeTab extends StatelessWidget {
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [AppTheme.primary, _blue],
-        ),
+        gradient: LinearGradient(colors: [AppTheme.primary, _blue]),
         borderRadius: BorderRadius.circular(24),
       ),
       child: const Row(
@@ -205,24 +188,26 @@ class _HomeTab extends StatelessWidget {
   Widget _buildStatsRow(FactoryController controller) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Obx(() => Row(
-            children: [
-              _StatCard(
-                label: "Factories",
-                value: "${controller.factories.length}",
-                icon: Icons.factory,
-                color: AppTheme.primary,
-              ),
-              const SizedBox(width: 10),
-              _StatCard(
-                label: "Cities",
-                value:
-                    "${controller.factories.map((f) => f['city']).toSet().length}",
-                icon: Icons.location_city,
-                color: AppTheme.tertiary,
-              ),
-            ],
-          )),
+      child: Obx(
+        () => Row(
+          children: [
+            _StatCard(
+              label: "Factories",
+              value: "${controller.factoryList.length}",
+              icon: Icons.factory,
+              color: AppTheme.primary,
+            ),
+            const SizedBox(width: 10),
+            _StatCard(
+              label: "Cities",
+              value:
+                  "${controller.factoryList.map((f) => f.city).toSet().length}",
+              icon: Icons.location_city,
+              color: AppTheme.tertiary,
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -294,7 +279,7 @@ class _StatCard extends StatelessWidget {
 }
 
 class _FactoryCard extends StatelessWidget {
-  final Map<String, String> factory;
+  final FactoryModel factory;
   final int index;
   final VoidCallback onDelete;
 
@@ -313,18 +298,22 @@ class _FactoryCard extends StatelessWidget {
       ),
       child: ListTile(
         onTap: () => Get.off(() => const OwnerDashboardScreen()),
-        leading: CircleAvatar(
-          backgroundColor: AppTheme.primary.withOpacity(0.1),
-          child: Text(
-            factory['name']![0].toUpperCase(),
-            style: TextStyle(color: AppTheme.primary),
-          ),
-        ),
-        title: Text(factory['name'] ?? ''),
-        subtitle: Text(
-          "${factory['city']} • ${factory['address']}",
-          style: TextStyle(color: AppTheme.neutral),
-        ),
+       leading: CircleAvatar(
+  backgroundColor: AppTheme.primary.withOpacity(0.1),
+  child: Text(
+    factory.name.isNotEmpty
+        ? factory.name[0].toUpperCase()
+        : "?",
+    style: TextStyle(color: AppTheme.primary),
+  ),
+),
+
+title: Text(factory.name),
+
+subtitle: Text(
+  "${factory.city} • ${factory.address}",
+  style: TextStyle(color: AppTheme.neutral),
+),
         trailing: IconButton(
           onPressed: onDelete,
           icon: const Icon(Icons.delete_outline),
