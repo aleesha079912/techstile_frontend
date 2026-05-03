@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../screens/factory_owner_dash/owner_dashboard.dart';
 import '../screens/factory_owner_dash/machine/machines.dart';
 import '../screens/factory_owner_dash/payments.dart';
-import '../screens/factory_owner_dash/users.dart';
+import '../screens/factory_owner_dash/user/users.dart';
 
 class CustomBottomNav extends StatelessWidget {
   final int currentIndex;

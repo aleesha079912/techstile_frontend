@@ -6,10 +6,6 @@ import '../models/factory_model.dart';
 class FactoryController extends GetxController {
   var factoryList = <FactoryModel>[].obs;
   var isLoading = false.obs;
-
-  // Laravel Server ka URL
-  // Agar Chrome par hain: http://127.0.0.1:8000/api/factories
-  // Agar Mobile par hain: http://APKA_IP_ADDRESS:8000/api/factories
   final String baseUrl = "http://127.0.0.1:8000/api/factories";
 
   @override
@@ -51,7 +47,7 @@ class FactoryController extends GetxController {
       if (response.statusCode == 200) {
         final res = jsonDecode(response.body);
         if (res['status'] == true) {
-          await fetchFactories(); // List refresh karein
+          await fetchFactories(); // List refresh 
           return true;
         }
       }
