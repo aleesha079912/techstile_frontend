@@ -314,11 +314,30 @@ subtitle: Text(
   "${factory.city} • ${factory.address}",
   style: TextStyle(color: AppTheme.neutral),
 ),
-        trailing: IconButton(
-          onPressed: onDelete,
-          icon: const Icon(Icons.delete_outline),
-          color: Colors.red,
-        ),
+       trailing: Row(
+  mainAxisSize: MainAxisSize.min, 
+  children: [
+    // EDIT BUTTON
+    IconButton(
+      onPressed: () {
+        //  edit ka logic/navigation
+        Get.to(() => AddFactoryScreen(), arguments: factory);
+      },
+      // icon: const Icon(Icons.edit_note),
+      // icon: const Icon(Icons.edit_outlined),
+      // icon: const Icon(Icons.assignment_outlined),
+      icon: const Icon(Icons.app_registration_rounded),
+      // icon: const Icon(Icons.edit_square),
+      color: const Color(0xFF14B8A6), // Aapka teal color
+    ),
+    // DELETE BUTTON
+    IconButton(
+      onPressed: onDelete,
+      icon: const Icon(Icons.delete_outline),
+      color: Colors.red,
+    ),
+  ],
+),
       ),
     );
   }
