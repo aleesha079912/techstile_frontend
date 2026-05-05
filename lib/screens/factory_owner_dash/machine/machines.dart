@@ -59,9 +59,6 @@ class _MachinesScreenState extends State<MachinesScreen> {
               _buildField(idCtrl, "Machine ID (e.g. LM-8402)", Icons.tag),
               _buildField(typeCtrl, "Machine Type (e.g. Rapier)", Icons.settings_outlined),
 
-              // Note: Status aur Location dropdowns yahan se hata diye hain 
-              // kyunke aapke backend model/DB mein wo nahi hain.
-
               const SizedBox(height: 25),
               SizedBox(
                 width: double.infinity,

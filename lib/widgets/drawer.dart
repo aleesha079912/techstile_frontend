@@ -3,6 +3,11 @@ import 'package:get/get.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/user/manage_users.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/machine/machines.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/owner_dashboard.dart';
+import 'package:techstile_frontend/screens/factory_owner_dash/attendance.dart';
+import 'package:techstile_frontend/screens/factory_owner_dash/employees.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/app_owner_dash.dart';
+import 'package:techstile_frontend/screens/factory_owner_dash/machine_assignment.dart';
+
 class OwnerDrawer extends StatelessWidget {
   const OwnerDrawer({super.key});
 
@@ -18,24 +23,20 @@ class OwnerDrawer extends StatelessWidget {
         children: [
           // HEADER (Blue Area)
           Container(
-            height: 120,
+            height: 90,
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
             decoration: BoxDecoration(color: colors.primary),
             child: const Column(
-              mainAxisAlignment: MainAxisAlignment.end,
+              // mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Factory Owner",
+                  "Management Panel",
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 22,
+                    fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
-                ),
-                Text(
-                  "Management Panel",
-                  style: TextStyle(color: Colors.white70, fontSize: 13),
                 ),
               ],
             ),
@@ -50,7 +51,13 @@ class OwnerDrawer extends StatelessWidget {
                   context,
                   Icons.dashboard_rounded,
                   "Home",
-                  () => Get.to(() => const OwnerDashboardScreen()),
+                  () => Get.to(() => const OwnerDashboard()),
+                ),
+                _item(
+                  context,
+                  Icons.badge_outlined,
+                  "Factory Dashboard",
+                    () => Get.to(() => const OwnerDashboardScreen()),
                 ),
                 _item(
                   context,
@@ -61,8 +68,8 @@ class OwnerDrawer extends StatelessWidget {
                 _item(
                   context,
                   Icons.factory_outlined,
-                  "Manage Production",
-                  () => Get.toNamed("/production"),
+                  "Machine Assignment",
+                 () => Get.to(() => const MachineAssignmentPage()),
                 ),
                 _item(
                   context,
@@ -72,15 +79,21 @@ class OwnerDrawer extends StatelessWidget {
                 ),
                 _item(
                   context,
+                  Icons.badge_outlined,
+                  "Manage Employees",
+                    () => Get.to(() => const EmployeeScreen()),
+                ),
+                _item(
+                  context,
                   Icons.access_time_rounded,
                   "Manage Attendance",
-                  () => Get.toNamed("/attendance"),
+                  () => Get.to(() => const AttendanceScreen()),
                 ),
                 _item(
                   context,
                   Icons.badge_outlined,
                   "Manage Employees",
-                  () => Get.toNamed("/employee"),
+                    () => Get.to(() => const EmployeeScreen()),
                 ),
                 const Divider(),
                 _item(
