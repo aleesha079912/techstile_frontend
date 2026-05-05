@@ -1,7 +1,7 @@
 import '../../core/utils/theme.dart';
 import 'package:flutter/material.dart';
 import '../../core/services/machine_assignment_service.dart';
-// import '../../../../widgets/drawer.dart';
+import '../../../../widgets/drawer.dart';
 class MachineAssignmentPage extends StatefulWidget {
   const MachineAssignmentPage({super.key});
 
@@ -39,7 +39,7 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // drawer: const OwnerDrawer(), 
+        drawer: const OwnerDrawer(), 
       appBar: AppBar(
         title: const Text("Machine Assignment"),
         centerTitle: true,

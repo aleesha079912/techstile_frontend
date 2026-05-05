@@ -9,6 +9,7 @@ import 'package:techstile_frontend/screens/app_Owner_dashboard/notification_scre
 import 'package:techstile_frontend/screens/app_Owner_dashboard/setting_screen.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/owner_dashboard.dart';
 import 'package:techstile_frontend/core/models/factory_model.dart';
+import '../../../../widgets/drawer.dart';
 const _blue = Color(0xFF2563EB);
 const _skyBlue = Color(0xFFEFF6FF);
 const _white = Colors.white;
@@ -34,13 +35,37 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
   Widget build(BuildContext context) {
     Get.put(FactoryController());
 
+    // return Scaffold(
+    //   drawer: const OwnerDrawer(), //drawer 
+    //   backgroundColor: AppTheme.secondary,
+    //   body: IndexedStack(index: _currentIndex, children: _pages),
+    //   floatingActionButton: _currentIndex == 0 ? _buildFAB() : null,
+    //   floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+    //   bottomNavigationBar: _buildBottomNav(),
+    // );
+
     return Scaffold(
-      backgroundColor: AppTheme.secondary,
-      body: IndexedStack(index: _currentIndex, children: _pages),
-      floatingActionButton: _currentIndex == 0 ? _buildFAB() : null,
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      bottomNavigationBar: _buildBottomNav(),
-    );
+  drawer: const OwnerDrawer(),
+
+  // ✅ ADD THIS APPBAR
+  appBar: AppBar(
+    backgroundColor: AppTheme.primary,
+    elevation: 0,
+    leading: Builder(
+      builder: (context) => IconButton(
+        icon: const Icon(Icons.menu, color: Colors.white),
+        onPressed: () => Scaffold.of(context).openDrawer(),
+      ),
+    ),
+    title: const Text("Owner Dashboard", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+  ),
+
+  backgroundColor: AppTheme.secondary,
+  body: IndexedStack(index: _currentIndex, children: _pages),
+  floatingActionButton: _currentIndex == 0 ? _buildFAB() : null,
+  floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+  bottomNavigationBar: _buildBottomNav(),
+);
   }
 
   Widget _buildFAB() {
@@ -110,7 +135,7 @@ class _HomeTab extends StatelessWidget {
     return SafeArea(
       child: CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(child: _buildHeader()),
+          // SliverToBoxAdapter(child: _buildHeader()),
           SliverToBoxAdapter(child: _buildStatsRow(controller)),
           SliverToBoxAdapter(
             child: Padding(
@@ -156,34 +181,34 @@ class _HomeTab extends StatelessWidget {
     );
   }
 
-  Widget _buildHeader() {
-    return Container(
-      margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [AppTheme.primary, _blue]),
-        borderRadius: BorderRadius.circular(24),
-      ),
-      child: const Row(
-        children: [
-          Expanded(
-            child: Text(
-              "Owner Dashboard",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          CircleAvatar(
-            backgroundColor: Colors.white24,
-            child: Icon(Icons.person, color: Colors.white),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildHeader() {
+  //   return Container(
+  //     margin: const EdgeInsets.all(16),
+  //     padding: const EdgeInsets.all(20),
+  //     decoration: BoxDecoration(
+  //       gradient: LinearGradient(colors: [AppTheme.primary, _blue]),
+  //       borderRadius: BorderRadius.circular(24),
+  //     ),
+  //     child: const Row(
+  //       children: [
+  //         Expanded(
+  //           child: Text(
+  //             "Owner Dashboard",
+  //             style: TextStyle(
+  //               color: Colors.white,
+  //               fontSize: 22,
+  //               fontWeight: FontWeight.bold,
+  //             ),
+  //           ),
+  //         ),
+  //         CircleAvatar(
+  //           backgroundColor: Colors.white24,
+  //           child: Icon(Icons.person, color: Colors.white),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _buildStatsRow(FactoryController controller) {
     return Padding(
@@ -323,11 +348,8 @@ subtitle: Text(
         //  edit ka logic/navigation
         Get.to(() => AddFactoryScreen(), arguments: factory);
       },
-      // icon: const Icon(Icons.edit_note),
-      // icon: const Icon(Icons.edit_outlined),
-      // icon: const Icon(Icons.assignment_outlined),
-      icon: const Icon(Icons.app_registration_rounded),
-      // icon: const Icon(Icons.edit_square),
+    
+      icon: const Icon(Icons.edit_outlined),
       color: const Color(0xFF14B8A6), // Aapka teal color
     ),
     // DELETE BUTTON

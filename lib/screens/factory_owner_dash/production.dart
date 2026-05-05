@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/services/production_service.dart';
 import '../../core/utils/theme.dart'; 
-// import '../../../../widgets/drawer.dart';
+import '../../../../widgets/drawer.dart';
 class ProductionScreen extends StatefulWidget {
   const ProductionScreen({super.key});
 
@@ -85,7 +85,7 @@ class _ProductionScreenState extends State<ProductionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // drawer: const OwnerDrawer(), 
+      drawer: const OwnerDrawer(), 
       appBar: AppBar(title: const Text("Production Management")),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppTheme.primary,
