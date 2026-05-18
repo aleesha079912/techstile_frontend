@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:techstile_frontend/screens/factory_owner_dash/production.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/user/manage_users.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/machine/machines.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/owner_dashboard.dart';
@@ -7,7 +8,9 @@ import 'package:techstile_frontend/screens/factory_owner_dash/attendance.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/employees.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/app_owner_dash.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/machine_assignment.dart';
-
+import 'package:techstile_frontend/screens/factory_owner_dash/view_assignments.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/role_management.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/assign_paermission.dart';
 class OwnerDrawer extends StatelessWidget {
   const OwnerDrawer({super.key});
 
@@ -59,6 +62,29 @@ class OwnerDrawer extends StatelessWidget {
                   "Factory Dashboard",
                     () => Get.to(() => const OwnerDashboardScreen()),
                 ),
+                // Replace inside ListView in OwnerDrawer
+                      ExpansionTile(
+                        leading: Icon(Icons.security_rounded, color: colors.primary),
+                        title: const Text(
+                          "User Management", // Aapka screenshot section
+                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                        ),
+                        childrenPadding: const EdgeInsets.only(left: 20), // Sub-menu offset
+                        children: [
+                          _item(
+                            context,
+                            Icons.admin_panel_settings_outlined,
+                            "Manage Roles",
+                            () => Get.to(() => RoleManagementScreen()),
+                          ),
+                          _item(
+                            context,
+                            Icons.vpn_key_outlined,
+                            "Assign Permissions",
+                            () => Get.to(() => AssignPermissionsScreen()),
+                          ),
+                        ],
+                      ),
                 _item(
                   context,
                   Icons.people_outline,
@@ -70,6 +96,12 @@ class OwnerDrawer extends StatelessWidget {
                   Icons.factory_outlined,
                   "Machine Assignment",
                  () => Get.to(() => const MachineAssignmentPage()),
+                ),
+                _item(
+                  context,
+                  Icons.factory_outlined,
+                  "View Assignment",
+                 () => Get.to(() => const ViewAssignments()),
                 ),
                 _item(
                   context,
@@ -92,8 +124,8 @@ class OwnerDrawer extends StatelessWidget {
                 _item(
                   context,
                   Icons.badge_outlined,
-                  "Manage Employees",
-                    () => Get.to(() => const EmployeeScreen()),
+                  "Manage production",
+                    () => Get.to(() => const ProductionScreen()),
                 ),
                 const Divider(),
                 _item(
@@ -103,6 +135,7 @@ class OwnerDrawer extends StatelessWidget {
                   () => Get.toNamed("/login"),
                 ),
               ],
+              
             ),
           ),
         ],

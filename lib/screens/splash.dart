@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
 
-            // 🔹 Top Section
+            //  Top Section
             Column(
               children: [
                 const SizedBox(height: 30),
@@ -45,7 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
                 const SizedBox(height: 50),
 
-                // 🔹 Icon Box
+                //  Icon Box
                 Container(
                   height: 90,
                   width: 90,
@@ -69,7 +69,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
                 const SizedBox(height: 30),
 
-                // 🔹 App Name
+                // App Name
                 const Text(
                   "LoomControl",
                   style: TextStyle(
@@ -81,7 +81,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
                 const SizedBox(height: 10),
 
-                // 🔹 Subtitle
+                //  Subtitle
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: const Text(
@@ -96,7 +96,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
                 const SizedBox(height: 20),
 
-                // 🔹 Small line indicator
+                //  Small line indicator
                 Container(
                   width: 40,
                   height: 3,
@@ -108,11 +108,11 @@ class _SplashScreenState extends State<SplashScreen> {
               ],
             ),
 
-            // 🔹 Bottom Section
-                        // 🔹 Bottom Section
+            //  Bottom Section
+                        //  Bottom Section
             Column(
               children: [
-                // 🔹 Background Image (optional)
+                //  Background Image 
                 Container(
                   height: 120,
                   width: double.infinity,
@@ -127,7 +127,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
                 const SizedBox(height: 10),
 
-                // 🔹 Button + Stats
+                //  Button + Stats
                 Column(
                   children: [
                     Padding(
