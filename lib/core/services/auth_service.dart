@@ -26,7 +26,7 @@ class AuthService {
       }),
     );
 
-    // 1. Response decode 
+    // 1. Response decode and sends to UI for further processing 
    final data = jsonDecode(response.body);
     print(data);
 

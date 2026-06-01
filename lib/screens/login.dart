@@ -45,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
       });
 
       if (result['success'] == true) {
-        // 1. Extract data of user, token, and roles 
+        // 1. Extract data of user, token, and roles from data object
         final userData = result['data']['user'];
         final token = result['data']['token'];
         // 2. Extract roles from user array

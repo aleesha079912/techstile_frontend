@@ -10,9 +10,6 @@ import 'package:techstile_frontend/screens/app_Owner_dashboard/setting_screen.da
 import 'package:techstile_frontend/screens/factory_owner_dash/owner_dashboard.dart';
 import 'package:techstile_frontend/core/models/factory_model.dart';
 import '../../../../widgets/drawer.dart';
-const _blue = Color(0xFF2563EB);
-const _skyBlue = Color(0xFFEFF6FF);
-const _white = Colors.white;
 
 class OwnerDashboard extends StatefulWidget {
   const OwnerDashboard({super.key});
@@ -22,72 +19,80 @@ class OwnerDashboard extends StatefulWidget {
 }
 
 class _OwnerDashboardState extends State<OwnerDashboard> {
+  //  variable that tracks current active tab index (0, 1, 2, 3)
   int _currentIndex = 0;
-
+  //  Navigation Target List
   final List<Widget> _pages = const [
     _HomeTab(),
     CalculatorScreen(),
     NotificationScreen(),
     SettingsScreen(),
   ];
-
   @override
   Widget build(BuildContext context) {
+    // inject the FactoryController into memory so that it can be accessed from any child widget of this dashboard without needing to pass it down the widget tree.
     Get.put(FactoryController());
-
-    // return Scaffold(
-    //   drawer: const OwnerDrawer(), //drawer 
-    //   backgroundColor: AppTheme.secondary,
-    //   body: IndexedStack(index: _currentIndex, children: _pages),
-    //   floatingActionButton: _currentIndex == 0 ? _buildFAB() : null,
-    //   floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-    //   bottomNavigationBar: _buildBottomNav(),
-    // );
-
+    final theme = Theme.of(context);
     return Scaffold(
-  drawer: const OwnerDrawer(),
-
-  // ✅ ADD THIS APPBAR
-  appBar: AppBar(
-    backgroundColor: AppTheme.primary,
-    elevation: 0,
-    leading: Builder(
-      builder: (context) => IconButton(
-        icon: const Icon(Icons.menu, color: Colors.white),
-        onPressed: () => Scaffold.of(context).openDrawer(),
+      drawer: const OwnerDrawer(),
+      appBar: AppBar(
+        backgroundColor: theme.appBarTheme.backgroundColor,
+        elevation: theme.appBarTheme.elevation,
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: Icon(Icons.menu, color: theme.appBarTheme.foregroundColor),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
+        title: Text(
+          "Owner Dashboard",
+          style: TextStyle(
+            color: theme.appBarTheme.foregroundColor,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
-    ),
-    title: const Text("Owner Dashboard", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-  ),
+      backgroundColor: theme.scaffoldBackgroundColor,
+      // CONCEPT: Preserve State (IndexedStack)
+      // `IndexedStack` ka faida yeh hai ke jab aap tabs badalte hain (e.g., Home se Calculator par gaye),
+      // toh purani screen ka data/scroll position khoti nahi hai, balkay background mein save rehti hai.
+      body: IndexedStack(index: _currentIndex, children: _pages),
 
-  backgroundColor: AppTheme.secondary,
-  body: IndexedStack(index: _currentIndex, children: _pages),
-  floatingActionButton: _currentIndex == 0 ? _buildFAB() : null,
-  floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-  bottomNavigationBar: _buildBottomNav(),
-);
+      // Conditional UI Rendering
+      floatingActionButton: _currentIndex == 0 ? _buildFAB(context) : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      bottomNavigationBar: _buildBottomNav(context),
+    );
   }
 
-  Widget _buildFAB() {
+  // CONCEPT: Modular UI / Widget Refactoring
+  Widget _buildFAB(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [AppTheme.primary, _blue]),
+        gradient: LinearGradient(
+          colors: [
+            theme.colorScheme.primary,
+            theme.colorScheme.primary.withOpacity(0.8),
+          ],
+        ),
         borderRadius: BorderRadius.circular(16),
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
         onTap: () => Get.to(() => const AddFactoryScreen()),
-        child: const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.add, color: Colors.white),
-              SizedBox(width: 6),
+              Icon(Icons.add, color: theme.colorScheme.onPrimary),
+              const SizedBox(width: 6),
               Text(
                 "Add Factory",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: theme.colorScheme.onPrimary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -98,13 +103,19 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
     );
   }
 
-  Widget _buildBottomNav() {
+  Widget _buildBottomNav(BuildContext context) {
+    final theme = Theme.of(context);
+
     return BottomNavigationBar(
       currentIndex: _currentIndex,
-      onTap: (i) => setState(() => _currentIndex = i),
+      onTap: (i) => setState(
+        () => _currentIndex = i,
+      ), // when Tab change reload (rebuild) the UI with new index.
       type: BottomNavigationBarType.fixed,
-      backgroundColor: Colors.white,
-      selectedItemColor: AppTheme.primary,
+      backgroundColor: theme
+          .colorScheme
+          .onPrimary,
+      selectedItemColor: theme.colorScheme.primary, 
       unselectedItemColor: AppTheme.neutral,
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: "Home"),
@@ -130,87 +141,66 @@ class _HomeTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<FactoryController>();
+     final controller = Get.find<FactoryController>();
+    final theme = Theme.of(context);
 
     return SafeArea(
       child: CustomScrollView(
-        slivers: [
-          // SliverToBoxAdapter(child: _buildHeader()),
-          SliverToBoxAdapter(child: _buildStatsRow(controller)),
+       slivers: [
+          SliverToBoxAdapter(child: _buildStatsRow(context, controller)),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Obx(
+
+                // when the length of the factory list is changed, this text will auto refresh.
                 () => Text(
                   "${"${controller.factoryList.length} registered"} ${controller.factoryList.length == 1 ? "factory" : "factories"}",
-                  style: TextStyle(color: AppTheme.neutral),
-                ),
+                  style: theme.textTheme.bodyMedium,
+                  ),
               ),
             ),
           ),
+
+          // Reactive List Handling
           Obx(() {
-  if (controller.factoryList.isEmpty) {
-    return SliverFillRemaining(
-      child: _buildEmptyState(),
-    );
-  }
+            // Empty State Pattern
+            if (controller.factoryList.isEmpty) {
+              return SliverFillRemaining(child: _buildEmptyState(context));
+            }
 
-  return SliverList(
-    delegate: SliverChildBuilderDelegate(
-      (context, index) {
-        final factory = controller.factoryList[index];
+            // its only render these items that show on screen and when user scrolls it will render the next items and so on, this is more efficient than ListView.builder in case of large lists.
+            return SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final factory = controller.factoryList[index];
 
-        return Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 6,
-          ),
-          child: _FactoryCard(
-            factory: factory,
-            index: index,
-            onDelete: () => controller.deleteFactory(factory.id),
-          ),
-        );
-      },
-      childCount: controller.factoryList.length,
-    ),
-  );
-}),
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 6,
+                    ),
+                    child: _FactoryCard(
+                      factory: factory,
+                      index: index,
+                      onDelete: () => controller.deleteFactory(
+                        factory.id,
+                      ), // Controller method call.
+                    ),
+                  );
+                },
+                childCount:
+                    controller.factoryList.length, // List total items count.
+              ),
+            );
+          }),
         ],
       ),
     );
   }
 
-  // Widget _buildHeader() {
-  //   return Container(
-  //     margin: const EdgeInsets.all(16),
-  //     padding: const EdgeInsets.all(20),
-  //     decoration: BoxDecoration(
-  //       gradient: LinearGradient(colors: [AppTheme.primary, _blue]),
-  //       borderRadius: BorderRadius.circular(24),
-  //     ),
-  //     child: const Row(
-  //       children: [
-  //         Expanded(
-  //           child: Text(
-  //             "Owner Dashboard",
-  //             style: TextStyle(
-  //               color: Colors.white,
-  //               fontSize: 22,
-  //               fontWeight: FontWeight.bold,
-  //             ),
-  //           ),
-  //         ),
-  //         CircleAvatar(
-  //           backgroundColor: Colors.white24,
-  //           child: Icon(Icons.person, color: Colors.white),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  Widget _buildStatsRow(FactoryController controller) {
+  Widget _buildStatsRow(BuildContext context, FactoryController controller) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Obx(
@@ -220,15 +210,19 @@ class _HomeTab extends StatelessWidget {
               label: "Factories",
               value: "${controller.factoryList.length}",
               icon: Icons.factory,
-              color: AppTheme.primary,
+              color: theme.colorScheme.primary,
             ),
             const SizedBox(width: 10),
             _StatCard(
               label: "Cities",
+              // Data Manipulation (Mapping & Sets)
+              // `map((f) => f.city).toSet().length` mean  count only unique cities 
               value:
                   "${controller.factoryList.map((f) => f.city).toSet().length}",
               icon: Icons.location_city,
-              color: AppTheme.tertiary,
+              color: theme
+                  .colorScheme
+                  .secondary, 
             ),
           ],
         ),
@@ -236,7 +230,8 @@ class _HomeTab extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(BuildContext context) {
+    final theme = Theme.of(context);
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -244,23 +239,24 @@ class _HomeTab extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: _skyBlue,
+             color: theme.colorScheme.primary.withOpacity(0.08),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Icon(
               Icons.factory_outlined,
               size: 40,
-              color: AppTheme.primary,
+              color: theme.colorScheme.primary,
             ),
           ),
           const SizedBox(height: 16),
-          const Text("No factories yet"),
+          Text("No factories yet", style: theme.textTheme.bodyMedium),
         ],
       ),
     );
   }
 }
 
+// Reusable Custom Component 
 class _StatCard extends StatelessWidget {
   final String label;
   final String value;
@@ -276,11 +272,12 @@ class _StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Expanded(
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: theme.colorScheme.onPrimary,
           borderRadius: BorderRadius.circular(16),
         ),
         child: Column(
@@ -295,7 +292,12 @@ class _StatCard extends StatelessWidget {
                 fontSize: 20,
               ),
             ),
-            Text(label),
+            Text(
+              label,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ],
         ),
       ),
@@ -303,6 +305,7 @@ class _StatCard extends StatelessWidget {
   }
 }
 
+//Reusable List Item Component 
 class _FactoryCard extends StatelessWidget {
   final FactoryModel factory;
   final int index;
@@ -316,50 +319,55 @@ class _FactoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.colorScheme.onPrimary,
         borderRadius: BorderRadius.circular(18),
       ),
       child: ListTile(
         onTap: () => Get.off(() => const OwnerDashboardScreen()),
-       leading: CircleAvatar(
-  backgroundColor: AppTheme.primary.withOpacity(0.1),
-  child: Text(
-    factory.name.isNotEmpty
-        ? factory.name[0].toUpperCase()
-        : "?",
-    style: TextStyle(color: AppTheme.primary),
-  ),
-),
-
-title: Text(factory.name),
-
-subtitle: Text(
-  "${factory.city} • ${factory.address}",
-  style: TextStyle(color: AppTheme.neutral),
-),
-       trailing: Row(
-  mainAxisSize: MainAxisSize.min, 
-  children: [
-    // EDIT BUTTON
-    IconButton(
-      onPressed: () {
-        //  edit ka logic/navigation
-        Get.to(() => AddFactoryScreen(), arguments: factory);
-      },
-    
-      icon: const Icon(Icons.edit_outlined),
-      color: const Color(0xFF14B8A6), // Aapka teal color
-    ),
-    // DELETE BUTTON
-    IconButton(
-      onPressed: onDelete,
-      icon: const Icon(Icons.delete_outline),
-      color: Colors.red,
-    ),
-  ],
-),
+        leading: CircleAvatar(
+          backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
+          child: Text(
+            //  Null / Empty Safety Check
+            // if the factory name is not empty, show the first letter capitalized; otherwise, show "?".
+            factory.name.isNotEmpty ? factory.name[0].toUpperCase() : "?",
+            style: TextStyle(color: theme.colorScheme.primary),
+          ),
+        ),
+        title: Text(
+          factory.name,
+          style: const TextStyle(fontWeight: FontWeight.w600),
+        ),
+        subtitle: Text(
+          //  String Interpolation
+           "${factory.city} • ${factory.address}",
+          style: theme.textTheme.bodyMedium,
+        ),
+        trailing: Row(
+          mainAxisSize: MainAxisSize
+              .min, // fix the Element size inside row its compulsory.
+          children: [
+            // Route Arguments Passing
+            // 'arguments: factory' through this send the selected factory data into new page. 
+            IconButton(
+              onPressed: () {
+                Get.to(() => const AddFactoryScreen(), arguments: factory);
+              },
+              icon: const Icon(Icons.edit_outlined),
+              color: theme
+                  .colorScheme
+                  .secondary, 
+            ),
+            //  Action Callbacks
+            IconButton(
+              onPressed: onDelete,
+              icon: const Icon(Icons.delete_outline),
+              color: Colors.red, 
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/production.dart';
-import 'package:techstile_frontend/screens/factory_owner_dash/user/manage_users.dart';
-import 'package:techstile_frontend/screens/factory_owner_dash/machine/machines.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/user/manage_users.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/machines.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/owner_dashboard.dart';
-import 'package:techstile_frontend/screens/factory_owner_dash/attendance.dart';
-import 'package:techstile_frontend/screens/factory_owner_dash/employees.dart';
+import 'package:techstile_frontend/screens/employee/attendance.dart';
+import 'package:techstile_frontend/screens/employee/employees.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/app_owner_dash.dart';
-import 'package:techstile_frontend/screens/factory_owner_dash/machine_assignment.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/machine_assignment.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/view_assignments.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/role_management.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/assign_paermission.dart';
@@ -16,21 +16,18 @@ class OwnerDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Theme colors uthana
     final colors = Theme.of(context).colorScheme;
-
     return Drawer(
       backgroundColor: Colors.white,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          // HEADER (Blue Area)
+          // HEADER 
           Container(
             height: 90,
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
             decoration: BoxDecoration(color: colors.primary),
             child: const Column(
-              // mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
@@ -62,11 +59,11 @@ class OwnerDrawer extends StatelessWidget {
                   "Factory Dashboard",
                     () => Get.to(() => const OwnerDashboardScreen()),
                 ),
-                // Replace inside ListView in OwnerDrawer
+                //sub menu for user management
                       ExpansionTile(
                         leading: Icon(Icons.security_rounded, color: colors.primary),
                         title: const Text(
-                          "User Management", // Aapka screenshot section
+                          "User Management",
                           style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
                         ),
                         childrenPadding: const EdgeInsets.only(left: 20), // Sub-menu offset
@@ -107,7 +104,7 @@ class OwnerDrawer extends StatelessWidget {
                   context,
                   Icons.precision_manufacturing_outlined,
                   "Manage Machines",
-                  () => Get.to(() => const MachinesScreen()),
+                  () => Get.to(() => const MachinesScreen()),//machines.dart pa jai ga add new machine page and show all machines
                 ),
                 _item(
                   context,
@@ -156,7 +153,7 @@ class OwnerDrawer extends StatelessWidget {
         style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
       ),
       onTap: () {
-        Get.back(); // Drawer band karein
+        Get.back(); // close Drawer 
         onTapAction();
       },
     );

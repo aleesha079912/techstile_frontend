@@ -1,10 +1,8 @@
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import '../screens/factory_owner_dash/owner_dashboard.dart';
-import '../screens/factory_owner_dash/machine/machines.dart';
+import '../screens/app_Owner_dashboard/machine/machines.dart';
 import '../screens/factory_owner_dash/payments.dart';
-import '../screens/factory_owner_dash/user/users.dart';
+ import '../screens/app_Owner_dashboard/user/manage_users.dart';
 
 class CustomBottomNav extends StatelessWidget {
   final int currentIndex;
@@ -27,7 +25,7 @@ class CustomBottomNav extends StatelessWidget {
         page = const PaymentsScreen();
         break;
       case 3:
-        page = const UsersScreen();
+        page = const ManageUsersScreen();
         break;
       default:
         return;

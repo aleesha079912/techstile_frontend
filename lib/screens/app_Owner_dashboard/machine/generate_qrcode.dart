@@ -3,7 +3,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import '../../../core/utils/theme.dart';
 import '../../../core/services/scan_qrcode_service.dart';
 import '../../../../widgets/bottom_nav_bar.dart';
-
+import '../../../../../widgets/drawer.dart';
 class GenerateQrCodeScreen extends StatelessWidget {
   final String data;
 
@@ -21,7 +21,7 @@ class GenerateQrCodeScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
         elevation: 0,
-        title: const Text("TextileOS"),
+        title: const Text("QR Code Generator"),
         actions: const [
           Padding(
             padding: EdgeInsets.only(right: 16),
@@ -199,6 +199,7 @@ class GenerateQrCodeScreen extends StatelessWidget {
           ],
         ),
       ),
+      drawer: const OwnerDrawer(),
       bottomNavigationBar: const CustomBottomNav(currentIndex: 1),
     );
   }

@@ -70,7 +70,6 @@ class _RoleManagementScreenState extends State<RoleManagementScreen> {
             child: ListView.builder(
               itemCount: roles.length,
               itemBuilder: (context, index) {
-                // Yahan 'return' lazmi hai
                 return ListTile(
                   leading: const Icon(Icons.verified_user, color: Colors.blue),
                   title: Text(roles[index]['name']),

@@ -10,15 +10,16 @@ import 'package:techstile_frontend/screens/app_Owner_dashboard/calculator_screen
 import 'package:techstile_frontend/screens/app_Owner_dashboard/notification_screen.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/setting_screen.dart';
 
-import 'package:techstile_frontend/screens/factory_owner_dash/machine/machines.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/machines.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/payments.dart';
-import 'package:techstile_frontend/screens/factory_owner_dash/user/users.dart';
-import 'package:techstile_frontend/screens/factory_owner_dash/user/manage_users.dart';
+// import 'package:techstile_frontend/screens/factory_owner_dash/user/users.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/user/manage_users.dart';
 
 import 'package:techstile_frontend/screens/manager_dashboard.dart';
-import 'package:techstile_frontend/screens/employee_dashboard.dart';
+import 'package:techstile_frontend/screens/employee/employee_dashboard.dart';
 
 import 'package:techstile_frontend/core/services/factory_service.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/generate_qrcode.dart';
 
 class AppRoutes {
   static const splash = "/";
@@ -37,7 +38,7 @@ class AppRoutes {
   static const users = '/users';
   static const payments = '/payments';
   static const manageusers = '/manage_users';
-
+  static const generateQRCode = '/generate_qr_code';
   static List<GetPage> routes = [
 
     GetPage(
@@ -111,10 +112,10 @@ class AppRoutes {
       page: () => const MachinesScreen(),
     ),
 
-    GetPage(
-      name: users,
-      page: () => const UsersScreen(),
-    ),
+    // GetPage(
+    //   name: users,
+    //   page: () => const UsersScreen(),
+    // ),
 
     GetPage(
       name: payments,
@@ -124,6 +125,16 @@ class AppRoutes {
     GetPage(
       name: manageusers,
       page: () => const ManageUsersScreen(),
+    ),
+
+    GetPage(
+      name: generateQRCode,
+      page: () {
+        final args = Get.arguments;
+        return GenerateQrCodeScreen(
+          data: args is String ? args : (args?['data'] ?? ''),
+        );
+      },
     ),
   ];
 }

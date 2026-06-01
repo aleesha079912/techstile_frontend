@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:techstile_frontend/core/services/factory_service.dart'; 
+import 'package:techstile_frontend/core/utils/theme.dart';
 
 class AddFactoryScreen extends StatefulWidget {
   const AddFactoryScreen({super.key});
@@ -14,12 +15,6 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
   final _nameController = TextEditingController();
   final _addressController = TextEditingController();
   final _cityController = TextEditingController();
-
-  static const _navy = Color(0xFF1E3A8A);
-  static const _blue = Color(0xFF2563EB);
-  static const _lightBlue = Color(0xFFEFF6FF);
-  static const _bgPage = Color(0xFFF0F4FF);
-  static const _slate = Color(0xFF64748B);
 
   @override
   void initState() {
@@ -83,7 +78,7 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
     final existing = Get.arguments;
     
     return Scaffold(
-      backgroundColor: _bgPage,
+     backgroundColor: AppTheme.secondary,
       appBar: _buildAppBar(existing != null),
       body: SafeArea(
         child: Form(
@@ -132,7 +127,7 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
       preferredSize: const Size.fromHeight(72),
       child: Container(
         decoration: const BoxDecoration(
-          color: _navy,
+          color: AppTheme.primary,
           borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
         ),
         child: SafeArea(
@@ -173,7 +168,7 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [BoxShadow(color: _navy.withOpacity(0.08), blurRadius: 16, offset: const Offset(0, 4))],
+        boxShadow: [BoxShadow(color: AppTheme.primary.withOpacity(0.08), blurRadius: 16, offset: const Offset(0, 4))],
       ),
       padding: const EdgeInsets.all(16),
       child: Row(
@@ -181,7 +176,8 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
           Container(
             width: 52, height: 52,
             decoration: BoxDecoration(
-              gradient: const LinearGradient(colors: [_navy, _blue]),
+              gradient: const LinearGradient(colors: [AppTheme.primary,
+                     AppTheme.tertiary,]),
               borderRadius: BorderRadius.circular(14),
             ),
             child: Icon(isEdit ? Icons.edit_note_rounded : Icons.factory_rounded, color: Colors.white, size: 26),
@@ -193,12 +189,12 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
               children: [
                 Text(
                   isEdit ? "Update Factory Info" : "New Factory Registration",
-                  style: const TextStyle(color: _navy, fontSize: 14, fontWeight: FontWeight.w600),
+                  style: const TextStyle(color: AppTheme.primary, fontSize: 14, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 3),
                 Text(
                   isEdit ? "Modify details and save changes to server" : "Fill in the details to add a factory to your network",
-                  style: const TextStyle(color: _slate, fontSize: 11.5, height: 1.4),
+                  style: const TextStyle(color: AppTheme.secondary, fontSize: 11.5, height: 1.4),
                 ),
               ],
             ),
@@ -210,7 +206,7 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
 
   Widget _buildSectionLabel(String label) => Text(
     label.toUpperCase(),
-    style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: _navy, letterSpacing: 0.9),
+    style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppTheme.primary, letterSpacing: 0.9),
   );
 
   Widget _buildField({required TextEditingController controller, required String label, required String hint, required IconData icon, String? Function(String?)? validator}) {
@@ -218,7 +214,7 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: _navy.withOpacity(0.05), blurRadius: 8, offset: const Offset(0, 2))],
+        boxShadow: [BoxShadow(color: AppTheme.primary.withOpacity(0.05), blurRadius: 8, offset: const Offset(0, 2))],
       ),
       child: TextFormField(
         controller: controller,
@@ -227,15 +223,15 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
         decoration: InputDecoration(
           labelText: label,
           hintText: hint,
-          labelStyle: const TextStyle(color: _blue, fontSize: 12, fontWeight: FontWeight.w600),
+          labelStyle: const TextStyle( color: AppTheme.primary, fontSize: 12, fontWeight: FontWeight.w600),
           prefixIcon: Container(
             margin: const EdgeInsets.all(10),
             width: 34, height: 34,
-            decoration: BoxDecoration(color: _lightBlue, borderRadius: BorderRadius.circular(9)),
-            child: Icon(icon, color: _navy, size: 17),
+            decoration: BoxDecoration( color: AppTheme.secondary, borderRadius: BorderRadius.circular(9)),
+            child: Icon(icon, color: AppTheme.primary, size: 17),
           ),
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
-          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide(color: _blue, width: 1.5)),
+          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide( color: AppTheme.primary, width: 1.5)),
           filled: true,
           fillColor: Colors.white,
           contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
@@ -249,12 +245,13 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
     
     return Obx(() => Container(
       decoration: BoxDecoration(
-        gradient: const LinearGradient(colors: [_navy, _blue]),
+        gradient: const LinearGradient(colors: [ AppTheme.primary,
+                        AppTheme.tertiary,]),
         borderRadius: BorderRadius.circular(18),
-        boxShadow: [BoxShadow(color: _navy.withOpacity(0.35), blurRadius: 16, offset: const Offset(0, 6))],
+        boxShadow: [BoxShadow(color: AppTheme.primary.withOpacity(0.35), blurRadius: 16, offset: const Offset(0, 6))],
       ),
       child: Material(
-        color: Colors.transparent,
+        color: AppTheme.primary,
         child: InkWell(
           onTap: controller.isLoading.value ? null : _submit,
           child: Padding(

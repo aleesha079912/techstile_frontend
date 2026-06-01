@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:techstile_frontend/core/utils/theme.dart';
 
-const _navy   = Color(0xFF1E3A8A);
-const _blue   = Color(0xFF2563EB);
-const _bgPage = Color(0xFFF0F4FF);
-const _white  = Colors.white;
-const _slate  = Color(0xFF64748B);
+// const _navy   = Color(0xFF1E3A8A);
+// const _blue   = Color(0xFF2563EB);
+// const _bgPage = Color(0xFFF0F4FF);
+// const _white  = Colors.white;
+// const _slate  = Color(0xFF64748B);
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -33,19 +34,19 @@ class _SettingsScreenState extends State<SettingsScreen> {
             items: [
               _SettingsTile(
                 icon: Icons.person_rounded,
-                iconColor: _navy,
+                iconColor: AppTheme.primary,
                 label: "Edit Profile",
                 onTap: () => _showSnack("Edit Profile"),
               ),
               _SettingsTile(
                 icon: Icons.lock_rounded,
-                iconColor: const Color(0xFF7C3AED),
+                iconColor: AppTheme.primary,
                 label: "Change Password",
                 onTap: () => _showSnack("Change Password"),
               ),
               _SettingsTile(
                 icon: Icons.verified_user_rounded,
-                iconColor: const Color(0xFF059669),
+                iconColor: AppTheme.primary,
                 label: "Verification Status",
                 trailing: _verifiedBadge(),
                 onTap: () {},
@@ -96,7 +97,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             items: [
               _SettingsTile(
                 icon: Icons.help_rounded,
-                iconColor: _blue,
+                iconColor: AppTheme.neutral,
                 label: "Help & FAQ",
                 onTap: () => _showSnack("Help & FAQ"),
               ),
@@ -108,7 +109,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               _SettingsTile(
                 icon: Icons.privacy_tip_rounded,
-                iconColor: _slate,
+                iconColor: AppTheme.neutral,
                 label: "Privacy Policy",
                 onTap: () => _showSnack("Privacy Policy"),
               ),
@@ -122,7 +123,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               "TechStile v1.0.0",
               style: TextStyle(
                 fontSize: 11,
-                color: _slate,
+                color: AppTheme.neutral,
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -136,8 +137,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     Get.snackbar(
       label,
       "Coming soon",
-      backgroundColor: _white,
-      colorText: _navy,
+      backgroundColor: AppTheme.primary,
+      colorText: AppTheme.secondary,
       snackPosition: SnackPosition.BOTTOM,
       margin: const EdgeInsets.all(16),
       borderRadius: 14,
@@ -150,14 +151,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [_navy, Color(0xFF1D4ED8)],
+          colors: [AppTheme.primary, AppTheme.primary],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: _navy.withOpacity(0.3),
+            color: AppTheme.neutral.withOpacity(0.3),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -171,14 +172,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 width: 64,
                 height: 64,
                 decoration: BoxDecoration(
-                  color: _white.withOpacity(0.2),
+                  color: AppTheme.primary.withOpacity(0.2),
                   shape: BoxShape.circle,
                 ),
                 child: const Center(
                   child: Text(
                     "AK",
                     style: TextStyle(
-                      color: _white,
+                      color: AppTheme.neutral,
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
                     ),
@@ -194,7 +195,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   decoration: BoxDecoration(
                     color: const Color(0xFF059669),
                     shape: BoxShape.circle,
-                    border: Border.all(color: _white, width: 2),
+                    border: Border.all(color: AppTheme.primary, width: 2),
                   ),
                 ),
               ),
@@ -208,7 +209,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const Text(
                   "Abdul Kareem",
                   style: TextStyle(
-                    color: _white,
+                    color: AppTheme.secondary,
                     fontSize: 17,
                     fontWeight: FontWeight.w700,
                   ),
@@ -226,13 +227,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: _white.withOpacity(0.15),
+                    color: AppTheme.primary.withOpacity(0.15),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: const Text(
                     "Factory Owner",
                     style: TextStyle(
-                      color: _white,
+                      color: AppTheme.primary,
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
                     ),
@@ -247,10 +248,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: _white.withOpacity(0.15),
+                color: AppTheme.primary.withOpacity(0.15),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Icon(Icons.edit_rounded, color: _white, size: 17),
+              child: const Icon(Icons.edit_rounded, color: AppTheme.primary, size: 17),
             ),
           ),
         ],
@@ -272,18 +273,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
             style: const TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w700,
-              color: _navy,
+              color: AppTheme.neutral,
               letterSpacing: 0.9,
             ),
           ),
         ),
         Container(
           decoration: BoxDecoration(
-            color: _white,
+            color: AppTheme.primary.withOpacity(0.15),
             borderRadius: BorderRadius.circular(18),
             boxShadow: [
               BoxShadow(
-                color: _navy.withOpacity(0.06),
+                color: AppTheme.neutral.withOpacity(0.06),
                 blurRadius: 12,
                 offset: const Offset(0, 3),
               ),
@@ -335,7 +336,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: Switch(
         value: value,
         onChanged: onChanged,
-        activeThumbColor: _navy,
+        activeThumbColor: AppTheme.primary,
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       ),
     );
@@ -389,13 +390,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         content: const Text(
           "Are you sure you want to log out of your account?",
-          style: TextStyle(color: _slate, fontSize: 13),
+          style: TextStyle(color: AppTheme.neutral, fontSize: 13),
         ),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
             child: const Text("Cancel",
-                style: TextStyle(color: _slate)),
+                style: TextStyle(color: AppTheme.neutral)),
           ),
           ElevatedButton(
             onPressed: () {
@@ -403,8 +404,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               Get.snackbar(
                 "Logged Out",
                 "See you next time!",
-                backgroundColor: _white,
-                colorText: _navy,
+                backgroundColor: AppTheme.primary.withOpacity(0.15),
+                colorText: AppTheme.neutral,
                 snackPosition: SnackPosition.BOTTOM,
                 margin: const EdgeInsets.all(16),
                 borderRadius: 14,
@@ -412,7 +413,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFFDC2626),
-              foregroundColor: _white,
+              foregroundColor: AppTheme.primary,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -475,7 +476,7 @@ class _SettingsTile extends StatelessWidget {
               trailing ??
                   Icon(
                     Icons.chevron_right_rounded,
-                    color: _slate.withOpacity(0.4),
+                    color: AppTheme.neutral.withOpacity(0.4),
                     size: 20,
                   ),
             ],

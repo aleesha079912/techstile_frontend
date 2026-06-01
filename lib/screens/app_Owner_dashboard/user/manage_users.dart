@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/services/manage_users_service.dart';
 import '../../../../core/utils/theme.dart'; 
 import '../../../../widgets/drawer.dart';
-import 'package:techstile_frontend/screens/factory_owner_dash/user/register_user_rolebased.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/user/register_user_rolebased.dart';
 
 class ManageUsersScreen extends StatefulWidget {
   const ManageUsersScreen({super.key});

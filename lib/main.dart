@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:techstile_frontend/routes/routes.dart';
-import '../../../core/utils/theme.dart';
+import 'package:techstile_frontend/core/utils/theme.dart';
+
 void main() {
   runApp(const TECHstile());
 }
