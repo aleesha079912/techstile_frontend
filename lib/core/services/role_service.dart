@@ -14,16 +14,26 @@ class RoleService {
     }
   }
 
-  // 2. Add Role
-  Future<bool> addRole(String name) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/add'),
+  Future<Map<String, dynamic>> addRole(String name) async {
+  var response = await http.post( Uri.parse('$baseUrl/add'),
       headers: {"Content-Type": "application/json"},
-      body: json.encode({"name": name}),
-    );
-    return response.statusCode == 201;
-    
+      body: json.encode({"name": name}),);
+
+  var data = jsonDecode(response.body);
+
+  if (data['status'] == true) {
+    return {
+      'success': true,
+      'message': 'Role added successfully'
+    };
   }
+
+  return {
+    'success': false,
+    'message': data['errors']?['name']?[0] ??
+        'Role already exists'
+  };
+}
   // Role delete karne ke liye
 Future<bool> deleteRole(int id) async {
   final response = await http.delete(Uri.parse('$baseUrl/delete/$id'));

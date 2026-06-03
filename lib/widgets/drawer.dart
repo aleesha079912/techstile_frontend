@@ -11,6 +11,7 @@ import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/machine_a
 import 'package:techstile_frontend/screens/factory_owner_dash/view_assignments.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/role_management.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/assign_paermission.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/scan_code.dart';
 class OwnerDrawer extends StatelessWidget {
   const OwnerDrawer({super.key});
 
@@ -123,6 +124,12 @@ class OwnerDrawer extends StatelessWidget {
                   Icons.badge_outlined,
                   "Manage production",
                     () => Get.to(() => const ProductionScreen()),
+                ),
+                 _item(
+                  context,
+                  Icons.qr_code_scanner,
+                  "Scan QR Code",
+                    () => Get.to(() => const ScanQrCodeScreen()),
                 ),
                 const Divider(),
                 _item(

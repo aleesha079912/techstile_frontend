@@ -49,14 +49,29 @@ class _RoleManagementScreenState extends State<RoleManagementScreen> {
                   ),
                   const SizedBox(height: 10),
                   ElevatedButton(
-                    onPressed: () async {
-                      bool success =
-                          await _roleService.addRole(_roleController.text);
-                      if (success) {
-                        _roleController.clear();
-                        _loadRoles();
-                      }
-                    },
+                        onPressed: () async {
+                        var result =
+                            await _roleService.addRole(_roleController.text);
+
+                        if (result['success']) {
+                          _roleController.clear();
+                          _loadRoles();
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Role added successfully"),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(result['message']),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
+                      },
                     child: const Text("Save"),
                   )
                 ],

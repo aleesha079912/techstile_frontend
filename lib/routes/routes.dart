@@ -132,7 +132,7 @@ class AppRoutes {
       page: () {
         final args = Get.arguments;
         return GenerateQrCodeScreen(
-          data: args is String ? args : (args?['data'] ?? ''),
+          machineId: args is String ? args : (args?['machineId'] ?? ''),
         );
       },
     ),
