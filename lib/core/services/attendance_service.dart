@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
+import 'auth_service.dart';
 class AttendanceService {
   // ⚠️ Emulator ke liye
   final String baseUrl = "http://localhost:8000/api/attendence";
@@ -8,7 +8,9 @@ class AttendanceService {
   // 🔹 Get All
   Future<List<dynamic>> fetchAttendance() async {
     try {
-      final res = await http.get(Uri.parse("$baseUrl/all_attendence"));
+      final res = await http.get(Uri.parse("$baseUrl/all_attendence"),
+      headers: AuthService.authHeaders,
+      );
       if (res.statusCode == 200) {
         return jsonDecode(res.body);
       }
@@ -23,7 +25,7 @@ class AttendanceService {
     try {
       final res = await http.post(
         Uri.parse("$baseUrl/add_attendence"),
-        headers: {"Content-Type": "application/json"},
+       headers: AuthService.authHeaders,
         body: jsonEncode(data),
       );
       return res.statusCode == 201;
@@ -38,7 +40,7 @@ class AttendanceService {
     try {
       final res = await http.put(
         Uri.parse("$baseUrl/update_attendence/$id"),
-        headers: {"Content-Type": "application/json"},
+       headers: AuthService.authHeaders,
         body: jsonEncode(data),
       );
       return res.statusCode == 200;
@@ -50,7 +52,9 @@ class AttendanceService {
   // 🔹 Delete
   Future<bool> deleteAttendance(int id) async {
     try {
-      final res = await http.delete(Uri.parse("$baseUrl/delete_attendence/$id"));
+      final res = await http.delete(Uri.parse("$baseUrl/delete_attendence/$id"),
+      headers: AuthService.authHeaders,
+      );
       return res.statusCode == 200;
     } catch (e) {
       return false;

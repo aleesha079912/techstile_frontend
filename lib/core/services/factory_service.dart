@@ -2,37 +2,38 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../models/factory_model.dart';
+import 'auth_service.dart';
 
 class FactoryController extends GetxController {
   var factoryList = <FactoryModel>[].obs;
   var isLoading = false.obs;
-  final String baseUrl = "http://127.0.0.1:8000/api/factories";
+  final String baseUrl = "http://localhost:8000/api/factories";
 
   @override
   void onInit() {
     super.onInit();
-    fetchFactories(); // App start hotay hi data load ho jaye ga
+    fetchFactories(); 
   }
 
   // 1. GET ALL (Backend index function)
   Future<void> fetchFactories() async {
-    isLoading.value = true;
-    try {
-      final response = await http.get(Uri.parse('$baseUrl/allfactories'));
-      
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = jsonDecode(response.body);
-        if (responseData['status'] == true) {
-          List<dynamic> data = responseData['data'];
-          factoryList.assignAll(data.map((e) => FactoryModel.fromJson(e)).toList());
-        }
-      }
-    } catch (e) {
-      print("Error fetching factories: $e");
-    } finally {
-      isLoading.value = false;
-    }
+  final token = AuthService.token; // ya jaise bhi token lo
+  print("🔑 Token: $token");       // ← token print karo
+
+  final response = await http.get(
+    Uri.parse('$baseUrl/allfactories'),
+    headers: AuthService.authHeaders,
+  );
+  if (response.statusCode == 200) {
+  final res = jsonDecode(response.body);
+  if (res['status'] == true) {        // ← 'status' hai ya 'success'?
+    List<dynamic> data = res['data'];
+    factoryList.assignAll(
+      data.map((e) => FactoryModel.fromJson(e)).toList()
+    );
   }
+}  
+}
 
   // 2. CREATE (Backend store function)
   Future<bool> addFactory(Map<String, dynamic> data) async {
@@ -40,7 +41,7 @@ class FactoryController extends GetxController {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/addfactory'),
-        headers: {"Content-Type": "application/json"},
+        headers: AuthService.authHeaders,
         body: jsonEncode(data),
       );
 
@@ -66,7 +67,7 @@ class FactoryController extends GetxController {
     try {
       final response = await http.put(
         Uri.parse('$baseUrl/updatefactory/$id'),
-        headers: {"Content-Type": "application/json"},
+        headers: AuthService.authHeaders,
         body: jsonEncode(data),
       );
 
@@ -86,7 +87,9 @@ class FactoryController extends GetxController {
   // 4. DELETE (Backend destroy function)
   Future<void> deleteFactory(dynamic id) async {
     try {
-      final response = await http.delete(Uri.parse('$baseUrl/deletefactory/$id'));
+      final response = await http.delete(Uri.parse('$baseUrl/deletefactory/$id'),
+       headers: AuthService.authHeaders,
+       );
       
       if (response.statusCode == 200) {
         factoryList.removeWhere((f) => f.id == id);

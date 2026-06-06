@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-
+import 'auth_service.dart';
 class MachineDetailsService extends GetxController {
 
   RxBool loading = true.obs;
@@ -18,6 +18,7 @@ class MachineDetailsService extends GetxController {
         Uri.parse(
           "http://localhost:8000/api/machines/details/$machineId",
         ),
+        headers: AuthService.authHeaders,
       );
 
       if (response.statusCode == 200) {

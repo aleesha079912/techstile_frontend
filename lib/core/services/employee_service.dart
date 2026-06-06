@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
+import 'auth_service.dart';
 class EmployeeService {
   // ⚠️ Flutter Web → localhost
   // ⚠️ Emulator → 10.0.2.2
@@ -9,7 +9,9 @@ class EmployeeService {
   // 🔹 GET ALL
   Future<List<dynamic>> fetchEmployees() async {
     try {
-      final res = await http.get(Uri.parse("$baseUrl/all_employee"));
+      final res = await http.get(Uri.parse("$baseUrl/all_employee"),
+      headers: AuthService.authHeaders,
+      );
       if (res.statusCode == 200) {
         return jsonDecode(res.body);
       }
@@ -24,7 +26,7 @@ class EmployeeService {
     try {
       final res = await http.post(
         Uri.parse("$baseUrl/add_employee"),
-        headers: {"Content-Type": "application/json"},
+        headers: AuthService.authHeaders,
         body: jsonEncode(data),
       );
       return res.statusCode == 201;
@@ -38,7 +40,7 @@ class EmployeeService {
     try {
       final res = await http.put(
         Uri.parse("$baseUrl/update_employee/$id"),
-        headers: {"Content-Type": "application/json"},
+        headers: AuthService.authHeaders,
         body: jsonEncode(data),
       );
       return res.statusCode == 200;
@@ -50,7 +52,9 @@ class EmployeeService {
   // 🔹 DELETE
   Future<bool> deleteEmployee(int id) async {
     try {
-      final res = await http.delete(Uri.parse("$baseUrl/delete_employee/$id"));
+      final res = await http.delete(Uri.parse("$baseUrl/delete_employee/$id"),
+      headers: AuthService.authHeaders,
+      );
       return res.statusCode == 200;
     } catch (e) {
       return false;

@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
+import 'auth_service.dart';
 class ProductionService {
   // Base URL (Apne backend IP ke mutabiq change karein)
   static const String baseUrl = "http://localhost:8000/api/productions";
@@ -8,7 +8,9 @@ class ProductionService {
   // 1. Fetch All
   Future<List<dynamic>> fetchProductions() async {
     try {
-      final response = await http.get(Uri.parse("$baseUrl/all_production"));
+      final response = await http.get(Uri.parse("$baseUrl/all_production"),
+      headers: AuthService.authHeaders,
+      );
       if (response.statusCode == 200) {
         return jsonDecode(response.body);
       }
@@ -23,7 +25,7 @@ class ProductionService {
     try {
       final response = await http.post(
         Uri.parse("$baseUrl/add_production"),
-        headers: {"Content-Type": "application/json", "Accept": "application/json"},
+       headers: AuthService.authHeaders,
         body: jsonEncode(data),
       );
       return response.statusCode == 201;
@@ -37,7 +39,7 @@ class ProductionService {
     try {
       final response = await http.put(
         Uri.parse("$baseUrl/update_production/$id"),
-        headers: {"Content-Type": "application/json", "Accept": "application/json"},
+       headers: AuthService.authHeaders,
         body: jsonEncode(data),
       );
       return response.statusCode == 200;
@@ -49,7 +51,9 @@ class ProductionService {
   // 4. Delete Production
   Future<bool> deleteProduction(int id) async {
     try {
-      final response = await http.delete(Uri.parse("$baseUrl/delete_production/$id"));
+      final response = await http.delete(Uri.parse("$baseUrl/delete_production/$id"),
+      headers: AuthService.authHeaders,
+      );
       return response.statusCode == 200;
     } catch (e) {
       return false;

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
+import 'auth_service.dart';
 
 class Machine {
   final String id;
@@ -44,7 +45,9 @@ class MachinesService {
   // 🔹 1. FETCH ALL (Laravel: machines/all)
   Future<MachinesData> fetchMachines() async {
     try {
-      final response = await http.get(Uri.parse("$baseUrl/all"));
+      final response = await http.get(Uri.parse("$baseUrl/all"),
+       headers: AuthService.authHeaders,
+      );
       if (response.statusCode == 200) {
         final Map<String, dynamic> body = jsonDecode(response.body);
         final List<dynamic> data = body['data']; // Laravel Controller 'data' key bhej raha hai
@@ -61,8 +64,7 @@ class MachinesService {
     try {
       final response = await http.post(
         Uri.parse("$baseUrl/add_machine"),
-        headers: {"Content-Type": "application/json",
-        "Accept": "application/json",},
+        headers: AuthService.authHeaders,
         body: jsonEncode({
           "machine_id": machineId,
           "machine_type": type,
@@ -81,7 +83,7 @@ class MachinesService {
     try {
       final response = await http.put(
         Uri.parse("$baseUrl/update_machine/$id"),
-        headers: {"Content-Type": "application/json"},
+        headers: AuthService.authHeaders,
         body: jsonEncode({
           "machine_id": machineId,
           "machine_type": type,
@@ -98,7 +100,9 @@ class MachinesService {
   // 🔹 4. DELETE (Laravel: machines/delete_machine/{id})
   Future<bool> deleteMachine(String id) async {
     try {
-      final response = await http.delete(Uri.parse("$baseUrl/delete_machine/$id"));
+      final response = await http.delete(Uri.parse("$baseUrl/delete_machine/$id"),
+       headers: AuthService.authHeaders,
+      );
       return response.statusCode == 200;
     } catch (e) {
       debugPrint("Delete Error: $e");

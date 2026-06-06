@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
+import 'auth_service.dart';
 class UserData {
   final int? id; // Backend se integer ID aati hai
   final String name, email, phone, cnic, address, role, details, pic;
@@ -57,7 +57,9 @@ class ManageUsersService {
   // ✅ Get All Users
   Future<List<UserData>> fetchUsers() async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/all'));
+      final response = await http.get(Uri.parse('$baseUrl/all'),
+       headers: AuthService.authHeaders,
+      );
       if (response.statusCode == 200) {
         final List data = jsonDecode(response.body)['data'];
         return data.map((json) => UserData.fromJson(json)).toList();
@@ -76,7 +78,7 @@ class ManageUsersService {
 
       final response = await http.post(
         Uri.parse('$baseUrl/add'),
-        headers: {"Content-Type": "application/json", "Accept": "application/json"},
+       headers: AuthService.authHeaders,
         body: jsonEncode(data),
       );
       return response.statusCode == 201;
@@ -90,7 +92,7 @@ class ManageUsersService {
     try {
       final response = await http.put(
         Uri.parse('$baseUrl/update/$id'),
-        headers: {"Content-Type": "application/json", "Accept": "application/json"},
+       headers: AuthService.authHeaders,
         body: jsonEncode(data),
       );
       return response.statusCode == 200;
@@ -102,7 +104,9 @@ class ManageUsersService {
   // ✅ Delete User
   Future<bool> deleteUser(int id) async {
     try {
-      final response = await http.delete(Uri.parse('$baseUrl/delete/$id'));
+      final response = await http.delete(Uri.parse('$baseUrl/delete/$id'),
+       headers: AuthService.authHeaders,
+      );
       return response.statusCode == 200;
     } catch (e) {
       return false;

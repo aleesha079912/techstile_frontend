@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:techstile_frontend/core/services/machine_details_service.dart';
-
+import '../../../../../widgets/drawer.dart';
 class MachineDetailsScreen extends StatefulWidget {
 
   final String machineId;
@@ -35,7 +35,7 @@ class _MachineDetailsScreenState
   Widget build(BuildContext context) {
 
     return Scaffold(
-
+drawer: const OwnerDrawer(),
       appBar: AppBar(
         title: const Text(
           "Machine Details",
