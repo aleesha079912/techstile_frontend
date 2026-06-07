@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
+import 'auth_service.dart';
 class MachineAssignmentService {
   // 127.0.0.1 browser ke liye theek hai, Emulator ke liye 10.0.2.2 use karein
   static const String baseUrl = "http://localhost:8000/api";
@@ -8,10 +8,15 @@ class MachineAssignmentService {
   Future<Map<String, List<dynamic>>> getAssignmentFormData() async {
     try {
       final responses = await Future.wait([
-        http.get(Uri.parse("$baseUrl/factories/allfactories")),
-        http.get(Uri.parse("$baseUrl/users/all")),
-        http.get(Uri.parse("$baseUrl/employees/all_employee")),
-        http.get(Uri.parse("$baseUrl/machines/all")),
+        http.get(Uri.parse("$baseUrl/factories/allfactories"),
+        headers: AuthService.authHeaders,),
+        http.get(Uri.parse("$baseUrl/users/all"),
+        headers: AuthService.authHeaders,),
+        http.get(Uri.parse("$baseUrl/employees/all_employee"),
+        headers: AuthService.authHeaders,),
+        http.get(Uri.parse("$baseUrl/machines/all"),
+        headers: AuthService.authHeaders,),
+        
       ]);
 
       return {
@@ -47,7 +52,7 @@ class MachineAssignmentService {
     try {
       final response = await http.post(
         Uri.parse("$baseUrl/productions/add_production"), // Corrected Store Route
-        headers: {"Content-Type": "application/json"},
+       headers: AuthService.authHeaders,
         body: jsonEncode(data),
       );
       return response.statusCode == 201 || response.statusCode == 200;

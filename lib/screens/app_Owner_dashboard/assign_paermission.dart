@@ -198,23 +198,43 @@ class _AssignPermissionsScreenState extends State<AssignPermissionsScreen> {
                   ),
                 ),
                 onPressed: () async {
-                  if (selectedRoleId != null) {
-                    bool success =
-                        await _service.syncPermissions(
-                      selectedRoleId!,
-                      selectedPerms,
-                    );
 
-                    if (success) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          backgroundColor: AppTheme.tertiary,
-                          content: const Text(
-                            "Permissions Updated Successfully!",
-                          ),
+  // Role select nahi hua
+                  if (selectedRoleId == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Please select a role."),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                    return;
+                  }
+
+                  // Koi permission select nahi hui
+                  if (selectedPerms.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("Please select at least one permission."),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                    return;
+                  }
+
+                  bool success = await _service.syncPermissions(
+                    selectedRoleId!,
+                    selectedPerms,
+                  );
+
+                  if (success) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        backgroundColor: AppTheme.tertiary,
+                        content: const Text(
+                          "Permissions Updated Successfully!",
                         ),
-                      );
-                    }
+                      ),
+                    );
                   }
                 },
               ),

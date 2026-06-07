@@ -126,7 +126,8 @@ class _MachinesScreenState extends State<MachinesScreen> {
                         Future.microtask(() {
                           Get.to(
                             () => GenerateQrCodeScreen(
-                              data: '${idCtrl.text}|${typeCtrl.text}',
+                              machineId: idCtrl.text,
+                              //  machineId: machine.id,
                             ),
                           );
                         });
