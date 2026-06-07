@@ -79,9 +79,9 @@ class AppRoutes {
     /// EMPLOYEE DASHBOARD
     GetPage(
       name: employeeDashboard,
-      page: () => const EmployeeDashboard(),
+      page: () => EmployeeDashboard(),
       transition: Transition.fadeIn,
-    ),
+),
 
     GetPage(
       name: addFactory,
