@@ -113,3 +113,45 @@ class ManageUsersService {
     }
   }
 }
+
+Future<List<dynamic>> getFactories() async {
+  final response = await http.get(
+    Uri.parse("http://localhost:8000/api/factories/allfactories"),
+    headers: AuthService.authHeaders,
+  );
+
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body)['data'];
+  }
+  return [];
+}
+
+Future<List<dynamic>> getFactoryMachines(int factoryId) async {
+  final response = await http.get(
+    Uri.parse("http://localhost:8000/api/machines/details/$factoryId"),
+    headers: AuthService.authHeaders,
+  );
+
+  if (response.statusCode == 200) {
+    return jsonDecode(response.body)['data']['machines'];
+  }
+  return [];
+}
+
+Future<bool> assignFactoryAndMachines(
+    int userId,
+    int factoryId,
+    List<int> machineIds,
+) async {
+  final response = await http.post(
+    Uri.parse("http://localhost:8000/api/assign/factory-machines"),
+    headers: AuthService.authHeaders,
+    body: jsonEncode({
+      "user_id": userId,
+      "factory_id": factoryId,
+      "machine_ids": machineIds,
+    }),
+  );
+
+  return response.statusCode == 200;
+}
