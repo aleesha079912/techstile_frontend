@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:techstile_frontend/screens/employee_dashboard/machine_detail_screen.dart';
 
 import 'package:techstile_frontend/screens/splash.dart';
 import 'package:techstile_frontend/screens/login.dart';
@@ -16,10 +17,11 @@ import 'package:techstile_frontend/screens/factory_owner_dash/payments.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/user/manage_users.dart';
 
 import 'package:techstile_frontend/screens/manager_dashboard.dart';
-import 'package:techstile_frontend/screens/employee/employee_dashboard.dart';
+import 'package:techstile_frontend/screens/employee_dashboard/employee_dashboard.dart';
 
 import 'package:techstile_frontend/core/services/factory_service.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/generate_qrcode.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/scan_code.dart';
 
 class AppRoutes {
   static const splash = "/";
@@ -39,6 +41,11 @@ class AppRoutes {
   static const payments = '/payments';
   static const manageusers = '/manage_users';
   static const generateQRCode = '/generate_qr_code';
+
+  //employee dashboard routes
+   static const empDashboard = '/employee-dashboard';
+ static const empmachineDetail = '/machine-detail';
+  
   static List<GetPage> routes = [
 
     GetPage(
@@ -136,5 +143,17 @@ class AppRoutes {
         );
       },
     ),
+    //employee dashboard side routes
+          GetPage(
+      name: empDashboard,
+      page: () => const EmployeeDashboard(),
+    )
+    ,
+           GetPage(
+  name: AppRoutes.empmachineDetail,
+  page: () => MachineDetailScreen(
+    machineId: Get.arguments,
+  ),
+),
   ];
 }

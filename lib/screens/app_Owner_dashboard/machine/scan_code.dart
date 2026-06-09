@@ -4,6 +4,7 @@ import 'package:techstile_frontend/core/utils/theme.dart';
 import 'machine_detail_screen.dart';
 import '../../../../../widgets/drawer.dart';
 
+
 class ScanQrCodeScreen extends StatefulWidget {
   const ScanQrCodeScreen({super.key});
 
@@ -42,8 +43,6 @@ class _ScanQrCodeScreenState extends State<ScanQrCodeScreen>
     controller.dispose();
     super.dispose();
   }
-
-  // ✅ Back jane ka ek function — sab jagah yahi use karo
   void _goBack() {
     controller.stop();
     controller.dispose();
@@ -74,7 +73,7 @@ class _ScanQrCodeScreenState extends State<ScanQrCodeScreen>
 
   @override
   Widget build(BuildContext context) {
-    // ✅ WillPopScope — Android physical back button bhi handle karo
+    // ✅ WillPopScope — Android physical back button handle 
     return WillPopScope(
       onWillPop: () async {
         controller.stop();

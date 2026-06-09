@@ -1,14 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+import '../screens/employee_dashboard/employee_dashboard.dart';
+import '../screens/employee_dashboard/scan_qr_code.dart';
+// import '../screens//history_screen.dart';
+// import '../screens/payments/payment_screen.dart';
 
 class EmployeeBottomNav extends StatelessWidget {
   final int currentIndex;
-  final Function(int) onTap;
 
   const EmployeeBottomNav({
     super.key,
     required this.currentIndex,
-    required this.onTap,
   });
+
+  void _changeTab(int index) {
+    if (index == currentIndex) return;
+
+    switch (index) {
+      case 0:
+        Get.off(() => const EmployeeDashboard());
+        break;
+
+      case 1:
+        Get.off(() => const ScanqrCodeScreen());
+        break;
+
+      case 2:
+        // Get.off(() => const HistoryScreen());
+        break;
+
+      case 3:
+        // Get.off(() => const PaymentScreen());
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +47,7 @@ class EmployeeBottomNav extends StatelessWidget {
 
     return Container(
       decoration: const BoxDecoration(
-        color: Color(0xFF0D1B4B),
+        color: Color(0xFF0D1B4B), // from your theme
       ),
       child: SafeArea(
         child: SizedBox(
@@ -36,7 +62,7 @@ class EmployeeBottomNav extends StatelessWidget {
 
               return Expanded(
                 child: InkWell(
-                  onTap: () => onTap(index),
+                  onTap: () => _changeTab(index),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

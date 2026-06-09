@@ -16,7 +16,7 @@ class AuthService {
   /// Every authenticated API call mein yahi headers use karo
   static Map<String, String> get authHeaders => {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',  // ✅ yahi missing tha
+        'Authorization': 'Bearer $token',  // Token ko header mein bhejo
       };
 
   // ── LOGIN ──────────────────────────────────────────────────────────────────
@@ -28,7 +28,8 @@ class AuthService {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/login'),
-        headers: {'Content-Type': 'application/json'},
+        headers: {'Content-Type': 'application/json'
+        },
         body: jsonEncode({'email': email, 'password': password}),
       );
 
