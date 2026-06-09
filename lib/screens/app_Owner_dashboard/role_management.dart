@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:techstile_frontend/core/services/role_service.dart';
 import 'package:techstile_frontend/widgets/drawer.dart';
-<<<<<<< HEAD
-=======
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
->>>>>>> d0413feb4e2f304aa24838e8965f6e4ff3982073
 
 class RoleManagementScreen extends StatefulWidget {
   @override
