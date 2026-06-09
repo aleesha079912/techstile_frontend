@@ -1,26 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:techstile_frontend/core/services/manage_users_service.dart';
 import '../../../../core/utils/theme.dart';
-import '../../../../widgets/drawer.dart';
-import '../../../../core/services/role_service.dart';
 
-class AssignFactoryScreen extends StatefulWidget {
-  final int managerId;
+class AssignFactoryPopup extends StatefulWidget {
+  final int userId;
 
-  const AssignFactoryScreen({
-    super.key,
-    required this.managerId,
-  });
+  const AssignFactoryPopup({super.key, required this.userId});
 
   @override
-  State<AssignFactoryScreen> createState() => _AssignFactoryScreenState();
+  State<AssignFactoryPopup> createState() => _AssignFactoryPopupState();
 }
 
-class _AssignFactoryScreenState extends State<AssignFactoryScreen> {
-  final RoleService _service = RoleService();
-
+class _AssignFactoryPopupState extends State<AssignFactoryPopup> {
+  final _service = ManageUsersService.instance;
   List<dynamic> factories = [];
   int? selectedFactoryId;
   bool isLoading = true;
+  bool saving = false;
 
   @override
   void initState() {
@@ -29,168 +25,157 @@ class _AssignFactoryScreenState extends State<AssignFactoryScreen> {
   }
 
   Future<void> _loadFactories() async {
-    // TODO: replace with your real API
-    var data = await _service.getRoles(); // temporary (replace later)
-
+    // Use the service method that returns all factories. The ManageUsersService
+    // defines getFactories().
+    final data = await _service.getFactories();
     setState(() {
       factories = data;
       isLoading = false;
     });
   }
 
-  Future<void> _assignFactory() async {
+  Future<void> _assign() async {
     if (selectedFactoryId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Please select a factory"),
-          backgroundColor: Colors.red,
-        ),
+        const SnackBar(content: Text("Please select a factory"),
+            backgroundColor: Colors.red),
       );
       return;
     }
 
-    // TODO: API call later
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          "Factory Assigned to Manager ID: ${widget.managerId}",
-        ),
-        backgroundColor: Colors.green,
-      ),
+    setState(() => saving = true);
+
+    bool success = await _service.assignFactoryToUser(
+      userId: widget.userId,
+      factoryId: selectedFactoryId!,
     );
+
+    setState(() => saving = false);
+
+    if (success && mounted) {
+      Navigator.pop(context, true);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Factory Assigned Successfully"),
+            backgroundColor: Colors.green),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer: const OwnerDrawer(),
-      backgroundColor: const Color(0xffF5F7FB),
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // ── Title
+            const Text("Assign Factory",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 4),
+            const Text("Select a factory to assign to this manager",
+                style: TextStyle(color: Colors.grey, fontSize: 13)),
+            const SizedBox(height: 16),
 
-      appBar: AppBar(
-        title: const Text("Assign Factory"),
-        backgroundColor: AppTheme.primary,
-      ),
+            // ── Factory list
+            isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : factories.isEmpty
+                    ? const Text("No factories found",
+                        style: TextStyle(color: Colors.grey))
+                    : SizedBox(
+                        height: 260,
+                        child: ListView.builder(
+                          itemCount: factories.length,
+                          itemBuilder: (context, index) {
+                            final factory = factories[index];
+                            final isSelected =
+                                selectedFactoryId == factory['id'];
 
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Select Factory for Manager",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.primary,
-                    ),
-                  ),
-
-                  const SizedBox(height: 15),
-
-                  /// FACTORY LIST
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: factories.length,
-                      itemBuilder: (context, index) {
-                        final factory = factories[index];
-
-                        final isSelected =
-                            selectedFactoryId == factory['id'];
-
-                        return GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedFactoryId = factory['id'];
-                            });
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.only(bottom: 12),
-                            padding: const EdgeInsets.all(14),
-                            decoration: BoxDecoration(
-                              color: isSelected
-                                  ? AppTheme.primary.withOpacity(0.1)
-                                  : Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color: isSelected
-                                    ? AppTheme.primary
-                                    : Colors.grey.shade200,
-                              ),
-                            ),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Icons.factory,
-                                  color: AppTheme.primary,
+                            return GestureDetector(
+                              onTap: () => setState(
+                                  () => selectedFactoryId = factory['id']),
+                              child: Container(
+                                margin: const EdgeInsets.only(bottom: 8),
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? AppTheme.primary.withOpacity(0.08)
+                                      : Colors.grey.shade50,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: isSelected
+                                        ? AppTheme.primary
+                                        : Colors.grey.shade200,
+                                    width: isSelected ? 2 : 1,
+                                  ),
                                 ),
-                                const SizedBox(width: 10),
-
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.factory,
+                                        color: isSelected
+                                            ? AppTheme.primary
+                                            : Colors.grey),
+                                    const SizedBox(width: 10),
+                                    Expanded(
+                                      child: Text(
                                         factory['name'] ?? "Factory",
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        "Tap to assign",
                                         style: TextStyle(
-                                          color: Colors.grey.shade600,
-                                          fontSize: 12,
+                                          fontWeight: isSelected
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                          color: isSelected
+                                              ? AppTheme.primary
+                                              : Colors.black,
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                    if (isSelected)
+                                      const Icon(Icons.check_circle,
+                                          color: Colors.green, size: 20),
+                                  ],
                                 ),
-
-                                if (isSelected)
-                                  const Icon(
-                                    Icons.check_circle,
-                                    color: Colors.green,
-                                  ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  /// ASSIGN BUTTON
-                  SizedBox(
-                    width: double.infinity,
-                    height: 50,
-                    child: ElevatedButton(
-                      onPressed: _assignFactory,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                              ),
+                            );
+                          },
                         ),
                       ),
-                      child: const Text(
-                        "Assign Factory",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
+
+            const SizedBox(height: 12),
+
+            // ── Assign button
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Cancel"),
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primary,
+                      foregroundColor: Colors.white,
+                    ),
+                    onPressed: saving ? null : _assign,
+                    child: saving
+                        ? const SizedBox(
+                            height: 18,
+                            width: 18,
+                            child: CircularProgressIndicator(
+                                color: Colors.white, strokeWidth: 2))
+                        : const Text("Assign"),
+                  ),
+                ),
+              ],
             ),
+          ],
+        ),
+      ),
     );
   }
 }

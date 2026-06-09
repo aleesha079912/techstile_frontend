@@ -1,77 +1,96 @@
 import 'package:flutter/material.dart';
-import '../../../../core/services/manage_users_service.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/assign_factory.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/assign_machine.dart';
 import '../../../../core/utils/theme.dart';
 
 class UserProfileScreen extends StatefulWidget {
   final int userId;
+  final String name;
+  final String email;
+  final String phone;
+  final String cnic;
+  final String address;
+  final String role;
 
-  const UserProfileScreen({super.key, required this.userId});
+  const UserProfileScreen({
+    super.key,
+    required this.userId,
+    required this.name,
+    required this.email,
+    required this.phone,
+    required this.cnic,
+    required this.address,
+    required this.role,
+  });
 
   @override
   State<UserProfileScreen> createState() => _UserProfileScreenState();
 }
 
 class _UserProfileScreenState extends State<UserProfileScreen> {
-  final _service = ManageUsersService.instance;
 
-  UserData? user;
-  bool loading = true;
+  late String normalizedRole;
 
   @override
   void initState() {
     super.initState();
-    _loadUser();
+
+    // 🔥 Normalize role safely
+    normalizedRole = widget.role.trim().toLowerCase();
+
+    debugPrint("========= USER PROFILE DEBUG =========");
+    debugPrint("User ID: ${widget.userId}");
+    debugPrint("Raw Role: '${widget.role}'");
+    debugPrint("Normalized Role: '$normalizedRole'");
+    debugPrint("======================================");
   }
 
-  Future<void> _loadUser() async {
-    final users = await _service.fetchUsers();
-
-    user = users.firstWhere((e) => e.id == widget.userId);
-
-    setState(() => loading = false);
-  }
+  bool get isManager => normalizedRole.contains('manager');
+  bool get isWorker =>
+      normalizedRole.contains('worker') ||
+      normalizedRole.contains('employee');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xffF4F6FA),
-
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
-        title: const Text("Profile Details"),
+        title: const Text("User Profile"),
       ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _header(),
+            _infoCard(),
+            const SizedBox(height: 10),
 
-      body: loading
-    ? const Center(child: CircularProgressIndicator())
-    : SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              _topHeader(),
-              _infoCard(),
+            // ✅ ROLE BASED SECTION
+            if (isManager)
+              _managerAssignSection()
+            else if (isWorker)
+              _workerAssignSection()
+            else
+              _noRoleSection(),
 
-              if (user!.role.toLowerCase() == "manager")
-                _managerSection(),
-
-              if (user!.role.toLowerCase() == "employee")
-                _employeeSection(),
-            ],
-          ),
+            const SizedBox(height: 30),
+          ],
         ),
       ),
     );
   }
 
-  // ---------------- HEADER ----------------
-  Widget _topHeader() {
+  // ───────────── HEADER ─────────────
+
+  Widget _header() {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(30),
-          bottomRight: Radius.circular(30),
+          bottomLeft: Radius.circular(25),
+          bottomRight: Radius.circular(25),
         ),
       ),
       child: Column(
@@ -79,26 +98,20 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           CircleAvatar(
             radius: 45,
             backgroundColor: AppTheme.primary.withOpacity(0.1),
-            child: const Icon(Icons.person, size: 40, color: AppTheme.primary),
+            child: const Icon(Icons.person,
+                size: 40, color: AppTheme.primary),
           ),
-
           const SizedBox(height: 10),
-
           Text(
-            user!.name,
+            widget.name,
             style: const TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-            ),
+                fontSize: 22,
+                fontWeight: FontWeight.bold),
           ),
-
-          const SizedBox(height: 6),
-
-          _roleBadge(user!.role),
-
-          const SizedBox(height: 10),
-
-          Text(user!.email,
+          const SizedBox(height: 5),
+          _roleBadge(widget.role),
+          const SizedBox(height: 8),
+          Text(widget.email,
               style: const TextStyle(color: Colors.grey)),
         ],
       ),
@@ -106,82 +119,183 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   }
 
   Widget _roleBadge(String role) {
-    Color color;
-
-    switch (role.toLowerCase()) {
-      case "manager":
-        color = Colors.blue;
-        break;
-      case "employee":
-        color = Colors.green;
-        break;
-      default:
-        color = Colors.orange;
-    }
-
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      padding:
+          const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.15),
+        color: Colors.blue.withOpacity(0.15),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
-        role.toUpperCase(),
-        style: TextStyle(
-          color: color,
-          fontWeight: FontWeight.bold,
-          fontSize: 12,
-        ),
+        role.isEmpty ? "NO ROLE" : role.toUpperCase(),
+        style: const TextStyle(
+            color: Colors.blue,
+            fontWeight: FontWeight.bold),
       ),
     );
   }
 
-  // ---------------- INFO ----------------
+  // ───────────── INFO CARD ─────────────
+
   Widget _infoCard() {
-  return Container(
-    margin: const EdgeInsets.all(12),
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(15),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.05),
-          blurRadius: 10,
-        )
-      ],
-    ),
-    child: Column(
-      children: [
-        _tile(Icons.phone, "Phone", user!.phone),
-        _tile(Icons.credit_card, "CNIC", user!.cnic),
-        _tile(Icons.location_on, "Address", user!.address),
-        _tile(Icons.info, "Details", user!.details),
-      ],
-    ),
-  );
-}
+    return Container(
+      margin: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15)),
+      child: Column(
+        children: [
+          _tile(Icons.phone, "Phone", widget.phone),
+          _tile(Icons.credit_card, "CNIC", widget.cnic),
+          _tile(Icons.location_on, "Address", widget.address),
+        ],
+      ),
+    );
+  }
 
   Widget _tile(IconData icon, String label, String value) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding:
+          const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         children: [
-          Icon(icon, color: AppTheme.primary, size: 24),
-          const SizedBox(width: 12),
+          Icon(icon, color: AppTheme.primary),
+          const SizedBox(width: 10),
+          Text("$label: ",
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold)),
+          Expanded(
+              child: Text(value,
+                  style:
+                      const TextStyle(color: Colors.grey))),
+        ],
+      ),
+    );
+  }
+
+  // ───────────── MANAGER SECTION ─────────────
+
+  Widget _managerAssignSection() {
+    return _assignmentSection(
+      title: "Factory Assignment",
+      emptyTitle: "No Factory Assigned",
+      subtitle: "Tap below to assign a factory",
+      icon: Icons.factory,
+      buttonText: "Assign Factory",
+      buttonColor: Colors.blue,
+      onPressed: _showAssignFactoryPopup,
+    );
+  }
+
+  // ───────────── WORKER SECTION ─────────────
+
+  Widget _workerAssignSection() {
+    return _assignmentSection(
+      title: "Machine Assignment",
+      emptyTitle: "No Machines Assigned",
+      subtitle: "Tap below to assign machines",
+      icon: Icons.precision_manufacturing,
+      buttonText: "Assign Machines",
+      buttonColor: Colors.green,
+      onPressed: _showAssignMachinePopup,
+    );
+  }
+
+  // ───────────── UNKNOWN ROLE SECTION ─────────────
+
+  Widget _noRoleSection() {
+    return Container(
+      margin: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.orange.shade50,
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: const Text(
+        "This user has no valid role assigned.",
+        style: TextStyle(
+            color: Colors.orange,
+            fontWeight: FontWeight.w500),
+      ),
+    );
+  }
+
+  // ───────────── COMMON ASSIGNMENT UI ─────────────
+
+  Widget _assignmentSection({
+    required String title,
+    required String emptyTitle,
+    required String subtitle,
+    required IconData icon,
+    required String buttonText,
+    required Color buttonColor,
+    required VoidCallback onPressed,
+  }) {
+    return Container(
+      margin: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title,
+              style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold)),
+          const SizedBox(height: 10),
+          _assignmentBox(
+              title: emptyTitle,
+              subtitle: subtitle,
+              icon: icon),
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: buttonColor,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(10)),
+              ),
+              icon: const Icon(Icons.add),
+              label: Text(buttonText),
+              onPressed: onPressed,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _assignmentBox({
+    required String title,
+    required String subtitle,
+    required IconData icon,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+          color: Colors.grey.shade100,
+          borderRadius: BorderRadius.circular(12)),
+      child: Row(
+        children: [
+          Icon(icon, color: AppTheme.primary),
+          const SizedBox(width: 10),
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
               children: [
-                Text(label,
+                Text(title,
                     style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.w500)),
-                const SizedBox(height: 4),
-                Text(value,
-                    style: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.w600)),
+                        fontWeight: FontWeight.bold)),
+                Text(subtitle,
+                    style:
+                        const TextStyle(color: Colors.grey)),
               ],
             ),
           ),
@@ -190,142 +304,22 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
-  Widget _row(String a, String b) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(a,
-                style: const TextStyle(fontWeight: FontWeight.bold)),
-          ),
-          Expanded(child: Text(b)),
-        ],
-      ),
+  // ───────────── POPUPS ─────────────
+
+  void _showAssignFactoryPopup() {
+    showDialog(
+      context: context,
+      builder: (_) =>
+          AssignFactoryPopup(userId: widget.userId),
     );
   }
 
-  // ---------------- MANAGER ----------------
-  Widget _managerSection() {
-    return Container(
-      margin: const EdgeInsets.all(12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text("Factory Assignment",
-              style: TextStyle(
-                  fontSize: 16, fontWeight: FontWeight.bold)),
-
-          const SizedBox(height: 10),
-
-          const Text("No factory assigned yet"),
-
-          const SizedBox(height: 15),
-
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
-              ),
-              icon: const Icon(Icons.factory),
-              label: const Text("Assign Factory"),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => AssignFactoryScreen(userId: user!.id!),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ---------------- EMPLOYEE ----------------
-  Widget _employeeSection() {
-    return Container(
-      margin: const EdgeInsets.all(12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text("Machine Assignment",
-              style: TextStyle(
-                  fontSize: 16, fontWeight: FontWeight.bold)),
-
-          const SizedBox(height: 10),
-
-          const Text("No machines assigned yet"),
-
-          const SizedBox(height: 15),
-
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-              ),
-              icon: const Icon(Icons.precision_manufacturing),
-              label: const Text("Assign Machines"),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) =>
-                        AssignMachineScreen(userId: user!.id!),
-                  ),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// ---------------- PLACEHOLDERS ----------------
-
-class AssignFactoryScreen extends StatelessWidget {
-  final int userId;
-
-  const AssignFactoryScreen({super.key, required this.userId});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Assign Factory")),
-      body: const Center(
-        child: Text("Factory Assignment Form (Coming Soon)"),
-      ),
-    );
-  }
-}
-
-class AssignMachineScreen extends StatelessWidget {
-  final int userId;
-
-  const AssignMachineScreen({super.key, required this.userId});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Assign Machines")),
-      body: const Center(
-        child: Text("Machine Assignment Form (Coming Soon)"),
+  void _showAssignMachinePopup() {
+    showDialog(
+      context: context,
+      builder: (_) => AssignMachinePopup(
+        userId: widget.userId,
+        role: widget.role,
       ),
     );
   }

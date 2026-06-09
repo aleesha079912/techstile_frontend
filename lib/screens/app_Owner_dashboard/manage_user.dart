@@ -278,7 +278,15 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => UserProfileScreen(userId: user.id!),
+          builder: (_) => UserProfileScreen(
+            userId: user.id!,
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            cnic: user.cnic,
+            address: user.address,
+            role: user.role,
+          ),
         ),
       );
     },
