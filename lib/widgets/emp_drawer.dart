@@ -52,6 +52,8 @@ class EmployeeDrawer extends StatelessWidget {
                   () => Get.off(() => const EmployeeDashboard()),
                 ),
 
+                
+
                 _item(
                   context,
                   Icons.qr_code_scanner,
