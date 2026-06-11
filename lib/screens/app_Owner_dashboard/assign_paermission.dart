@@ -16,8 +16,12 @@ class _AssignPermissionsScreenState extends State<AssignPermissionsScreen> {
 
   List<dynamic> roles = [];
   List<dynamic> allPermissions = [];
+  List<dynamic> filteredPermissions = [];
+
   List<int> selectedPerms = [];
   int? selectedRoleId;
+
+  final TextEditingController searchCtrl = TextEditingController();
 
   @override
   void initState() {
@@ -32,6 +36,16 @@ class _AssignPermissionsScreenState extends State<AssignPermissionsScreen> {
     setState(() {
       roles = r;
       allPermissions = p;
+      filteredPermissions = p;
+    });
+  }
+
+  void _search(String value) {
+    setState(() {
+      filteredPermissions = allPermissions
+          .where((p) =>
+              p['name'].toLowerCase().contains(value.toLowerCase()))
+          .toList();
     });
   }
 
@@ -50,145 +64,149 @@ class _AssignPermissionsScreenState extends State<AssignPermissionsScreen> {
     }
   }
 
+  void _togglePermission(int id) {
+    setState(() {
+      if (selectedPerms.contains(id)) {
+        selectedPerms.remove(id);
+      } else {
+        selectedPerms.add(id);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: OwnerDrawer(),
-      backgroundColor: AppTheme.secondary,
+      backgroundColor: const Color(0xffF5F7FB),
 
       appBar: AppBar(
-        title: const Text(
-          "Assign Permissions",
-          style: TextStyle(fontWeight: FontWeight.bold),
+        backgroundColor: AppTheme.primary,
+        title: const Text("Assign Permissions"),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => Navigator.pop(context),
         ),
-        centerTitle: true,
       ),
 
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-
-            /// ROLE DROPDOWN
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(12),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppTheme.primary.withOpacity(0.08),
-                    blurRadius: 8,
-                    offset: const Offset(0, 3),
-                  ),
-                ],
+      body: Column(
+        children: [
+          /// HEADER CARD
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
               ),
-              child: DropdownButtonFormField<int>(
-                value: selectedRoleId,
-                decoration: InputDecoration(
-                  labelText: "Select Role",
-                  labelStyle: const TextStyle(
-                    color: AppTheme.primary,
+            ),
+            child: Column(
+              children: [
+                /// ROLE DROPDOWN
+                DropdownButtonFormField<int>(
+                  value: selectedRoleId,
+                  decoration: InputDecoration(
+                    labelText: "Select Role",
+                    prefixIcon: const Icon(Icons.admin_panel_settings),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                  prefixIcon: const Icon(
-                    Icons.admin_panel_settings,
-                    color: AppTheme.primary,
+                  items: roles.map((role) {
+                    return DropdownMenuItem<int>(
+                      value: role['id'],
+                      child: Text(role['name'].toString()),
+                    );
+                  }).toList(),
+                  onChanged: _onRoleChanged,
+                ),
+
+                const SizedBox(height: 10),
+
+                /// SEARCH BOX
+                TextField(
+                  controller: searchCtrl,
+                  onChanged: _search,
+                  decoration: InputDecoration(
+                    hintText: "Search permissions...",
+                    prefixIcon: const Icon(Icons.search),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                  border: OutlineInputBorder(
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 10),
+
+          /// PERMISSIONS LIST (FIXED SCROLL ISSUE)
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.all(12),
+              itemCount: filteredPermissions.length,
+              itemBuilder: (context, index) {
+                var perm = filteredPermissions[index];
+
+                final isSelected =
+                    selectedPerms.contains(perm['id']);
+
+                return Card(
+                  elevation: 2,
+                  margin: const EdgeInsets.only(bottom: 10),
+                  shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
-                ),
-                items: roles.map((role) {
-                  return DropdownMenuItem<int>(
-                    value: role['id'],
-                    child: Text(
-                      role['name'].toString().toUpperCase(),
+                  child: ListTile(
+                    onTap: () => _togglePermission(perm['id']),
+                    leading: Icon(
+                      isSelected
+                          ? Icons.check_circle
+                          : Icons.circle_outlined,
+                      color: isSelected
+                          ? Colors.green
+                          : Colors.grey,
                     ),
-                  );
-                }).toList(),
-                onChanged: _onRoleChanged,
-              ),
-            ),
-
-            const SizedBox(height: 20),
-
-            /// PERMISSION TITLE
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                "Permissions",
-                style: TextStyle(
-                  color: AppTheme.primary,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 10),
-
-            /// PERMISSIONS LIST
-            Expanded(
-              child: allPermissions.isEmpty
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(15),
-                        boxShadow: [
-                          BoxShadow(
-                            color:
-                                AppTheme.primary.withOpacity(0.08),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
+                    title: Text(
+                      perm['name'],
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w600,
                       ),
-                      child: ListView.builder(
-                        itemCount: allPermissions.length,
-                        itemBuilder: (context, index) {
-                          var perm = allPermissions[index];
-
-                          return CheckboxListTile(
-                            activeColor: AppTheme.tertiary,
-                            title: Text(
-                              perm['name'],
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                              ),
+                    ),
+                    trailing: isSelected
+                        ? Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.green.withOpacity(0.15),
+                              borderRadius: BorderRadius.circular(20),
                             ),
-                            value:
-                                selectedPerms.contains(perm['id']),
-                            onChanged: (bool? checked) {
-                              setState(() {
-                                if (checked == true) {
-                                  selectedPerms.add(perm['id']);
-                                } else {
-                                  selectedPerms.remove(perm['id']);
-                                }
-                              });
-                            },
-                          );
-                        },
-                      ),
-                    ),
+                            child: const Text(
+                              "Selected",
+                              style: TextStyle(
+                                  color: Colors.green,
+                                  fontSize: 12),
+                            ),
+                          )
+                        : null,
+                  ),
+                );
+              },
             ),
+          ),
 
-            const SizedBox(height: 20),
-
-            /// SAVE BUTTON
-            SizedBox(
+          /// SAVE BUTTON
+          SizedBox(
               width: double.infinity,
               height: 55,
               child: ElevatedButton.icon(
                 icon: const Icon(Icons.save),
                 label: const Text(
                   "Save Permissions",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.primary,
@@ -198,23 +216,20 @@ class _AssignPermissionsScreenState extends State<AssignPermissionsScreen> {
                   ),
                 ),
                 onPressed: () async {
-
-  // Role select nahi hua
                   if (selectedRoleId == null) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text("Please select a role."),
+                        content: Text("Select a role"),
                         backgroundColor: Colors.red,
                       ),
                     );
                     return;
                   }
 
-                  // Koi permission select nahi hui
                   if (selectedPerms.isEmpty) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text("Please select at least one permission."),
+                        content: Text("Select permissions"),
                         backgroundColor: Colors.red,
                       ),
                     );
@@ -228,19 +243,16 @@ class _AssignPermissionsScreenState extends State<AssignPermissionsScreen> {
 
                   if (success) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        backgroundColor: AppTheme.tertiary,
-                        content: const Text(
-                          "Permissions Updated Successfully!",
-                        ),
+                      const SnackBar(
+                        content: Text("Updated Successfully"),
+                        backgroundColor: Colors.green,
                       ),
                     );
                   }
                 },
               ),
             ),
-          ],
-        ),
+        ],
       ),
     );
   }

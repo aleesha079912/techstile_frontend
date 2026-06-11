@@ -223,10 +223,7 @@ packages:
       sha256: "1741988757a65eb6b36abe716829688cf01910bbf91c34354ff7ec1c3de2b349"
       url: "https://pub.dev"
     source: hosted
-<<<<<<< HEAD
     version: "1.18.0"
-=======
-    version: "1.16.0"
   mime:
     dependency: transitive
     description:
@@ -243,7 +240,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.2.0"
->>>>>>> 57f7569c66f0937288ae0fb15d80237544768218
   path:
     dependency: transitive
     description:

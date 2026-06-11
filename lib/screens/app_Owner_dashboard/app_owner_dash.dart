@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/core/services/factory_service.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/add_factories.dart';
-import 'package:techstile_frontend/screens/app_Owner_dashboard/calculator_screen.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/manage_user.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/notification_screen.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/setting_screen.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/owner_dashboard.dart';
@@ -24,7 +24,7 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
   //  Navigation Target List
   final List<Widget> _pages = const [
     _HomeTab(),
-    CalculatorScreen(),
+    ManageUsersScreen(),
     NotificationScreen(),
     SettingsScreen(),
   ];
@@ -120,8 +120,8 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: "Home"),
         BottomNavigationBarItem(
-          icon: Icon(Icons.calculate_outlined),
-          label: "Calculator",
+          icon: Icon(Icons.people_outline),
+          label: "Users",
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.notifications_outlined),
