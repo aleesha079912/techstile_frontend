@@ -21,7 +21,6 @@ import 'package:techstile_frontend/screens/employee_dashboard/employee_dashboard
 
 import 'package:techstile_frontend/core/services/factory_service.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/generate_qrcode.dart';
-import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/scan_code.dart';
 
 class AppRoutes {
   static const splash = "/";
