@@ -62,92 +62,92 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
               children: [
                 /// TOP CARD
                Container(
-  margin: const EdgeInsets.all(16),
-  padding: const EdgeInsets.all(24),
-  decoration: BoxDecoration(
-    gradient: const LinearGradient(
-      colors: [
-        AppTheme.primary,
-        AppTheme.primary,
-      ],
-    ),
-    borderRadius: BorderRadius.circular(24),
-  ),
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const Text(
-        "Production Overview",
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 22,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-
-      const SizedBox(height: 20),
-
-      Wrap(
-        spacing: 10,
-        runSpacing: 10,
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 14,
-              vertical: 10,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(.15),
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.precision_manufacturing,
-                  color: Colors.white,
-                  size: 18,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  "$totalMachines Machines",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
+                margin: const EdgeInsets.all(16),
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [
+                      AppTheme.primary,
+                      AppTheme.primary,
+                    ],
                   ),
+                  borderRadius: BorderRadius.circular(24),
                 ),
-              ],
-            ),
-          ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Production Overview",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
 
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 14,
-              vertical: 10,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(.15),
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.straighten,
-                  color: Colors.white,
-                  size: 18,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  "${totalProduction.toStringAsFixed(0)} Assigned",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
+                    const SizedBox(height: 20),
+
+                    Wrap(
+                      spacing: 10,
+                      runSpacing: 10,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 10,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(.15),
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.precision_manufacturing,
+                                color: Colors.white,
+                                size: 18,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                "$totalMachines Machines",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 10,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(.15),
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.straighten,
+                                color: Colors.white,
+                                size: 18,
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                "${totalProduction.toStringAsFixed(0)} Assigned",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
 
           Container(
             padding: const EdgeInsets.symmetric(
@@ -196,7 +196,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                         ),
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: AppTheme.secondary,
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
@@ -340,17 +340,17 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
   }) {
     return Column(
       children: [
-        Icon(icon, color: Colors.white),
+        Icon(icon, color: AppTheme.secondary),
         const SizedBox(height: 5),
         Text(
           value,
           style: const TextStyle(
-            color: Colors.white,
+            color: AppTheme.secondary,
             fontSize: 12,
             fontWeight: FontWeight.bold,
           ),
         ),
-        Text(label, style: const TextStyle(color: Colors.white70)),
+        Text(label, style: const TextStyle(color: AppTheme.secondary)),
       ],
     );
   }
