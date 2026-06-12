@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/employee_dashboard.dart';
-
+import 'package:techstile_frontend/screens/employee_dashboard/profile.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/scan_code.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/scan_qr_code.dart';
 // import 'package:techstile_frontend/screens/employee/history_screen.dart';
@@ -20,7 +20,7 @@ class EmployeeDrawer extends StatelessWidget {
         children: [
           // HEADER
           Container(
-            height: 90,
+            height: 80,
             width: double.infinity,
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -62,8 +62,8 @@ class EmployeeDrawer extends StatelessWidget {
                 _item(
                   context,
                   Icons.history,
-                  "History",
-                  () => Get.off(() => const ScanQrCodeScreen()),
+                  "Profile",
+                  () => Get.off(() => const UserProfileScreen()),
                 ),
 
                 _item(

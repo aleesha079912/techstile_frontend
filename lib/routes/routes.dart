@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
+import 'package:techstile_frontend/screens/employee_dashboard/employee_enter_production.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/machine_detail_screen.dart';
+import 'package:techstile_frontend/screens/employee_dashboard/profile.dart';
 
 import 'package:techstile_frontend/screens/splash.dart';
 import 'package:techstile_frontend/screens/login.dart';
@@ -45,7 +47,8 @@ class AppRoutes {
   //employee dashboard routes
    static const empDashboard = '/employee-dashboard';
  static const empmachineDetail = '/machine-detail';
-  
+ static const enterProduction = '/enter-production';
+  static const profile = '/profile';
   static List<GetPage> routes = [
 
     GetPage(
@@ -155,5 +158,15 @@ class AppRoutes {
     machineId: Get.arguments,
   ),
 ),
+  GetPage(
+    name: AppRoutes.enterProduction,
+    page: () => EnterProductionScreen(
+      machineId: Get.arguments,
+    ),
+  ),
+  GetPage(
+    name: AppRoutes.profile,
+    page: () => const UserProfileScreen(),
+  ),
   ];
 }
