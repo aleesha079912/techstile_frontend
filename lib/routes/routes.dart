@@ -9,21 +9,19 @@ import 'package:techstile_frontend/screens/signup.dart';
 
 import 'package:techstile_frontend/screens/app_Owner_dashboard/app_owner_dash.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/add_factories.dart';
-import 'package:techstile_frontend/screens/app_Owner_dashboard/calculator_screen.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/manage_user.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/notification_screen.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/setting_screen.dart';
 
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/machines.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/payments.dart';
 // import 'package:techstile_frontend/screens/factory_owner_dash/user/users.dart';
-import 'package:techstile_frontend/screens/app_Owner_dashboard/user/manage_users.dart';
 
 import 'package:techstile_frontend/screens/manager_dashboard.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/employee_dashboard.dart';
 
 import 'package:techstile_frontend/core/services/factory_service.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/generate_qrcode.dart';
-import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/scan_code.dart';
 
 class AppRoutes {
   static const splash = "/";
@@ -99,11 +97,6 @@ class AppRoutes {
       transition: Transition.rightToLeftWithFade,
     ),
 
-    GetPage(
-      name: calculator,
-      page: () => const CalculatorScreen(),
-      transition: Transition.rightToLeftWithFade,
-    ),
 
     GetPage(
       name: notifications,

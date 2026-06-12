@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../models/factory_model.dart';
@@ -19,7 +20,9 @@ class FactoryController extends GetxController {
   Future<void> fetchFactories() async {
   final token = AuthService.token; // ya jaise bhi token lo
   print("🔑 Token: $token");       // ← token print karo
+  final box = GetStorage();
 
+  print("Token: box.read('token') = ${box.read('token')}"); // ← GetStorage se bhi check karo
   final response = await http.get(
     Uri.parse('$baseUrl/allfactories'),
     headers: AuthService.authHeaders,
