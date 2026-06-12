@@ -151,12 +151,18 @@ class AppRoutes {
     machineId: Get.arguments,
   ),
 ),
-  GetPage(
-    name: AppRoutes.enterProduction,
-    page: () => EnterProductionScreen(
-      machineId: Get.arguments,
-    ),
-  ),
+ GetPage(
+  name: AppRoutes.enterProduction,
+  page: () {
+    final args = Get.arguments;
+    // ✅ Map se machineId nikalo
+    final machineId = args is Map 
+        ? args['machineId']?.toString() ?? ''
+        : args?.toString() ?? '';
+    
+    return EnterProductionScreen(machineId: machineId);
+  },
+),
   GetPage(
     name: AppRoutes.profile,
     page: () => const UserProfileScreen(),

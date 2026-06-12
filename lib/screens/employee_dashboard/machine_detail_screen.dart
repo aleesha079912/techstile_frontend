@@ -152,6 +152,10 @@ class _MachineDetailScreenState
             color: Colors.white,
           ),
         ),
+         leading: IconButton(
+    icon: const Icon(Icons.arrow_back, color: Colors.white),
+    onPressed: () => Get.back(), // scan page pe wapas
+  ),
       ),
 
       body: loading
@@ -274,7 +278,12 @@ class _MachineDetailScreenState
                       onPressed: () {
                         Get.toNamed(
                           AppRoutes.enterProduction,
-                          arguments: widget.machineId,
+                          arguments: {
+      'machineId': widget.machineId,
+      'varietyType': machine?['variety_type'] ?? '',    // pass variety type
+      'totalLength': machine?['total_length']?.toString() ?? '', // pass totall length
+    },
+
                         );
                       },
                       icon: const Icon(Icons.add),
