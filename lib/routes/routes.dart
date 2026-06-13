@@ -13,7 +13,7 @@ import 'package:techstile_frontend/screens/app_Owner_dashboard/manage_user.dart'
 import 'package:techstile_frontend/screens/app_Owner_dashboard/notification_screen.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/setting_screen.dart';
 
-import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/machines.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/manage_machines.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/payments.dart';
 // import 'package:techstile_frontend/screens/factory_owner_dash/user/users.dart';
 

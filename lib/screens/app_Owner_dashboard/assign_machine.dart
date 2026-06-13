@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:techstile_frontend/core/services/manage_users_service.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
 
-import '../../core/services/manage_users_service.dart';
-
 class AssignMachinePopup extends StatefulWidget {
   final int userId;
   final String role;

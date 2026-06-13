@@ -5,7 +5,7 @@ import '../../../../widgets/bottom_nav_bar.dart';
 import '../../../../widgets/drawer.dart';
 import 'generate_qrcode.dart';
 import 'package:get/get.dart';
-
+import 'assign_production_batch.dart';
 class MachinesScreen extends StatefulWidget {
   const MachinesScreen({super.key});
 
@@ -332,6 +332,23 @@ class _MachinesScreenState extends State<MachinesScreen> {
                   color: Colors.redAccent,
                 ),
               ),
+              GestureDetector(
+  onTap: () {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+      ),
+      builder: (ctx) => AssignProductionDialog(
+        machineId: int.parse(m.id),
+        onSuccess: load,
+      ),
+    );
+  },
+  child: const Icon(Icons.add_task, size: 22, color: Colors.green),
+),
             ],
           ),
         ],

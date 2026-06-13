@@ -53,8 +53,21 @@ class _EnterProductionScreenState
       Get.snackbar("Error", "Enter the ready production quantity");
       return;
     }
+     final args      = Get.arguments;
+     final remaining = double.tryParse(
+      args?['remaining']?.toString() ?? '0') ?? 0;
+     final ready     = double.tryParse(readyController.text) ?? 0;
 
-    setState(() => loading = true);
+  if (ready > remaining) {
+    Get.snackbar(
+      "Error",
+      "Maximum $remaining enter kar sakte ho",
+      backgroundColor: Colors.red,
+      colorText: Colors.white,
+    );
+    return;
+  }
+  setState(() => loading = true);
 
     try {
       final args       = Get.arguments;
@@ -86,7 +99,7 @@ class _EnterProductionScreenState
       } else {
         Get.snackbar(
           "Error",
-          "Submit Nahi Hui — Dobara Try Karo",
+          "production is not added",
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
