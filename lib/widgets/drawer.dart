@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:techstile_frontend/screens/factory_owner_dash/production.dart';
+import 'package:techstile_frontend/screens/factory_owner_dash/pending_productions.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/user/manage_users.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/machines.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/owner_dashboard.dart';
@@ -123,7 +123,7 @@ class OwnerDrawer extends StatelessWidget {
                   context,
                   Icons.badge_outlined,
                   "Manage production",
-                    () => Get.to(() => const ProductionScreen()),
+                    () => Get.to(() => const PendingProductionScreen()),
                 ),
                  _item(
                   context,

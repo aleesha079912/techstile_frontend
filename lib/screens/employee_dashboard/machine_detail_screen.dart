@@ -3,6 +3,8 @@ import 'package:techstile_frontend/widgets/emp_drawer.dart';
 
 import '../../core/services/employee_service/machine_detail_service.dart';
 import '../../core/utils/theme.dart';
+import 'package:get/get.dart';
+import '../../routes/routes.dart';
 
 class MachineDetailScreen extends StatefulWidget {
   final String machineId;
@@ -270,8 +272,10 @@ class _MachineDetailScreenState
                         ),
                       ),
                       onPressed: () {
-                        // TODO:
-                        // Enter Production Screen
+                        Get.toNamed(
+                          AppRoutes.enterProduction,
+                          arguments: widget.machineId,
+                        );
                       },
                       icon: const Icon(Icons.add),
                       label: const Text(

@@ -61,54 +61,127 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
           : Column(
               children: [
                 /// TOP CARD
-                Container(
-                  margin: const EdgeInsets.all(16),
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [
-                        AppTheme.primary,
-                        AppTheme.primary,
-                      ],
-                    ),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Column(
-                    children: [
-                      const Text(
-                        "Production Overview",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
+               Container(
+  margin: const EdgeInsets.all(16),
+  padding: const EdgeInsets.all(24),
+  decoration: BoxDecoration(
+    gradient: const LinearGradient(
+      colors: [
+        AppTheme.primary,
+        AppTheme.primary,
+      ],
+    ),
+    borderRadius: BorderRadius.circular(24),
+  ),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Text(
+        "Production Overview",
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 22,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
 
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _buildStat(
-                            icon: Icons.precision_manufacturing,
-                            value: "$totalMachines",
-                            label: "Machines",
-                          ),
-                          _buildStat(
-                            icon: Icons.straighten,
-                            value: totalProduction.toStringAsFixed(0),
-                            label: "Assigned",
-                          ),
-                          _buildStat(
-                            icon: Icons.check_circle,
-                            value: totalReadyProduction.toStringAsFixed(0),
-                            label: "Ready",
-                          ),
-                        ],
-                      ),
-                    ],
+      const SizedBox(height: 20),
+
+      Wrap(
+        spacing: 10,
+        runSpacing: 10,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 10,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(.15),
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.precision_manufacturing,
+                  color: Colors.white,
+                  size: 18,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  "$totalMachines Machines",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
+              ],
+            ),
+          ),
 
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 10,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(.15),
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.straighten,
+                  color: Colors.white,
+                  size: 18,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  "${totalProduction.toStringAsFixed(0)} Assigned",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 14,
+              vertical: 10,
+            ),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(.15),
+              borderRadius: BorderRadius.circular(50),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.check_circle,
+                  color: Colors.white,
+                  size: 18,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  "${totalReadyProduction.toStringAsFixed(0)} Ready",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    ],
+  ),
+),
                 /// LIST
                 Expanded(
                   child: ListView.builder(
