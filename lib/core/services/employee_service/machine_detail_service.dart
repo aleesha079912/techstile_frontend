@@ -6,10 +6,9 @@ class EmployeeMachineService {
   final String baseUrl = "http://localhost:8000/api";
 
   Future<Map<String, dynamic>> getMachineDetails(String machineId ) async {
-    var machineId;
     final response = await http.get(
       Uri.parse(
-        "$baseUrl/employee/machine-details/ $machineId",
+        "$baseUrl/employee/machine-details/$machineId",
       ),
       headers: AuthService.authHeaders,
     );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../screens/factory_owner_dash/owner_dashboard.dart';
-import '../screens/app_Owner_dashboard/machine/machines.dart';
+import '../screens/app_Owner_dashboard/machine/manage_machines.dart';
 import '../screens/factory_owner_dash/payments.dart';
  import '../screens/app_Owner_dashboard/user/manage_users.dart';
 

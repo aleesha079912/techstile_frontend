@@ -4,8 +4,9 @@ import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart' as share_plus;
+import 'package:share_plus/share_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:cross_file/cross_file.dart';
 class GenerateQrService {
   /// QR widget ko image bytes mein convert karo
   static Future<Uint8List?> captureQrAsImage(GlobalKey qrKey) async {
