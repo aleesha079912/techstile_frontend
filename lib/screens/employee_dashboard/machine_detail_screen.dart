@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:techstile_frontend/widgets/emp_drawer.dart';
-
+import '../../core/services/employee_service/attendance_service.dart';
 import '../../core/services/employee_service/machine_detail_service.dart';
 import '../../core/utils/theme.dart';
 import 'package:get/get.dart';
 import '../../routes/routes.dart';
-
+ 
+ final attendanceService = AttendanceService();
 class MachineDetailScreen extends StatefulWidget {
   final String machineId;
-
   const MachineDetailScreen({
     super.key,
     required this.machineId,
@@ -224,6 +224,74 @@ class _MachineDetailScreenState
                       ),
                     ),
                   ),
+                  const SizedBox(height:20),
+                  SizedBox(
+                    width: double.infinity,
+                    height:55,
+                child: ElevatedButton.icon(
+
+                    onPressed: () async{
+
+
+                      final success =
+                      await attendanceService.markAttendance(
+
+                        employeeId:
+                        machine?['employee_id'],
+
+                        machineId:
+                        int.parse(widget.machineId),
+
+                      );
+
+
+                      if(success){
+
+                        Get.snackbar(
+                        "Success",
+                        "Attendance Marked",
+                        backgroundColor: Colors.green,
+                        colorText: Colors.white
+                        );
+
+                      }
+                      else{
+
+                        Get.snackbar(
+                        "Error",
+                        "Attendance Failed",
+                        backgroundColor: Colors.red,
+                        colorText: Colors.white
+                        );
+
+                      }
+
+
+                    },
+
+
+                    icon:const Icon(Icons.fingerprint),
+
+                    label:const Text(
+                    "Mark Attendance",
+                    style:TextStyle(
+                    fontSize:16,
+                    fontWeight:FontWeight.bold
+                    ),
+                    ),
+
+
+                    style:ElevatedButton.styleFrom(
+                    backgroundColor:Colors.green,
+                    foregroundColor:Colors.white,
+                    shape:RoundedRectangleBorder(
+                    borderRadius:BorderRadius.circular(12)
+                    )
+                    ),
+
+                    ),
+
+                    ),
                 ],
               ),
             ),

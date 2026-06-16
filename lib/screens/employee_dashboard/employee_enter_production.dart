@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:techstile_frontend/screens/employee_dashboard/employee_dashboard.dart';
 
 import '../../core/utils/theme.dart';
 import '../../core/services/employee_service/employee_production_service.dart';
@@ -89,7 +90,7 @@ class _EnterProductionScreenState
       );
 
       if (success) {
-        Get.back();
+      Get.off(() => EmployeeDashboard());
         Get.snackbar(
           "Success",
           "Submitted Successfully",

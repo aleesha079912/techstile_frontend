@@ -48,140 +48,70 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: const EmployeeDrawer(),
+      backgroundColor: AppTheme.secondary,
 
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
         title: const Text("LOOM CONTROL"),
       ),
 
-      backgroundColor: AppTheme.secondary,
-
       body: loading
           ? const Center(child: CircularProgressIndicator())
           : Column(
               children: [
-                /// TOP CARD
-               Container(
-  margin: const EdgeInsets.all(16),
-  padding: const EdgeInsets.all(24),
-  decoration: BoxDecoration(
-    gradient: const LinearGradient(
-      colors: [
-        AppTheme.primary,
-        AppTheme.primary,
-      ],
-    ),
-    borderRadius: BorderRadius.circular(24),
-  ),
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const Text(
-        "Production Overview",
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 22,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-
-      const SizedBox(height: 20),
-
-      Wrap(
-        spacing: 10,
-        runSpacing: 10,
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 14,
-              vertical: 10,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(.15),
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.precision_manufacturing,
-                  color: Colors.white,
-                  size: 18,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  "$totalMachines Machines",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
+                /// TITLE
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16, vertical: 12),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Production Overview",
+                      style: TextStyle(
+                        color: AppTheme.primary,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
-              ],
-            ),
-          ),
 
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 14,
-              vertical: 10,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(.15),
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.straighten,
-                  color: Colors.white,
-                  size: 18,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  "${totalProduction.toStringAsFixed(0)} Assigned",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
+                /// 3 BUTTONS IN ONE LINE
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: _buildOverviewButton(
+                          icon: Icons.precision_manufacturing,
+                          label: "Machines",
+                          value: "$totalMachines",
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+
+                      // Expanded(
+                      //   child: _buildOverviewButton(
+                      //     icon: Icons.straighten,
+                      //     label: "Assigned",
+                      //     value: "${totalProduction.toStringAsFixed(0)}",
+                      //   ),
+                      // ),
+                      // const SizedBox(width: 8),
+
+                      Expanded(
+                        child: _buildOverviewButton(
+                          icon: Icons.check_circle,
+                          label: "Ready",
+                          value: "${totalReadyProduction.toStringAsFixed(0)}",
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
 
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 14,
-              vertical: 10,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(.15),
-              borderRadius: BorderRadius.circular(50),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.check_circle,
-                  color: Colors.white,
-                  size: 18,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  "${totalReadyProduction.toStringAsFixed(0)} Ready",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    ],
-  ),
-),
+                const SizedBox(height: 7),
+
                 /// LIST
                 Expanded(
                   child: ListView.builder(
@@ -191,9 +121,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
 
                       return Container(
                         margin: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
+                            horizontal: 16, vertical: 8),
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -208,11 +136,9 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            /// MACHINE ID
                             Row(
                               children: [
-                                Icon(Icons.memory,
-                                    color: AppTheme.primary),
+                                Icon(Icons.memory, color: AppTheme.primary),
                                 const SizedBox(width: 8),
                                 Text(
                                   "Machine ID: ${machine["machine_id"]}",
@@ -224,34 +150,17 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                                 ),
                               ],
                             ),
-
                             const SizedBox(height: 10),
 
-                            /// TYPE
                             Row(
                               children: [
-                                Icon(Icons.precision_manufacturing,
-                                    color: AppTheme.primary),
-                                const SizedBox(width: 8),
-                                Text(machine["machine_type"] ?? ""),
-                              ],
-                            ),
-
-                            const SizedBox(height: 8),
-
-                            /// EMPLOYEE
-                            Row(
-                              children: [
-                                Icon(Icons.person,
-                                    color: AppTheme.primary),
+                                Icon(Icons.person, color: AppTheme.primary),
                                 const SizedBox(width: 8),
                                 Text(machine["employee_name"] ?? ""),
                               ],
                             ),
-
                             const SizedBox(height: 8),
 
-                            /// VARIETY
                             Row(
                               children: [
                                 Icon(Icons.category,
@@ -260,29 +169,22 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                                 Text(machine["variety_type"] ?? ""),
                               ],
                             ),
-
                             const SizedBox(height: 12),
 
                             Text(
                               "Ready Production: ${machine["ready_production"]}",
-                              style: TextStyle(
-                                fontWeight: FontWeight.w600,
-                                color: AppTheme.neutral,
-                              ),
                             ),
 
                             const SizedBox(height: 5),
 
                             Text(
                               "Total Length: ${machine["total_length"]}",
-                              style: TextStyle(color: AppTheme.neutral),
                             ),
 
-                            const SizedBox(height: 15),
+                            const SizedBox(height: 10),
 
-                            /// PROGRESS
                             LinearProgressIndicator(
-                              value: (machine["progress"] ?? 0).toDouble() / 100,
+                              value: (machine["progress"] ?? 0) / 100,
                               minHeight: 10,
                               color: AppTheme.primary,
                               backgroundColor:
@@ -292,31 +194,10 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                             const SizedBox(height: 8),
 
                             Text(
-                              "Progress : ${machine["progress"]} %",
+                              "Progress: ${machine["progress"]}%",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: AppTheme.primary,
-                              ),
-                            ),
-
-                            const SizedBox(height: 10),
-
-                            /// STATUS
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 12,
-                                vertical: 6,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppTheme.primary.withOpacity(0.15),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(
-                                machine["machine_status"] ?? "",
-                                style: TextStyle(
-                                  color: AppTheme.primary,
-                                  fontWeight: FontWeight.bold,
-                                ),
                               ),
                             ),
                           ],
@@ -328,30 +209,51 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
               ],
             ),
 
-      bottomNavigationBar:
-          const EmployeeBottomNav(currentIndex: 0),
+      bottomNavigationBar: const EmployeeBottomNav(currentIndex: 0),
     );
   }
 
-  Widget _buildStat({
+  /// BUTTON WIDGET
+  Widget _buildOverviewButton({
     required IconData icon,
-    required String value,
     required String label,
+    required String value,
   }) {
-    return Column(
-      children: [
-        Icon(icon, color: Colors.white),
-        const SizedBox(height: 5),
-        Text(
-          value,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 12,
-            fontWeight: FontWeight.bold,
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.primary.withOpacity(0.08),
+            blurRadius: 8,
+          )
+        ],
+      ),
+      child: Column(
+        children: [
+          Icon(icon, color: AppTheme.primary),
+          const SizedBox(height: 6),
+          Text(
+            label,
+            style: TextStyle(
+              color: AppTheme.primary,
+              fontWeight: FontWeight.w600,
+              fontSize: 12,
+            ),
           ),
-        ),
-        Text(label, style: const TextStyle(color: Colors.white70)),
-      ],
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: TextStyle(
+              color: AppTheme.primary,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

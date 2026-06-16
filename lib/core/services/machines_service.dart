@@ -5,13 +5,13 @@ import 'auth_service.dart';
 
 class Machine {
   final String id;
-  final String machineId;
+  final String machineName; // ✅ field name
   final String type;
-  final String time; // Laravel model ke mutabiq
+  final String time;
 
   Machine({
     required this.id,
-    required this.machineId,
+    required this.machineName, // ✅ constructor mein same naam
     required this.type,
     required this.time,
   });
@@ -19,7 +19,7 @@ class Machine {
   factory Machine.fromJson(Map<String, dynamic> json) {
     return Machine(
       id: json['id'].toString(),
-      machineId: json['machine_id'] ?? '',
+      machineName: json['machine_name'] ?? '', // ✅ DB column → dart field
       type: json['machine_type'] ?? '',
       time: json['time'] ?? '',
     );
@@ -30,8 +30,7 @@ class MachinesData {
   final List<Machine> machines;
   MachinesData({required this.machines});
 
-  // Stats filhal total count dikhayenge kyunke DB mein status field nahi hai
-  int get running => machines.length; 
+  int get running => machines.length;
   int get maintenance => 0;
   int get offline => 0;
 }
@@ -42,16 +41,19 @@ class MachinesService {
 
   final String baseUrl = "http://localhost:8000/api/machines";
 
-  // 🔹 1. FETCH ALL (Laravel: machines/all)
+  // 🔹 1. FETCH ALL
   Future<MachinesData> fetchMachines() async {
     try {
-      final response = await http.get(Uri.parse("$baseUrl/all"),
-       headers: AuthService.authHeaders,
+      final response = await http.get(
+        Uri.parse("$baseUrl/all"),
+        headers: AuthService.authHeaders,
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> body = jsonDecode(response.body);
-        final List<dynamic> data = body['data']; // Laravel Controller 'data' key bhej raha hai
-        return MachinesData(machines: data.map((m) => Machine.fromJson(m)).toList());
+        final List<dynamic> data = body['data'];
+        return MachinesData(
+          machines: data.map((m) => Machine.fromJson(m)).toList(),
+        );
       }
     } catch (e) {
       debugPrint("Fetch Error: $e");
@@ -59,33 +61,41 @@ class MachinesService {
     return MachinesData(machines: []);
   }
 
-  // 🔹 2. CREATE (Laravel: machines/add_machine)
-  Future<bool> addMachine(String machineId, String type) async {
+  // 🔹 2. CREATE
+  Future<Map<String, dynamic>?> addMachine(String machineName, String type) async {
     try {
       final response = await http.post(
         Uri.parse("$baseUrl/add_machine"),
         headers: AuthService.authHeaders,
         body: jsonEncode({
-          "machine_id": machineId,
+          "machine_name": machineName, // ✅ parameter naam use karo
           "machine_type": type,
-          "time": DateTime.now().toIso8601String().substring(0, 10), // Required in Laravel
+          "time": DateTime.now().toIso8601String().substring(0, 10),
         }),
       );
-      return response.statusCode == 200 || response.statusCode == 201;
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final decoded = jsonDecode(response.body);
+        return {
+          'success': true,
+          'id': decoded['data']['id'].toString(),
+        };
+      }
+      return null;
     } catch (e) {
       debugPrint("Add Error: $e");
-      return false;
+      return null;
     }
   }
 
-  // 🔹 3. UPDATE (Laravel: machines/update_machine/{id})
-  Future<bool> updateMachine(String id, String machineId, String type) async {
+  // 🔹 3. UPDATE
+  Future<bool> updateMachine(String id, String machineName, String type) async {
     try {
       final response = await http.put(
         Uri.parse("$baseUrl/update_machine/$id"),
         headers: AuthService.authHeaders,
         body: jsonEncode({
-          "machine_id": machineId,
+          "machine_name": machineName, // ✅
           "machine_type": type,
           "time": DateTime.now().toIso8601String().substring(0, 10),
         }),
@@ -97,11 +107,12 @@ class MachinesService {
     }
   }
 
-  // 🔹 4. DELETE (Laravel: machines/delete_machine/{id})
+  // 🔹 4. DELETE
   Future<bool> deleteMachine(String id) async {
     try {
-      final response = await http.delete(Uri.parse("$baseUrl/delete_machine/$id"),
-       headers: AuthService.authHeaders,
+      final response = await http.delete(
+        Uri.parse("$baseUrl/delete_machine/$id"),
+        headers: AuthService.authHeaders,
       );
       return response.statusCode == 200;
     } catch (e) {
@@ -109,5 +120,4 @@ class MachinesService {
       return false;
     }
   }
-  
 }

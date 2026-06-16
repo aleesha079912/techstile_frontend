@@ -35,7 +35,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
 
   // --- 1. CRUD: ADD & UPDATE POPUP ---
   void _showMachineForm(BuildContext context, {Machine? machine}) {
-    final idCtrl = TextEditingController(text: machine?.machineId);
+    final idCtrl = TextEditingController(text: machine?.machineName);
     final typeCtrl = TextEditingController(text: machine?.type);
 
     showModalBottomSheet(
@@ -77,11 +77,11 @@ class _MachinesScreenState extends State<MachinesScreen> {
               ),
               const SizedBox(height: 20),
 
-              _buildField(idCtrl, "Machine ID (e.g. LM-8402)", Icons.tag),
+              _buildField(idCtrl, "Machine Name (e.g. LM-8402)", Icons.abc_outlined),
               _buildField(
                 typeCtrl,
                 "Machine Type (e.g. Rapier)",
-                Icons.settings_outlined,
+                Icons.category_outlined,
               ),
 
               const SizedBox(height: 25),
@@ -96,48 +96,55 @@ class _MachinesScreenState extends State<MachinesScreen> {
                     ),
                   ),
                   onPressed: () async {
-                    if (idCtrl.text.isEmpty || typeCtrl.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Please fill all fields")),
-                      );
-                      return;
-                    }
-
-                    bool success;
-                    if (machine == null) {
-                      success = await service.addMachine(
-                        idCtrl.text,
-                        typeCtrl.text,
-                      );
-                    } else {
-                      success = await service.updateMachine(
-                        machine.id,
-                        idCtrl.text,
-                        typeCtrl.text,
-                      );
-                    }
-
-                    if (!mounted) return;
-
-                    if (success) {
-                      Get.back();
-                      load();
-                      if (machine == null) {
-                        Future.microtask(() {
-                          Get.to(
-                            () => GenerateQrCodeScreen(
-                              machineId: idCtrl.text,
-                              //  machineId: machine.id,
-                            ),
-                          );
-                        });
+                      if (idCtrl.text.isEmpty || typeCtrl.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Please fill all fields")),
+                        );
+                        return;
                       }
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Something went wrong!")),
-                      );
-                    }
-                  },
+
+                      if (machine == null) {
+                        // ── ADD ──
+                        final result = await service.addMachine(idCtrl.text, typeCtrl.text);
+
+                        if (!mounted) return;
+
+                        if (result != null && result['success'] == true) {
+                          Get.back();
+                          load();
+                          final newDbId = result['id']; // ✅ real primary id from DB
+
+                          Future.microtask(() {
+                            Get.to(() => GenerateQrCodeScreen(
+                              machineDbId: newDbId,      // ✅ stored in QR
+                              machineLabel: idCtrl.text, // ✅ shown as display name
+                            ));
+                          });
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Something went wrong!")),
+                          );
+                        }
+                      } else {
+                        // ── UPDATE ──
+                        bool success = await service.updateMachine(
+                          machine.id,
+                          idCtrl.text,
+                          typeCtrl.text,
+                        );
+
+                        if (!mounted) return;
+
+                        if (success) {
+                          Get.back();
+                          load();
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Something went wrong!")),
+                          );
+                        }
+                      }
+                    },
                   child: Text(
                     machine == null ? "Register Machine" : "Update Machine",
                     style: const TextStyle(color: Colors.white),
@@ -299,7 +306,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  m.machineId,
+                  m.machineName,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,

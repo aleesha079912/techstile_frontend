@@ -70,7 +70,7 @@ class ManageUsersService {
   ManageUsersService._();
 
   // 🔥 CHANGE THIS IF USING EMULATOR
-  final String baseUrl = "http://10.0.2.2:8000/api";
+  final String baseUrl = "http://localhost:8000/api";
 
   Map<String, String> get _headers => {
         "Content-Type": "application/json",

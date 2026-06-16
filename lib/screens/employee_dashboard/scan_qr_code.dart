@@ -45,10 +45,10 @@ class _ScanqrCodeScreenState extends State<ScanqrCodeScreen>
     super.dispose();
   }
 
-  void _goBack() {
-    controller.stop();
-    Navigator.pop(context);
-  }
+ void _goBack() {
+  controller.stop();
+  Get.offAllNamed(AppRoutes.employeeDashboard);
+}
 
   void _onDetect(BarcodeCapture capture) {
     if (scanned) return;
