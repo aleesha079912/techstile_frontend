@@ -201,7 +201,7 @@ class _ScanQrCodeScreenState extends State<ScanQrCodeScreen>
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: AppTheme.tertiary,
+                        color: AppTheme.background,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Icon(Icons.qr_code_scanner,
@@ -227,7 +227,7 @@ class _ScanQrCodeScreenState extends State<ScanQrCodeScreen>
                                 : "Waiting For QR Code...",
                             style: TextStyle(
                               color: scanned
-                                  ? AppTheme.tertiary
+                                  ? AppTheme.background
                                   : Colors.white,
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -277,10 +277,10 @@ class ScannerOverlay extends StatelessWidget {
             child: Container(
               height: 2,
               decoration: BoxDecoration(
-                color: AppTheme.tertiary,
+                color: AppTheme.background,
                 boxShadow: [
                   BoxShadow(
-                    color: AppTheme.tertiary.withOpacity(0.8),
+                    color: AppTheme.background.withOpacity(0.8),
                     blurRadius: 8,
                     spreadRadius: 1,
                   ),
@@ -315,16 +315,16 @@ class ScannerOverlay extends StatelessWidget {
         ),
         border: Border(
           top: top
-              ? BorderSide(color: AppTheme.tertiary, width: 4)
+              ? BorderSide(color: AppTheme.background, width: 4)
               : BorderSide.none,
           bottom: bottom
-              ? BorderSide(color: AppTheme.tertiary, width: 4)
+              ? BorderSide(color: AppTheme.background, width: 4)
               : BorderSide.none,
           left: left
-              ? BorderSide(color: AppTheme.tertiary, width: 4)
+              ? BorderSide(color: AppTheme.background, width: 4)
               : BorderSide.none,
           right: right
-              ? BorderSide(color: AppTheme.tertiary, width: 4)
+              ? BorderSide(color: AppTheme.background, width: 4)
               : BorderSide.none,
         ),
       ),

@@ -48,11 +48,11 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: const EmployeeDrawer(),
-      backgroundColor: AppTheme.secondary,
+      backgroundColor: AppTheme.background,
 
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
-        title: const Text("LOOM CONTROL"),
+        title: const Text("LOOM CONTROL", style: TextStyle(color: AppTheme.neutral),),
       ),
 
       body: loading
@@ -222,7 +222,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
@@ -238,7 +238,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
           Text(
             label,
             style: TextStyle(
-              color: AppTheme.primary,
+              color: AppTheme.background,
               fontWeight: FontWeight.w600,
               fontSize: 12,
             ),
@@ -247,7 +247,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
           Text(
             value,
             style: TextStyle(
-              color: AppTheme.primary,
+              color: AppTheme.background,
               fontWeight: FontWeight.bold,
               fontSize: 16,
             ),

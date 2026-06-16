@@ -115,10 +115,10 @@ class _LoginScreenState extends State<LoginScreen> {
   }) {
     return InputDecoration(
       hintText: hint,
-      prefixIcon: Icon(icon, color: AppTheme.neutral),
+      prefixIcon: Icon(icon, color: AppTheme.secondary),
       suffixIcon: suffixIcon, // ✅ FIX 2: suffix icon support add kiya
       filled: true,
-      fillColor: AppTheme.secondary,
+      fillColor: AppTheme.background,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide.none,
@@ -128,15 +128,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.secondary,
+  return Scaffold(
+      backgroundColor: AppTheme.background,
       body: Center(
         child: SingleChildScrollView(
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 20),
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: AppTheme.background,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Column(
@@ -151,7 +151,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       "LOOMCONTROL",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: AppTheme.primary,
+                        color: AppTheme.secondary,
                       ),
                     ),
                   ],
@@ -168,17 +168,17 @@ class _LoginScreenState extends State<LoginScreen> {
                 Container(
                   width: 40,
                   height: 3,
-                  color: AppTheme.tertiary,
+                  color: AppTheme.background,
                   margin: const EdgeInsets.symmetric(vertical: 8),
                 ),
                 Text(
                   "Enter your credentials to manage active looms and production logs.",
-                  style: TextStyle(color: AppTheme.neutral),
+                  style: TextStyle(color: AppTheme.primary),
                 ),
                 const SizedBox(height: 20),
                 Text(
                   "Email",
-                  style: TextStyle(fontSize: 12, color: AppTheme.neutral),
+                  style: TextStyle(fontSize: 12, color: AppTheme.primary),
                 ),
                 const SizedBox(height: 5),
                 TextField(
@@ -192,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 15),
                 Text(
                   "PIN / PASSWORD",
-                  style: TextStyle(fontSize: 12, color: AppTheme.neutral),
+                  style: TextStyle(fontSize: 12, color: AppTheme.primary),
                 ),
                 const SizedBox(height: 5),
                 TextField(
@@ -222,7 +222,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: _isLoading ? null : _login,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.primary,
-                      foregroundColor: Colors.white,
+                      foregroundColor: AppTheme.background,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(28),
                       ),
@@ -280,9 +280,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.support_agent, color: AppTheme.tertiary),
+                        Icon(Icons.support_agent, color: AppTheme.neutral),
                         const SizedBox(width: 10),
-                        const Expanded(child: Text("Contact Supervisor")),
+                        const Expanded(
+                          child: Text("Contact Supervisor", style: TextStyle(color: AppTheme.background),
+                        )),
                         Icon(Icons.arrow_forward_ios,
                             size: 14, color: AppTheme.neutral),
                       ],
@@ -296,7 +298,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 10,
-                      color: AppTheme.neutral,
+                      color: AppTheme.textPrimary,
                     ),
                   ),
                 ),

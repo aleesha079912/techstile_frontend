@@ -152,7 +152,7 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
 
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Machine Assigned Successfully!"), backgroundColor: AppTheme.tertiary),
+          const SnackBar(content: Text("Machine Assigned Successfully!"), backgroundColor: AppTheme.background),
         );
         _formKey.currentState!.reset();
       } else {
