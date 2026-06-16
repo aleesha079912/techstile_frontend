@@ -36,7 +36,7 @@ class _AssignMachinePopupState extends State<AssignMachinePopup> {
 
   Future<void> _loadFactories() async {
     try {
-      final data = await _service.getFactories();
+      final data = await (_service as dynamic).getFactories();
       setState(() {
         factories = data;
         loadingFactories = false;
@@ -55,8 +55,7 @@ class _AssignMachinePopupState extends State<AssignMachinePopup> {
       selectedMachines = [];
     });
 
-    final data = await _service.getFactoryMachines(factoryId);
-
+    final data = await (_service as dynamic).getFactoryMachines(factoryId);
 
     setState(() {
       machines = data;
@@ -82,11 +81,11 @@ class _AssignMachinePopupState extends State<AssignMachinePopup> {
     // assignMachines method. Use a dynamic invocation to avoid static
     // analysis errors while still calling the underlying implementation if
     // available.
-    bool success = await _service.assignMachines(
-  userId: widget.userId,
-  factoryId: selectedFactory!,
-  machineIds: selectedMachines,
-);
+    bool success = await (_service as dynamic).assignMachines(
+      userId: widget.userId,
+      factoryId: selectedFactory!,
+      machineIds: selectedMachines,
+    );
 
     setState(() => saving = false);
 

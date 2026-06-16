@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/assign_paermission.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/role_management.dart';
-import 'package:techstile_frontend/screens/app_Owner_dashboard/user_prof.dart';
 import '../../../../core/services/manage_users_service.dart';
 import '../../../../core/utils/theme.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/user/register_user_rolebased.dart';
@@ -273,146 +272,109 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
   VoidCallback onDelete,
   VoidCallback onEdit,
 ) {
-  return GestureDetector(
-    onTap: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => UserProfileScreen(
-            userId: user.id!,
-            name: user.name,
-            email: user.email,
-            phone: user.phone,
-            cnic: user.cnic,
-            address: user.address,
-            role: user.role,
+  return Container(
+    margin: const EdgeInsets.only(bottom: 12),
+    padding: const EdgeInsets.all(14),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(16),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.05),
+          blurRadius: 10,
+        )
+      ],
+    ),
+    child: Row(
+      children: [
+        CircleAvatar(
+          radius: 26,
+          backgroundColor: AppTheme.primary.withOpacity(0.1),
+          child: const Icon(
+            Icons.person,
+            color: AppTheme.primary,
           ),
         ),
-      );
-    },
-    child: Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-          )
-        ],
-      ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 26,
-            backgroundColor: AppTheme.primary.withOpacity(0.1),
-            child: const Icon(
-              Icons.person,
-              color: AppTheme.primary,
-            ),
-          ),
 
-          const SizedBox(width: 12),
+        const SizedBox(width: 12),
 
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  user.name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-
-                const SizedBox(height: 4),
-
-                Text(
-                  "ID: ${user.id}",
-                  style: const TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12,
-                  ),
-                ),
-
-                const SizedBox(height: 4),
-
-                Text(
-                  user.role,
-                  style: const TextStyle(
-                    color: AppTheme.primary,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: 4,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.green.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: const Text(
-              "ACTIVE",
-              style: TextStyle(
-                color: Colors.green,
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-
-          PopupMenuButton<String>(
-            onSelected: (value) {
-              if (value == 'edit') {
-                onEdit();
-              }
-
-              if (value == 'delete') {
-                onDelete();
-              }
-            },
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'edit',
-                child: Row(
-                  children: [
-                    Icon(Icons.edit),
-                    SizedBox(width: 10),
-                    Text("Edit"),
-                  ],
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                user.name,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
                 ),
               ),
-              const PopupMenuItem(
-                value: 'delete',
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.delete,
-                      color: Colors.red,
-                    ),
-                    SizedBox(width: 10),
-                    Text(
-                      "Delete",
-                      style: TextStyle(
-                        color: Colors.red,
-                      ),
-                    ),
-                  ],
+
+              const SizedBox(height: 4),
+
+              Text(
+                user.email,
+                style: const TextStyle(
+                  color: Colors.grey,
+                  fontSize: 12,
+                ),
+              ),
+
+              const SizedBox(height: 4),
+
+              Text(
+                user.role,
+                style: const TextStyle(
+                  color: AppTheme.primary,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
           ),
-        ],
-      ),
+        ),
+
+        PopupMenuButton<String>(
+          onSelected: (value) {
+            if (value == 'edit') {
+              onEdit();
+            }
+
+            if (value == 'delete') {
+              onDelete();
+            }
+          },
+          itemBuilder: (context) => const [
+            PopupMenuItem(
+              value: 'edit',
+              child: Row(
+                children: [
+                  Icon(Icons.edit),
+                  SizedBox(width: 10),
+                  Text("Edit"),
+                ],
+              ),
+            ),
+            PopupMenuItem(
+              value: 'delete',
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    "Delete",
+                    style: TextStyle(
+                      color: Colors.red,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
     ),
   );
 }
