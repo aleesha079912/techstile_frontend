@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/employee_enter_production.dart';
+import 'package:techstile_frontend/screens/employee_dashboard/history_screen.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/machine_detail_screen.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/profile.dart';
 
@@ -41,12 +42,13 @@ class AppRoutes {
   static const payments = '/payments';
   static const manageusers = '/manage_users';
   static const generateQRCode = '/generate_qr_code';
-
+ static const machineDetail = '/machine-detail';
   //employee dashboard routes
    static const empDashboard = '/employee-dashboard';
  static const empmachineDetail = '/machine-detail';
  static const enterProduction = '/enter-production';
   static const profile = '/profile';
+  static const history = '/history';
   static List<GetPage> routes = [
 
     GetPage(
@@ -140,6 +142,14 @@ class AppRoutes {
         );
       },
     ),
+ GetPage(
+  name: AppRoutes.machineDetail, 
+  page: () => MachineDetailScreen(
+    machineId: Get.arguments,
+  ),
+),
+
+
     //employee dashboard side routes
           GetPage(
       name: empDashboard,
@@ -167,6 +177,10 @@ class AppRoutes {
   GetPage(
     name: AppRoutes.profile,
     page: () => const UserProfileScreen(),
+  ),
+  GetPage(
+    name: AppRoutes.history,
+    page: () => const HistoryScreen(),
   ),
   ];
 }

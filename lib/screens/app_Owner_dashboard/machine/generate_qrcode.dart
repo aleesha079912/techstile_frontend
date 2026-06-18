@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:techstile_frontend/core/services/generate_qr_service.dart';
-
+import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
+import 'package:techstile_frontend/widgets/drawer.dart';
 class GenerateQrCodeScreen extends StatefulWidget {
   final String machineDbId;   // primary id from DB (e.g. "3")
   final String machineLabel;  // display label (e.g. "LM-1")
@@ -24,6 +25,7 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const OwnerDrawer(),
       backgroundColor: const Color(0xFFF5F6FA),
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -263,6 +265,7 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
           ],
         ),
       ),
+       bottomNavigationBar: const CustomBottomNav(currentIndex: 1),
     );
   }
 }

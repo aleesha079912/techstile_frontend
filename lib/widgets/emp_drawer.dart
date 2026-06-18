@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/employee_dashboard.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/profile.dart';
-import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/scan_code.dart';
+// import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/scan_code.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/scan_qr_code.dart';
-// import 'package:techstile_frontend/screens/employee/history_screen.dart';
+import 'package:techstile_frontend/screens/employee_dashboard/history_screen.dart';
 // import 'package:techstile_frontend/screens/employee/payment_screen.dart';
 
 class EmployeeDrawer extends StatelessWidget {
@@ -71,8 +71,8 @@ class EmployeeDrawer extends StatelessWidget {
                 _item(
                   context,
                   Icons.payment,
-                  "Payments",
-                  () => Get.off(() => const ScanQrCodeScreen()),
+                  "History Screen",
+                  () => Get.off(() => const HistoryScreen()),
                 ),
 
                 const Divider(),

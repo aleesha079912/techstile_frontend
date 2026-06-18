@@ -6,6 +6,7 @@ import '../../../../widgets/drawer.dart';
 import 'generate_qrcode.dart';
 import 'package:get/get.dart';
 import 'assign_production_batch.dart';
+import 'machine_detail.dart';
 class MachinesScreen extends StatefulWidget {
   const MachinesScreen({super.key});
 
@@ -292,7 +293,12 @@ class _MachinesScreenState extends State<MachinesScreen> {
   }
 
   Widget _machineTile(Machine m) {
-    return Container(
+  return GestureDetector(
+    onTap: () => Get.to(() => MachineDetailScreen(
+  machine:   m,
+    onRefresh: load,
+)),
+    child: Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -339,28 +345,12 @@ class _MachinesScreenState extends State<MachinesScreen> {
                   color: Colors.redAccent,
                 ),
               ),
-              GestureDetector(
-  onTap: () {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-      ),
-      builder: (ctx) => AssignProductionDialog(
-        machineId: int.parse(m.id),
-        onSuccess: load,
-      ),
-    );
-  },
-  child: const Icon(Icons.add_task, size: 22, color: Colors.green),
-),
-            ],
+           ],
           ),
         ],
       ),
-    );
+    ),
+  );
   }
 
   Widget _buildField(TextEditingController ctrl, String hint, IconData icon) {

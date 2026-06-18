@@ -4,7 +4,6 @@ import 'package:techstile_frontend/screens/employee_dashboard/history_screen.dar
 
 import '../screens/employee_dashboard/employee_dashboard.dart';
 import '../screens/employee_dashboard/scan_qr_code.dart';
-// import '../screens//history_screen.dart';
 // import '../screens/payments/payment_screen.dart';
 
 class EmployeeBottomNav extends StatelessWidget {

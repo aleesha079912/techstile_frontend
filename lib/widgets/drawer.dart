@@ -129,7 +129,7 @@ class OwnerDrawer extends StatelessWidget {
                   context,
                   Icons.qr_code_scanner,
                   "Scan QR Code",
-                    () => Get.to(() => const ScanQrCodeScreen()),
+                    () => Get.to(() => const ScanQRCodeScreen()),
                 ),
                 const Divider(),
                 _item(
