@@ -2,12 +2,19 @@ import 'package:flutter/material.dart';
 import '../../../../core/services/machines_service.dart';
 import '../../../../core/utils/theme.dart';
 import '../../../../widgets/bottom_nav_bar.dart';
-import '../../../../widgets/drawer.dart';
+import '../../../widgets/factorydrawer.dart';
 import 'generate_qrcode.dart';
 import 'package:get/get.dart';
 import 'assign_production_batch.dart';
+
+
 class MachinesScreen extends StatefulWidget {
-  const MachinesScreen({super.key});
+  final int factoryId;
+
+  const MachinesScreen({
+    super.key,
+    required this.factoryId,
+  });
 
   @override
   State<MachinesScreen> createState() => _MachinesScreenState();
@@ -26,7 +33,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
 
   void load() async {
     setState(() => isLoading = true);
-    final res = await service.fetchMachines();
+    final res = await service.fetchMachines(
+  widget.factoryId,
+);
     setState(() {
       data = res;
       isLoading = false;
@@ -35,7 +44,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
 
   // --- 1. CRUD: ADD & UPDATE POPUP ---
   void _showMachineForm(BuildContext context, {Machine? machine}) {
-    final idCtrl = TextEditingController(text: machine?.machineId);
+    final nameCtrl = TextEditingController(text: machine?.machineId);
     final typeCtrl = TextEditingController(text: machine?.type);
 
     showModalBottomSheet(
@@ -77,7 +86,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
               ),
               const SizedBox(height: 20),
 
-              _buildField(idCtrl, "Machine ID (e.g. LM-8402)", Icons.tag),
+              _buildField(nameCtrl, "Machine Name (e.g. LM-8402)", Icons.tag),
               _buildField(
                 typeCtrl,
                 "Machine Type (e.g. Rapier)",
@@ -96,7 +105,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
                     ),
                   ),
                   onPressed: () async {
-                    if (idCtrl.text.isEmpty || typeCtrl.text.isEmpty) {
+                    if (nameCtrl.text.isEmpty || typeCtrl.text.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text("Please fill all fields")),
                       );
@@ -106,14 +115,16 @@ class _MachinesScreenState extends State<MachinesScreen> {
                     bool success;
                     if (machine == null) {
                       success = await service.addMachine(
-                        idCtrl.text,
+                        nameCtrl.text,
                         typeCtrl.text,
+                        widget.factoryId,
                       );
                     } else {
                       success = await service.updateMachine(
                         machine.id,
-                        idCtrl.text,
+                        nameCtrl.text,
                         typeCtrl.text,
+                        widget.factoryId,
                       );
                     }
 
@@ -126,7 +137,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
                         Future.microtask(() {
                           Get.to(
                             () => GenerateQrCodeScreen(
-                              machineId: idCtrl.text,
+                              machineId: nameCtrl.text,
                               //  machineId: machine.id,
                             ),
                           );
@@ -182,7 +193,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.secondary,
-      drawer: const OwnerDrawer(),
+      drawer: FactoryDrawer(factoryId: widget.factoryId),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -254,7 +265,10 @@ class _MachinesScreenState extends State<MachinesScreen> {
                 ],
               ),
             ),
-      bottomNavigationBar: const CustomBottomNav(currentIndex: 1),
+      bottomNavigationBar: CustomBottomNav(
+        currentIndex: 1,
+        factoryId: widget.factoryId,
+     ),
     );
   }
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:techstile_frontend/core/services/role_service.dart';
-import 'package:techstile_frontend/widgets/drawer.dart';
+import 'package:techstile_frontend/widgets/owner_drawer.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
 
 class RoleManagementScreen extends StatefulWidget {
@@ -29,7 +29,7 @@ class _RoleManagementScreenState extends State<RoleManagementScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: OwnerDrawer(),
+      drawer: const OwnerDrawer(),
       backgroundColor: const Color(0xffF5F7FB),
 
       appBar: AppBar(

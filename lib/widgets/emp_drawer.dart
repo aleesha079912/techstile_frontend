@@ -68,12 +68,12 @@ class EmployeeDrawer extends StatelessWidget {
                   () => Get.off(() => const UserProfileScreen()),
                 ),
 
-                _item(
-                  context,
-                  Icons.payment,
-                  "Payments",
-                  () => Get.off(() => const ScanQrCodeScreen()),
-                ),
+                // _item(
+                //   context,
+                //   Icons.payment,
+                //   "Payments",
+                //   () => Get.off(() => const ScanQrCodeScreen()),
+                // ),
 
                 const Divider(),
 

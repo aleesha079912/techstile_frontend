@@ -1,41 +1,42 @@
 import 'package:flutter/material.dart';
-import '../screens/factory_owner_dash/owner_dashboard.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
+import '../screens/factory_owner_dash/factorydashboard.dart';
 import '../screens/app_Owner_dashboard/machine/manage_machines.dart';
 import '../screens/factory_owner_dash/payments.dart';
- import '../screens/app_Owner_dashboard/user/manage_users.dart';
+import '../screens/app_Owner_dashboard/user/manage_users.dart';
 
 class CustomBottomNav extends StatelessWidget {
   final int currentIndex;
+  final int factoryId; // ✅ ADD THIS
 
-  const CustomBottomNav({super.key, required this.currentIndex});
+  const CustomBottomNav({
+    super.key,
+    required this.currentIndex,
+    required this.factoryId,
+  });
 
   void _onTap(BuildContext context, int index) {
-    if (index == currentIndex) return;
+  if (index == currentIndex) return;
 
-    Widget page;
+  switch (index) {
+    case 0:
+      Get.offAll(() => FactoryDashboardScreen(factoryId: factoryId));
+      break;
 
-    switch (index) {
-      case 0:
-        page = const OwnerDashboardScreen();
-        break;
-      case 1:
-        page = const MachinesScreen();
-        break;
-      case 2:
-        page = const PaymentsScreen();
-        break;
-      case 3:
-        page = const ManageUsersScreen();
-        break;
-      default:
-        return;
-    }
+    case 1:
+      Get.to(() => MachinesScreen(factoryId: factoryId));
+      break;
 
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => page),
-    );
+    case 2:
+      Get.to(() => PaymentsScreen); // agar needed
+      break;
+
+    case 3:
+      Get.to(() => ManageUsersScreen); // agar needed
+      break;
   }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +48,7 @@ class CustomBottomNav extends StatelessWidget {
     ];
 
     return Container(
-      color: const Color(0xFF0D1B4B), // navy
+      color: const Color(0xFF0D1B4B),
       child: SafeArea(
         top: false,
         child: SizedBox(
@@ -56,7 +57,7 @@ class CustomBottomNav extends StatelessWidget {
             children: List.generate(tabs.length, (i) {
               final selected = i == currentIndex;
               final color = selected
-                  ? const Color(0xFF00C8B0) // teal
+                  ? const Color(0xFF00C8B0)
                   : const Color(0xFF6A7AA1);
 
               return Expanded(

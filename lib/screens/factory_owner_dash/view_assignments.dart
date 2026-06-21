@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:techstile_frontend/widgets/owner_drawer.dart';
 import '../../core/services/view_assignment_service.dart';
-import 'package:techstile_frontend/widgets/drawer.dart';
+import 'package:techstile_frontend/widgets/factorydrawer.dart';
 
 class ViewAssignments extends StatefulWidget {
-  const ViewAssignments({super.key});
+  final dynamic factoryId;
+  const ViewAssignments({super.key, required this.factoryId});
 
   @override
   State<ViewAssignments> createState() => _ViewAssignmentsState();
@@ -31,7 +33,7 @@ class _ViewAssignmentsState extends State<ViewAssignments> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const OwnerDrawer(),
+      drawer: const OwnerDrawer(), // ✅ PASS FACTORY ID HERE
       appBar: AppBar(title: const Text("View Assignments")),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())

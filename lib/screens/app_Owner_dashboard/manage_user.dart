@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/assign_paermission.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/machine_assignment.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/role_management.dart';
 import '../../../../core/services/manage_users_service.dart';
 import '../../../../core/utils/theme.dart';
@@ -135,14 +136,16 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                 /// ACTION BUTTONS ROW
                 Row(
                   children: [
-                    Expanded(child: _actionBtn("Add New User", Icons.add, () {
+                    _actionBtn("Assign Machines",Icons.factory_outlined,
+                     () {
                       Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const RegisterUserRoleBased(),
-                        ),
-                      );
-                    })),
+                         context,
+                          MaterialPageRoute(
+                           builder: (_) => const MachineAssignmentPage(),
+                          ),
+                        );
+                     },
+                    ),
 
                     const SizedBox(width: 8),
 

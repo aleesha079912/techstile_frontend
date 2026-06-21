@@ -19,7 +19,7 @@ class Machine {
   factory Machine.fromJson(Map<String, dynamic> json) {
     return Machine(
       id: json['id'].toString(),
-      machineId: json['machine_id'] ?? '',
+      machineId: json['machine_name'] ?? '',
       type: json['machine_type'] ?? '',
       time: json['time'] ?? '',
     );
@@ -43,9 +43,12 @@ class MachinesService {
   final String baseUrl = "http://localhost:8000/api/machines";
 
   // 🔹 1. FETCH ALL (Laravel: machines/all)
-  Future<MachinesData> fetchMachines() async {
+  Future<MachinesData> fetchMachines(int factoryId) async {
     try {
-      final response = await http.get(Uri.parse("$baseUrl/all"),
+      final response = await http.get(
+        Uri.parse(
+          "$baseUrl/all/$factoryId",
+        ),
        headers: AuthService.authHeaders,
       );
       if (response.statusCode == 200) {
@@ -60,15 +63,20 @@ class MachinesService {
   }
 
   // 🔹 2. CREATE (Laravel: machines/add_machine)
-  Future<bool> addMachine(String machineId, String type) async {
+  Future<bool> addMachine(
+    String machineId,
+    String type,
+    int factoryId,
+    ) async {
     try {
       final response = await http.post(
         Uri.parse("$baseUrl/add_machine"),
         headers: AuthService.authHeaders,
         body: jsonEncode({
-          "machine_id": machineId,
-          "machine_type": type,
-          "time": DateTime.now().toIso8601String().substring(0, 10), // Required in Laravel
+         "machine_name": machineId,
+         "machine_type": type,
+         "factory_id": factoryId,
+         "time": DateTime.now().toIso8601String(),
         }),
       );
       return response.statusCode == 200 || response.statusCode == 201;
@@ -79,14 +87,15 @@ class MachinesService {
   }
 
   // 🔹 3. UPDATE (Laravel: machines/update_machine/{id})
-  Future<bool> updateMachine(String id, String machineId, String type) async {
+  Future<bool> updateMachine(String id, String machineId, String type, int factoryId) async {
     try {
       final response = await http.put(
         Uri.parse("$baseUrl/update_machine/$id"),
         headers: AuthService.authHeaders,
         body: jsonEncode({
-          "machine_id": machineId,
+          "machine_name": machineId,
           "machine_type": type,
+          "factory_id": factoryId,
           "time": DateTime.now().toIso8601String().substring(0, 10),
         }),
       );

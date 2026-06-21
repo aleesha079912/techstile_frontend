@@ -1,63 +1,102 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'auth_service.dart';
-class MachineAssignmentService {
-  // 127.0.0.1 browser ke liye theek hai, Emulator ke liye 10.0.2.2 use karein
-  static const String baseUrl = "http://localhost:8000/api";
+
+class AssignMachineService {
+  static final AssignMachineService instance = AssignMachineService._();
+  AssignMachineService._();
+
+  final String baseUrl = "http://localhost:8000/api";
+
+  Map<String, String> get _headers => {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        ...AuthService.authHeaders,
+      };
 
   Future<Map<String, List<dynamic>>> getAssignmentFormData() async {
-    try {
-      final responses = await Future.wait([
-        http.get(Uri.parse("$baseUrl/factories/allfactories"),
-        headers: AuthService.authHeaders,),
-        http.get(Uri.parse("$baseUrl/users/all"),
-        headers: AuthService.authHeaders,),
-        http.get(Uri.parse("$baseUrl/employees/all_employee"),
-        headers: AuthService.authHeaders,),
-        http.get(Uri.parse("$baseUrl/machines/all"),
-        headers: AuthService.authHeaders,),
-        
-      ]);
+  final factories = await getFactories();
+  final managers = await getManagers();
+  final employees = await getEmployees();
 
-      return {
-        "factories": _extractData(responses[0]),
-        "users": _extractData(responses[1]),
-        "employees": _extractData(responses[2]),
-        "machines": _extractData(responses[3]),
-      };
-    } catch (e) {
-      print("Fetch Error: $e");
-      return {"factories": [], "users": [], "employees": [], "machines": []};
-    }
-  }
+  return {
+    "factories": factories,
+    "managers": managers,
+    "employees": employees,
+  };
+}
+  
+  
+  // FACTORIES
+  Future<List<dynamic>> getFactories() async {
+    final res = await http.get(Uri.parse('$baseUrl/factories/allfactories'),
+        headers: _headers);
 
-  // Flexible extraction logic
-  List<dynamic> _extractData(http.Response res) {
     if (res.statusCode == 200) {
       final body = jsonDecode(res.body);
-      // Agar response { "data": [...] } format mein hai
-      if (body is Map && body.containsKey('data')) {
-        return body['data'];
-      } 
-      // Agar direct list [...] format mein hai
-      if (body is List) {
-        return body;
-      }
+      return body['data'] ?? [];
     }
-    print("API Error (${res.statusCode}) on: ${res.request?.url}");
     return [];
   }
 
-  Future<bool> storeProduction(Map<String, dynamic> data) async {
-    try {
-      final response = await http.post(
-        Uri.parse("$baseUrl/productions/add_production"), // Corrected Store Route
-       headers: AuthService.authHeaders,
-        body: jsonEncode(data),
-      );
-      return response.statusCode == 201 || response.statusCode == 200;
-    } catch (e) {
-      return false;
+  // MANAGERS
+  Future<List<dynamic>> getManagers() async {
+    final res = await http.get(Uri.parse('$baseUrl/users/managers'),
+        headers: _headers);
+
+    if (res.statusCode == 200) {
+      final body = jsonDecode(res.body);
+      return body['data'] ?? [];
     }
+    return [];
   }
+
+  // EMPLOYEES
+  Future<List<dynamic>> getEmployees() async {
+    final res = await http.get(Uri.parse('$baseUrl/users/employees'),
+        headers: _headers);
+
+    if (res.statusCode == 200) {
+      final body = jsonDecode(res.body);
+      return body['data'] ?? [];
+    }
+    return [];
+  }
+
+  // MACHINES BY FACTORY
+  Future<List<dynamic>> getFactoryMachines(int factoryId) async {
+    final res = await http.get(
+        Uri.parse('$baseUrl/machines/all/$factoryId'),
+        headers: _headers);
+
+    if (res.statusCode == 200) {
+      final body = jsonDecode(res.body);
+      return body['data'] ?? [];
+    }
+    return [];
+  }
+
+  // ASSIGN API
+  Future<bool> assign({
+  required int userId,
+  required int managerId,
+  required int factoryId,
+  required List<int> machineIds,
+}) async {
+  final res = await http.post(
+    Uri.parse('$baseUrl/assign-machines'),
+    headers: _headers,
+    body: jsonEncode({
+     "user_id": userId,
+     "manager_id": managerId,
+     "factory_id": factoryId,
+     "machine_ids": machineIds,
+    }),
+  );
+
+  print(res.body);
+
+  return res.statusCode == 200 ||
+      res.statusCode == 201;
+}
 }

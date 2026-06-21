@@ -67,7 +67,7 @@ class AppRoutes {
     /// OWNER DASHBOARD
     GetPage(
       name: ownerDashboard,
-      page: () => const OwnerDashboard(),
+      page: () => const OwnerDashboardScreen(factoryId: 0),
       binding: BindingsBuilder(() {
         Get.lazyPut<FactoryController>(
           () => FactoryController(),
@@ -112,7 +112,7 @@ class AppRoutes {
 
     GetPage(
       name: machines,
-      page: () => const MachinesScreen(),
+      page: () => const MachinesScreen(factoryId: 0),
     ),
 
     // GetPage(
@@ -122,7 +122,13 @@ class AppRoutes {
 
     GetPage(
       name: payments,
-      page: () => const PaymentsScreen(),
+      page: () {
+        final args = Get.arguments;
+        final factoryId = args is int
+            ? args
+            : int.tryParse(args?.toString() ?? '') ?? 0;
+        return PaymentsScreen(factoryId: factoryId);
+      },
     ),
 
     GetPage(

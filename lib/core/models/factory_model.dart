@@ -1,5 +1,6 @@
 class FactoryModel {
-  final dynamic id; // Isay dynamic rakhein taake int ya string dono chal sakein
+  final int id; // ❗ MUST be int
+
   final String name;
   final String address;
   final String city;
@@ -13,21 +14,10 @@ class FactoryModel {
 
   factory FactoryModel.fromJson(Map<String, dynamic> json) {
     return FactoryModel(
-      // .toString() lagane se agar backend se number (1) aaye ya string, 
-      // aapka model usay handle kar lega
-      id: json['id'].toString(), 
+      id: int.parse(json['id'].toString()), // 🔥 FIX HERE
       name: json['name'] ?? '',
       address: json['address'] ?? '',
       city: json['city'] ?? '',
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      "id": id,
-      "name": name,
-      "address": address,
-      "city": city,
-    };
   }
 }

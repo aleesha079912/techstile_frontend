@@ -2,16 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/pending_productions.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/user/manage_users.dart';
-import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/manage_machines.dart';
-import 'package:techstile_frontend/screens/factory_owner_dash/owner_dashboard.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/employee/attendance.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/employee/employees.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/app_owner_dash.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/machine_assignment.dart';
-import 'package:techstile_frontend/screens/factory_owner_dash/view_assignments.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/role_management.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/assign_paermission.dart';
-import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/scan_code.dart';
 class OwnerDrawer extends StatelessWidget {
   const OwnerDrawer({super.key});
 
@@ -52,14 +48,14 @@ class OwnerDrawer extends StatelessWidget {
                   context,
                   Icons.dashboard_rounded,
                   "Home",
-                  () => Get.to(() => const OwnerDashboard()),
+                  () => Get.to(() => OwnerDashboardScreen(factoryId: 0)),
                 ),
-                _item(
-                  context,
-                  Icons.badge_outlined,
-                  "Factory Dashboard",
-                    () => Get.to(() => const OwnerDashboardScreen()),
-                ),
+                // _item(
+                //   context,
+                //   Icons.badge_outlined,
+                //   "Factory Dashboard",
+                //     () => Get.to(() => FactoryDashboardScreen(factoryId: FactoryDrawer().factoryId)),
+                // ),
                 //sub menu for user management
                       ExpansionTile(
                         leading: Icon(Icons.security_rounded, color: colors.primary),
@@ -95,18 +91,12 @@ class OwnerDrawer extends StatelessWidget {
                   "Machine Assignment",
                  () => Get.to(() => const MachineAssignmentPage()),
                 ),
-                _item(
-                  context,
-                  Icons.factory_outlined,
-                  "View Assignment",
-                 () => Get.to(() => const ViewAssignments()),
-                ),
-                _item(
-                  context,
-                  Icons.precision_manufacturing_outlined,
-                  "Manage Machines",
-                  () => Get.to(() => const MachinesScreen()),//machines.dart pa jai ga add new machine page and show all machines
-                ),
+                // _item(
+                //   context,
+                //   Icons.factory_outlined,
+                //   "View Assignment",
+                //  () => Get.to(() => const ViewAssignments()),
+                // ),
                 _item(
                   context,
                   Icons.badge_outlined,
@@ -125,12 +115,12 @@ class OwnerDrawer extends StatelessWidget {
                   "Manage production",
                     () => Get.to(() => const PendingProductionScreen()),
                 ),
-                 _item(
-                  context,
-                  Icons.qr_code_scanner,
-                  "Scan QR Code",
-                    () => Get.to(() => const ScanQrCodeScreen()),
-                ),
+                //  _item(
+                //   context,
+                //   Icons.qr_code_scanner,
+                //   "Scan QR Code",
+                //     () => Get.to(() => const ScanQRCodeScreen()),
+                // ),
                 const Divider(),
                 _item(
                   context,

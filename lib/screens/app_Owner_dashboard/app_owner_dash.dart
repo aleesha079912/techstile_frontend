@@ -7,18 +7,22 @@ import 'package:techstile_frontend/screens/app_Owner_dashboard/add_factories.dar
 import 'package:techstile_frontend/screens/app_Owner_dashboard/manage_user.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/notification_screen.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/setting_screen.dart';
-import 'package:techstile_frontend/screens/factory_owner_dash/owner_dashboard.dart';
 import 'package:techstile_frontend/core/models/factory_model.dart';
-import '../../../../widgets/drawer.dart';
+import 'package:techstile_frontend/screens/factory_owner_dash/factorydashboard.dart';
+import '../../widgets/factorydrawer.dart';
 
-class OwnerDashboard extends StatefulWidget {
-  const OwnerDashboard({super.key});
-  
+class OwnerDashboardScreen extends StatefulWidget {
+  final int factoryId;
+
+  const OwnerDashboardScreen({
+    super.key,
+    required this.factoryId,
+  });
+
   @override
-  State<OwnerDashboard> createState() => _OwnerDashboardState();
+  State<OwnerDashboardScreen> createState() => _OwnerDashboardState();
 }
-
-class _OwnerDashboardState extends State<OwnerDashboard> {
+class _OwnerDashboardState extends State<OwnerDashboardScreen> {
   //  variable that tracks current active tab index (0, 1, 2, 3)
   int _currentIndex = 0;
   //  Navigation Target List
@@ -34,7 +38,7 @@ class _OwnerDashboardState extends State<OwnerDashboard> {
     Get.put(FactoryController());
     final theme = Theme.of(context);
     return Scaffold(
-      drawer: const OwnerDrawer(),
+      drawer: FactoryDrawer(factoryId: widget.factoryId),
       appBar: AppBar(
         backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: theme.appBarTheme.elevation,
@@ -326,7 +330,11 @@ class _FactoryCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
       ),
       child: ListTile(
-        onTap: () => Get.off(() => const OwnerDashboardScreen()),
+        onTap: () {
+  print("CLICKED FACTORY ID: ${factory.id}");
+
+  Get.to(() => FactoryDashboardScreen(factoryId: factory.id));
+},
         leading: CircleAvatar(
           backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
           child: Text(

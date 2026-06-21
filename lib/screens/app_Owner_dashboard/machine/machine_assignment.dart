@@ -1,7 +1,7 @@
-import '../../../core/utils/theme.dart';
 import 'package:flutter/material.dart';
-import '../../../core/services/machine_assignment_service.dart';
-import '../../../../../widgets/drawer.dart';
+import 'package:techstile_frontend/core/services/machine_assignment_service.dart';
+import 'package:techstile_frontend/widgets/owner_drawer.dart';
+
 class MachineAssignmentPage extends StatefulWidget {
   const MachineAssignmentPage({super.key});
 
@@ -10,13 +10,21 @@ class MachineAssignmentPage extends StatefulWidget {
 }
 
 class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
-  final _service = MachineAssignmentService();
-  final _lengthCtrl = TextEditingController();
-  final _varietyCtrl = TextEditingController();
+  final _service = AssignMachineService.instance;
+
   final _formKey = GlobalKey<FormState>();
 
-  List<dynamic> factories = [], users = [], employees = [], machines = [];
-  String? selFactory, selUser, selEmployee, selMachine;
+  List<dynamic> factories = [];
+  List<dynamic> managers = [];
+  List<dynamic> employees = [];
+  List<dynamic> machines = [];
+
+  int? selFactory;
+  int? selManager;
+  int? selEmployee;
+  int? selectedMachine;
+
+
   bool isLoading = true;
 
   @override
@@ -27,61 +35,124 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
 
   void _loadAllData() async {
     final data = await _service.getAssignmentFormData();
+
     setState(() {
-      factories = data['factories']!;
-      users = data['users']!;
-      employees = data['employees']!;
-      machines = data['machines']!;
+      factories = data['factories'] ?? [];
+      managers = data['managers'] ?? [];
+      employees = data['employees'] ?? [];
       isLoading = false;
     });
   }
 
+  void _loadMachines(int factoryId) async {
+    final data = await _service.getFactoryMachines(factoryId);
+
+    setState(() {
+      machines = data;
+      selectedMachine = null;
+    });
+  }
+
+  Future<void> _handleAssignment() async {
+  if (!_formKey.currentState!.validate()) return;
+
+  if (selectedMachine == null) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Please select a machine"),
+      ),
+    );
+    return;
+  }
+
+  final success = await _service.assign(
+    userId: selEmployee!,
+    managerId: selManager!,
+    factoryId: selFactory!,
+    machineIds: [selectedMachine!], // single machine
+  );
+
+  if (!mounted) return;
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        success ? "Assignment Successful" : "Failed",
+      ),
+      backgroundColor: success ? Colors.green : Colors.red,
+    ),
+  );
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        drawer: const OwnerDrawer(), 
-      appBar: AppBar(
-        title: const Text("Machine Assignment"),
-        centerTitle: true,
-      ),
+      drawer: const OwnerDrawer(),
+      appBar: AppBar(title: const Text("Machine Assignment")),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(20),
               child: Form(
                 key: _formKey,
                 child: Column(
                   children: [
-                    // Dropdowns
-                    _buildDrop("Select Factory", factories, selFactory, (v) => setState(() => selFactory = v)),
-                    _buildDrop("Select User", users, selUser, (v) => setState(() => selUser = v)),
-                    _buildDrop("Select Employee", employees, selEmployee, (v) => setState(() => selEmployee = v)),
-                    _buildDrop("Select Machine", machines, selMachine, (v) => setState(() => selMachine = v)),
+                    _buildDrop(
+                      "Select Factory",
+                      factories,
+                      selFactory,
+                      (v) {
+                        setState(() {
+                          selFactory = v;
+                        });
+                        _loadMachines(v!);
+                      },
+                    ),
+
+                    _buildDrop(
+                      "Select Manager",
+                      managers,
+                      selManager,
+                      (v) => setState(() => selManager = v),
+                    ),
+
+                    _buildDrop(
+                      "Select Employee",
+                      employees,
+                      selEmployee,
+                      (v) => setState(() => selEmployee = v),
+                    ),
 
                     const SizedBox(height: 10),
 
-                    // Text Fields
-                    _buildTextField(_lengthCtrl, "Enter Length", "Length", TextInputType.number),
-                    const SizedBox(height: 15),
-                    _buildTextField(_varietyCtrl, "Enter Variety", "Variety", TextInputType.text),
+                    const Text(
+                      "Select Machines",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
 
-                    const SizedBox(height: 40),
+                   Column(
+                    children: machines.map((m) {
+                      int id = m['id'];
+                      return RadioListTile<int>(
+                        value: id,
+                        groupValue: selectedMachine,
+                        title: Text(
+                           m['machine_name'] ?? 'Machine',
+                           ),
+                           onChanged: (value) {
+                            setState(() {
+                              selectedMachine = value;
+                            });
+                         },
+                      );
+                    }).toList(),
+                  ),
 
-                    // Add Button
-                    SizedBox(
-                      width: double.infinity,
-                      height: 55,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppTheme.primary,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        ),
-                        onPressed: _handleAssignment,
-                        child: const Text(
-                          "ADD ASSIGNMENT",
-                          style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-                        ),
-                      ),
+                    const SizedBox(height: 20),
+
+                    ElevatedButton(
+                      onPressed: _handleAssignment,
+                      child: const Text("Assign"),
                     ),
                   ],
                 ),
@@ -90,76 +161,31 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
     );
   }
 
-  // Common Dropdown Builder
-  Widget _buildDrop(String hint, List items, String? value, Function(String?) onChanged) {
+  Widget _buildDrop(
+    String label,
+    List items,
+    int? value,
+    Function(int?) onChanged,
+  ) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
-      child: DropdownButtonFormField<String>(
-        initialValue: value,
+      child: DropdownButtonFormField<int>(
+        value: value,
         isExpanded: true,
-        hint: Text(hint),
         decoration: InputDecoration(
-          filled: true,
-          fillColor: Colors.white,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+          labelText: label,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
         items: items.map((e) {
-          return DropdownMenuItem<String>(
-            value: e['id'].toString(),
-            child: Text(e['name'] ?? e['machine_id'] ?? "ID: ${e['id']}"),
+          return DropdownMenuItem<int>(
+            value: e['id'],
+            child: Text(e['name'] ?? 'Unknown'),
           );
         }).toList(),
         onChanged: onChanged,
-        validator: (v) => v == null ? "Field required" : null,
       ),
     );
-  }
-
-  // Common TextField Builder
-  Widget _buildTextField(TextEditingController ctrl, String hint, String label, TextInputType type) {
-    return TextFormField(
-      controller: ctrl,
-      keyboardType: type,
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: hint,
-        filled: true,
-        fillColor: Colors.white,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
-      ),
-      validator: (v) => v!.isEmpty ? "Enter $label" : null,
-    );
-  }
-
-  void _handleAssignment() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() => isLoading = true);
-
-      final body = {
-        "factory_id": selFactory,
-        "user_id": selUser,
-        "employee_id": selEmployee,
-        "machine_id": selMachine,
-        "total_length": _lengthCtrl.text,
-        "variety_type": _varietyCtrl.text,
-        // Backend keys agar different hain to yahan change karlein
-      };
-
-      final success = await _service.storeProduction(body);
-
-      setState(() => isLoading = false);
-
-      if (success) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Machine Assigned Successfully!"), backgroundColor: AppTheme.tertiary),
-        );
-        _formKey.currentState!.reset();
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Error storing production!"), backgroundColor: Colors.red),
-        );
-      }
-    }
   }
 }

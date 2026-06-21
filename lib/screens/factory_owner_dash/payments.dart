@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/services/payments_service.dart';
 import '../../core/utils/theme.dart'; 
 import '../../../../widgets/bottom_nav_bar.dart';
-import '../../../../widgets/drawer.dart'; 
+import '../../widgets/factorydrawer.dart'; 
 
 // ── Text styles ───────────────────────────────────────────────────────────────
 const _kSora = 'Sora';
@@ -12,7 +12,9 @@ TextStyle _ts(double size, FontWeight w, Color c, {double? ls}) =>
 
 // ── Screen ───────────────────────────────────────────────────────────────────
 class PaymentsScreen extends StatefulWidget {
-  const PaymentsScreen({super.key});
+  const PaymentsScreen({super.key, required this.factoryId});
+
+  final int factoryId;
 
   @override
   State<PaymentsScreen> createState() => _PaymentsScreenState();
@@ -40,13 +42,13 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       backgroundColor: theme.scaffoldBackgroundColor, 
       
       // 1. Drawer yahan sahi hai
-      drawer: const OwnerDrawer(),
+      drawer: FactoryDrawer(factoryId: widget.factoryId), // ✅ PASS FACTORY ID HERE
       
       appBar: _appBar(context),
       body: _svc.isLoading
           ? Center(child: CircularProgressIndicator(color: colors.primary, strokeWidth: 2))
           : _body(context),
-      bottomNavigationBar: const CustomBottomNav(currentIndex: 2),
+      bottomNavigationBar: CustomBottomNav(currentIndex: 2, factoryId: widget.factoryId),
     );
   }
 
