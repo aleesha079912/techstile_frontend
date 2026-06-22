@@ -7,7 +7,7 @@ import 'package:techstile_frontend/screens/app_Owner_dashboard/add_factories.dar
 import 'package:techstile_frontend/screens/app_Owner_dashboard/manage_user.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/notification_screen.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/setting_screen.dart';
-import 'package:techstile_frontend/screens/factory_owner_dash/owner_dashboard.dart';
+import 'package:techstile_frontend/screens/factory_owner_dash/factory_dashboard.dart';
 import 'package:techstile_frontend/core/models/factory_model.dart';
 import '../../../../widgets/drawer.dart';
 
@@ -319,56 +319,108 @@ class _FactoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     final theme = Theme.of(context);
+
     return Container(
       decoration: BoxDecoration(
         color: theme.colorScheme.onPrimary,
         borderRadius: BorderRadius.circular(18),
       ),
+
       child: ListTile(
-        onTap: () => Get.off(() => const OwnerDashboardScreen()),
+
+        // ✅ Factory click → Factory Dashboard open
+        onTap: () {
+
+          Get.to(
+            () => FactoryDashboard(
+              factoryId: factory.id,
+            ),
+          );
+
+        },
+
+
         leading: CircleAvatar(
-          backgroundColor: theme.colorScheme.primary.withOpacity(0.1),
+
+          backgroundColor:
+          theme.colorScheme.primary.withOpacity(0.1),
+
           child: Text(
-            //  Null / Empty Safety Check
-            // if the factory name is not empty, show the first letter capitalized; otherwise, show "?".
-            factory.name.isNotEmpty ? factory.name[0].toUpperCase() : "?",
-            style: TextStyle(color: theme.colorScheme.primary),
+
+            factory.name.isNotEmpty
+                ? factory.name[0].toUpperCase()
+                : "?",
+
+            style: TextStyle(
+              color: theme.colorScheme.primary,
+            ),
+
           ),
+
         ),
+
+
         title: Text(
           factory.name,
-          style: const TextStyle(fontWeight: FontWeight.w600),
+          style: const TextStyle(
+            fontWeight: FontWeight.w600,
+          ),
         ),
+
+
         subtitle: Text(
-          //  String Interpolation
-           "${factory.city} • ${factory.address}",
+          "${factory.city} • ${factory.address}",
           style: theme.textTheme.bodyMedium,
         ),
+
+
         trailing: Row(
-          mainAxisSize: MainAxisSize
-              .min, // fix the Element size inside row its compulsory.
+
+          mainAxisSize: MainAxisSize.min,
+
           children: [
-            // Route Arguments Passing
-            // 'arguments: factory' through this send the selected factory data into new page. 
+
+
             IconButton(
+
               onPressed: () {
-                Get.to(() => const AddFactoryScreen(), arguments: factory);
+
+                Get.to(
+                  () => const AddFactoryScreen(),
+                  arguments: factory,
+                );
+
               },
+
               icon: const Icon(Icons.edit_outlined),
-              color: theme
-                  .colorScheme
-                  .secondary, 
+
+              color: theme.colorScheme.secondary,
+
             ),
-            //  Action Callbacks
+
+
+
             IconButton(
+
               onPressed: onDelete,
+
               icon: const Icon(Icons.delete_outline),
-              color: Colors.red, 
+
+              color: Colors.red,
+
             ),
+
+
           ],
+
         ),
+
       ),
+
     );
+
   }
 }
+

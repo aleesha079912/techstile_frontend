@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import '../screens/factory_owner_dash/owner_dashboard.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import '../screens/factory_owner_dash/factory_dashboard.dart';
 import '../screens/app_Owner_dashboard/machine/manage_machines.dart';
 import '../screens/factory_owner_dash/payments.dart';
  import '../screens/app_Owner_dashboard/user/manage_users.dart';
@@ -16,7 +18,9 @@ class CustomBottomNav extends StatelessWidget {
 
     switch (index) {
       case 0:
-        page = const OwnerDashboardScreen();
+         page = FactoryDashboard(
+      factoryId: Get.arguments ?? 0,
+    );
         break;
       case 1:
         page = const MachinesScreen();

@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import '../../routes/routes.dart';
  
  final attendanceService = AttendanceService();
+ bool alreadyMarkedToday = false;
 class MachineDetailScreen extends StatefulWidget {
   final String machineId;
   const MachineDetailScreen({
@@ -44,10 +45,10 @@ class _MachineDetailScreenState
 
       setState(() {
         machine   = data;
-        // ✅ Yahan set karo
         canAdd    = data['can_add_production'] ?? false;
         remaining = (data['remaining'] ?? 0).toDouble();
         loading   = false;
+        alreadyMarkedToday = data['already_marked_today'] ?? false;
       });
     } catch (e) {
       setState(() {
@@ -187,7 +188,7 @@ class _MachineDetailScreenState
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                         backgroundColor:
-                            canAdd ? AppTheme.primary : Colors.grey,
+                            canAdd ? AppTheme.primary : Colors.green,
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12)),
@@ -209,7 +210,7 @@ class _MachineDetailScreenState
                           : () {
                               Get.snackbar(
                                 "Complete",
-                                "Is machine ki production poori ho gayi",
+                                "The Production is Completed of this Machine",
                                 backgroundColor: Colors.orange,
                                 colorText: Colors.white,
                               );
@@ -218,7 +219,7 @@ class _MachineDetailScreenState
                       label: Text(
                         canAdd
                             ? "Enter Production (Remaining: $remaining)"
-                            : "Production Complete ✅",
+                            : "Production Complete",
                         style: const TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 16),
                       ),
@@ -230,10 +231,16 @@ class _MachineDetailScreenState
                     height:55,
                 child: ElevatedButton.icon(
 
-                    onPressed: () async{
-
-
-                      final success =
+                   onPressed: alreadyMarkedToday
+                      ? () {
+                          Get.snackbar(
+                            "Already Marked",
+                            "Already Marked",
+                            backgroundColor: Colors.orange,
+                            colorText: Colors.white,
+                          );
+                        }
+                      : () async{ final success =
                       await attendanceService.markAttendance(
 
                         employeeId:
@@ -253,6 +260,7 @@ class _MachineDetailScreenState
                         backgroundColor: Colors.green,
                         colorText: Colors.white
                         );
+                        loadData();
 
                       }
                       else{
@@ -272,8 +280,10 @@ class _MachineDetailScreenState
 
                     icon:const Icon(Icons.fingerprint),
 
-                    label:const Text(
-                    "Mark Attendance",
+                    label: Text(
+                        alreadyMarkedToday
+                        ? "Attendance Already Marked"
+                        : "Mark Attendance",
                     style:TextStyle(
                     fontSize:16,
                     fontWeight:FontWeight.bold

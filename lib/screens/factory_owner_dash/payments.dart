@@ -39,7 +39,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor, 
       
-      // 1. Drawer yahan sahi hai
+  
       drawer: const OwnerDrawer(),
       
       appBar: _appBar(context),

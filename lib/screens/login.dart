@@ -80,9 +80,15 @@ class _LoginScreenState extends State<LoginScreen> {
         // Role based navigation
         if (roleName == 'owner') {
           Get.offAllNamed(AppRoutes.ownerDashboard);
-        } else if (roleName == 'manager') {
-          Get.offAllNamed(AppRoutes.managerDashboard);
-        } else if (roleName == 'employee') {
+        } else if (roleName == 'manager'){
+  // ✅ factoryId pass karo
+  final managerId = userData['id'];
+  
+  Get.offAllNamed(
+    AppRoutes.managerDashboard,
+    arguments: managerId, // ya factoryId — backend kya expect karta hai
+  );
+} else if (roleName == 'employee') {
           Get.offAllNamed(AppRoutes.employeeDashboard);
         } else {
           Get.snackbar(

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/pending_productions.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/user/manage_users.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/manage_machines.dart';
-import 'package:techstile_frontend/screens/factory_owner_dash/owner_dashboard.dart';
+import 'package:techstile_frontend/screens/factory_owner_dash/factory_dashboard.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/employee/attendance.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/employee/employees.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/app_owner_dash.dart';
@@ -54,12 +54,12 @@ class OwnerDrawer extends StatelessWidget {
                   "Home",
                   () => Get.to(() => const OwnerDashboard()),
                 ),
-                _item(
-                  context,
-                  Icons.badge_outlined,
-                  "Factory Dashboard",
-                    () => Get.to(() => const OwnerDashboardScreen()),
-                ),
+                // _item(
+                //   context,
+                //   Icons.badge_outlined,
+                //   "Factory Dashboard",
+                //     () => Get.to(() => const FactoryDashboard()),
+                // ),
                 //sub menu for user management
                       ExpansionTile(
                         leading: Icon(Icons.security_rounded, color: colors.primary),
