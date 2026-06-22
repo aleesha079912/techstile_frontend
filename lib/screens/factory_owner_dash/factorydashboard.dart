@@ -1,347 +1,380 @@
 import 'package:flutter/material.dart';
+import 'package:techstile_frontend/core/services/factory_dashbaord_service.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
-import 'package:techstile_frontend/widgets/factorydrawer.dart';
-import '../../core/services/owner_dashboard_service.dart';
+// ── Palette ────────────────────────────────────────────────────────────────────
+const _navy   = Color(0xFF0D1B4B);
+const _navy2  = Color(0xFF1A3570);
+const _teal   = Color(0xFF00C8B0);
+const _bg     = Color(0xFFF5F6FA);
+const _white  = Colors.white;
+const _amber  = Color(0xFFFF8C42);
 
-class FactoryDashboardScreen extends StatefulWidget {
-  final int factoryId;
-
-  const FactoryDashboardScreen({
-    super.key,
-    required this.factoryId,
-  });
+class FactoryDashboard extends StatefulWidget {
+  final String factoryId;
+  const FactoryDashboard({super.key, required this.factoryId});
 
   @override
-  State<FactoryDashboardScreen> createState() => _FactoryDashboardScreenState();
+  State<FactoryDashboard> createState() => _FactoryDashboardState();
 }
 
-class _FactoryDashboardScreenState extends State<FactoryDashboardScreen> {
-  final _service = OwnerDashboardService.instance;
+class _FactoryDashboardState extends State<FactoryDashboard> {
+  final _service = FactoryDashboardService();
 
-  OwnerDashboardSnapshot? _snapshot;
-  bool _loading = true;
+  bool loading = true;
+  Map data = {};
+  
+  int get factoryId => int.parse(widget.factoryId);
 
- @override
-void initState() {
-  super.initState();
+  @override
+  void initState() {
+    super.initState();
+    load();
+  }
 
-  print("=================================");
-  print("OPENED FACTORY ID => ${widget.factoryId}");
-  print("=================================");
+  Future<void> load() async {
+    setState(() => loading = true);
+    try {
+      final res = await _service.getDashboard(widget.factoryId);
+      setState(() {
+        data    = res;
+        loading = false;
+      });
+    } catch (_) {
+      setState(() => loading = false);
+    }
+  }
 
-  _service.init(widget.factoryId);
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: _bg,
+      appBar: _buildAppBar(),
+      body: loading
+          ? const Center(
+              child: CircularProgressIndicator(color: _navy, strokeWidth: 2.5))
+          : RefreshIndicator(
+              color: _navy,
+              onRefresh: load,
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _heroCard(),
+                    const SizedBox(height: 20),
 
-  _service.stream.listen((snap) {
-    print("SNAPSHOT RECEIVED FOR FACTORY => ${widget.factoryId}");
+                    const _SectionLabel(text: 'This Week'),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        _statCard(
+                          icon:  Icons.today_rounded,
+                          label: 'Today',
+                          value: "${data['today_units'] ?? 0}",
+                          unit:  'yards',
+                          color: _teal,
+                        ),
+                        const SizedBox(width: 12),
+                        _statCard(
+                          icon:  Icons.calendar_month_rounded,
+                          label: 'Weekly',
+                          value: "${data['weekly_units'] ?? 0}",
+                          unit:  'yards',
+                          color: _amber,
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
 
-    if (!mounted) return;
+                    const _SectionLabel(text: 'Floor Assets'),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        _statCard(
+                          icon:  Icons.precision_manufacturing_rounded,
+                          label: 'Machines',
+                          value: "${data['machines_count'] ?? 0}",
+                          unit:  'active',
+                          color: _navy2,
+                        ),
+                        const SizedBox(width: 12),
+                        _statCard(
+                          icon:  Icons.groups_rounded,
+                          label: 'Employees',
+                          value: "${data['employees_count'] ?? 0}",
+                          unit:  'on duty',
+                          color: const Color(0xFF7B61FF),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
 
-    setState(() {
-      _snapshot = snap;
-      _loading = false;
-    });
-  });
-}
- @override
-Widget build(BuildContext context) {
-  final theme = Theme.of(context);
-  final colorScheme = theme.colorScheme;
+                    _SectionLabel(
+                      text:
+                          'Varieties (${data['total_varieties'] ?? 0})',
+                    ),
+                    const SizedBox(height: 12),
+                    _varietiesList(),
+                  ],
+                ),
+              ),
+            ),
+            bottomNavigationBar: CustomBottomNav(currentIndex: 0, factoryId: factoryId),
+    );
+  }
 
-  return Scaffold(
-    backgroundColor: theme.scaffoldBackgroundColor,
-    drawer: FactoryDrawer(factoryId: widget.factoryId),
-    appBar: AppBar(
-      backgroundColor: Colors.white,
+  // ── AppBar ─────────────────────────────────────────────────────────────────
+  PreferredSizeWidget _buildAppBar() {
+    return AppBar(
+      backgroundColor: _navy,
       elevation: 0,
-      surfaceTintColor: Colors.transparent,
-      centerTitle: false,
-      leadingWidth: 48,
-      leading: Builder(
-        builder: (context) => IconButton(
-          padding: const EdgeInsets.only(left: 12),
-          icon: Icon(
-            Icons.menu_rounded,
-            color: colorScheme.primary,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back_ios_new_rounded,
+            color: _white, size: 20),
+        onPressed: () => Navigator.pop(context),
+      ),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'TechStile',
+            style: TextStyle(
+                color: _white, fontWeight: FontWeight.w800, fontSize: 17),
           ),
-          onPressed: () => Scaffold.of(context).openDrawer(),
-        ),
+          Text(
+            data['factory']?['name'] ?? 'Loading…',
+            style: TextStyle(
+                color: _white.withOpacity(0.65),
+                fontSize: 12,
+                fontWeight: FontWeight.w400),
+          ),
+        ],
       ),
-      title: Text(
-        'TextileOS',
-        style: TextStyle(
-          color: colorScheme.primary,
-          fontWeight: FontWeight.bold,
-          fontSize: 18,
-          fontFamily: 'Sora',
+    );
+  }
+
+  // ── Hero card — factory location summary ────────────────────────────────────
+  Widget _heroCard() {
+    final factory = data['factory'];
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [_navy, _navy2],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+              color: _navy.withOpacity(0.3),
+              blurRadius: 16,
+              offset: const Offset(0, 6)),
+        ],
       ),
-      actions: [
-        Padding(
-          padding: const EdgeInsets.only(right: 16.0),
-          child: CircleAvatar(
-            radius: 16,
-            backgroundColor: colorScheme.primary,
-            child: const Icon(
-              Icons.person_outline_rounded,
-              color: Colors.white,
-              size: 18,
+      child: Row(
+        children: [
+          Container(
+            width: 56,
+            height: 56,
+            decoration: BoxDecoration(
+              color: _white.withOpacity(0.12),
+              borderRadius: BorderRadius.circular(16),
             ),
+            child: const Icon(Icons.factory_rounded,
+                color: _teal, size: 28),
           ),
-        ),
-      ],
-    ),
-    body: RefreshIndicator(
-  onRefresh: () => _service.refresh(widget.factoryId),
-  child: SingleChildScrollView(
-    physics: const AlwaysScrollableScrollPhysics(),
-    padding: const EdgeInsets.all(20),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-
-        // FACTORY ID CARD
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(16),
-          margin: const EdgeInsets.only(bottom: 20),
-          decoration: BoxDecoration(
-            color: Colors.blue.shade50,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: Colors.blue),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'CURRENT FACTORY',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                'Factory ID: ${widget.factoryId}',
-                style: const TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        _buildHealthIndex(
-          _snapshot?.health ??
-              FactoryHealthData(
-                healthIndex: 85,
-                insight: "Factory running normally.",
-              ),
-          colorScheme,
-        ),
-
-        const SizedBox(height: 25),
-
-        _buildProductionCard(
-          _snapshot?.production ??
-              MonthlyProductionData(
-                value: 120,
-                growth: 12,
-              ),
-          colorScheme,
-        ),
-
-        const SizedBox(height: 15),
-
-        _buildRevenueCard(
-          _snapshot?.revenue ??
-              RevenuePipelineData(
-                amount: 2.5,
-                growth: 8,
-                progress: 0.65,
-              ),
-          colorScheme,
-        ),
-      ],
-    ),
-  ),
-),
-    bottomNavigationBar: CustomBottomNav(
-  currentIndex: 0,
-  factoryId: widget.factoryId,
-),
-  );
-}
-
-/// ----------------------
-/// FACTORY HEALTH INDEX
-/// ----------------------
-Widget _buildHealthIndex(
-  FactoryHealthData data,
-  ColorScheme colors,
-) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        'FACTORY HEALTH INDEX',
-        style: TextStyle(
-          color: colors.onSurface.withValues(alpha: 0.5),
-          fontSize: 11,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 1,
-        ),
-      ),
-      const SizedBox(height: 8),
-      Text(
-        '${data.healthIndex}%',
-        style: TextStyle(
-          fontSize: 48,
-          fontWeight: FontWeight.w900,
-          color: colors.primary,
-        ),
-      ),
-      const SizedBox(height: 8),
-      Text(
-        data.insight,
-        style: const TextStyle(
-          fontSize: 14,
-          height: 1.5,
-          color: Colors.black87,
-        ),
-      ),
-    ],
-  );
-}
-
-/// ----------------------
-/// MONTHLY PRODUCTION
-/// ----------------------
-Widget _buildProductionCard(
-  MonthlyProductionData data,
-  ColorScheme colors,
-) {
-  return Container(
-    padding: const EdgeInsets.all(20),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(16),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.04),
-          blurRadius: 10,
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'MONTHLY PRODUCTION',
-          style: TextStyle(
-            fontSize: 10,
-            color: colors.onSurface.withValues(alpha: 0.5),
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              '${data.value}k',
-              style: const TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Row(
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.trending_up,
-                  color: colors.secondary,
-                  size: 18,
-                ),
                 Text(
-                  ' ${data.growth}%',
-                  style: TextStyle(
-                    color: colors.secondary,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  factory?['name'] ?? 'Factory',
+                  style: const TextStyle(
+                      color: _white, fontWeight: FontWeight.w800, fontSize: 18),
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Icon(Icons.location_on_outlined,
+                        color: _white.withOpacity(0.6), size: 14),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        '${factory?['address'] ?? ''}, ${factory?['city'] ?? ''}',
+                        style: TextStyle(
+                            color: _white.withOpacity(0.65), fontSize: 12),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ── Stat card — reusable ────────────────────────────────────────────────────
+  Widget _statCard({
+    required IconData icon,
+    required String label,
+    required String value,
+    required String unit,
+    required Color color,
+  }) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: _white,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black.withOpacity(0.04),
+                blurRadius: 10,
+                offset: const Offset(0, 3)),
           ],
         ),
-        const Text(
-          'Yards of premium weave',
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey,
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.12),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(icon, color: color, size: 18),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              value,
+              style: const TextStyle(
+                  color: _navy, fontSize: 24, fontWeight: FontWeight.w800),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              '$label · $unit',
+              style: TextStyle(
+                  color: _navy.withOpacity(0.5),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500),
+            ),
+          ],
         ),
-      ],
-    ),
-  );
-}
+      ),
+    );
+  }
 
-/// ----------------------
-/// REVENUE PIPELINE
-/// ----------------------
-Widget _buildRevenueCard(
-  RevenuePipelineData data,
-  ColorScheme colors,
-) {
+  // ── Varieties list ───────────────────────────────────────────────────────────
+  Widget _varietiesList() {
+  final varieties = (data['varieties'] as List?) ?? [];
+
+  if (varieties.isEmpty) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 32),
+      decoration: BoxDecoration(
+        color: _white,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        children: [
+          Icon(Icons.inventory_2_outlined,
+              size: 40, color: Colors.grey.shade300),
+          const SizedBox(height: 10),
+          Text('No varieties produced yet',
+              style: TextStyle(color: Colors.grey.shade400, fontSize: 13)),
+        ],
+      ),
+    );
+  }
+
   return Container(
-    padding: const EdgeInsets.all(20),
     decoration: BoxDecoration(
-      color: colors.primary,
+      color: _white,
       borderRadius: BorderRadius.circular(16),
+      boxShadow: [
+        BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 3)),
+      ],
     ),
     child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'REVENUE PIPELINE',
-          style: TextStyle(
-            color: Colors.white70,
-            fontSize: 10,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: List.generate(varieties.length, (i) {
+        final item    = varieties[i];
+        final isLast  = i == varieties.length - 1;
+
+        return Column(
           children: [
-            Text(
-              '\$${data.amount}M',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              '+${data.growth}%',
-              style: TextStyle(
-                color: colors.secondary,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 15),
-        ClipRRect(
+           Padding(
+  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+  child: Row(
+    children: [
+      Container(
+        width: 32,
+        height: 32,
+        decoration: BoxDecoration(
+          color: _teal.withOpacity(0.12),
           borderRadius: BorderRadius.circular(10),
-          child: LinearProgressIndicator(
-            value: data.progress,
-            backgroundColor: Colors.white10,
-            color: colors.secondary,
-            minHeight: 6,
-          ),
         ),
-      ],
+        child: const Icon(Icons.texture_rounded, color: _teal, size: 16),
+      ),
+      const SizedBox(width: 12),
+      Expanded(
+        child: Text(
+          item['variety_type']?.toString() ?? '',
+          style: const TextStyle(
+              color: _navy, fontSize: 14, fontWeight: FontWeight.w600),
+        ),
+      ),
+      // ✅ Sirf ready production sum
+      Text(
+        '${item['ready_production'] ?? 0}',
+        style: const TextStyle(
+            color: _teal, fontSize: 16, fontWeight: FontWeight.w800),
+      ),
+    ],
+  ),
+),
+            if (!isLast)
+              Divider(height: 1, color: Colors.grey.shade100, indent: 16, endIndent: 16),
+          ],
+        );
+      }),
     ),
   );
 }
+}
+// ── Section label ─────────────────────────────────────────────────────────────
+class _SectionLabel extends StatelessWidget {
+  final String text;
+  const _SectionLabel({required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 4,
+          height: 16,
+          decoration: BoxDecoration(
+              color: _teal, borderRadius: BorderRadius.circular(2)),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          text,
+          style: const TextStyle(
+              color: _navy, fontWeight: FontWeight.w700, fontSize: 15),
+        ),
+      ],
+    );
+  }
 }

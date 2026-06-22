@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/pending_productions.dart';
-import 'package:techstile_frontend/screens/app_Owner_dashboard/user/manage_users.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/employee/attendance.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/employee/employees.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/app_owner_dash.dart';
@@ -9,7 +8,10 @@ import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/machine_a
 import 'package:techstile_frontend/screens/app_Owner_dashboard/role_management.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/assign_paermission.dart';
 class OwnerDrawer extends StatelessWidget {
-  const OwnerDrawer({super.key});
+
+  const OwnerDrawer({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -79,12 +81,12 @@ class OwnerDrawer extends StatelessWidget {
                           ),
                         ],
                       ),
-                _item(
-                  context,
-                  Icons.people_outline,
-                  "Manage Users",
-                  () => Get.to(() => const ManageUsersScreen()),
-                ),
+                // _item(
+                //   context,
+                //   Icons.people_outline,
+                //   "Manage Users",
+                //   () => Get.to(() => FactoryUsersScreen(factoryId: factoryId)),
+                // ),
                 _item(
                   context,
                   Icons.factory_outlined,
@@ -97,12 +99,12 @@ class OwnerDrawer extends StatelessWidget {
                 //   "View Assignment",
                 //  () => Get.to(() => const ViewAssignments()),
                 // ),
-                _item(
-                  context,
-                  Icons.badge_outlined,
-                  "Manage Employees",
-                    () => Get.to(() => const EmployeeScreen()),
-                ),
+                // _item(
+                //   context,
+                //   Icons.badge_outlined,
+                //   "Manage Employees",
+                //     () => Get.to(() => EmployeeScreen(factoryId: factoryId, userId: userId)),
+                // ),
                 _item(
                   context,
                   Icons.access_time_rounded,

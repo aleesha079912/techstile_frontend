@@ -60,4 +60,19 @@ class EmployeeService {
       return false;
     }
   }
+
+  Future<List<dynamic>> fetchEmployeesByFactory(int factoryId, int userId) async {
+    try {
+      final response = await http.get(
+        Uri.parse("$baseUrl/employees?factory_id=$factoryId&user_id=$userId"),
+        headers: AuthService.authHeaders,
+      );
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      }
+    } catch (e) {
+      print("Fetch by factory error: $e");
+    }
+    return [];
+  }
 }

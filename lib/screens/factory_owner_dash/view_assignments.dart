@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:techstile_frontend/widgets/owner_drawer.dart';
 import '../../core/services/view_assignment_service.dart';
-import 'package:techstile_frontend/widgets/factorydrawer.dart';
 
 class ViewAssignments extends StatefulWidget {
   final dynamic factoryId;

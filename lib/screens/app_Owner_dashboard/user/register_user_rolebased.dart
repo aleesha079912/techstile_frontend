@@ -15,6 +15,9 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
 
+  List<String> roles = [];
+  String? selectedRole;
+
   // Controllers
   final nameCtrl = TextEditingController();
   final emailCtrl = TextEditingController();
@@ -38,7 +41,20 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
       roleCtrl.text = widget.user!.role;
       detailsCtrl.text = widget.user!.details;
     }
+    _loadRoles();
   }
+  
+  Future<void> _loadRoles() async {
+  final result = await _service.fetchRoles();
+
+  setState(() {
+    roles = result;
+
+    if (widget.user != null) {
+      selectedRole = widget.user!.role;
+    }
+  });
+}
 
   Future<void> _handleSave() async {
     if (!_formKey.currentState!.validate()) return;
@@ -55,7 +71,7 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
           phone: phoneCtrl.text,
           cnic: cnicCtrl.text,
           address: addressCtrl.text,
-          role: roleCtrl.text,
+          role: selectedRole ?? '',
           details: detailsCtrl.text,
         ),
         passwordCtrl.text,
@@ -68,7 +84,7 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
         "phone_no": phoneCtrl.text,
         "cnic": cnicCtrl.text,
         "address": addressCtrl.text,
-        "role": roleCtrl.text,
+        "role": selectedRole,
         "employee_details": detailsCtrl.text,
       };
       if (passwordCtrl.text.isNotEmpty) data['password'] = passwordCtrl.text;
@@ -104,7 +120,29 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
                   _buildField(phoneCtrl, "Phone Number", Icons.phone),
                   _buildField(cnicCtrl, "CNIC Number", Icons.credit_card),
                   _buildField(addressCtrl, "Home Address", Icons.home),
-                  _buildField(roleCtrl, "Role", Icons.work),
+                  DropdownButtonFormField<String>(
+                    value: selectedRole,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.work, color: AppTheme.primary),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      hintText: "Select Role",
+                    ),
+                    items: roles.map((role) {
+                      return DropdownMenuItem<String>(
+                        value: role,
+                        child: Text(role),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        selectedRole = value;
+                      });
+                    },
+                    validator: (value) =>
+                        value == null ? "Select Role" : null,
+                  ),
                   _buildField(detailsCtrl, "Notes", Icons.description, maxLines: 3),
                   const SizedBox(height: 20),
                   SizedBox(

@@ -145,6 +145,41 @@ class ManageUsersService {
     }
   }
 
+  // ───────────────────────── ROLES ─────────────────────────
+
+Future<List<String>> fetchRoles() async {
+  try {
+    final response = await http.get(
+      Uri.parse('$baseUrl/users/all'),
+      headers: _headers,
+    );
+
+    if (response.statusCode == 200) {
+      final decoded = jsonDecode(response.body);
+
+      final List users =
+          decoded is List ? decoded : decoded['data'] ?? [];
+
+      final Set<String> roles = {};
+
+      for (final user in users) {
+        if (user['roles'] != null &&
+            user['roles'] is List &&
+            (user['roles'] as List).isNotEmpty) {
+          roles.add(user['roles'][0]['name'].toString());
+        }
+      }
+
+      return roles.toList();
+    }
+
+    return [];
+  } catch (e) {
+    print("fetchRoles error: $e");
+    return [];
+  }
+}
+
   // ───────────────────────── FACTORIES ─────────────────────────
 
   Future<List<dynamic>> getFactories() async {

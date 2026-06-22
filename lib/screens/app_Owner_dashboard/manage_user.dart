@@ -82,12 +82,6 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
-                const Text(
-                  "ADMINISTRATIVE CONSOLE",
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
-                ),
-
                 const SizedBox(height: 6),
 
                 const Text(
@@ -116,36 +110,22 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 10),
-
-                /// FILTER CHIPS
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: [
-                      _chip("All"),
-                      _chip("Admins"),
-                      _chip("Managers"),
-                      _chip("Workers"),
-                    ],
-                  ),
-                ),
-
                 const SizedBox(height: 12),
 
                 /// ACTION BUTTONS ROW
                 Row(
                   children: [
-                    _actionBtn("Assign Machines",Icons.factory_outlined,
-                     () {
+
+                    const SizedBox(width: 8),
+
+                    Expanded(child: _actionBtn("Assign Machines", Icons.factory_outlined, () {
                       Navigator.push(
-                         context,
-                          MaterialPageRoute(
-                           builder: (_) => const MachineAssignmentPage(),
-                          ),
-                        );
-                     },
-                    ),
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const MachineAssignmentPage(),
+                        ),
+                      );
+                    })),
 
                     const SizedBox(width: 8),
 
@@ -170,9 +150,24 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                     })),
                   ],
                 ),
+
+                const SizedBox(height: 10),
+
+                /// FILTER CHIPS
+                SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    children: [
+                      _chip("All"),
+                      _chip("Admins"),
+                      _chip("Managers"),
+                      _chip("Employees"),
+                    ],
+                  ),
+                ),
               ],
+            ) 
             ),
-          ),
 
           const SizedBox(height: 10),
 

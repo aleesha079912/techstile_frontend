@@ -4,7 +4,7 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import '../screens/factory_owner_dash/factorydashboard.dart';
 import '../screens/app_Owner_dashboard/machine/manage_machines.dart';
 import '../screens/factory_owner_dash/payments.dart';
-import '../screens/app_Owner_dashboard/user/manage_users.dart';
+import '../screens/app_Owner_dashboard/user/factory_users.dart';
 
 class CustomBottomNav extends StatelessWidget {
   final int currentIndex;
@@ -21,19 +21,22 @@ class CustomBottomNav extends StatelessWidget {
 
   switch (index) {
     case 0:
-      Get.offAll(() => FactoryDashboardScreen(factoryId: factoryId));
+      // FactoryDashboard expects a String for factoryId, convert here
+      Get.offAll(() => FactoryDashboard(factoryId: factoryId.toString()));
       break;
 
     case 1:
+      // MachinesScreen expects an int factoryId
       Get.to(() => MachinesScreen(factoryId: factoryId));
       break;
 
     case 2:
-      Get.to(() => PaymentsScreen); // agar needed
+      // Navigate to PaymentsScreen (constructor call)
+      Get.to(() => PaymentsScreen(factoryId: factoryId));
       break;
 
     case 3:
-      Get.to(() => ManageUsersScreen); // agar needed
+      Get.to(() => FactoryUsersScreen(factoryId: factoryId));
       break;
   }
 }

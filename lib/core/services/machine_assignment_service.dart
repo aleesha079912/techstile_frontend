@@ -77,21 +77,25 @@ class AssignMachineService {
   }
 
   // ASSIGN API
-  Future<bool> assign({
+ Future<bool> assign({
   required int userId,
   required int managerId,
   required int factoryId,
   required List<int> machineIds,
+  required String varietyType,
+  required String totalLength,
 }) async {
   final res = await http.post(
     Uri.parse('$baseUrl/assign-machines'),
     headers: _headers,
     body: jsonEncode({
-     "user_id": userId,
-     "manager_id": managerId,
-     "factory_id": factoryId,
-     "machine_ids": machineIds,
-    }),
+  "user_id": userId,
+  "manager_id": managerId,
+  "factory_id": factoryId,
+  "machine_ids": machineIds,
+  "variety_type": varietyType,
+  "total_length": totalLength,
+}),
   );
 
   print(res.body);

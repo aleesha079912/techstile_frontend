@@ -333,7 +333,7 @@ class _FactoryCard extends StatelessWidget {
         onTap: () {
   print("CLICKED FACTORY ID: ${factory.id}");
 
-  Get.to(() => FactoryDashboardScreen(factoryId: factory.id));
+  Get.to(() => FactoryDashboard(factoryId: factory.id.toString()));
 },
         leading: CircleAvatar(
           backgroundColor: theme.colorScheme.primary.withOpacity(0.1),

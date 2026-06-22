@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:techstile_frontend/core/services/machine_assignment_service.dart';
-import 'package:techstile_frontend/widgets/owner_drawer.dart';
 
 class MachineAssignmentPage extends StatefulWidget {
   const MachineAssignmentPage({super.key});
+  
 
   @override
   State<MachineAssignmentPage> createState() => _MachineAssignmentPageState();
@@ -11,6 +11,9 @@ class MachineAssignmentPage extends StatefulWidget {
 
 class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
   final _service = AssignMachineService.instance;
+
+  final _varietyTypeController = TextEditingController();
+  final _totalLengthController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -65,30 +68,48 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
     return;
   }
 
-  final success = await _service.assign(
-    userId: selEmployee!,
-    managerId: selManager!,
-    factoryId: selFactory!,
-    machineIds: [selectedMachine!], // single machine
-  );
+ final success = await _service.assign(
+  userId: selEmployee!,
+  managerId: selManager!,
+  factoryId: selFactory!,
+  machineIds: [selectedMachine!],
+  varietyType: _varietyTypeController.text,
+  totalLength: _totalLengthController.text,
+);
 
   if (!mounted) return;
 
+if (success) {
   ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(
-        success ? "Assignment Successful" : "Failed",
-      ),
-      backgroundColor: success ? Colors.green : Colors.red,
+    const SnackBar(
+      content: Text("Machine Assigned Successfully"),
+      backgroundColor: Colors.green,
     ),
   );
+
+  Navigator.pop(context, true);
+} else {
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(
+      content: Text("Assignment Failed"),
+      backgroundColor: Colors.red,
+    ),
+  );
+}
 }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const OwnerDrawer(),
-      appBar: AppBar(title: const Text("Machine Assignment")),
+      appBar: AppBar(
+        title: const Text("Machine Assignment"),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
@@ -125,28 +146,65 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
 
                     const SizedBox(height: 10),
 
-                    const Text(
-                      "Select Machines",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    DropdownButtonFormField<int>(
+                      value: selectedMachine,
+                      decoration: const InputDecoration(
+                        labelText: "Select Machine",
+                        border: OutlineInputBorder(),
+                        ),
+                        items: machines.map((machine) {
+                         return DropdownMenuItem<int>(
+                          value: machine['id'],
+                          child: Text(
+                            machine['machine_name'] ?? 'Machine',
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          selectedMachine = value;
+                        });
+                      },
+                      validator: (value) {
+                       if (value == null) {
+                        return "Please Select Machine";
+                       }
+                       return null;
+                      },
                     ),
 
-                   Column(
-                    children: machines.map((m) {
-                      int id = m['id'];
-                      return RadioListTile<int>(
-                        value: id,
-                        groupValue: selectedMachine,
-                        title: Text(
-                           m['machine_name'] ?? 'Machine',
-                           ),
-                           onChanged: (value) {
-                            setState(() {
-                              selectedMachine = value;
-                            });
-                         },
-                      );
-                    }).toList(),
-                  ),
+                  const SizedBox(height: 15),
+
+TextFormField(
+  controller: _varietyTypeController,
+  decoration: const InputDecoration(
+    labelText: "Variety Type",
+    border: OutlineInputBorder(),
+  ),
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return "Enter Variety Type";
+    }
+    return null;
+  },
+),
+
+const SizedBox(height: 15),
+
+TextFormField(
+  controller: _totalLengthController,
+  keyboardType: TextInputType.number,
+  decoration: const InputDecoration(
+    labelText: "Total Length",
+    border: OutlineInputBorder(),
+  ),
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return "Enter Total Length";
+    }
+    return null;
+  },
+),
 
                     const SizedBox(height: 20),
 
