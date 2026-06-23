@@ -127,9 +127,10 @@ class _MachinesScreenState extends State<MachinesScreen> {
 
                           Future.microtask(() {
                             Get.to(() => GenerateQrCodeScreen(
-                              machineDbId: newDbId,      // ✅ stored in QR
-                              machineLabel: idCtrl.text, // ✅ shown as display name
-                            ));
+                                  machineDbId: newDbId, // ✅ stored in QR
+                                  machineLabel: idCtrl.text,
+                                  factoryId: widget.factoryId, // pass int
+                                ));
                           });
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -310,6 +311,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
   return GestureDetector(
     onTap: () => Get.to(() => MachineDetailScreen(
   machine:   m,
+  factoryId: widget.factoryId.toString(),
     onRefresh: load,
 )),
     child: Container(

@@ -106,7 +106,7 @@ Get.to(
     machine: machine,
     onRefresh: (){
       machineService.getMachineDetails(code);
-    },
+    }, factoryId: widget.factoryId.toString(),
     ),
   )?.then((_){
 

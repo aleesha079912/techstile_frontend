@@ -15,11 +15,13 @@ const _white = Colors.white;
 class MachineDetailScreen extends StatefulWidget {
   final Machine machine;
   final VoidCallback onRefresh;
+  final String factoryId;
 
   const MachineDetailScreen({
     super.key,
     required this.machine,
     required this.onRefresh,
+    required this.factoryId,
   });
 
   @override
@@ -71,6 +73,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
       () => GenerateQrCodeScreen(
         machineDbId: widget.machine.id,
         machineLabel: widget.machine.machineName,
+        factoryId: int.parse(widget.factoryId),
       ),
     );
   }

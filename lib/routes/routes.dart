@@ -169,9 +169,13 @@ class AppRoutes {
       name: generateQRCode,
       page: () {
         final args = Get.arguments;
+        final factoryId = args is int
+            ? args
+            : int.tryParse(args is Map ? args['factoryId']?.toString() ?? '' : '') ?? 0;
         return GenerateQrCodeScreen(
           machineDbId: args is String ? args : (args?['machineDbId'] ?? ''),
           machineLabel: args is String ? args : (args?['machineLabel'] ?? ''),
+          factoryId: factoryId,
         );
       },
     ),

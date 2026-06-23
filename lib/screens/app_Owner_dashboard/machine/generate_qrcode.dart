@@ -6,11 +6,13 @@ import 'package:techstile_frontend/widgets/owner_drawer.dart';
 class GenerateQrCodeScreen extends StatefulWidget {
   final String machineDbId;   // primary id from DB (e.g. "3")
   final String machineLabel;  // display label (e.g. "LM-1")
+  final int factoryId;        // factory identifier for navigation
 
   const GenerateQrCodeScreen({
     super.key,
     required this.machineDbId,
     required this.machineLabel,
+    required this.factoryId,
   });
 
   @override
@@ -21,9 +23,6 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
   final GlobalKey _qrKey = GlobalKey();
   bool _isDownloading = false;
   bool _isPrinting = false;
-  
-  // ignore: recursive_getters
-  int get factoryId => factoryId; // Placeholder, replace with actual factory ID retrieval logic
 
   @override
   Widget build(BuildContext context) {
@@ -268,7 +267,7 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
           ],
         ),
       ),
-       bottomNavigationBar: CustomBottomNav(currentIndex: 1, factoryId: factoryId),
+       bottomNavigationBar: CustomBottomNav(currentIndex: 1, factoryId: widget.factoryId),
     );
   }
 }
