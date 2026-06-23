@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/employee/employees.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/scan_code.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/pending_productions.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/employee/attendance.dart';
-import 'package:techstile_frontend/screens/app_Owner_dashboard/employee/employees.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/app_owner_dash.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/machine_assignment.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/role_management.dart';
@@ -12,6 +13,8 @@ class OwnerDrawer extends StatelessWidget {
   const OwnerDrawer({
     super.key,
   });
+  
+  int get factoryId => 0; // Placeholder, replace with actual factory ID retrieval logic // Placeholder, replace with actual user ID retrieval logic
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +59,7 @@ class OwnerDrawer extends StatelessWidget {
                 //   context,
                 //   Icons.badge_outlined,
                 //   "Factory Dashboard",
-                //     () => Get.to(() => FactoryDashboardScreen(factoryId: FactoryDrawer().factoryId)),
+                //     () => Get.to(() => const FactoryDashboard()),
                 // ),
                 //sub menu for user management
                       ExpansionTile(
@@ -117,12 +120,12 @@ class OwnerDrawer extends StatelessWidget {
                   "Manage production",
                     () => Get.to(() => const PendingProductionScreen()),
                 ),
-                //  _item(
-                //   context,
-                //   Icons.qr_code_scanner,
-                //   "Scan QR Code",
-                //     () => Get.to(() => const ScanQRCodeScreen()),
-                // ),
+                 _item(
+                  context,
+                  Icons.qr_code_scanner,
+                  "Scan QR Code",
+                    () => Get.to(() => ScanQRCodeScreen(factoryId: factoryId)),
+                ),
                 const Divider(),
                 _item(
                   context,

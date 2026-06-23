@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:techstile_frontend/core/services/factory_user_services.dart';
+import 'package:techstile_frontend/core/services/factory_user_services.dart' show FactoryUsersService;
 import 'package:techstile_frontend/screens/app_Owner_dashboard/employee/employees.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
 import '../../../../core/utils/theme.dart';
-
 class FactoryUsersScreen extends StatefulWidget {
   final int factoryId;
 
@@ -34,8 +33,6 @@ class _FactoryUsersScreenState
 
   final TextEditingController searchCtrl =
       TextEditingController();
-      
-        int get userId => userId; // ✅ ADD THIS
 
   @override
   void initState() {
@@ -269,29 +266,32 @@ class _FactoryUsersScreenState
                       ),
                     ),
 
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primary,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 10,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      icon: const Icon(Icons.schedule),
-                      label: const Text("Assign Shift"),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => EmployeeScreen(factoryId: widget.factoryId, userId: userId),
-                          ),
-                        );
-                      },
-                    ),
+                    // ElevatedButton.icon(
+                    //   style: ElevatedButton.styleFrom(
+                    //     backgroundColor: AppTheme.primary,
+                    //     foregroundColor: Colors.white,
+                    //     padding: const EdgeInsets.symmetric(
+                    //       horizontal: 12,
+                    //       vertical: 10,
+                    //     ),
+                    //     shape: RoundedRectangleBorder(
+                    //       borderRadius: BorderRadius.circular(10),
+                    //     ),
+                    //   ),
+                    //   // icon: const Icon(Icons.schedule),
+                    //   // label: const Text("Assign Shift"),
+                    //   // onPressed: () {
+                    //   //   Navigator.push(
+                    //   //     context,
+                    //   //     MaterialPageRoute(
+                    //   //       builder: (_) => EmployeeScreen(
+                    //   //         factoryId: widget.factoryId,
+                    //   //         userId: manager?['id'] ?? 0,
+                    //   //       ),
+                    //   //     ),
+                    //   //   );
+                    //   // },
+                    // ),
                   ],
                 ),
 

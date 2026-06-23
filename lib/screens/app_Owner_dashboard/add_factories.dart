@@ -177,7 +177,7 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
             width: 52, height: 52,
             decoration: BoxDecoration(
               gradient: const LinearGradient(colors: [AppTheme.primary,
-                     AppTheme.tertiary,]),
+                     AppTheme.background,]),
               borderRadius: BorderRadius.circular(14),
             ),
             child: Icon(isEdit ? Icons.edit_note_rounded : Icons.factory_rounded, color: Colors.white, size: 26),
@@ -246,7 +246,7 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
     return Obx(() => Container(
       decoration: BoxDecoration(
         gradient: const LinearGradient(colors: [ AppTheme.primary,
-                        AppTheme.tertiary,]),
+                        AppTheme.background,]),
         borderRadius: BorderRadius.circular(18),
         boxShadow: [BoxShadow(color: AppTheme.primary.withOpacity(0.35), blurRadius: 16, offset: const Offset(0, 6))],
       ),

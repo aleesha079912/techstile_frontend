@@ -5,9 +5,7 @@ import '../../../../widgets/bottom_nav_bar.dart';
 import '../../../widgets/factorydrawer.dart';
 import 'generate_qrcode.dart';
 import 'package:get/get.dart';
-import 'assign_production_batch.dart';
-
-
+import 'machine_detail.dart';
 class MachinesScreen extends StatefulWidget {
   final int factoryId;
 
@@ -44,7 +42,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
 
   // --- 1. CRUD: ADD & UPDATE POPUP ---
   void _showMachineForm(BuildContext context, {Machine? machine}) {
-    final nameCtrl = TextEditingController(text: machine?.machineId);
+    final idCtrl = TextEditingController(text: machine?.machineName);
     final typeCtrl = TextEditingController(text: machine?.type);
 
     showModalBottomSheet(
@@ -86,11 +84,11 @@ class _MachinesScreenState extends State<MachinesScreen> {
               ),
               const SizedBox(height: 20),
 
-              _buildField(nameCtrl, "Machine Name (e.g. LM-8402)", Icons.tag),
+              _buildField(idCtrl, "Machine Name (e.g. LM-8402)", Icons.abc_outlined),
               _buildField(
                 typeCtrl,
                 "Machine Type (e.g. Rapier)",
-                Icons.settings_outlined,
+                Icons.category_outlined,
               ),
 
               const SizedBox(height: 25),
@@ -105,50 +103,60 @@ class _MachinesScreenState extends State<MachinesScreen> {
                     ),
                   ),
                   onPressed: () async {
-                    if (nameCtrl.text.isEmpty || typeCtrl.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Please fill all fields")),
-                      );
-                      return;
-                    }
-
-                    bool success;
-                    if (machine == null) {
-                      success = await service.addMachine(
-                        nameCtrl.text,
-                        typeCtrl.text,
-                        widget.factoryId,
-                      );
-                    } else {
-                      success = await service.updateMachine(
-                        machine.id,
-                        nameCtrl.text,
-                        typeCtrl.text,
-                        widget.factoryId,
-                      );
-                    }
-
-                    if (!mounted) return;
-
-                    if (success) {
-                      Get.back();
-                      load();
-                      if (machine == null) {
-                        Future.microtask(() {
-                          Get.to(
-                            () => GenerateQrCodeScreen(
-                              machineId: nameCtrl.text,
-                              //  machineId: machine.id,
-                            ),
-                          );
-                        });
+                      if (idCtrl.text.isEmpty || typeCtrl.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Please fill all fields")),
+                        );
+                        return;
                       }
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Something went wrong!")),
-                      );
-                    }
-                  },
+
+                      if (machine == null) {
+                        // ── ADD ──
+                        final result = await service.addMachine(
+                          idCtrl.text,
+                          typeCtrl.text,
+                          widget.factoryId,
+                        );
+
+                        if (!mounted) return;
+
+                        if (result != null && result['success'] == true) {
+                          Get.back();
+                          load();
+                          final String newDbId = result['id'].toString(); // ✅ real primary id from DB
+
+                          Future.microtask(() {
+                            Get.to(() => GenerateQrCodeScreen(
+                              machineDbId: newDbId,      // ✅ stored in QR
+                              machineLabel: idCtrl.text, // ✅ shown as display name
+                            ));
+                          });
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Something went wrong!")),
+                          );
+                        }
+                      } else {
+                        // ── UPDATE ──
+                        bool success = await service.updateMachine(
+                          machine.id,
+                          idCtrl.text,
+                          typeCtrl.text,
+                          widget.factoryId,
+                        );
+
+                        if (!mounted) return;
+
+                        if (success) {
+                          Get.back();
+                          load();
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Something went wrong!")),
+                          );
+                        }
+                      }
+                    },
                   child: Text(
                     machine == null ? "Register Machine" : "Update Machine",
                     style: const TextStyle(color: Colors.white),
@@ -299,7 +307,12 @@ class _MachinesScreenState extends State<MachinesScreen> {
   }
 
   Widget _machineTile(Machine m) {
-    return Container(
+  return GestureDetector(
+    onTap: () => Get.to(() => MachineDetailScreen(
+  machine:   m,
+    onRefresh: load,
+)),
+    child: Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -313,7 +326,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  m.machineId,
+                  m.machineName,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 16,
@@ -346,28 +359,12 @@ class _MachinesScreenState extends State<MachinesScreen> {
                   color: Colors.redAccent,
                 ),
               ),
-              GestureDetector(
-  onTap: () {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.white,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-      ),
-      builder: (ctx) => AssignProductionDialog(
-        machineId: int.parse(m.id),
-        onSuccess: load,
-      ),
-    );
-  },
-  child: const Icon(Icons.add_task, size: 22, color: Colors.green),
-),
-            ],
+           ],
           ),
         ],
       ),
-    );
+    ),
+  );
   }
 
   Widget _buildField(TextEditingController ctrl, String hint, IconData icon) {

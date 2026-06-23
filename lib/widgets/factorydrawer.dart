@@ -68,12 +68,12 @@ class FactoryDrawer extends StatelessWidget {
                   () => Get.to(() => MachinesScreen(factoryId: factoryId)),
                 ),
 
-                _item(
-                  context,
-                  Icons.badge_outlined,
-                  "Manage Employees",
-                  () => Get.to(() => EmployeeScreen(factoryId: factoryId, userId: userId)),
-                ),
+                // _item(
+                //   context,
+                //   Icons.badge_outlined,
+                //   "Manage Employees",
+                //   () => Get.to(() => EmployeeScreen(factoryId: factoryId, userId: userId)),
+                // ),
 
                 _item(
                   context,

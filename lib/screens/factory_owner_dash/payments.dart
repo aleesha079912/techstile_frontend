@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:techstile_frontend/widgets/owner_drawer.dart';
 import '../../core/services/payments_service.dart';
 import '../../core/utils/theme.dart'; 
 import '../../../../widgets/bottom_nav_bar.dart';
@@ -42,7 +43,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       backgroundColor: theme.scaffoldBackgroundColor, 
       
       // 1. Drawer yahan sahi hai
-      drawer: FactoryDrawer(factoryId: widget.factoryId), // ✅ PASS FACTORY ID HERE
+      drawer: FactoryDrawer(factoryId: widget.factoryId), // ✅ PASS FACTORY ID HER
       
       appBar: _appBar(context),
       body: _svc.isLoading

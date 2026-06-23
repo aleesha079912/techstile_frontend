@@ -112,7 +112,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.edit_outlined, color: AppTheme.tertiary),
+                          icon: const Icon(Icons.edit_outlined, color: AppTheme.background),
                           onPressed: () => showForm(item: item),
                         ),
                         IconButton(
