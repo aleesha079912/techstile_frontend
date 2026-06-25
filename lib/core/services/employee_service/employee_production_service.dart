@@ -13,6 +13,7 @@ class EmployeeProductionService {
   required String varietyType,
   required double totalLength,
   required double readyProduction,
+  required double wasteProduction,
 }) async {
 
   try {
@@ -26,6 +27,7 @@ class EmployeeProductionService {
         "variety_type": varietyType,
         "total_length": totalLength,
         "ready_production": readyProduction,
+         "waste_production": wasteProduction,
         "status": 1
       }),
     );

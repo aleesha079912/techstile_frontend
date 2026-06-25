@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:techstile_frontend/core/services/factory_dashbaord_service.dart';
+import 'package:techstile_frontend/core/services/factory_dashboard_service.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
 // ── Palette ────────────────────────────────────────────────────────────────────
 const _navy   = Color(0xFF0D1B4B);

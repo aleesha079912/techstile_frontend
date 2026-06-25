@@ -19,12 +19,13 @@ class EnterProductionScreen extends StatefulWidget {
       _EnterProductionScreenState();
 }
 
-class _EnterProductionScreenState
-    extends State<EnterProductionScreen> {
+class _EnterProductionScreenState extends State<EnterProductionScreen> {
 
   final varietyController = TextEditingController();
-  final lengthController   = TextEditingController();
-  final readyController    = TextEditingController();
+  final lengthController = TextEditingController();
+  final readyController = TextEditingController();
+  final wasteController = TextEditingController(); // 🔥 NEW
+  final remainingController = TextEditingController(); // 🔥 NEW
 
   bool loading = false;
 
@@ -32,11 +33,15 @@ class _EnterProductionScreenState
   void initState() {
     super.initState();
 
-    // ✅ Machine detail screen se auto-fill
+    // ✅ auto-fill from previous screen / DB
     final args = Get.arguments;
+
     if (args is Map) {
       varietyController.text = args['varietyType']?.toString() ?? '';
-      lengthController.text  = args['totalLength']?.toString()  ?? '';
+      lengthController.text = args['totalLength']?.toString() ?? '';
+
+      // 🔥 ADD remaining from backend
+      remainingController.text = args['remaining']?.toString() ?? '0';
     }
   }
 
@@ -45,52 +50,57 @@ class _EnterProductionScreenState
     varietyController.dispose();
     lengthController.dispose();
     readyController.dispose();
+    wasteController.dispose();
+    remainingController.dispose();
     super.dispose();
   }
 
   Future<void> submitProduction() async {
-    // Validation
+
     if (readyController.text.trim().isEmpty) {
-      Get.snackbar("Error", "Enter the ready production quantity");
+      Get.snackbar("Error", "Enter ready production");
       return;
     }
-     final args      = Get.arguments;
-     final remaining = double.tryParse(
-      args?['remaining']?.toString() ?? '0') ?? 0;
-     final ready     = double.tryParse(readyController.text) ?? 0;
 
-  if (ready > remaining) {
-    Get.snackbar(
-      "Error",
-      "Maximum $remaining enter kar sakte ho",
-      backgroundColor: Colors.red,
-      colorText: Colors.white,
-    );
-    return;
-  }
-  setState(() => loading = true);
+    final remaining = double.tryParse(remainingController.text) ?? 0;
+    final ready = double.tryParse(readyController.text) ?? 0;
+
+    if (ready > remaining) {
+      Get.snackbar(
+        "Error",
+        "Maximum $remaining allowed",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    setState(() => loading = true);
 
     try {
-      final args       = Get.arguments;
-      final machineId  = args is Map
+      final args = Get.arguments;
+
+      final machineId = args is Map
           ? args['machineId']?.toString() ?? widget.machineId
           : widget.machineId;
 
-      final user       = AuthService.user;
+      final user = AuthService.user;
       final employeeId = user?['id'];
 
       final bool success =
           await EmployeeProductionService().submitProduction(
-        machineId:       int.parse(machineId),
-        employeeId:      employeeId,
-        factoryId:       1,
-        varietyType:     varietyController.text,
-        totalLength:     double.parse(lengthController.text.isEmpty ? '0' : lengthController.text),
-        readyProduction: double.parse(readyController.text),
+        machineId: int.parse(machineId),
+        employeeId: employeeId,
+        factoryId: 1,
+        varietyType: varietyController.text,
+        totalLength: double.parse(lengthController.text.isEmpty ? '0' : lengthController.text),
+        readyProduction: ready,
+        wasteProduction: double.parse(wasteController.text.isEmpty ? '0' : wasteController.text), // 🔥 FIX
       );
 
       if (success) {
-      Get.off(() => EmployeeDashboard());
+        Get.off(() => EmployeeDashboard());
+
         Get.snackbar(
           "Success",
           "Submitted Successfully",
@@ -100,7 +110,7 @@ class _EnterProductionScreenState
       } else {
         Get.snackbar(
           "Error",
-          "production is not added",
+          "Production not added",
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
@@ -140,75 +150,82 @@ class _EnterProductionScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
 
-                // ── Variety Type — readOnly ──────────────────
-                const Text(
-                  "Variety Type",
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                // ── Variety ──
+                const Text("Variety Type",
+                    style: TextStyle(fontSize: 12, color: Colors.grey)),
                 const SizedBox(height: 6),
                 TextField(
                   controller: varietyController,
-                  readOnly: true, // ✅ auto-filled — edit nahi hoga
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
+                  readOnly: true,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
                     filled: true,
-                    fillColor: Colors.grey.shade100,
-                    suffixIcon: const Icon(Icons.lock_outline, size: 18),
                   ),
                 ),
 
                 const SizedBox(height: 15),
 
-                // ── Total Length — readOnly ──────────────────
-                const Text(
-                  "Total Length",
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+                // ── Total Length ──
+                const Text("Total Length",
+                    style: TextStyle(fontSize: 12, color: Colors.grey)),
                 const SizedBox(height: 6),
                 TextField(
                   controller: lengthController,
-                  readOnly: true, // ✅ auto-filled — edit nahi hoga
-                  keyboardType: TextInputType.number,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
+                  readOnly: true,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
                     filled: true,
-                    fillColor: Colors.grey.shade100,
-                    suffixIcon: const Icon(Icons.lock_outline, size: 18),
                   ),
                 ),
 
                 const SizedBox(height: 15),
 
-                // ── Ready Production — editable ──────────────
-                const Text(
-                  "Ready Production",
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w500,
+                // ── Remaining (NEW) ──
+                const Text("Remaining",
+                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+                const SizedBox(height: 6),
+                TextField(
+                  controller: remainingController,
+                  readOnly: true,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    filled: true,
                   ),
                 ),
+
+                const SizedBox(height: 15),
+
+                // ── Ready ──
+                const Text("Ready Production",
+                    style: TextStyle(fontSize: 12, color: Colors.grey)),
                 const SizedBox(height: 6),
                 TextField(
                   controller: readyController,
                   keyboardType: TextInputType.number,
                   decoration: const InputDecoration(
-                    hintText: "Enter Ready Production Quantity",
+                    hintText: "Enter Ready Production",
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+
+                const SizedBox(height: 15),
+
+                // ── Waste (NEW) ──
+                const Text("Waste Production",
+                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+                const SizedBox(height: 6),
+                TextField(
+                  controller: wasteController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    hintText: "Enter Waste",
                     border: OutlineInputBorder(),
                   ),
                 ),
 
                 const SizedBox(height: 30),
 
-                // ── Submit Button ────────────────────────────
+                // ── Submit ──
                 SizedBox(
                   width: double.infinity,
                   height: 55,

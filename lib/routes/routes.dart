@@ -4,6 +4,7 @@ import 'package:techstile_frontend/screens/employee_dashboard/employee_enter_pro
 import 'package:techstile_frontend/screens/employee_dashboard/history_screen.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/machine_detail_screen.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/profile.dart';
+import 'package:techstile_frontend/screens/man_dashboard/manager_emloyee_deatil_screen.dart';
 // import 'package:techstile_frontend/screens/factory_owner_dash/factory_dashboard.dart';
 
 import 'package:techstile_frontend/screens/splash.dart';
@@ -22,11 +23,11 @@ import 'package:techstile_frontend/screens/factory_owner_dash/payments.dart';
 // import 'package:techstile_frontend/screens/factory_owner_dash/user/users.dart';
 
 import 'package:techstile_frontend/screens/man_dashboard/manager_dashboard.dart';
-// ✅ Naye manager screens import karo
+
 import 'package:techstile_frontend/screens/man_dashboard/manager_machines_screen.dart';
 import 'package:techstile_frontend/screens/man_dashboard/manager_employee_screen.dart';
 import 'package:techstile_frontend/screens/man_dashboard/manager_payments_screen.dart';
-
+import 'package:techstile_frontend/screens/man_dashboard/machine_detail_screen.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/employee_dashboard.dart';
 
 import 'package:techstile_frontend/core/services/factory_service.dart';
@@ -41,11 +42,13 @@ class AppRoutes {
   static const String managerDashboard = "/manager-dashboard";
   static const employeeDashboard = "/employee-dashboard";
 
-  // ✅ Manager ke baaki 3 tabs ke routes
-  static const managerMachines  = "/manager-machines";
+  //manager routes
+  static const managerMachines = "/manager-machines";
   static const managerEmployees = "/manager-employees";
-  static const managerPayments  = "/manager-payments";
-
+  static const managerPayments = "/manager-payments";
+  static const MachineDetails = '/machine_details';
+  static const managerEmployeeDetail = '/manager-employee-detail';
+  // owner dashboard
   static const addFactory = '/add-factory';
   static const calculator = '/calculator';
   static const notifications = '/notifications';
@@ -56,7 +59,7 @@ class AppRoutes {
   static const manageusers = '/manage_users';
   static const generateQRCode = '/generate_qr_code';
   static const machineDetail = '/machine-detail';
-//  static const String factoryDashboard = "/factoryDashboard";
+  //  static const String factoryDashboard = "/factoryDashboard";
   //employee dashboard routes
   static const empDashboard = '/employee-dashboard';
   static const empmachineDetail = '/machine-detail';
@@ -116,7 +119,28 @@ class AppRoutes {
         return ManagerPaymentsScreen(factoryId: factoryId);
       },
     ),
+    // --Manager Details 
+    
+GetPage(
+  name: AppRoutes.MachineDetails,
+  page: () {
 
+    final data = Get.arguments as Map;
+
+    return MachineDetailsScreen(
+      machine: data['machine'],
+      factoryId: data['factoryId'],
+    );
+
+  },
+),
+
+ GetPage(
+      name: AppRoutes.managerEmployeeDetail,
+      page: () => ManagerEmployeeDetailScreen(
+        employeeId: Get.arguments,
+      ),
+    ),
     /// EMPLOYEE DASHBOARD
     GetPage(
       name: employeeDashboard,
@@ -142,16 +166,7 @@ class AppRoutes {
       transition: Transition.rightToLeftWithFade,
     ),
 
-    GetPage(
-      name: machines,
-      page: () => const MachinesScreen(factoryId: 0),
-    ),
-
-    // GetPage(
-    //   name: users,
-    //   page: () => const UsersScreen(),
-    // ),
-
+    GetPage(name: machines, page: () => const MachinesScreen(factoryId: 0)),
     GetPage(
       name: payments,
       page: () {
@@ -171,7 +186,10 @@ class AppRoutes {
         final args = Get.arguments;
         final factoryId = args is int
             ? args
-            : int.tryParse(args is Map ? args['factoryId']?.toString() ?? '' : '') ?? 0;
+            : int.tryParse(
+                    args is Map ? args['factoryId']?.toString() ?? '' : '',
+                  ) ??
+                  0;
         return GenerateQrCodeScreen(
           machineDbId: args is String ? args : (args?['machineDbId'] ?? ''),
           machineLabel: args is String ? args : (args?['machineLabel'] ?? ''),
