@@ -39,7 +39,7 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
     Get.put(FactoryController());
     final theme = Theme.of(context);
     return Scaffold(
-      drawer: FactoryDrawer(factoryId: widget.factoryId),
+      drawer: FactoryDrawer(factoryId: widget.factoryId, userID: widget.factoryId),
       appBar: AppBar(
         backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: theme.appBarTheme.elevation,

@@ -8,7 +8,9 @@ import 'package:techstile_frontend/screens/employee_dashboard/history_screen.dar
 // import 'package:techstile_frontend/screens/employee/payment_screen.dart';
 
 class EmployeeDrawer extends StatelessWidget {
-  const EmployeeDrawer({super.key});
+  final dynamic userId;
+
+  const EmployeeDrawer({super.key, this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +67,7 @@ class EmployeeDrawer extends StatelessWidget {
                   context,
                   Icons.history,
                   "Profile",
-                  () => Get.off(() => const UserProfileScreen()),
+                  () => Get.off(() => UserProfileScreen(userId: userId)),
                 ),
 
                 _item(

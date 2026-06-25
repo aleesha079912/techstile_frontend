@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:techstile_frontend/screens/app_Owner_dashboard/employee/employees.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/scan_code.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/pending_productions.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/employee/attendance.dart';
@@ -14,7 +13,7 @@ class OwnerDrawer extends StatelessWidget {
     super.key,
   });
   
-  int get factoryId => 0; // Placeholder, replace with actual factory ID retrieval logic // Placeholder, replace with actual user ID retrieval logic
+  int get factoryId => 0; // Placeholder, replace with actual factory ID retrieval logic
 
   @override
   Widget build(BuildContext context) {

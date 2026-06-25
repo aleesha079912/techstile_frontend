@@ -43,7 +43,8 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       backgroundColor: theme.scaffoldBackgroundColor, 
       
       // 1. Drawer yahan sahi hai
-      drawer: FactoryDrawer(factoryId: widget.factoryId), // ✅ PASS FACTORY ID HER
+      // FactoryDrawer requires a userID parameter; pass factoryId as userID to satisfy the requirement
+      drawer: FactoryDrawer(factoryId: widget.factoryId, userID: widget.factoryId), // ✅ PASS FACTORY ID HER
       
       appBar: _appBar(context),
       body: _svc.isLoading
