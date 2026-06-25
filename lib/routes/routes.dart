@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/employee_enter_production.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/history_screen.dart';
@@ -152,16 +151,16 @@ class AppRoutes {
     //   page: () => const UsersScreen(),
     // ),
 
-    GetPage(
-      name: payments,
-      page: () {
-        final args = Get.arguments;
-        final factoryId = args is int
-            ? args
-            : int.tryParse(args?.toString() ?? '') ?? 0;
-        return PaymentsScreen(factoryId: factoryId);
-      },
-    ),
+    // GetPage(
+    //   name: payments,
+    //   page: () {
+    //     final args = Get.arguments;
+    //     final factoryId = args is int
+    //         ? args
+    //         : int.tryParse(args?.toString() ?? '') ?? 0;
+    //     return PaymentsScreen(factoryId: factoryId);
+    //   },
+    // ),
 
     GetPage(name: manageusers, page: () => const ManageUsersScreen()),
 
@@ -199,7 +198,16 @@ class AppRoutes {
         return EnterProductionScreen(machineId: machineId);
       },
     ),
-    GetPage(name: AppRoutes.profile, page: () => const UserProfileScreen()),
+    GetPage(
+      name: AppRoutes.profile,
+      page: () {
+        final args = Get.arguments;
+        final userId = args is Map
+            ? int.tryParse(args['userId']?.toString() ?? '') ?? 0
+            : int.tryParse(args?.toString() ?? '') ?? 0;
+        return UserProfileScreen(userId: userId);
+      },
+    ),
     GetPage(name: AppRoutes.history, page: () => const HistoryScreen()),
   ];
 }

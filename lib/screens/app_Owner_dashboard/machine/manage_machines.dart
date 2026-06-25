@@ -202,7 +202,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.secondary,
-      drawer: FactoryDrawer(factoryId: widget.factoryId),
+      // drawer: FactoryDrawer(factoryId: widget.factoryId),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,

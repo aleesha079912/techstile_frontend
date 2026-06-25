@@ -33,10 +33,10 @@ class CustomBottomNav extends StatelessWidget {
       Get.to(() => MachinesScreen(factoryId: factoryId));
       break;
 
-    case 2:
-      // Navigate to PaymentsScreen (constructor call)
-      Get.to(() => PaymentsScreen(factoryId: factoryId));
-      break;
+    // case 2:
+    //   // Navigate to PaymentsScreen (constructor call)
+    //   Get.to(() => PaymentsScreen(factoryId: factoryId));
+    //   break;
 
     case 3:
       Get.to(() => FactoryUsersScreen(factoryId: factoryId));

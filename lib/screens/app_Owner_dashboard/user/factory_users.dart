@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:techstile_frontend/core/services/factory_user_services.dart' show FactoryUsersService;
-import 'package:techstile_frontend/screens/app_Owner_dashboard/employee/employees.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/employee/assign_shift.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
 import '../../../../core/utils/theme.dart';
 class FactoryUsersScreen extends StatefulWidget {
@@ -235,124 +235,99 @@ class _FactoryUsersScreenState
       backgroundColor: const Color(0xffF4F6FB),
 
       appBar: AppBar(
-        backgroundColor: AppTheme.primary,
-        title: const Text("TextileOS"),
+        backgroundColor: const Color.fromARGB(255, 21, 35, 85),
+        title: const Text("TextileOS",),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.primary,
+                foregroundColor: Colors.white,
+              ),
+              icon: const Icon(Icons.schedule),
+              label: const Text("Assign Shift"),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => AssignShiftsScreen(
+                      factoryId: widget.factoryId,
+                      userId: manager?['id'] ?? 0,
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+      body: loading
+    ? const Center(
+        child: CircularProgressIndicator(),
+      )
+    : Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 10),
+
+            // Manager (TOP)
+            managerCard(),
+
+            // Search
+            TextField(
+              controller: searchCtrl,
+              onChanged: search,
+              decoration: InputDecoration(
+                hintText: "Search users...",
+                prefixIcon: const Icon(Icons.search),
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            // STATS (colored but soft)
+            Row(
+              children: [
+                statBox(
+                  "Total Users",
+                  "$totalUsers",
+                  const Color(0xFF1A73E8),
+                ),
+                statBox(
+                  "Active Users",
+                  "$activeUsers",
+                  Colors.green,
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 10),
+
+            Expanded(
+              child: ListView.builder(
+                itemCount: filteredUsers.length,
+                itemBuilder: (context, index) {
+                  return userCard(filteredUsers[index]);
+                },
+              ),
+            ),
+          ],
+        ),
       ),
 
       bottomNavigationBar: CustomBottomNav(
         currentIndex: 3,
         factoryId: widget.factoryId,
       ),
-
-      body: loading
-          ? const Center(
-              child: CircularProgressIndicator(),
-            )
-          : Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
-                children: [
-
-                  Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      "Users",
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-
-                    // ElevatedButton.icon(
-                    //   style: ElevatedButton.styleFrom(
-                    //     backgroundColor: AppTheme.primary,
-                    //     foregroundColor: Colors.white,
-                    //     padding: const EdgeInsets.symmetric(
-                    //       horizontal: 12,
-                    //       vertical: 10,
-                    //     ),
-                    //     shape: RoundedRectangleBorder(
-                    //       borderRadius: BorderRadius.circular(10),
-                    //     ),
-                    //   ),
-                    //   // icon: const Icon(Icons.schedule),
-                    //   // label: const Text("Assign Shift"),
-                    //   // onPressed: () {
-                    //   //   Navigator.push(
-                    //   //     context,
-                    //   //     MaterialPageRoute(
-                    //   //       builder: (_) => EmployeeScreen(
-                    //   //         factoryId: widget.factoryId,
-                    //   //         userId: manager?['id'] ?? 0,
-                    //   //       ),
-                    //   //     ),
-                    //   //   );
-                    //   // },
-                    // ),
-                  ],
-                ),
-
-                  const SizedBox(height: 10),
-
-                  // Manager (TOP)
-                  managerCard(),
-
-                  // Search
-                  TextField(
-                    controller: searchCtrl,
-                    onChanged: search,
-                    decoration: InputDecoration(
-                      hintText: "Search users...",
-                      prefixIcon:
-                          const Icon(Icons.search),
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius:
-                            BorderRadius.circular(12),
-                        borderSide:
-                            BorderSide.none,
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  // STATS (colored but soft)
-                  Row(
-                    children: [
-                      statBox(
-                        "Total Users",
-                        "$totalUsers",
-                        const Color(0xFF1A73E8),
-                      ),
-                      statBox(
-                        "Active Users",
-                        "$activeUsers",
-                        Colors.green,
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount:
-                          filteredUsers.length,
-                      itemBuilder:
-                          (context, index) {
-                        return userCard(
-                            filteredUsers[index]);
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
     );
   }
 }
