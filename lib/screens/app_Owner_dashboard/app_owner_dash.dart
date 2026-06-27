@@ -7,7 +7,6 @@ import 'package:techstile_frontend/screens/app_Owner_dashboard/add_factories.dar
 import 'package:techstile_frontend/screens/app_Owner_dashboard/manage_user.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/notification_screen.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/setting_screen.dart';
-import 'package:techstile_frontend/screens/factory_owner_dash/factory_dashboard.dart';
 import 'package:techstile_frontend/core/models/factory_model.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/factorydashboard.dart';
 import '../../widgets/factorydrawer.dart';
