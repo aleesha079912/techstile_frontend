@@ -93,7 +93,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
       ),
       body: loading
           ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
+         : ListView.builder(
               itemCount: data.length,
               itemBuilder: (context, i) {
                 final item = data[i];
@@ -116,7 +116,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                           onPressed: () => showForm(item: item),
                         ),
                         IconButton(
-                          icon: const Icon(Icons.delete_outlined, color: Colors.red),
+                          icon: const Icon(Icons.delete_outlined, color:AppTheme.secondary),
                           onPressed: () => delete(item['id']),
                         ),
                       ],

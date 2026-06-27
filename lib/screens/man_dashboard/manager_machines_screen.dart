@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../core/services/manager_service.dart';
+import '../../core/services/manager_service/manager_service.dart';
 import '../../../core/utils/theme.dart';
 import '../../../widgets/man_bottom_navbar.dart';
 
