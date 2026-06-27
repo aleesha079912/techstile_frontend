@@ -237,7 +237,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: AppTheme.neutral.withOpacity(0.4),
+                color: AppTheme.secondary.withOpacity(0.4),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(icon, color: AppTheme.primary, size: 18),
@@ -266,7 +266,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
         decoration: BoxDecoration(color: Colors.white, borderRadius: AppTheme.cardRadius),
         child: Column(
           children: [
-            const Icon(Icons.inventory_2_outlined, size: 40, color: AppTheme.neutral),
+            const Icon(Icons.inventory_2_outlined, size: 40, color: AppTheme.secondary),
             const SizedBox(height: 10),
             const Text('No varieties produced yet',
                 style: TextStyle(color: AppTheme.textSecondary, fontSize: 13)),

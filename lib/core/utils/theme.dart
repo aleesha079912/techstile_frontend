@@ -3,14 +3,12 @@ import 'package:flutter/material.dart';
 class AppTheme {
   // ===== Colors =====
 
-  static const Color primary = Color(0xFF122B7A); // Dark Navy
-  static const Color secondary = Color(0xFF3498F7); // Bright Blue
-  static const Color neutral = Color(0xFFACD0EC);
-  static const Color background = Color(0xFFF5FAFF);
-  static const Color cardBackground = Color(0xFFB3D6EF);
+  static const Color primary = Color(0xFF122B7A);    // Dark Navy
+  static const Color secondary= Color(0xFFFFFFFF); // White
+  static const Color background = Color(0xFFFFFFFF); // White
 
-  static const Color textPrimary = Color(0xFF122B7A);
-  static const Color textSecondary = Color(0xFF6D7A96);
+  static const Color textPrimary = Color(0xFF122B7A);   // Dark Navy
+  static const Color textSecondary = Color(0xFF122B7A); // Dark Navy (light opacity used where needed)
 
   static const Color success = Color(0xFF2ECC71);
   static const Color error = Color(0xFFE74C3C);
@@ -27,7 +25,7 @@ class AppTheme {
 
   static List<BoxShadow> softShadow = [
     BoxShadow(
-      color: Colors.blueGrey.withOpacity(0.08),
+      color: Color(0xFF122B7A).withOpacity(0.08),
       blurRadius: 30,
       offset: const Offset(0, 10),
     ),
@@ -42,25 +40,26 @@ class AppTheme {
 
     colorScheme: const ColorScheme.light(
       primary: primary,
-      secondary: secondary,
-      surface: cardBackground,
+      secondary: primary,
+      surface: background,
       onPrimary: Colors.white,
       onSecondary: Colors.white,
-      onSurface: textPrimary,
+      onSurface: primary,
     ),
 
     appBarTheme: const AppBarTheme(
       elevation: 0,
       backgroundColor: background,
-      foregroundColor: textPrimary,
+      foregroundColor: primary,
       centerTitle: false,
     ),
 
     cardTheme: CardThemeData(
-      color: cardBackground,
+      color: background,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: cardRadius,
+        side: BorderSide(color: primary, width: 1),
       ),
     ),
 
@@ -70,7 +69,7 @@ class AppTheme {
         foregroundColor: Colors.white,
         minimumSize: const Size(double.infinity, 56),
         shape: RoundedRectangleBorder(
-          borderRadius: buttonRadius,
+          borderRadius: buttonRadius
         ),
       ),
     ),
@@ -84,18 +83,15 @@ class AppTheme {
       ),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(18),
-        borderSide: BorderSide.none,
+        borderSide: const BorderSide(color: primary, width: 1),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(18),
-        borderSide: BorderSide.none,
+        borderSide: const BorderSide(color: primary, width: 1),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(18),
-        borderSide: const BorderSide(
-          color: secondary,
-          width: 1.5,
-        ),
+        borderSide: const BorderSide(color: primary, width: 2),
       ),
     ),
 
@@ -103,25 +99,25 @@ class AppTheme {
       headlineLarge: TextStyle(
         fontSize: 32,
         fontWeight: FontWeight.bold,
-        color: textPrimary,
+        color: primary,
       ),
       headlineMedium: TextStyle(
         fontSize: 24,
         fontWeight: FontWeight.w700,
-        color: textPrimary,
+        color: primary,
       ),
       titleLarge: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.w600,
-        color: textPrimary,
+        color: primary,
       ),
       bodyLarge: TextStyle(
         fontSize: 16,
-        color: textPrimary,
+        color: primary,
       ),
       bodyMedium: TextStyle(
         fontSize: 14,
-        color: textSecondary,
+        color: primary,
       ),
       labelLarge: TextStyle(
         fontSize: 14,

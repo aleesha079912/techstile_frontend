@@ -101,7 +101,7 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.people_outline_rounded, size: 48, color: AppTheme.neutral),
+          const Icon(Icons.people_outline_rounded, size: 48, color: AppTheme.secondary),
           const SizedBox(height: 12),
           const Text('No employees assigned',
               style: TextStyle(color: AppTheme.textSecondary, fontSize: 14)),

@@ -101,7 +101,7 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.credit_card_outlined, size: 48, color: AppTheme.neutral),
+          const Icon(Icons.credit_card_outlined, size: 48, color: AppTheme.primary),
           const SizedBox(height: 12),
           const Text('No production records yet',
               style: TextStyle(color: AppTheme.textSecondary, fontSize: 14)),
@@ -112,7 +112,7 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
 
   Widget _paymentCard(dynamic p) {
     final statusMap = {
-      1: ('Pending',  AppTheme.neutral),
+      1: ('Pending',  AppTheme.primary),
       2: ('Approved', AppTheme.success),
       3: ('Rejected', AppTheme.error),
     };

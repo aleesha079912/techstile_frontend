@@ -102,7 +102,7 @@ class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           const Icon(Icons.precision_manufacturing_outlined,
-              size: 48, color: AppTheme.neutral),
+              size: 48, color: AppTheme.secondary),
           const SizedBox(height: 12),
           const Text('No machines assigned',
               style: TextStyle(color: AppTheme.textSecondary, fontSize: 14)),
@@ -126,7 +126,7 @@ class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: AppTheme.neutral.withOpacity(0.4),
+              color: AppTheme.secondary.withOpacity(0.4),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Icon(Icons.precision_manufacturing_rounded,

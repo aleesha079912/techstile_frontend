@@ -10,7 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   testWidgets('App smoke test', (WidgetTester tester) async {
-    await tester.pumpWidget(const TECHstile());
+    // await tester.pumpWidget(const TECHstile());
     expect(find.text('Techstile'), findsOneWidget);
     await tester.pumpWidget( const TECHstile() as Widget);
     expect(find.text('ServEase'), findsOneWidget);

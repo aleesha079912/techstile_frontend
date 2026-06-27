@@ -86,7 +86,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
   // ── Body (No changes needed here) ──────────────────────────────────────────
   Widget _body(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final neutral = AppTheme.neutral;
+    final neutral = AppTheme.secondary;
 
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
@@ -147,7 +147,7 @@ class _WorkerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final neutral = AppTheme.neutral;
+    final neutral = AppTheme.secondary;
     final bool isPriority = worker.status == PaymentStatus.priorityReview;
 
     return Container(
@@ -243,7 +243,7 @@ class _StatusBadge extends StatelessWidget {
     
     final (label, bg, fg) = switch (status) {
       PaymentStatus.verified => ('VERIFIED', colors.secondary.withOpacity(0.2), colors.secondary),
-      PaymentStatus.pending => ('PENDING', const Color(0xFFEEEFF4), AppTheme.neutral),
+      PaymentStatus.pending => ('PENDING', const Color(0xFFEEEFF4), AppTheme.secondary),
       PaymentStatus.priorityReview => ('PRIORITY REVIEW', Colors.black26, Colors.white),
       PaymentStatus.adjustment => ('ADJUSTMENT', const Color(0xFFFFEEDD), Colors.orange),
     };
@@ -275,7 +275,7 @@ class _HoldBtn extends StatelessWidget {
       icon: Icon(Icons.pause, size: 14, color: textColor),
       label: Text('Hold', style: _ts(12, FontWeight.w700, textColor)),
       style: OutlinedButton.styleFrom(
-        side: BorderSide(color: dark ? Colors.white30 : const Color(0xFFE8EBF3), width: 1.5),
+        side: BorderSide(color: dark ? const Color.fromARGB(77, 107, 101, 101) : const Color(0xFFE8EBF3), width: 1.5),
         padding: const EdgeInsets.symmetric(vertical: 11),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
@@ -314,7 +314,7 @@ class _ActionDone extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final isApproved = action == PaymentAction.approved;
-    final statusColor = isApproved ? colors.secondary : AppTheme.neutral;
+    final statusColor = isApproved ? colors.secondary : AppTheme.secondary;
 
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -349,7 +349,7 @@ class _CutoffCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final neutral = AppTheme.neutral;
+    final neutral = AppTheme.secondary;
 
     return Container(
       padding: const EdgeInsets.all(18),

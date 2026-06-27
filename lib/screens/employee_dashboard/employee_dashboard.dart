@@ -52,7 +52,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
 
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
-        title: const Text("LOOM CONTROL", style: TextStyle(color: AppTheme.neutral),),
+        title: const Text("LOOM CONTROL", style: TextStyle(color: AppTheme.secondary),),
       ),
 
       body: loading

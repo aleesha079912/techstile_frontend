@@ -121,7 +121,7 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
           .colorScheme
           .onPrimary,
       selectedItemColor: theme.colorScheme.primary, 
-      unselectedItemColor: AppTheme.neutral,
+      unselectedItemColor: AppTheme.secondary,
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: "Home"),
         BottomNavigationBarItem(

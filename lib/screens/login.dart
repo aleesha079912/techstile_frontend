@@ -211,7 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscureText ? Icons.visibility_off : Icons.visibility,
-                        color: AppTheme.neutral,
+                        color: AppTheme.secondary,
                       ),
                       onPressed: () {
                         setState(() {
@@ -286,13 +286,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.support_agent, color: AppTheme.neutral),
+                        Icon(Icons.support_agent, color: AppTheme.secondary),
                         const SizedBox(width: 10),
                         const Expanded(
                           child: Text("Contact Supervisor", style: TextStyle(color: AppTheme.background),
                         )),
                         Icon(Icons.arrow_forward_ios,
-                            size: 14, color: AppTheme.neutral),
+                            size: 14, color: AppTheme.secondary),
                       ],
                     ),
                   ),
