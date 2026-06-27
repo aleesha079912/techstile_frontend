@@ -37,8 +37,13 @@ class _AssignShiftsScreenState extends State<AssignShiftsScreen> {
   Future<void> load() async {
     setState(() => loading = true);
 
+
     // ✅ Fix: sahi method call — sirf factoryId chahiye
     data = await service.fetchEmployeesByFactory(widget.factoryId);
+
+    // ✅ Fix: sahi method call — factoryId aur userId dono chahiye
+    // data = await service.fetchEmployeesByFactory(widget.factoryId, widget.userId);
+
 
     setState(() => loading = false);
   }
@@ -46,7 +51,11 @@ class _AssignShiftsScreenState extends State<AssignShiftsScreen> {
   // ✅ Fix: ab EmployeeService se hi data aata hai — koi crash nahi
   Future<void> loadEmployees() async {
     try {
+
       final list = await service.fetchEmployeesByFactory(widget.factoryId);
+
+      // final list = await service.fetchEmployeesByFactory(widget.factoryId, widget.userId);
+
       setState(() {
         employees = list;
       });
