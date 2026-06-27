@@ -26,6 +26,7 @@ class _ManagerMachinesScreenState
 
   List machines = [];
   List filteredMachines = [];
+  String? factoryName; // ✅ yahan store hoga
 
   String? error;
 
@@ -45,12 +46,17 @@ class _ManagerMachinesScreenState
     });
 
     try {
+      // ✅ Machines list
       final res = await _service.getMachines(widget.factoryId);
 
+      // ✅ Factory name — dashboard API se le aao (already factory info de raha hai)
+      final dashboardData = await _service.getDashboard(widget.factoryId);
+
       setState(() {
-        machines = res;
-        filteredMachines = res;
-        loading = false;
+        machines          = res;
+        filteredMachines  = res;
+        factoryName       = dashboardData['factory']?['name'];
+        loading           = false;
       });
     } catch (e) {
       setState(() {
@@ -90,12 +96,27 @@ class _ManagerMachinesScreenState
         backgroundColor: AppTheme.primary,
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: const Text(
-          'Machines',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w700,
-          ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'All Machines',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w800,
+                fontSize: 17,
+              ),
+            ),
+
+            // ✅ Fix: ab state se aata hai — Get.arguments se nahi
+            Text(
+              loading ? 'Loading...' : (factoryName ?? 'Factory'),
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.65),
+                fontSize: 12,
+              ),
+            ),
+          ],
         ),
       ),
 

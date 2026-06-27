@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/services/manager_service/manager_service.dart';
 import '../../../core/utils/theme.dart';
 import '../../../widgets/man_bottom_navbar.dart';
+import 'package:get/get.dart';
 
 class ManagerDashboard extends StatefulWidget {
   final dynamic factoryId;
@@ -62,6 +63,11 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         _heroCard(),
+                        const SizedBox(height: 14),
+
+                        // ✅ Button hero card se BAHAR — apni jagah pe
+                        _viewProductionsButton(),
+
                         const SizedBox(height: 20),
 
                         const _SectionLabel(text: 'This Week'),
@@ -123,6 +129,8 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
   }
 
   PreferredSizeWidget _buildAppBar() {
+    final factory = data['factory'];
+
     return AppBar(
       backgroundColor: AppTheme.primary,
       elevation: 0,
@@ -130,11 +138,11 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('TechStile',
+          const Text('Manager Dashboard',
               style: TextStyle(
                   color: Colors.white, fontWeight: FontWeight.w800, fontSize: 17)),
           Text(
-            data['factory']?['name'] ?? 'Loading…',
+            loading ? 'Loading...' : (factory?['name'] ?? 'Factory'),
             style: TextStyle(
                 color: Colors.white.withOpacity(0.65), fontSize: 12),
           ),
@@ -163,6 +171,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
     );
   }
 
+  // ── Hero card — sirf factory info, button alag hai ────────────────────────
   Widget _heroCard() {
     final factory = data['factory'];
     return Container(
@@ -174,6 +183,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
         boxShadow: AppTheme.softShadow,
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             width: 56,
@@ -213,6 +223,35 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  // ── ✅ View Productions button — full width, alag container, mobile-friendly ──
+  Widget _viewProductionsButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton.icon(
+        onPressed: () {
+          Get.toNamed(
+            '/manager-production',
+            arguments: widget.factoryId, // ✅ yeh managerId hai (consistent)
+          );
+        },
+        icon: const Icon(Icons.list_alt_rounded, size: 19),
+        label: const Text(
+          'View Productions',
+          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+        ),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppTheme.secondary,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+        ),
       ),
     );
   }

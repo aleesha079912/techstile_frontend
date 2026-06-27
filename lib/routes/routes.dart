@@ -3,6 +3,7 @@ import 'package:techstile_frontend/screens/employee_dashboard/employee_enter_pro
 import 'package:techstile_frontend/screens/employee_dashboard/history_screen.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/machine_detail_screen.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/profile.dart';
+import 'package:techstile_frontend/screens/factory_owner_dash/owner_production_page.dart';
 import 'package:techstile_frontend/screens/man_dashboard/manager_emloyee_deatil_screen.dart';
 // import 'package:techstile_frontend/screens/factory_owner_dash/factory_dashboard.dart';
 
@@ -30,6 +31,7 @@ import 'package:techstile_frontend/screens/man_dashboard/machine_detail_screen.d
 import 'package:techstile_frontend/screens/employee_dashboard/employee_dashboard.dart';
 
 import 'package:techstile_frontend/core/services/factory_service.dart';
+import 'package:techstile_frontend/screens/man_dashboard/manager_production_page.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/generate_qrcode.dart';
 
 class AppRoutes {
@@ -65,7 +67,8 @@ class AppRoutes {
   static const enterProduction = '/enter-production';
   static const profile = '/profile';
   static const history = '/history';
-
+ static const ownerProduction = '/owner-production';
+ static const managerProduction = '/manager-production';
   static List<GetPage> routes = [
     GetPage(name: splash, page: () => SplashScreen()),
 
@@ -134,12 +137,23 @@ GetPage(
   },
 ),
 
+GetPage(
+  name: AppRoutes.managerEmployeeDetail,
+  page: () {
+    final args = Get.arguments as Map;
+    return ManagerEmployeeDetailScreen(
+      employeeId: args['employeeId'],
+      factoryId: args['factoryId'], // ✅ yeh add karo
+    );
+  },
+),
+
  GetPage(
-      name: AppRoutes.managerEmployeeDetail,
-      page: () => ManagerEmployeeDetailScreen(
-        employeeId: Get.arguments,
-      ),
-    ),
+  name: '/manager-production',
+  page: () => ManagerProductionsPage(
+    factoryId: Get.arguments,
+  ),
+),
     /// EMPLOYEE DASHBOARD
     GetPage(
       name: employeeDashboard,
@@ -180,22 +194,6 @@ GetPage(
       name: machines,
       page: () => const MachinesScreen(factoryId: 0),
     ),
-
-    // GetPage(
-    //   name: users,
-    //   page: () => const UsersScreen(),
-    // ),
-
-    // GetPage(
-    //   name: payments,
-    //   page: () {
-    //     final args = Get.arguments;
-    //     final factoryId = args is int
-    //         ? args
-    //         : int.tryParse(args?.toString() ?? '') ?? 0;
-    //     return PaymentsScreen(factoryId: factoryId);
-    //   },
-    // ),
 
     GetPage(name: manageusers, page: () => const ManageUsersScreen()),
 
@@ -246,6 +244,14 @@ GetPage(
         return UserProfileScreen(userId: userId);
       },
     ),
+ GetPage(
+  name: '/owner-production',
+  page: () => OwnerProductionsPage(
+    factoryId: Get.arguments,
+  ),
+),
     GetPage(name: AppRoutes.history, page: () => const HistoryScreen()),
   ];
+
+  
 }
