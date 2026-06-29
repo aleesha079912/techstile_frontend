@@ -22,7 +22,7 @@ class EmployeeService {
   Future<List<dynamic>> fetchFactories() async {
   try {
     final res = await http.get(
-      Uri.parse("$baseUrl/factories"),
+      Uri.parse("$baseUrl/employees/factories"),
       headers: AuthService.authHeaders,
     );
 
@@ -41,7 +41,7 @@ class EmployeeService {
 Future<List<dynamic>> fetchUsers() async {
   try {
     final res = await http.get(
-      Uri.parse("$baseUrl/users"),
+      Uri.parse("$baseUrl/employees/users"),
       headers: AuthService.authHeaders,
     );
 

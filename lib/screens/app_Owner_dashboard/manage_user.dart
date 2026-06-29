@@ -380,30 +380,44 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
         children: [
           CircleAvatar(
             radius: 26,
-            backgroundColor:
-                AppTheme.primary.withOpacity(0.1),
-            child: const Icon(Icons.person,
-                color: AppTheme.primary),
+            backgroundColor: AppTheme.primary.withOpacity(0.1),
+            child: const Icon(Icons.person, color: AppTheme.primary),
           ),
+
           const SizedBox(width: 12),
 
           Expanded(
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(user.name,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold)),
-                Text(user.email,
-                    style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey)),
-                Text(user.role,
-                    style: const TextStyle(
-                        color: AppTheme.primary)),
+                Text(
+                  user.name,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  user.email,
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+                Text(
+                  user.role,
+                  style: const TextStyle(color: AppTheme.primary),
+                ),
               ],
             ),
+          ),
+
+          // 🔥 ACTION BUTTONS (EDIT + DELETE)
+          Row(
+            children: [
+              IconButton(
+                onPressed: onEdit,
+                icon: const Icon(Icons.edit, color: Colors.blue),
+              ),
+              IconButton(
+                onPressed: onDelete,
+                icon: const Icon(Icons.delete, color: Colors.red),
+              ),
+            ],
           ),
         ],
       ),
