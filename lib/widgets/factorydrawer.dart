@@ -70,12 +70,12 @@ class FactoryDrawer extends StatelessWidget {
                   () => Get.to(() => FactoryUsersScreen(factoryId: factoryId)),
                 ),
 
-                _item(
-                  context,
-                  Icons.badge_outlined,
-                  "Assign Shifts",
-                  () => Get.to(() => AssignShiftsScreen(factoryId: factoryId, userId: userID,)),
-                ),
+                // _item(
+                //   context,
+                //   Icons.badge_outlined,
+                //   "Assign Shifts",
+                //   () => Get.to(() => AssignShiftsScreen(factoryId: factoryId, userId: userID,)),
+                // ),
 
                 _item(
                   context,

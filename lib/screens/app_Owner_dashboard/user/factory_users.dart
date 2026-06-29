@@ -97,33 +97,6 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
               ),
             ],
           ),
-
-          const SizedBox(height: 14),
-
-          // ✅ Sirf Assign Shift button — full width
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.primary,
-                foregroundColor: Colors.white,
-              ),
-              icon: const Icon(Icons.schedule, size: 18),
-              label: const Text("Assign Shift"),
-              onPressed: () {
-                // ✅ AssignShiftsScreen khulta hai — wahan + FAB se popup khulta hai
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => AssignShiftsScreen(
-                      factoryId: widget.factoryId,
-                      userId: manager?['id'] ?? 0,
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
         ],
       ),
     );
