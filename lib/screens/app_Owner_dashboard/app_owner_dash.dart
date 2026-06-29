@@ -39,14 +39,20 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
     // inject the FactoryController into memory so that it can be accessed from any child widget of this dashboard without needing to pass it down the widget tree.
     Get.put(FactoryController());
     final theme = Theme.of(context);
-    return Scaffold(
-      drawer: FactoryDrawer(factoryId: widget.factoryId, userID: widget.factoryId),
-      appBar: AppBar(
+    return Scaffold(drawer: _currentIndex == 0? FactoryDrawer(
+      factoryId: widget.factoryId,
+      userID: widget.factoryId,
+    ): null,
+      appBar: _currentIndex == 0
+    ? AppBar(
         backgroundColor: theme.appBarTheme.backgroundColor,
         elevation: theme.appBarTheme.elevation,
         leading: Builder(
           builder: (context) => IconButton(
-            icon: Icon(Icons.menu, color: theme.appBarTheme.foregroundColor),
+            icon: Icon(
+              Icons.menu,
+              color: theme.appBarTheme.foregroundColor,
+            ),
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
         ),
@@ -57,7 +63,8 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
             fontWeight: FontWeight.bold,
           ),
         ),
-      ),
+      )
+    : null,
       backgroundColor: theme.scaffoldBackgroundColor,
       // CONCEPT: Preserve State (IndexedStack)
       // `IndexedStack` ka faida yeh hai ke jab aap tabs badalte hain (e.g., Home se Calculator par gaye),

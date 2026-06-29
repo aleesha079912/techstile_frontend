@@ -76,7 +76,13 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
 
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
-        title: const Text("TextileOS"),
+        title: const Text(
+         "TECHstile",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         actions: const [
           Padding(
             padding: EdgeInsets.only(right: 12),
@@ -106,8 +112,8 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
           children: [
             Container(
               width: double.infinity,
-              margin: const EdgeInsets.only(top: 8), // ✅ FIX visibility
-              padding: const EdgeInsets.all(18),
+              margin: EdgeInsets.zero,
+              padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -126,8 +132,6 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                       color: AppTheme.primary,
                     ),
                   ),
-
-                  const SizedBox(height: 10),
 
                   /// SEARCH
                   SizedBox(
@@ -244,8 +248,6 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                 ],
               ),
             ),
-
-            const SizedBox(height: 10),
 
             /// LIST
             Expanded(
