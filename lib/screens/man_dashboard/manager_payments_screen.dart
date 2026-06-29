@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../core/services/manager_service.dart';
+import '../../core/services/manager_service/manager_service.dart';
 import '../../../core/utils/theme.dart';
 import '../../../widgets/man_bottom_navbar.dart';
 
@@ -17,6 +17,7 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
   bool loading = true;
   List productions = [];
   String? error;
+  String? factoryName; 
 
   @override
   void initState() {
@@ -30,10 +31,16 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
       error   = null;
     });
     try {
+      // ✅ Payments list
       final res = await _service.getPayments(widget.factoryId);
+
+      // ✅ Factory name — dashboard API se
+      final dashboardData = await _service.getDashboard(widget.factoryId);
+
       setState(() {
-        productions = res;
-        loading     = false;
+        productions  = res;
+        factoryName  = dashboardData['factory']?['name'];
+        loading      = false;
       });
     } catch (e) {
       setState(() {
@@ -51,8 +58,21 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
         backgroundColor: AppTheme.primary,
         elevation: 0,
         automaticallyImplyLeading: false,
-        title: const Text('Payments',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700)),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Payments',
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 17)),
+            // ✅ Fix: state se aata hai — Get.arguments se nahi
+            Text(
+              loading ? 'Loading...' : (factoryName ?? 'Factory'),
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.65),
+                fontSize: 12,
+              ),
+            ),
+          ],
+        ),
       ),
       body: loading
           ? const Center(child: CircularProgressIndicator(color: AppTheme.primary))

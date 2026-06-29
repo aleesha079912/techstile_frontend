@@ -34,13 +34,12 @@ class _AssignShiftsScreenState extends State<AssignShiftsScreen> {
   }
 
   Future<void> load() async {
-    setState(() => loading = true);
+  setState(() => loading = true);
 
-    // ✅ Fix: sahi method call — factoryId aur userId dono chahiye
-    data = await service.fetchEmployees();
-    
-    setState(() => loading = false);
-  }
+  data = await service.fetchEmployees();
+
+  setState(() => loading = false);
+}
 
   Future<void> _pickTime(
     BuildContext context,

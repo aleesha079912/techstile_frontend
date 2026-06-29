@@ -3,9 +3,14 @@ import 'package:techstile_frontend/screens/employee_dashboard/employee_enter_pro
 import 'package:techstile_frontend/screens/employee_dashboard/history_screen.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/machine_detail_screen.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/profile.dart';
-import 'package:techstile_frontend/screens/factory_owner_dash/onwer_production_page.dart';
-// import 'package:techstile_frontend/screens/factory_owner_dash/owner_production_page.dart';
-// import 'package:techstile_frontend/screens/man_dashboard/manager_emloyee_deatil_screen.dart';
+
+import 'package:techstile_frontend/screens/factory_owner_dash/owner_production_page.dart';
+import 'package:techstile_frontend/screens/man_dashboard/manager_emloyee_deatil_screen.dart';
+
+
+
+
+
 // import 'package:techstile_frontend/screens/factory_owner_dash/factory_dashboard.dart';
 
 import 'package:techstile_frontend/screens/splash.dart';
@@ -28,11 +33,15 @@ import 'package:techstile_frontend/screens/man_dashboard/manager_dashboard.dart'
 import 'package:techstile_frontend/screens/man_dashboard/manager_machines_screen.dart';
 import 'package:techstile_frontend/screens/man_dashboard/manager_employee_screen.dart';
 import 'package:techstile_frontend/screens/man_dashboard/manager_payments_screen.dart';
-// import 'package:techstile_frontend/screens/man_dashboard/machine_detail_screen.dart';
+
+import 'package:techstile_frontend/screens/man_dashboard/machine_detail_screen.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/employee_dashboard.dart';
 
 import 'package:techstile_frontend/core/services/factory_service.dart';
-// import 'package:techstile_frontend/screens/man_dashboard/manager_production_page.dart';
+import 'package:techstile_frontend/screens/man_dashboard/manager_production_page.dart';
+
+
+
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/generate_qrcode.dart';
 
 class AppRoutes {
@@ -124,37 +133,71 @@ class AppRoutes {
     ),
     // --Manager Details 
     
-// GetPage(
-//   name: AppRoutes.MachineDetails,
-//   page: () {
 
-//     final data = Get.arguments as Map;
+GetPage(
+  name: AppRoutes.MachineDetails,
+  page: () {
 
-//     return MachineDetailsScreen(
-//       machine: data['machine'],
-//       factoryId: data['factoryId'],
-//     );
+    final data = Get.arguments as Map;
 
-//   },
-// ),
+    return MachineDetailsScreen(
+      machine: data['machine'],
+      factoryId: data['factoryId'],
+    );
 
-// GetPage(
-//   name: AppRoutes.managerEmployeeDetail,
-//   page: () {
-//     final args = Get.arguments as Map;
-//     return ManagerEmployeeDetailScreen(
-//       employeeId: args['employeeId'],
-//       factoryId: args['factoryId'], // ✅ yeh add karo
-//     );
-//   },
-// ),
+  },
+),
 
-//  GetPage(
-//   name: '/manager-production',
-//   page: () => ManagerProductionsPage(
-//     factoryId: Get.arguments,
-//   ),
-// ),
+GetPage(
+  name: AppRoutes.managerEmployeeDetail,
+  page: () {
+    final args = Get.arguments as Map;
+    return ManagerEmployeeDetailScreen(
+      employeeId: args['employeeId'],
+      factoryId: args['factoryId'], // ✅ yeh add karo
+    );
+  },
+),
+
+ GetPage(
+  name: '/manager-production',
+  page: () => ManagerProductionsPage(
+    factoryId: Get.arguments,
+  ),
+),
+
+GetPage(
+  name: AppRoutes.MachineDetails,
+  page: () {
+
+    final data = Get.arguments as Map;
+
+    return MachineDetailsScreen(
+      machine: data['machine'],
+      factoryId: data['factoryId'],
+    );
+
+  },
+),
+
+GetPage(
+  name: AppRoutes.managerEmployeeDetail,
+  page: () {
+    final args = Get.arguments as Map;
+    return ManagerEmployeeDetailScreen(
+      employeeId: args['employeeId'],
+      factoryId: args['factoryId'], // ✅ yeh add karo
+    );
+  },
+),
+
+ GetPage(
+  name: '/manager-production',
+  page: () => ManagerProductionsPage(
+    factoryId: Get.arguments,
+  ),
+),
+
     /// EMPLOYEE DASHBOARD
     GetPage(
       name: employeeDashboard,
@@ -255,4 +298,6 @@ class AppRoutes {
   ];
 
   
+
 }
+

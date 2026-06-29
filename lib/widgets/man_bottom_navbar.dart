@@ -3,8 +3,6 @@ import 'package:get/get.dart';
 import '../core/utils/theme.dart';
 import '../routes/routes.dart';
 
-/// Bottom nav shared by all 4 manager screens.
-/// Each tap navigates to a GetX named route — passes factoryId along.
 class ManagerBottomNav extends StatelessWidget {
   final int currentIndex;
   final dynamic factoryId;
