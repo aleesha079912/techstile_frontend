@@ -3,10 +3,19 @@ import '../../core/services/manager_service/manager_service.dart';
 import '../../../core/utils/theme.dart';
 import '../../../widgets/man_bottom_navbar.dart';
 import 'package:get/get.dart';
-
+import 'package:techstile_frontend/widgets/man_drawer.dart';
+import 'package:techstile_frontend/core/services/auth_service.dart';
+import 'package:techstile_frontend/routes/routes.dart';
 class ManagerDashboard extends StatefulWidget {
+
   final dynamic factoryId;
-  const ManagerDashboard({super.key, required this.factoryId});
+  // final dynamic userId;
+
+  const ManagerDashboard({
+    super.key,
+    required this.factoryId,
+    // this.userId,
+  });
 
   @override
   State<ManagerDashboard> createState() => _ManagerDashboardState();
@@ -22,31 +31,52 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
   @override
   void initState() {
     super.initState();
-    load();
-  }
+      print("Arguments = ${Get.arguments}");
+print("Factory from Storage = ${AuthService.factoryId}");
+print("Stored User ID = ${AuthService.userId}");
 
-  Future<void> load() async {
-    setState(() {
-      loading = true;
-      error   = null;
-    });
-    try {
-      final res = await _service.getDashboard(widget.factoryId);
-      setState(() {
-        data    = res;
-        loading = false;
-      });
-    } catch (e) {
-      setState(() {
-        error   = e.toString();
-        loading = false;
-      });
-    }
+  load();
+   
   }
+  
+
+ Future<void> load() async {
+   final res = await _service.getDashboard(widget.factoryId); 
+  setState(() {
+    loading = true;
+    error = null;
+  });
+
+  try {
+    final id = int.tryParse(widget.factoryId.toString());
+
+    if (id == null || id == 0) {
+      throw Exception("Invalid factoryId");
+    }
+
+    final res = await _service.getDashboard(id);
+
+    setState(() {
+      data = res;
+      loading = false;
+    });
+  } catch (e) {
+    setState(() {
+      error = e.toString();
+      loading = false;
+    });
+  }
+}
 
   @override
   Widget build(BuildContext context) {
+  final factoryId = AuthService.factoryId;
+  // final userId = widget.userId;
     return Scaffold(
+   drawer: ManagerDrawer(
+    // userId: userId,
+    factoryId: factoryId,
+  ),
       backgroundColor: AppTheme.background,
       appBar: _buildAppBar(),
       body: loading
@@ -121,10 +151,10 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
                     ),
                   ),
                 ),
-      bottomNavigationBar: ManagerBottomNav(
-        currentIndex: 0,
-        factoryId: widget.factoryId,
-      ),
+     bottomNavigationBar: ManagerBottomNav(
+ currentIndex:0,
+ factoryId: widget.factoryId,
+),
     );
   }
 
@@ -134,7 +164,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
     return AppBar(
       backgroundColor: AppTheme.primary,
       elevation: 0,
-      automaticallyImplyLeading: false,
+      automaticallyImplyLeading: true,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -234,9 +264,11 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
       child: ElevatedButton.icon(
         onPressed: () {
           Get.toNamed(
-            '/manager-production',
-            arguments: widget.factoryId, // ✅ yeh managerId hai (consistent)
-          );
+  AppRoutes.managerProduction,
+  arguments: {
+    'factoryId': widget.factoryId,
+  },
+);
         },
         icon: const Icon(Icons.list_alt_rounded, size: 19),
         label: const Text(

@@ -39,7 +39,7 @@ class EmployeeBottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const items = [
-      (Icons.dashboard, "Dashboard"),
+      (Icons.dashboard, "Home"),
       (Icons.qr_code_scanner, "Scan"),
       (Icons.history, "History"),
       (Icons.payment, "Payments"),

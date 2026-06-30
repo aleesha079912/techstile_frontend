@@ -5,7 +5,7 @@ import 'package:techstile_frontend/screens/employee_dashboard/profile.dart';
 // import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/scan_code.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/scan_qr_code.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/history_screen.dart';
-// import 'package:techstile_frontend/screens/employee/payment_screen.dart';
+import 'package:techstile_frontend/core/services/auth_service.dart';
 
 class EmployeeDrawer extends StatelessWidget {
   final dynamic userId;
@@ -63,13 +63,18 @@ class EmployeeDrawer extends StatelessWidget {
                   () => Get.off(() => const ScanqrCodeScreen()),
                 ),
 
-                _item(
+               _item(
                   context,
-                  Icons.history,
+                  Icons.person,
                   "Profile",
-                  () => Get.off(() => UserProfileScreen(userId: userId)),
+                  () {
+                    Get.to(
+                      () => UserProfileScreen(
+                        userId: AuthService.userId!,
+                      ),
+                    );
+                  },
                 ),
-
                 _item(
                   context,
                   Icons.payment,

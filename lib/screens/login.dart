@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:techstile_frontend/core/services/auth_service.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/routes/routes.dart';
+import 'package:techstile_frontend/core/services/manager_service/manager_service.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -16,12 +17,11 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final GetStorage box = GetStorage(); // ✅ FIX 1: GetStorage uncomment kiya
+  final GetStorage box = GetStorage();
 
   bool _isLoading = false;
-  bool _obscureText = true; // ✅ FIX 2: Password show/hide ke liye
+  bool _obscureText = true;
 
-  // ✅ FIX 3: Controllers dispose kiye — memory leak band
   @override
   void dispose() {
     _emailController.dispose();
@@ -39,7 +39,6 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    // ✅ FIX 4: mounted check — widget dispose hone ke baad setState crash nahi karega
     if (mounted) {
       setState(() {
         _isLoading = true;
@@ -52,7 +51,6 @@ class _LoginScreenState extends State<LoginScreen> {
         _passwordController.text.trim(),
       );
 
-      // ✅ FIX 4: mounted check yahan bhi
       if (mounted) {
         setState(() {
           _isLoading = false;
@@ -69,33 +67,63 @@ class _LoginScreenState extends State<LoginScreen> {
           roleName = roles[0]['name'].toString().toLowerCase().trim();
         }
 
-        debugPrint("SUCCESS => Token: $token, Role: $roleName"); // ✅ FIX 5: print → debugPrint
+        debugPrint("SUCCESS => Token: $token, Role: $roleName");
 
-        // ✅ FIX 1: Token, user, role storage mein save ho raha ab
         box.write('token', token);
         box.write('user', userData);
         box.write('role', roleName);
         box.write('isLoggedIn', true);
 
-        // Role based navigation
-        if (roleName == 'owner') {
-          Get.offAllNamed(AppRoutes.ownerDashboard);
-        } else if (roleName == 'manager'){
-  // ✅ factoryId pass karo
-  final managerId = userData['id'];
-  
+        // ✅ Role based navigation — fixed syntax
+     if (roleName == 'owner') {
+
   Get.offAllNamed(
-    AppRoutes.managerDashboard,
-    arguments: managerId, // ya factoryId — backend kya expect karta hai
+    AppRoutes.ownerDashboard,
   );
+
+} else if (roleName == 'manager') {
+
+  final managerId = userData['id'];
+
+  try {
+
+    final factoryId = userData['factory_id'];
+
+    await AuthService.saveFactoryInfo(
+      factoryId,
+      managerId,
+    );
+
+    Get.offAllNamed(
+      AppRoutes.managerDashboard,
+      arguments: {
+        'factoryId': factoryId,
+      },
+    );
+
+  } catch (e) {
+
+    Get.snackbar(
+      "Error",
+      "Could not load manager dashboard",
+    );
+
+  }
+
 } else if (roleName == 'employee') {
-          Get.offAllNamed(AppRoutes.employeeDashboard);
-        } else {
-          Get.snackbar(
-            "Invalid Role",
-            "This Account is not linked with any role.",
-          );
-        }
+
+  Get.offAllNamed(
+    AppRoutes.employeeDashboard,
+  );
+
+} else {
+
+  Get.snackbar(
+    "Invalid Role",
+    "This Account is not linked with any role.",
+  );
+
+}
       } else {
         Get.snackbar(
           "Login Failed",
@@ -103,13 +131,12 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       }
     } catch (e) {
-      // ✅ FIX 4: mounted check catch block mein bhi
       if (mounted) {
         setState(() {
           _isLoading = false;
         });
       }
-      debugPrint("LOGIN ERROR: $e"); // ✅ FIX 5: print → debugPrint
+      debugPrint("LOGIN ERROR: $e");
       Get.snackbar("Error", "Server connection failed");
     }
   }
@@ -122,7 +149,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return InputDecoration(
       hintText: hint,
       prefixIcon: Icon(icon, color: AppTheme.secondary),
-      suffixIcon: suffixIcon, // ✅ FIX 2: suffix icon support add kiya
+      suffixIcon: suffixIcon,
       filled: true,
       fillColor: AppTheme.background,
       border: OutlineInputBorder(
@@ -134,7 +161,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-  return Scaffold(
+    return Scaffold(
       backgroundColor: AppTheme.background,
       body: Center(
         child: SingleChildScrollView(
@@ -189,7 +216,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 5),
                 TextField(
                   controller: _emailController,
-                  keyboardType: TextInputType.emailAddress, // ✅ BONUS: Email keyboard
+                  keyboardType: TextInputType.emailAddress,
                   decoration: inputDecoration(
                     hint: "Enter your Email",
                     icon: Icons.email,
@@ -203,11 +230,10 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 5),
                 TextField(
                   controller: _passwordController,
-                  obscureText: _obscureText, // ✅ FIX 2: dynamic value
+                  obscureText: _obscureText,
                   decoration: inputDecoration(
                     hint: "Enter your Password",
                     icon: Icons.lock_outline,
-                    // ✅ FIX 2: Show/hide toggle button
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscureText ? Icons.visibility_off : Icons.visibility,
@@ -248,11 +274,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 10),
-                // ✅ FIX 6: "Forgot Password?" ab clickable hai
                 Center(
                   child: GestureDetector(
                     onTap: () {
-                      // TODO: Forgot password screen pe navigate karo
                       Get.snackbar(
                         "Forgot Password",
                         "Contact your supervisor to reset password.",
@@ -269,10 +293,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // ✅ FIX 7: "Contact Supervisor" ab clickable hai
                 GestureDetector(
                   onTap: () {
-                    // TODO: Supervisor contact screen ya dialog add karo
                     Get.snackbar(
                       "Contact Supervisor",
                       "Please reach out to your floor supervisor.",
@@ -289,8 +311,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         Icon(Icons.support_agent, color: AppTheme.neutral),
                         const SizedBox(width: 10),
                         const Expanded(
-                          child: Text("Contact Supervisor", style: TextStyle(color: AppTheme.background),
-                        )),
+                          child: Text(
+                            "Contact Supervisor",
+                            style: TextStyle(color: AppTheme.background),
+                          ),
+                        ),
                         Icon(Icons.arrow_forward_ios,
                             size: 14, color: AppTheme.neutral),
                       ],

@@ -29,14 +29,19 @@ class _UserProfileScreenState
   }
 
   Future<void> loadProfile() async {
-    final response =
-        await service.getProfile(widget.userId);
 
-    setState(() {
-      profile = response?['data'];
-      loading = false;
-    });
-  }
+  print("Profile User ID = ${widget.userId}");
+
+  final response =
+      await service.getProfile(widget.userId);
+
+  print(response);
+
+  setState(() {
+    profile = response?['data'];
+    loading = false;
+  });
+}
 
   Widget tile(IconData icon, String title, String value) {
     return ListTile(

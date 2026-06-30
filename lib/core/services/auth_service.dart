@@ -13,11 +13,15 @@ class AuthService {
   static Map? get user => box.read('user');
   static String get role => box.read('role') ?? '';
 
+  // ✅ Reload-safe factoryId/userId — GetStorage se persist hote hain
+  static dynamic get factoryId => box.read('factoryId');
+  static dynamic get userId => box.read('userId');
+
   /// Every authenticated API call mein yahi headers use karo
   static Map<String, String> get authHeaders => {
         'Content-Type': 'application/json',
-         'Accept': 'application/json',
-        'Authorization': 'Bearer $token',  // Token ko header mein bhejo
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
       };
 
   // ── LOGIN ──────────────────────────────────────────────────────────────────
@@ -29,8 +33,7 @@ class AuthService {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/login'),
-        headers: {'Content-Type': 'application/json'
-        },
+        headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'email': email, 'password': password}),
       );
 
@@ -44,6 +47,13 @@ class AuthService {
         box.write('user', userData);
         box.write('role', userData['role'] ?? '');
 
+        // ✅ Yahin save karo — agar backend response mein factoryId aata hai
+        // Agar 'factory_id' ya 'factoryId' key se aata hai to wahi use karo
+        if (userData['factory_id'] != null) {
+          box.write('factoryId', userData['factory_id']);
+        }
+        box.write('userId', userData['id']);
+
         return {'success': true, 'data': actualData};
       } else {
         return {
@@ -56,11 +66,27 @@ class AuthService {
     }
   }
 
+  // ✅ Manual save — agar factoryId login response mein nahi aata,
+  // balki ek alag API call se milta hai (jaisa manager ke case mein hota hai)
+ static Future<void> saveFactoryInfo(
+  dynamic factoryId,
+  dynamic userId,
+) async {
+  print("Saving Factory ID = $factoryId");
+
+  await box.write('factoryId', factoryId);
+  await box.write('userId', userId);
+
+  print("Stored Factory ID = ${box.read('factoryId')}");
+}
+
   // ── LOGOUT ─────────────────────────────────────────────────────────────────
 
   static void logout() {
     box.remove('token');
     box.remove('user');
     box.remove('role');
+    box.remove('factoryId'); // ✅ logout pe clear karo
+    box.remove('userId');
   }
 }

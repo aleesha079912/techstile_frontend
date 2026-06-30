@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:techstile_frontend/core/services/manager_profile_service.dart';
-
+import 'package:techstile_frontend/core/services/manager_service/manager_profile_service.dart';
+import 'package:techstile_frontend/widgets/man_drawer.dart';
+import 'package:techstile_frontend/core/services/auth_service.dart';
 class ManagerProfileScreen extends StatefulWidget {
   final int userId;
 
@@ -34,6 +35,10 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       drawer: ManagerDrawer(
+  userId: AuthService.userId,
+  factoryId: AuthService.factoryId,
+),
       appBar: AppBar(title: const Text("Manager Profile")),
       body: loading
           ? const Center(child: CircularProgressIndicator())

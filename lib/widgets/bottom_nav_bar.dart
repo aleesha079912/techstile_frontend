@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:techstile_frontend/screens/factory_owner_dash/payments.dart';
 import '../screens/factory_owner_dash/factorydashboard.dart';
 import 'package:get/get.dart';
-<<<<<<< HEAD
-// import 'package:get/get_core/src/get_main.dart';
-// import '../screens/factory_owner_dash/factory_dashboard.dart';
-=======
-import 'package:get/get_core/src/get_main.dart';
->>>>>>> 4944728c9d406cdc3a8f868f7d1478ee9c32b6e9
 import '../screens/app_Owner_dashboard/machine/manage_machines.dart';
-// import '../screens/factory_owner_dash/payments.dart';
 import '../screens/app_Owner_dashboard/user/factory_users.dart';
 
 class CustomBottomNav extends StatelessWidget {
