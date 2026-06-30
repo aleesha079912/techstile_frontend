@@ -157,7 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       "LOOMCONTROL",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: AppTheme.secondary,
+                        color: AppTheme.primary,
                       ),
                     ),
                   ],
@@ -211,7 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscureText ? Icons.visibility_off : Icons.visibility,
-                        color: AppTheme.secondary,
+                        color: AppTheme.primary,
                       ),
                       onPressed: () {
                         setState(() {
@@ -286,13 +286,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.support_agent, color: AppTheme.secondary),
+                        Icon(Icons.support_agent, color: AppTheme.primary),
                         const SizedBox(width: 10),
                         const Expanded(
                           child: Text("Contact Supervisor", style: TextStyle(color: AppTheme.background),
                         )),
                         Icon(Icons.arrow_forward_ios,
-                            size: 14, color: AppTheme.secondary),
+                            size: 14, color: AppTheme.primary),
                       ],
                     ),
                   ),
