@@ -72,7 +72,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
                 // App Name
                 const Text(
-                  "LoomControl",
+                  "TECHstile",
                   style: TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,

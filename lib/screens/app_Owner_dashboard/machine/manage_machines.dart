@@ -289,40 +289,59 @@ class _MachinesScreenState extends State<MachinesScreen> {
   }
 
   Widget _machineTile(Machine m) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(m.machineName,
+    return InkWell(
+      onTap: () {
+        Get.to(
+          () => MachineDetailScreen(
+            machine: m,
+            factoryId: widget.factoryId.toString(),
+            onRefresh: load,
+          ),
+        );
+      },
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    m.machineName,
                     style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 16)),
-                Text(m.type, style: const TextStyle(color: Colors.grey)),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  Text(
+                    m.type,
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+            Row(
+              children: [
+                GestureDetector(
+                  onTap: () => _showMachineForm(context, machine: m),
+                  child: const Icon(Icons.edit, color: AppTheme.primary),
+                ),
+                const SizedBox(width: 10),
+                GestureDetector(
+                  onTap: () => _handleDelete(m.id),
+                  child: const Icon(Icons.delete, color: Colors.red),
+                ),
               ],
             ),
-          ),
-          Row(
-            children: [
-              GestureDetector(
-                onTap: () => _showMachineForm(context, machine: m),
-                child: const Icon(Icons.edit, color: AppTheme.primary),
-              ),
-              const SizedBox(width: 10),
-              GestureDetector(
-                onTap: () => _handleDelete(m.id),
-                child: const Icon(Icons.delete, color: Colors.red),
-              ),
-            ],
-          )
-        ],
+          ],
+        ),
       ),
     );
   }

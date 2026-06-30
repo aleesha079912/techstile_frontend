@@ -124,8 +124,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     Icon(Icons.bar_chart, color: AppTheme.primary),
                     const SizedBox(width: 8),
                     const Text(
-                      "LOOMCONTROL",
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                      "TECHstile",
+                      style: TextStyle(
+                        color: AppTheme.primary,
+                        fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
@@ -134,13 +136,15 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const Text(
                   "Access",
-                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    color: AppTheme.primary,
+                    fontSize: 28, fontWeight: FontWeight.bold),
                 ),
 
                 const SizedBox(height: 8),
 
                 const Text(
-                  "Enter credentials to manage looms and production logs.",
+                  "Enter your credentials to manage active looms and production logs.",
                 ),
 
                 const SizedBox(height: 25),
@@ -193,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
 
-                const SizedBox(height: 15),
+                const SizedBox(height: 30),
 
                 // ================= CONTACT SUPERVISOR =================
                 GestureDetector(
@@ -201,17 +205,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppTheme.secondary,
+                      color: const Color.fromARGB(255, 223, 231, 238),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Row(
                       children: [
-                        Icon(Icons.support_agent, color: Colors.white),
+                        Icon(Icons.support_agent, color: Color.fromARGB(255, 0, 0, 0)),
                         SizedBox(width: 10),
                         Expanded(
                           child: Text(
-                            "Contact Supervisor",
-                            style: TextStyle(color: Colors.white),
+                            "System Help"
+                            " Contact Supervisor",
+                            style: TextStyle(color: Color.fromARGB(255, 3, 3, 3)),
                           ),
                         ),
                         Icon(Icons.arrow_forward_ios,

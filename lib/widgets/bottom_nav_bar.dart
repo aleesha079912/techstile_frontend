@@ -47,7 +47,7 @@ class CustomBottomNav extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const tabs = [
-      (Icons.grid_view_rounded, 'DASHBOARD'),
+      (Icons.grid_view_rounded, 'Productions'),
       (Icons.precision_manufacturing_outlined, 'MACHINES'),
       (Icons.credit_card_outlined, 'PAYMENTS'),
       (Icons.group_outlined, 'USERS'),
