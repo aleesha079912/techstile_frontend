@@ -42,6 +42,10 @@ import 'package:techstile_frontend/screens/man_dashboard/manager_production_page
 import 'package:techstile_frontend/screens/man_dashboard/manager_profile.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/generate_qrcode.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/scan_code.dart';
+import 'package:techstile_frontend/screens/man_dashboard/settings/editprofile.dart';
+import 'package:techstile_frontend/screens/man_dashboard/settings/help_faq.dart';
+import 'package:techstile_frontend/screens/man_dashboard/settings/manager_settings_screen.dart';
+import 'package:techstile_frontend/screens/man_dashboard/settings/about_app.dart';
 class AppRoutes {
   static const splash = "/";
   static const login = "/login";
@@ -59,6 +63,17 @@ class AppRoutes {
   static const managerEmployeeDetail = '/manager-employee-detail';
   static const managerProfile = "/manager-profile";
 static const managerScanMachine = "/manager-scan-machine";
+static const String managersettings =
+    '/manager-settings';
+
+ static const editProfile = "/edit-profile";
+  static const  chnagePassword = "/change-password";
+  static const  helpFaq = "/help-faq";
+  static const  aboutApp = '/about-app';
+
+
+
+
   // owner dashboard
   static const addFactory = '/add-factory';
   static const scanMachine = "/scan-machine";
@@ -190,6 +205,29 @@ GetPage(
     );
 
   },
+),
+
+//MANAGER SIDE SETTINGS
+GetPage(
+  name: '/edit-profile',
+  page: () => const EditProfileScreen(),
+),
+GetPage(
+  name: AppRoutes.managersettings,
+  page: () => const ManagerSettingsScreen(),
+),
+// GetPage(
+//   name: '/change-password',
+//   page: () => const ChangePasswordScreen(),
+// ),
+
+GetPage(
+  name: '/help-faq',
+  page: () => const HelpFaqScreen(),
+),
+GetPage(
+  name: '/about-app',
+  page: () => const AboutAppScreen(),
 ),
 
     /// EMPLOYEE DASHBOARD

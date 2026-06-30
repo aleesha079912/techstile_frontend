@@ -37,15 +37,12 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-<<<<<<< HEAD
     if (mounted) {
       setState(() {
         _isLoading = true;
       });
     }
-=======
     if (mounted) setState(() => _isLoading = true);
->>>>>>> 816ab67d9f66a05125d0f3a094c77867c7f4396a
 
     try {
       final result = await AuthService.login(
@@ -53,15 +50,12 @@ class _LoginScreenState extends State<LoginScreen> {
         _passwordController.text.trim(),
       );
 
-<<<<<<< HEAD
       if (mounted) {
         setState(() {
           _isLoading = false;
         });
       }
-=======
       if (mounted) setState(() => _isLoading = false);
->>>>>>> 816ab67d9f66a05125d0f3a094c77867c7f4396a
 
       if (result['success'] == true) {
         final userData = result['data']['user'];
@@ -72,21 +66,17 @@ class _LoginScreenState extends State<LoginScreen> {
             ? roles[0]['name'].toString().toLowerCase().trim()
             : "";
 
-<<<<<<< HEAD
         if (roles.isNotEmpty) {
           roleName = roles[0]['name'].toString().toLowerCase().trim();
         }
 
         debugPrint("SUCCESS => Token: $token, Role: $roleName");
 
-=======
->>>>>>> 816ab67d9f66a05125d0f3a094c77867c7f4396a
         box.write('token', token);
         box.write('user', userData);
         box.write('role', roleName);
         box.write('isLoggedIn', true);
 
-<<<<<<< HEAD
         // ✅ Role based navigation — fixed syntax
      if (roleName == 'owner') {
 
@@ -137,7 +127,6 @@ class _LoginScreenState extends State<LoginScreen> {
   );
 
 }
-=======
         if (roleName == 'owner') {
           Get.offAllNamed(AppRoutes.ownerDashboard);
         } else if (roleName == 'manager') {
@@ -148,21 +137,17 @@ class _LoginScreenState extends State<LoginScreen> {
         } else {
           Get.snackbar("Invalid Role", "This Account is not linked with any role.");
         }
->>>>>>> 816ab67d9f66a05125d0f3a094c77867c7f4396a
       } else {
         Get.snackbar("Login Failed", result['message'] ?? "Check credentials");
       }
     } catch (e) {
-<<<<<<< HEAD
       if (mounted) {
         setState(() {
           _isLoading = false;
         });
       }
       debugPrint("LOGIN ERROR: $e");
-=======
       if (mounted) setState(() => _isLoading = false);
->>>>>>> 816ab67d9f66a05125d0f3a094c77867c7f4396a
       Get.snackbar("Error", "Server connection failed");
     }
   }
@@ -242,10 +227,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 5),
                 TextField(
                   controller: _emailController,
-<<<<<<< HEAD
                   keyboardType: TextInputType.emailAddress,
-=======
->>>>>>> 816ab67d9f66a05125d0f3a094c77867c7f4396a
                   decoration: inputDecoration(
                     hint: "Enter Email",
                     icon: Icons.email,
@@ -261,13 +243,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: _passwordController,
                   obscureText: _obscureText,
                   decoration: inputDecoration(
-<<<<<<< HEAD
-                    hint: "Enter your Password",
-                    icon: Icons.lock_outline,
-=======
                     hint: "Enter Password",
-                    icon: Icons.lock,
->>>>>>> 816ab67d9f66a05125d0f3a094c77867c7f4396a
+                    icon: Icons.lock_outline,
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscureText
@@ -293,7 +270,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         : const Text("Begin Shift →"),
                   ),
                 ),
-<<<<<<< HEAD
                 const SizedBox(height: 10),
                 Center(
                   child: GestureDetector(
@@ -314,49 +290,31 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                GestureDetector(
-                  onTap: () {
-                    Get.snackbar(
-                      "Contact Supervisor",
-                      "Please reach out to your floor supervisor.",
-                    );
-                  },
-=======
-
                 const SizedBox(height: 30),
 
                 // ================= CONTACT SUPERVISOR =================
                 GestureDetector(
                   onTap: openWhatsApp,
->>>>>>> 816ab67d9f66a05125d0f3a094c77867c7f4396a
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: const Color.fromARGB(255, 223, 231, 238),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Row(
+                    child: Row(
                       children: [
-<<<<<<< HEAD
-                        Icon(Icons.support_agent, color: AppTheme.neutral),
+                        const Icon(Icons.support_agent,
+                            color: Color.fromARGB(255, 0, 0, 0)),
                         const SizedBox(width: 10),
                         const Expanded(
                           child: Text(
-                            "Contact Supervisor",
-                            style: TextStyle(color: AppTheme.background),
-=======
-                        Icon(Icons.support_agent, color: Color.fromARGB(255, 0, 0, 0)),
-                        SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            "System Help"
-                            " Contact Supervisor",
-                            style: TextStyle(color: Color.fromARGB(255, 3, 3, 3)),
->>>>>>> 816ab67d9f66a05125d0f3a094c77867c7f4396a
+                            "System Help Contact Supervisor",
+                            style: TextStyle(
+                                color: Color.fromARGB(255, 3, 3, 3)),
                           ),
                         ),
-                        Icon(Icons.arrow_forward_ios,
-                            size: 14, color: Colors.white),
+                        const Icon(Icons.arrow_forward_ios,
+                            size: 14, color: Color.fromARGB(255, 0, 0, 0)),
                       ],
                     ),
                   ),

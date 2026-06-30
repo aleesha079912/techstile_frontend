@@ -120,7 +120,7 @@ class ManagerDrawer extends StatelessWidget {
                     Get.back();
 
                     Get.toNamed(
-                      AppRoutes.settings
+                      AppRoutes.managersettings
                     );
 
                   },
