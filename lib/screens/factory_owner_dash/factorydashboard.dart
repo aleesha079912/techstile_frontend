@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:techstile_frontend/core/services/factory_dashbaord_service.dart';
+import 'package:techstile_frontend/core/services/factory_dashboard_service.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
+// import 'package:techstile_frontend/screens/factory_owner_dash/owner_production_page.dart'; // ← add this import
+import 'package:get/get.dart';
+import 'package:techstile_frontend/routes/routes.dart';
 // ── Palette ────────────────────────────────────────────────────────────────────
 const _navy   = Color(0xFF0D1B4B);
 const _navy2  = Color(0xFF1A3570);
@@ -22,7 +25,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
 
   bool loading = true;
   Map data = {};
-  
+
   int get factoryId => int.parse(widget.factoryId);
 
   @override
@@ -61,7 +64,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _heroCard(),
+                    _heroCard(),          // ← production button is inside here
                     const SizedBox(height: 20),
 
                     const _SectionLabel(text: 'This Week'),
@@ -111,8 +114,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                     const SizedBox(height: 24),
 
                     _SectionLabel(
-                      text:
-                          'Varieties (${data['total_varieties'] ?? 0})',
+                      text: 'Varieties (${data['total_varieties'] ?? 0})',
                     ),
                     const SizedBox(height: 12),
                     _varietiesList(),
@@ -120,28 +122,25 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                 ),
               ),
             ),
-            bottomNavigationBar: CustomBottomNav(currentIndex: 0, factoryId: factoryId),
+      bottomNavigationBar: CustomBottomNav(currentIndex: 0, factoryId: factoryId),
     );
   }
 
-  // ── AppBar ─────────────────────────────────────────────────────────────────
+  // ── AppBar ──────────────────────────────────────────────────────────────────
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
       backgroundColor: _navy,
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios_new_rounded,
-            color: _white, size: 20),
+        icon: const Icon(Icons.arrow_back_ios_new_rounded, color: _white, size: 20),
         onPressed: () => Navigator.pop(context),
       ),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'TechStile',
-            style: TextStyle(
-                color: _white, fontWeight: FontWeight.w800, fontSize: 17),
-          ),
+          const Text('TechStile',
+              style: TextStyle(
+                  color: _white, fontWeight: FontWeight.w800, fontSize: 17)),
           Text(
             data['factory']?['name'] ?? 'Loading…',
             style: TextStyle(
@@ -154,7 +153,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
     );
   }
 
-  // ── Hero card — factory location summary ────────────────────────────────────
+  // ── Hero card — factory info + Productions button ───────────────────────────
   Widget _heroCard() {
     final factory = data['factory'];
     return Container(
@@ -174,53 +173,93 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
               offset: const Offset(0, 6)),
         ],
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            width: 56,
-            height: 56,
-            decoration: BoxDecoration(
-              color: _white.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: const Icon(Icons.factory_rounded,
-                color: _teal, size: 28),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  factory?['name'] ?? 'Factory',
-                  style: const TextStyle(
-                      color: _white, fontWeight: FontWeight.w800, fontSize: 18),
+          // ── Factory info row (same as before) ───────────
+          Row(
+            children: [
+              Container(
+                width: 56,
+                height: 56,
+                decoration: BoxDecoration(
+                  color: _white.withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                const SizedBox(height: 4),
-                Row(
+                child: const Icon(Icons.factory_rounded, color: _teal, size: 28),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(Icons.location_on_outlined,
-                        color: _white.withOpacity(0.6), size: 14),
-                    const SizedBox(width: 4),
-                    Expanded(
-                      child: Text(
-                        '${factory?['address'] ?? ''}, ${factory?['city'] ?? ''}',
-                        style: TextStyle(
-                            color: _white.withOpacity(0.65), fontSize: 12),
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                    Text(
+                      factory?['name'] ?? 'Factory',
+                      style: const TextStyle(
+                          color: _white, fontWeight: FontWeight.w800, fontSize: 18),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Icon(Icons.location_on_outlined,
+                            color: _white.withOpacity(0.6), size: 14),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            '${factory?['address'] ?? ''}, ${factory?['city'] ?? ''}',
+                            style: TextStyle(
+                                color: _white.withOpacity(0.65), fontSize: 12),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
+
+          // ── Productions button ───────────────────────────
+         const SizedBox(height: 16),
+
+SizedBox(
+  width: double.infinity,
+  child: ElevatedButton.icon(
+ onPressed: () {
+
+  print("Sending Factory ID = ${widget.factoryId}");
+
+  Get.toNamed(
+    AppRoutes.ownerProduction,
+    arguments: widget.factoryId,
+  );
+},
+    icon: const Icon(Icons.list_alt_rounded),
+    label: const Text(
+      'View Productions',
+      style: TextStyle(
+        fontWeight: FontWeight.w700,
+        fontSize: 14,
+      ),
+    ),
+    style: ElevatedButton.styleFrom(
+      backgroundColor: _teal,
+      foregroundColor: _navy,
+      elevation: 0,
+      padding: const EdgeInsets.symmetric(vertical: 13),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+    ),
+  ),
+),
         ],
       ),
     );
   }
 
-  // ── Stat card — reusable ────────────────────────────────────────────────────
+  // ── Stat card ───────────────────────────────────────────────────────────────
   Widget _statCard({
     required IconData icon,
     required String label,
@@ -253,107 +292,108 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
               child: Icon(icon, color: color, size: 18),
             ),
             const SizedBox(height: 12),
-            Text(
-              value,
-              style: const TextStyle(
-                  color: _navy, fontSize: 24, fontWeight: FontWeight.w800),
-            ),
+            Text(value,
+                style: const TextStyle(
+                    color: _navy, fontSize: 24, fontWeight: FontWeight.w800)),
             const SizedBox(height: 2),
-            Text(
-              '$label · $unit',
-              style: TextStyle(
-                  color: _navy.withOpacity(0.5),
-                  fontSize: 11,
-                  fontWeight: FontWeight.w500),
-            ),
+            Text('$label · $unit',
+                style: TextStyle(
+                    color: _navy.withOpacity(0.5),
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500)),
           ],
         ),
       ),
     );
   }
 
-  // ── Varieties list ───────────────────────────────────────────────────────────
+  // ── Varieties list ──────────────────────────────────────────────────────────
   Widget _varietiesList() {
-  final varieties = (data['varieties'] as List?) ?? [];
+    final varieties = (data['varieties'] as List?) ?? [];
 
-  if (varieties.isEmpty) {
+    if (varieties.isEmpty) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 32),
+        decoration: BoxDecoration(
+            color: _white, borderRadius: BorderRadius.circular(16)),
+        child: Column(
+          children: [
+            Icon(Icons.inventory_2_outlined, size: 40, color: Colors.grey.shade300),
+            const SizedBox(height: 10),
+            Text('No varieties produced yet',
+                style: TextStyle(color: Colors.grey.shade400, fontSize: 13)),
+          ],
+        ),
+      );
+    }
+
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(vertical: 32),
       decoration: BoxDecoration(
         color: _white,
         borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 10,
+              offset: const Offset(0, 3)),
+        ],
       ),
       child: Column(
-        children: [
-          Icon(Icons.inventory_2_outlined,
-              size: 40, color: Colors.grey.shade300),
-          const SizedBox(height: 10),
-          Text('No varieties produced yet',
-              style: TextStyle(color: Colors.grey.shade400, fontSize: 13)),
-        ],
+        children: List.generate(varieties.length, (i) {
+          final item   = varieties[i];
+          final isLast = i == varieties.length - 1;
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 32,
+                      height: 32,
+                      decoration: BoxDecoration(
+                        color: _teal.withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(Icons.texture_rounded,
+                          color: _teal, size: 16),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        item['variety_type']?.toString() ?? '',
+                        style: const TextStyle(
+                            color: _navy,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    Text(
+                      '${item['ready_production'] ?? 0}',
+                      style: const TextStyle(
+                          color: _teal,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800),
+                    ),
+                  ],
+                ),
+              ),
+              if (!isLast)
+                Divider(
+                    height: 1,
+                    color: Colors.grey.shade100,
+                    indent: 16,
+                    endIndent: 16),
+            ],
+          );
+        }),
       ),
     );
   }
-
-  return Container(
-    decoration: BoxDecoration(
-      color: _white,
-      borderRadius: BorderRadius.circular(16),
-      boxShadow: [
-        BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 10,
-            offset: const Offset(0, 3)),
-      ],
-    ),
-    child: Column(
-      children: List.generate(varieties.length, (i) {
-        final item    = varieties[i];
-        final isLast  = i == varieties.length - 1;
-
-        return Column(
-          children: [
-           Padding(
-  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-  child: Row(
-    children: [
-      Container(
-        width: 32,
-        height: 32,
-        decoration: BoxDecoration(
-          color: _teal.withOpacity(0.12),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: const Icon(Icons.texture_rounded, color: _teal, size: 16),
-      ),
-      const SizedBox(width: 12),
-      Expanded(
-        child: Text(
-          item['variety_type']?.toString() ?? '',
-          style: const TextStyle(
-              color: _navy, fontSize: 14, fontWeight: FontWeight.w600),
-        ),
-      ),
-      // ✅ Sirf ready production sum
-      Text(
-        '${item['ready_production'] ?? 0}',
-        style: const TextStyle(
-            color: _teal, fontSize: 16, fontWeight: FontWeight.w800),
-      ),
-    ],
-  ),
-),
-            if (!isLast)
-              Divider(height: 1, color: Colors.grey.shade100, indent: 16, endIndent: 16),
-          ],
-        );
-      }),
-    ),
-  );
 }
-}
-// ── Section label ─────────────────────────────────────────────────────────────
+
+// ── Section label ────────────────────────────────────────────────────────────
 class _SectionLabel extends StatelessWidget {
   final String text;
   const _SectionLabel({required this.text});
@@ -369,11 +409,9 @@ class _SectionLabel extends StatelessWidget {
               color: _teal, borderRadius: BorderRadius.circular(2)),
         ),
         const SizedBox(width: 8),
-        Text(
-          text,
-          style: const TextStyle(
-              color: _navy, fontWeight: FontWeight.w700, fontSize: 15),
-        ),
+        Text(text,
+            style: const TextStyle(
+                color: _navy, fontWeight: FontWeight.w700, fontSize: 15)),
       ],
     );
   }

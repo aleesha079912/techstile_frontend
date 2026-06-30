@@ -3,7 +3,6 @@ import 'package:techstile_frontend/core/services/machine_assignment_service.dart
 
 class MachineAssignmentPage extends StatefulWidget {
   const MachineAssignmentPage({super.key});
-  
 
   @override
   State<MachineAssignmentPage> createState() => _MachineAssignmentPageState();
@@ -26,7 +25,6 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
   int? selManager;
   int? selEmployee;
   int? selectedMachine;
-
 
   bool isLoading = true;
 
@@ -56,47 +54,55 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
     });
   }
 
-  Future<void> _handleAssignment() async {
-  if (!_formKey.currentState!.validate()) return;
+  // ✅ NEW: filter employees by factory shift
+  Future<void> _loadEmployeesByFactory(int factoryId) async {
+    final data = await _service.getEmployeesByFactory(factoryId);
 
-  if (selectedMachine == null) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("Please select a machine"),
-      ),
-    );
-    return;
+    setState(() {
+      employees = data;
+      selEmployee = null;
+    });
   }
 
- final success = await _service.assign(
-  userId: selEmployee!,
-  managerId: selManager!,
-  factoryId: selFactory!,
-  machineIds: [selectedMachine!],
-  varietyType: _varietyTypeController.text,
-  totalLength: _totalLengthController.text,
-);
+  Future<void> _handleAssignment() async {
+    if (!_formKey.currentState!.validate()) return;
 
-  if (!mounted) return;
+    if (selectedMachine == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please select a machine")),
+      );
+      return;
+    }
 
-if (success) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(
-      content: Text("Machine Assigned Successfully"),
-      backgroundColor: Colors.green,
-    ),
-  );
+    final success = await _service.assign(
+      employeeId: selEmployee!,
+      managerId: selManager!,
+      factoryId: selFactory!,
+      machineIds: [selectedMachine!],
+      varietyType: _varietyTypeController.text,
+      totalLength: _totalLengthController.text,
+    );
 
-  Navigator.pop(context, true);
-} else {
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(
-      content: Text("Assignment Failed"),
-      backgroundColor: Colors.red,
-    ),
-  );
-}
-}
+    if (!mounted) return;
+
+    if (success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Machine Assigned Successfully"),
+          backgroundColor: Colors.green,
+        ),
+      );
+
+      Navigator.pop(context, true);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Assignment Failed"),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +132,11 @@ if (success) {
                         setState(() {
                           selFactory = v;
                         });
+
                         _loadMachines(v!);
+
+                        // ✅ NEW: load filtered employees
+                        _loadEmployeesByFactory(v);
                       },
                     ),
 
@@ -137,6 +147,7 @@ if (success) {
                       (v) => setState(() => selManager = v),
                     ),
 
+                    // 🔥 UPDATED ONLY DISPLAY TEXT
                     _buildDrop(
                       "Select Employee",
                       employees,
@@ -151,9 +162,9 @@ if (success) {
                       decoration: const InputDecoration(
                         labelText: "Select Machine",
                         border: OutlineInputBorder(),
-                        ),
-                        items: machines.map((machine) {
-                         return DropdownMenuItem<int>(
+                      ),
+                      items: machines.map((machine) {
+                        return DropdownMenuItem<int>(
                           value: machine['id'],
                           child: Text(
                             machine['machine_name'] ?? 'Machine',
@@ -166,45 +177,45 @@ if (success) {
                         });
                       },
                       validator: (value) {
-                       if (value == null) {
-                        return "Please Select Machine";
-                       }
-                       return null;
+                        if (value == null) {
+                          return "Please Select Machine";
+                        }
+                        return null;
                       },
                     ),
 
-                  const SizedBox(height: 15),
+                    const SizedBox(height: 15),
 
-TextFormField(
-  controller: _varietyTypeController,
-  decoration: const InputDecoration(
-    labelText: "Variety Type",
-    border: OutlineInputBorder(),
-  ),
-  validator: (value) {
-    if (value == null || value.isEmpty) {
-      return "Enter Variety Type";
-    }
-    return null;
-  },
-),
+                    TextFormField(
+                      controller: _varietyTypeController,
+                      decoration: const InputDecoration(
+                        labelText: "Variety Type",
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Enter Variety Type";
+                        }
+                        return null;
+                      },
+                    ),
 
-const SizedBox(height: 15),
+                    const SizedBox(height: 15),
 
-TextFormField(
-  controller: _totalLengthController,
-  keyboardType: TextInputType.number,
-  decoration: const InputDecoration(
-    labelText: "Total Length",
-    border: OutlineInputBorder(),
-  ),
-  validator: (value) {
-    if (value == null || value.isEmpty) {
-      return "Enter Total Length";
-    }
-    return null;
-  },
-),
+                    TextFormField(
+                      controller: _totalLengthController,
+                      keyboardType: TextInputType.number,
+                      decoration: const InputDecoration(
+                        labelText: "Total Length",
+                        border: OutlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Enter Total Length";
+                        }
+                        return null;
+                      },
+                    ),
 
                     const SizedBox(height: 20),
 
@@ -236,12 +247,18 @@ TextFormField(
             borderRadius: BorderRadius.circular(12),
           ),
         ),
+
+        // 🔥 UPDATED: show name + shift start time
         items: items.map((e) {
           return DropdownMenuItem<int>(
             value: e['id'],
-            child: Text(e['name'] ?? 'Unknown'),
+            child: Text(
+              "${e['name'] ?? 'Unknown'}"
+              "${e['shift_starttime'] != null ? ' (Shift: ${e['shift_starttime']})' : ''}",
+            ),
           );
         }).toList(),
+
         onChanged: onChanged,
       ),
     );

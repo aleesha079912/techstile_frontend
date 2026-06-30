@@ -2,9 +2,7 @@
 import '../auth_service.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:techstile_frontend/core/services/machines_service.dart'; // ✅ Machine model yahan se aata hai
-
-/// Service layer — manager related API calls.
+import 'package:techstile_frontend/core/services/machines_service.dart'; 
 class ManagerDashboardService {
   final String baseUrl = "http://localhost:8000/api/manager";
 
@@ -17,7 +15,6 @@ class ManagerDashboardService {
     throw Exception("Could not load manager dashboard");
   }
 
-  // ✅ Fix: raw Map ki list ko Machine objects ki list mein convert karo
   Future<List<Machine>> getMachines(dynamic factoryId) async {
     final response = await http.get(
       Uri.parse("$baseUrl/machines/$factoryId"),

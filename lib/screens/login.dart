@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:techstile_frontend/core/services/auth_service.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
@@ -16,12 +17,11 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final GetStorage box = GetStorage(); // ✅ FIX 1: GetStorage uncomment kiya
+  final GetStorage box = GetStorage();
 
   bool _isLoading = false;
-  bool _obscureText = true; // ✅ FIX 2: Password show/hide ke liye
+  bool _obscureText = true;
 
-  // ✅ FIX 3: Controllers dispose kiye — memory leak band
   @override
   void dispose() {
     _emailController.dispose();
@@ -32,19 +32,11 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _login() async {
     if (_emailController.text.trim().isEmpty ||
         _passwordController.text.trim().isEmpty) {
-      Get.snackbar(
-        "Error",
-        "Email and Password required",
-      );
+      Get.snackbar("Error", "Email and Password required");
       return;
     }
 
-    // ✅ FIX 4: mounted check — widget dispose hone ke baad setState crash nahi karega
-    if (mounted) {
-      setState(() {
-        _isLoading = true;
-      });
-    }
+    if (mounted) setState(() => _isLoading = true);
 
     try {
       final result = await AuthService.login(
@@ -52,65 +44,47 @@ class _LoginScreenState extends State<LoginScreen> {
         _passwordController.text.trim(),
       );
 
-      // ✅ FIX 4: mounted check yahan bhi
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
+      if (mounted) setState(() => _isLoading = false);
 
       if (result['success'] == true) {
         final userData = result['data']['user'];
         final token = result['data']['token'];
+
         List roles = userData['roles'] ?? [];
-        String roleName = "";
+        String roleName = roles.isNotEmpty
+            ? roles[0]['name'].toString().toLowerCase().trim()
+            : "";
 
-        if (roles.isNotEmpty) {
-          roleName = roles[0]['name'].toString().toLowerCase().trim();
-        }
-
-        debugPrint("SUCCESS => Token: $token, Role: $roleName"); // ✅ FIX 5: print → debugPrint
-
-        // ✅ FIX 1: Token, user, role storage mein save ho raha ab
         box.write('token', token);
         box.write('user', userData);
         box.write('role', roleName);
         box.write('isLoggedIn', true);
 
-        // Role based navigation
         if (roleName == 'owner') {
           Get.offAllNamed(AppRoutes.ownerDashboard);
-        } else if (roleName == 'manager'){
-  // ✅ factoryId pass karo
-  final managerId = userData['id'];
-  
-  Get.offAllNamed(
-    AppRoutes.managerDashboard,
-    arguments: managerId, // ya factoryId — backend kya expect karta hai
-  );
-} else if (roleName == 'employee') {
+        } else if (roleName == 'manager') {
+          Get.offAllNamed(AppRoutes.managerDashboard,
+              arguments: userData['id']);
+        } else if (roleName == 'employee') {
           Get.offAllNamed(AppRoutes.employeeDashboard);
         } else {
-          Get.snackbar(
-            "Invalid Role",
-            "This Account is not linked with any role.",
-          );
+          Get.snackbar("Invalid Role", "This Account is not linked with any role.");
         }
       } else {
-        Get.snackbar(
-          "Login Failed",
-          result['message'] ?? "Check your credentials",
-        );
+        Get.snackbar("Login Failed", result['message'] ?? "Check credentials");
       }
     } catch (e) {
-      // ✅ FIX 4: mounted check catch block mein bhi
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
-      debugPrint("LOGIN ERROR: $e"); // ✅ FIX 5: print → debugPrint
+      if (mounted) setState(() => _isLoading = false);
       Get.snackbar("Error", "Server connection failed");
+    }
+  }
+
+  Future<void> openWhatsApp() async {
+    const phone = "923216427668"; // 🔴 apna number
+    final Uri url = Uri.parse("https://wa.me/$phone");
+
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      Get.snackbar("Error", "WhatsApp open nahi ho saka");
     }
   }
 
@@ -122,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return InputDecoration(
       hintText: hint,
       prefixIcon: Icon(icon, color: AppTheme.secondary),
-      suffixIcon: suffixIcon, // ✅ FIX 2: suffix icon support add kiya
+      suffixIcon: suffixIcon,
       filled: true,
       fillColor: AppTheme.background,
       border: OutlineInputBorder(
@@ -134,178 +108,127 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-  return Scaffold(
+    return Scaffold(
       backgroundColor: AppTheme.background,
       body: Center(
         child: SingleChildScrollView(
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: AppTheme.background,
-              borderRadius: BorderRadius.circular(20),
-            ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+
+                // ================= HEADER =================
                 Row(
                   children: [
                     Icon(Icons.bar_chart, color: AppTheme.primary),
                     const SizedBox(width: 8),
-                    Text(
+                    const Text(
                       "LOOMCONTROL",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.primary,
-                      ),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
-                Text(
+
+                const SizedBox(height: 25),
+
+                const Text(
                   "Access",
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: AppTheme.primary,
-                  ),
+                  style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                 ),
-                Container(
-                  width: 40,
-                  height: 3,
-                  color: AppTheme.background,
-                  margin: const EdgeInsets.symmetric(vertical: 8),
+
+                const SizedBox(height: 8),
+
+                const Text(
+                  "Enter credentials to manage looms and production logs.",
                 ),
-                Text(
-                  "Enter your credentials to manage active looms and production logs.",
-                  style: TextStyle(color: AppTheme.primary),
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  "Email",
-                  style: TextStyle(fontSize: 12, color: AppTheme.primary),
-                ),
+
+                const SizedBox(height: 25),
+
+                // ================= EMAIL =================
+                const Text("Email"),
                 const SizedBox(height: 5),
                 TextField(
                   controller: _emailController,
-                  keyboardType: TextInputType.emailAddress, // ✅ BONUS: Email keyboard
                   decoration: inputDecoration(
-                    hint: "Enter your Email",
+                    hint: "Enter Email",
                     icon: Icons.email,
                   ),
                 ),
+
                 const SizedBox(height: 15),
-                Text(
-                  "PIN / PASSWORD",
-                  style: TextStyle(fontSize: 12, color: AppTheme.primary),
-                ),
+
+                // ================= PASSWORD =================
+                const Text("Password"),
                 const SizedBox(height: 5),
                 TextField(
                   controller: _passwordController,
-                  obscureText: _obscureText, // ✅ FIX 2: dynamic value
+                  obscureText: _obscureText,
                   decoration: inputDecoration(
-                    hint: "Enter your Password",
-                    icon: Icons.lock_outline,
-                    // ✅ FIX 2: Show/hide toggle button
+                    hint: "Enter Password",
+                    icon: Icons.lock,
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _obscureText ? Icons.visibility_off : Icons.visibility,
-                        color: AppTheme.primary,
+                        _obscureText
+                            ? Icons.visibility_off
+                            : Icons.visibility,
                       ),
                       onPressed: () {
-                        setState(() {
-                          _obscureText = !_obscureText;
-                        });
+                        setState(() => _obscureText = !_obscureText);
                       },
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 20),
+
+                // ================= LOGIN BUTTON =================
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _login,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.primary,
-                      foregroundColor: AppTheme.background,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(28),
-                      ),
-                      elevation: 0,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                    ),
                     child: _isLoading
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                                color: Colors.white, strokeWidth: 2))
-                        : const Text(
-                            "Begin Shift  →",
-                            style: TextStyle(fontSize: 16),
-                          ),
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text("Begin Shift →"),
                   ),
                 ),
-                const SizedBox(height: 10),
-                // ✅ FIX 6: "Forgot Password?" ab clickable hai
-                Center(
-                  child: GestureDetector(
-                    onTap: () {
-                      // TODO: Forgot password screen pe navigate karo
-                      Get.snackbar(
-                        "Forgot Password",
-                        "Contact your supervisor to reset password.",
-                      );
-                    },
-                    child: Text(
-                      "Forgot Password?",
-                      style: TextStyle(
-                        color: AppTheme.primary,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                // ✅ FIX 7: "Contact Supervisor" ab clickable hai
+
+                const SizedBox(height: 15),
+
+                // ================= CONTACT SUPERVISOR =================
                 GestureDetector(
-                  onTap: () {
-                    // TODO: Supervisor contact screen ya dialog add karo
-                    Get.snackbar(
-                      "Contact Supervisor",
-                      "Please reach out to your floor supervisor.",
-                    );
-                  },
+                  onTap: openWhatsApp,
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
                       color: AppTheme.secondary,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Row(
+                    child: const Row(
                       children: [
-                        Icon(Icons.support_agent, color: AppTheme.primary),
-                        const SizedBox(width: 10),
-                        const Expanded(
-                          child: Text("Contact Supervisor", style: TextStyle(color: AppTheme.background),
-                        )),
+                        Icon(Icons.support_agent, color: Colors.white),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            "Contact Supervisor",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
                         Icon(Icons.arrow_forward_ios,
-                            size: 14, color: AppTheme.primary),
+                            size: 14, color: Colors.white),
                       ],
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                Center(
+
+                const SizedBox(height: 20),
+
+                // ================= FOOTER =================
+                const Center(
                   child: Text(
-                    "© 2024 LOOMCONTROL INDUSTRIAL SYSTEMS\nVERSION 4.2.0-ALPHA",
+                    "© 2024 LOOMCONTROL\nVERSION 4.2.0-ALPHA",
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: AppTheme.textPrimary,
-                    ),
+                    style: TextStyle(fontSize: 10),
                   ),
                 ),
               ],

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:techstile_frontend/screens/factory_owner_dash/payments.dart';
 import '../screens/factory_owner_dash/factorydashboard.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import '../screens/factory_owner_dash/factory_dashboard.dart';
 import '../screens/app_Owner_dashboard/machine/manage_machines.dart';
-import '../screens/factory_owner_dash/payments.dart';
+// import '../screens/factory_owner_dash/payments.dart';
 import '../screens/app_Owner_dashboard/user/factory_users.dart';
 
 class CustomBottomNav extends StatelessWidget {
@@ -33,10 +33,10 @@ class CustomBottomNav extends StatelessWidget {
       Get.to(() => MachinesScreen(factoryId: factoryId));
       break;
 
-    // case 2:
-    //   // Navigate to PaymentsScreen (constructor call)
-    //   Get.to(() => PaymentsScreen(factoryId: factoryId));
-    //   break;
+    case 2:
+      // Navigate to PaymentsScreen (constructor call)
+      Get.to(() => PaymentsScreen(factoryId: factoryId));
+      break;
 
     case 3:
       Get.to(() => FactoryUsersScreen(factoryId: factoryId));

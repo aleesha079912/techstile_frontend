@@ -16,6 +16,7 @@ class AuthService {
   /// Every authenticated API call mein yahi headers use karo
   static Map<String, String> get authHeaders => {
         'Content-Type': 'application/json',
+         'Accept': 'application/json',
         'Authorization': 'Bearer $token',  // Token ko header mein bhejo
       };
 

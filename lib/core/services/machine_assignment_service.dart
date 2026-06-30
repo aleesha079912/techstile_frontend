@@ -76,9 +76,22 @@ class AssignMachineService {
     return [];
   }
 
+  Future<List<dynamic>> getEmployeesByFactory(int factoryId) async {
+  final res = await http.get(
+    Uri.parse('$baseUrl/employees-with-shift/$factoryId'),
+    headers: _headers,
+  );
+
+  if (res.statusCode == 200) {
+    final body = jsonDecode(res.body);
+    return body['data'] ?? [];
+  }
+  return [];
+}
+
   // ASSIGN API
  Future<bool> assign({
-  required int userId,
+  required int employeeId,
   required int managerId,
   required int factoryId,
   required List<int> machineIds,
@@ -89,7 +102,7 @@ class AssignMachineService {
     Uri.parse('$baseUrl/assign-machines'),
     headers: _headers,
     body: jsonEncode({
-  "user_id": userId,
+  "employee_id": employeeId,
   "manager_id": managerId,
   "factory_id": factoryId,
   "machine_ids": machineIds,
