@@ -6,6 +6,7 @@ import '../../../widgets/factorydrawer.dart';
 import 'generate_qrcode.dart';
 import 'package:get/get.dart';
 import 'machine_detail.dart';
+
 class MachinesScreen extends StatefulWidget {
   final int factoryId;
 
@@ -20,8 +21,12 @@ class MachinesScreen extends StatefulWidget {
 
 class _MachinesScreenState extends State<MachinesScreen> {
   final service = MachinesService.instance;
+
   MachinesData? data;
   bool isLoading = true;
+
+  List<Machine> filteredMachines = [];
+  final TextEditingController searchCtrl = TextEditingController();
 
   @override
   void initState() {
@@ -31,16 +36,30 @@ class _MachinesScreenState extends State<MachinesScreen> {
 
   void load() async {
     setState(() => isLoading = true);
-    final res = await service.fetchMachines(
-  widget.factoryId,
-);
+
+    final res = await service.fetchMachines(widget.factoryId);
+
     setState(() {
       data = res;
+      filteredMachines = res?.machines ?? [];
       isLoading = false;
     });
   }
 
-  // --- 1. CRUD: ADD & UPDATE POPUP ---
+  void searchMachines(String query) {
+    final all = data?.machines ?? [];
+
+    setState(() {
+      filteredMachines = all.where((m) {
+        return m.machineName
+                .toLowerCase()
+                .contains(query.toLowerCase()) ||
+            m.type.toLowerCase().contains(query.toLowerCase());
+      }).toList();
+    });
+  }
+
+  // --- ADD / UPDATE ---
   void _showMachineForm(BuildContext context, {Machine? machine}) {
     final idCtrl = TextEditingController(text: machine?.machineName);
     final typeCtrl = TextEditingController(text: machine?.type);
@@ -84,87 +103,51 @@ class _MachinesScreenState extends State<MachinesScreen> {
               ),
               const SizedBox(height: 20),
 
-              _buildField(idCtrl, "Machine Name (e.g. LM-8402)", Icons.abc_outlined),
-              _buildField(
-                typeCtrl,
-                "Machine Type (e.g. Rapier)",
-                Icons.category_outlined,
-              ),
+              _buildField(idCtrl, "Machine Name", Icons.abc),
+              _buildField(typeCtrl, "Machine Type", Icons.category),
 
               const SizedBox(height: 25),
+
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.primary,
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
                   ),
                   onPressed: () async {
-                      if (idCtrl.text.isEmpty || typeCtrl.text.isEmpty) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Please fill all fields")),
-                        );
-                        return;
+                    if (machine == null) {
+                      final result = await service.addMachine(
+                        idCtrl.text,
+                        typeCtrl.text,
+                        widget.factoryId,
+                      );
+
+                      if (!mounted) return;
+
+                      if (result != null && result['success'] == true) {
+                        Get.back();
+                        load();
                       }
+                    } else {
+                      bool success = await service.updateMachine(
+                        machine.id,
+                        idCtrl.text,
+                        typeCtrl.text,
+                        widget.factoryId,
+                      );
 
-                      if (machine == null) {
-                        // ── ADD ──
-                        final result = await service.addMachine(
-                          idCtrl.text,
-                          typeCtrl.text,
-                          widget.factoryId,
-                        );
-
-                        if (!mounted) return;
-
-                        if (result != null && result['success'] == true) {
-                          Get.back();
-                          load();
-                          final String newDbId = result['id'].toString(); // ✅ real primary id from DB
-
-                          Future.microtask(() {
-                            Get.to(() => GenerateQrCodeScreen(
-                                  machineDbId: newDbId, // ✅ stored in QR
-                                  machineLabel: idCtrl.text,
-                                  factoryId: widget.factoryId, // pass int
-                                ));
-                          });
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Something went wrong!")),
-                          );
-                        }
-                      } else {
-                        // ── UPDATE ──
-                        bool success = await service.updateMachine(
-                          machine.id,
-                          idCtrl.text,
-                          typeCtrl.text,
-                          widget.factoryId,
-                        );
-
-                        if (!mounted) return;
-
-                        if (success) {
-                          Get.back();
-                          load();
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Something went wrong!")),
-                          );
-                        }
+                      if (success) {
+                        Get.back();
+                        load();
                       }
-                    },
+                    }
+                  },
                   child: Text(
                     machine == null ? "Register Machine" : "Update Machine",
                     style: const TextStyle(color: Colors.white),
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
             ],
           ),
         ),
@@ -172,13 +155,12 @@ class _MachinesScreenState extends State<MachinesScreen> {
     );
   }
 
-  // --- 2. CRUD: DELETE LOGIC ---
   void _handleDelete(String id) async {
     bool? confirm = await showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text("Delete Machine"),
-        content: const Text("Are you sure you want to remove this machine?"),
+        content: const Text("Are you sure?"),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx, false),
@@ -186,7 +168,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text("Delete", style: TextStyle(color: Colors.red)),
+            child: const Text("Delete"),
           ),
         ],
       ),
@@ -202,22 +184,18 @@ class _MachinesScreenState extends State<MachinesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.secondary,
-      // drawer: FactoryDrawer(factoryId: widget.factoryId),
+
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(Icons.menu_rounded, color: Colors.black),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-          ),
-        ),
       ),
+
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppTheme.primary,
         onPressed: () => _showMachineForm(context),
         child: const Icon(Icons.add, color: Colors.white),
       ),
+
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : Padding(
@@ -228,56 +206,64 @@ class _MachinesScreenState extends State<MachinesScreen> {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       "All Machines",
-                      style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
+                      style:
+                          TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  /// 🔍 SEARCH ADDED
+                  TextField(
+                    controller: searchCtrl,
+                    onChanged: searchMachines,
+                    decoration: InputDecoration(
+                      hintText: "Search machines...",
+                      prefixIcon: const Icon(Icons.search),
+                      filled: true,
+                      fillColor: Colors.white,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
                       ),
                     ),
                   ),
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text("Real-time list of loom assets"),
-                  ),
+
                   const SizedBox(height: 16),
 
-                  // Stats row (Updated to show total count since status is missing)
                   Row(
                     children: [
-                      _statCard(
-                        "Total Assets",
-                        data?.machines.length ?? 0,
-                        AppTheme.primary,
-                      ),
+                      _statCard("Total Assets",
+                          data?.machines.length ?? 0, AppTheme.primary),
                       const SizedBox(width: 8),
-                      _statCard(
-                        "Active",
-                        data?.machines.length ?? 0,
-                        Colors.green,
-                      ),
+                      _statCard("Active",
+                          data?.machines.length ?? 0, Colors.green),
                     ],
                   ),
+
                   const SizedBox(height: 16),
 
                   Expanded(
                     child: RefreshIndicator(
                       onRefresh: () async => load(),
-                      child: data!.machines.isEmpty
+                      child: filteredMachines.isEmpty
                           ? const Center(child: Text("No machines found"))
                           : ListView.builder(
                               padding: const EdgeInsets.only(bottom: 80),
-                              itemCount: data!.machines.length,
+                              itemCount: filteredMachines.length,
                               itemBuilder: (context, i) =>
-                                  _machineTile(data!.machines[i]),
+                                  _machineTile(filteredMachines[i]),
                             ),
                     ),
                   ),
                 ],
               ),
             ),
+
       bottomNavigationBar: CustomBottomNav(
         currentIndex: 1,
         factoryId: widget.factoryId,
-     ),
+      ),
     );
   }
 
@@ -293,14 +279,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
           children: [
             Text(title, style: const TextStyle(fontSize: 12)),
             const SizedBox(height: 6),
-            Text(
-              "$count",
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
-            ),
+            Text("$count",
+                style: TextStyle(
+                    fontSize: 22, fontWeight: FontWeight.bold, color: color)),
           ],
         ),
       ),
@@ -308,74 +289,71 @@ class _MachinesScreenState extends State<MachinesScreen> {
   }
 
   Widget _machineTile(Machine m) {
-  return GestureDetector(
-    onTap: () => Get.to(() => MachineDetailScreen(
-  machine:   m,
-  factoryId: widget.factoryId.toString(),
-    onRefresh: load,
-)),
-    child: Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  m.machineName,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
+    return InkWell(
+      onTap: () {
+        Get.to(
+          () => MachineDetailScreen(
+            machine: m,
+            factoryId: widget.factoryId.toString(),
+            onRefresh: load,
+          ),
+        );
+      },
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    m.machineName,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
                   ),
+                  Text(
+                    m.type,
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+            ),
+            Row(
+              children: [
+                GestureDetector(
+                  onTap: () => _showMachineForm(context, machine: m),
+                  child: const Icon(Icons.edit, color: AppTheme.primary),
                 ),
-                Text(m.type, style: const TextStyle(color: Colors.grey)),
-                Text(
-                  "Last Update: ${m.time}",
-                  style: const TextStyle(fontSize: 10, color: Colors.blueGrey),
+                const SizedBox(width: 10),
+                GestureDetector(
+                  onTap: () => _handleDelete(m.id),
+                  child: const Icon(Icons.delete, color: Colors.red),
                 ),
               ],
             ),
-          ),
-          Row(
-            children: [
-              GestureDetector(
-                onTap: () => _showMachineForm(context, machine: m),
-                child: const Icon(
-                  Icons.edit_outlined,
-                  size: 22,
-                  color: AppTheme.primary,
-                ),
-              ),
-              const SizedBox(width: 15),
-              GestureDetector(
-                onTap: () => _handleDelete(m.id),
-                child: const Icon(
-                  Icons.delete_outline,
-                  size: 22,
-                  color: Colors.redAccent,
-                ),
-              ),
-           ],
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
+    );
   }
 
-  Widget _buildField(TextEditingController ctrl, String hint, IconData icon) {
+  Widget _buildField(
+      TextEditingController ctrl, String hint, IconData icon) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: TextField(
         controller: ctrl,
         decoration: InputDecoration(
-          prefixIcon: Icon(icon, size: 20, color: AppTheme.primary),
+          prefixIcon: Icon(icon, color: AppTheme.primary),
           hintText: hint,
           filled: true,
           fillColor: Colors.grey.shade100,

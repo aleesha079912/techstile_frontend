@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:techstile_frontend/core/services/auth_service.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
@@ -32,18 +33,19 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _login() async {
     if (_emailController.text.trim().isEmpty ||
         _passwordController.text.trim().isEmpty) {
-      Get.snackbar(
-        "Error",
-        "Email and Password required",
-      );
+      Get.snackbar("Error", "Email and Password required");
       return;
     }
 
+<<<<<<< HEAD
     if (mounted) {
       setState(() {
         _isLoading = true;
       });
     }
+=======
+    if (mounted) setState(() => _isLoading = true);
+>>>>>>> 816ab67d9f66a05125d0f3a094c77867c7f4396a
 
     try {
       final result = await AuthService.login(
@@ -51,29 +53,40 @@ class _LoginScreenState extends State<LoginScreen> {
         _passwordController.text.trim(),
       );
 
+<<<<<<< HEAD
       if (mounted) {
         setState(() {
           _isLoading = false;
         });
       }
+=======
+      if (mounted) setState(() => _isLoading = false);
+>>>>>>> 816ab67d9f66a05125d0f3a094c77867c7f4396a
 
       if (result['success'] == true) {
         final userData = result['data']['user'];
         final token = result['data']['token'];
-        List roles = userData['roles'] ?? [];
-        String roleName = "";
 
+        List roles = userData['roles'] ?? [];
+        String roleName = roles.isNotEmpty
+            ? roles[0]['name'].toString().toLowerCase().trim()
+            : "";
+
+<<<<<<< HEAD
         if (roles.isNotEmpty) {
           roleName = roles[0]['name'].toString().toLowerCase().trim();
         }
 
         debugPrint("SUCCESS => Token: $token, Role: $roleName");
 
+=======
+>>>>>>> 816ab67d9f66a05125d0f3a094c77867c7f4396a
         box.write('token', token);
         box.write('user', userData);
         box.write('role', roleName);
         box.write('isLoggedIn', true);
 
+<<<<<<< HEAD
         // ✅ Role based navigation — fixed syntax
      if (roleName == 'owner') {
 
@@ -124,20 +137,42 @@ class _LoginScreenState extends State<LoginScreen> {
   );
 
 }
+=======
+        if (roleName == 'owner') {
+          Get.offAllNamed(AppRoutes.ownerDashboard);
+        } else if (roleName == 'manager') {
+          Get.offAllNamed(AppRoutes.managerDashboard,
+              arguments: userData['id']);
+        } else if (roleName == 'employee') {
+          Get.offAllNamed(AppRoutes.employeeDashboard);
+        } else {
+          Get.snackbar("Invalid Role", "This Account is not linked with any role.");
+        }
+>>>>>>> 816ab67d9f66a05125d0f3a094c77867c7f4396a
       } else {
-        Get.snackbar(
-          "Login Failed",
-          result['message'] ?? "Check your credentials",
-        );
+        Get.snackbar("Login Failed", result['message'] ?? "Check credentials");
       }
     } catch (e) {
+<<<<<<< HEAD
       if (mounted) {
         setState(() {
           _isLoading = false;
         });
       }
       debugPrint("LOGIN ERROR: $e");
+=======
+      if (mounted) setState(() => _isLoading = false);
+>>>>>>> 816ab67d9f66a05125d0f3a094c77867c7f4396a
       Get.snackbar("Error", "Server connection failed");
+    }
+  }
+
+  Future<void> openWhatsApp() async {
+    const phone = "923216427668"; // 🔴 apna number
+    final Uri url = Uri.parse("https://wa.me/$phone");
+
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      Get.snackbar("Error", "WhatsApp open nahi ho saka");
     }
   }
 
@@ -165,114 +200,100 @@ class _LoginScreenState extends State<LoginScreen> {
       backgroundColor: AppTheme.background,
       body: Center(
         child: SingleChildScrollView(
-          child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: AppTheme.background,
-              borderRadius: BorderRadius.circular(20),
-            ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+
+                // ================= HEADER =================
                 Row(
                   children: [
                     Icon(Icons.bar_chart, color: AppTheme.primary),
                     const SizedBox(width: 8),
-                    Text(
-                      "LOOMCONTROL",
+                    const Text(
+                      "TECHstile",
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: AppTheme.secondary,
-                      ),
+                        color: AppTheme.primary,
+                        fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
-                Text(
+
+                const SizedBox(height: 25),
+
+                const Text(
                   "Access",
                   style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
                     color: AppTheme.primary,
-                  ),
+                    fontSize: 28, fontWeight: FontWeight.bold),
                 ),
-                Container(
-                  width: 40,
-                  height: 3,
-                  color: AppTheme.background,
-                  margin: const EdgeInsets.symmetric(vertical: 8),
-                ),
-                Text(
+
+                const SizedBox(height: 8),
+
+                const Text(
                   "Enter your credentials to manage active looms and production logs.",
-                  style: TextStyle(color: AppTheme.primary),
                 ),
-                const SizedBox(height: 20),
-                Text(
-                  "Email",
-                  style: TextStyle(fontSize: 12, color: AppTheme.primary),
-                ),
+
+                const SizedBox(height: 25),
+
+                // ================= EMAIL =================
+                const Text("Email"),
                 const SizedBox(height: 5),
                 TextField(
                   controller: _emailController,
+<<<<<<< HEAD
                   keyboardType: TextInputType.emailAddress,
+=======
+>>>>>>> 816ab67d9f66a05125d0f3a094c77867c7f4396a
                   decoration: inputDecoration(
-                    hint: "Enter your Email",
+                    hint: "Enter Email",
                     icon: Icons.email,
                   ),
                 ),
+
                 const SizedBox(height: 15),
-                Text(
-                  "PIN / PASSWORD",
-                  style: TextStyle(fontSize: 12, color: AppTheme.primary),
-                ),
+
+                // ================= PASSWORD =================
+                const Text("Password"),
                 const SizedBox(height: 5),
                 TextField(
                   controller: _passwordController,
                   obscureText: _obscureText,
                   decoration: inputDecoration(
+<<<<<<< HEAD
                     hint: "Enter your Password",
                     icon: Icons.lock_outline,
+=======
+                    hint: "Enter Password",
+                    icon: Icons.lock,
+>>>>>>> 816ab67d9f66a05125d0f3a094c77867c7f4396a
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _obscureText ? Icons.visibility_off : Icons.visibility,
-                        color: AppTheme.neutral,
+                        _obscureText
+                            ? Icons.visibility_off
+                            : Icons.visibility,
                       ),
                       onPressed: () {
-                        setState(() {
-                          _obscureText = !_obscureText;
-                        });
+                        setState(() => _obscureText = !_obscureText);
                       },
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 20),
+
+                // ================= LOGIN BUTTON =================
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _login,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppTheme.primary,
-                      foregroundColor: AppTheme.background,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(28),
-                      ),
-                      elevation: 0,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                    ),
                     child: _isLoading
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                                color: Colors.white, strokeWidth: 2))
-                        : const Text(
-                            "Begin Shift  →",
-                            style: TextStyle(fontSize: 16),
-                          ),
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text("Begin Shift →"),
                   ),
                 ),
+<<<<<<< HEAD
                 const SizedBox(height: 10),
                 Center(
                   child: GestureDetector(
@@ -300,37 +321,55 @@ class _LoginScreenState extends State<LoginScreen> {
                       "Please reach out to your floor supervisor.",
                     );
                   },
+=======
+
+                const SizedBox(height: 30),
+
+                // ================= CONTACT SUPERVISOR =================
+                GestureDetector(
+                  onTap: openWhatsApp,
+>>>>>>> 816ab67d9f66a05125d0f3a094c77867c7f4396a
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppTheme.secondary,
+                      color: const Color.fromARGB(255, 223, 231, 238),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Row(
+                    child: const Row(
                       children: [
+<<<<<<< HEAD
                         Icon(Icons.support_agent, color: AppTheme.neutral),
                         const SizedBox(width: 10),
                         const Expanded(
                           child: Text(
                             "Contact Supervisor",
                             style: TextStyle(color: AppTheme.background),
+=======
+                        Icon(Icons.support_agent, color: Color.fromARGB(255, 0, 0, 0)),
+                        SizedBox(width: 10),
+                        Expanded(
+                          child: Text(
+                            "System Help"
+                            " Contact Supervisor",
+                            style: TextStyle(color: Color.fromARGB(255, 3, 3, 3)),
+>>>>>>> 816ab67d9f66a05125d0f3a094c77867c7f4396a
                           ),
                         ),
                         Icon(Icons.arrow_forward_ios,
-                            size: 14, color: AppTheme.neutral),
+                            size: 14, color: Colors.white),
                       ],
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
-                Center(
+
+                const SizedBox(height: 20),
+
+                // ================= FOOTER =================
+                const Center(
                   child: Text(
-                    "© 2024 LOOMCONTROL INDUSTRIAL SYSTEMS\nVERSION 4.2.0-ALPHA",
+                    "© 2024 LOOMCONTROL\nVERSION 4.2.0-ALPHA",
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: AppTheme.textPrimary,
-                    ),
+                    style: TextStyle(fontSize: 10),
                   ),
                 ),
               ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/assign_paermission.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/employee/assign_shift.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/machine_assignment.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/role_management.dart';
 import '../../../../core/services/manage_users_service.dart';
@@ -19,6 +20,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
 
   String selectedFilter = "All";
   final searchCtrl = TextEditingController();
+  
 
   @override
   void initState() {
@@ -74,7 +76,13 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
 
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
-        title: const Text("TextileOS"),
+        title: const Text(
+         "TECHstile",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         actions: const [
           Padding(
             padding: EdgeInsets.only(right: 12),
@@ -104,8 +112,8 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
           children: [
             Container(
               width: double.infinity,
-              margin: const EdgeInsets.only(top: 8), // ✅ FIX visibility
-              padding: const EdgeInsets.all(18),
+              margin: EdgeInsets.zero,
+              padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -124,8 +132,6 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                       color: AppTheme.primary,
                     ),
                   ),
-
-                  const SizedBox(height: 10),
 
                   /// SEARCH
                   SizedBox(
@@ -148,47 +154,79 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                   ),
 
                   const SizedBox(height: 12),
-
-                  /// BUTTONS
-                  Row(
+                  
+                  Column(
                     children: [
-                      Expanded(
-                        child: _actionBtn("Assign Machines",
-                            Icons.factory_outlined, () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  const MachineAssignmentPage(),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _actionBtn(
+                              "Assign Shift",
+                              Icons.schedule,
+                              () {
+                                // provide fallback ids (0) to avoid undefined identifiers
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => AssignShiftsScreen(
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        }),
+                          ),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: _actionBtn(
+                              "Assign Machines",
+                              Icons.factory_outlined,
+                              () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const MachineAssignmentPage(),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: _actionBtn("Manage Roles",
-                            Icons.security, () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  RoleManagementScreen(),
+
+                      const SizedBox(height: 6),
+
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _actionBtn(
+                              "Manage Roles",
+                              Icons.security,
+                              () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => RoleManagementScreen(),
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        }),
-                      ),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: _actionBtn("Permissions", Icons.lock,
-                            () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) =>
-                                  const AssignPermissionsScreen(),
+                          ),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: _actionBtn(
+                              "Permissions",
+                              Icons.lock,
+                              () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => const AssignPermissionsScreen(),
+                                  ),
+                                );
+                              },
                             ),
-                          );
-                        }),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -210,8 +248,6 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                 ],
               ),
             ),
-
-            const SizedBox(height: 10),
 
             /// LIST
             Expanded(
@@ -346,30 +382,44 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
         children: [
           CircleAvatar(
             radius: 26,
-            backgroundColor:
-                AppTheme.primary.withOpacity(0.1),
-            child: const Icon(Icons.person,
-                color: AppTheme.primary),
+            backgroundColor: AppTheme.primary.withOpacity(0.1),
+            child: const Icon(Icons.person, color: AppTheme.primary),
           ),
+
           const SizedBox(width: 12),
 
           Expanded(
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(user.name,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold)),
-                Text(user.email,
-                    style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey)),
-                Text(user.role,
-                    style: const TextStyle(
-                        color: AppTheme.primary)),
+                Text(
+                  user.name,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  user.email,
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+                Text(
+                  user.role,
+                  style: const TextStyle(color: AppTheme.primary),
+                ),
               ],
             ),
+          ),
+
+          // 🔥 ACTION BUTTONS (EDIT + DELETE)
+          Row(
+            children: [
+              IconButton(
+                onPressed: onEdit,
+                icon: const Icon(Icons.edit, color: Colors.blue),
+              ),
+              IconButton(
+                onPressed: onDelete,
+                icon: const Icon(Icons.delete, color: Colors.red),
+              ),
+            ],
           ),
         ],
       ),

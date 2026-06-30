@@ -1,18 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
-import 'package:techstile_frontend/widgets/factorydrawer.dart';
 import '../../../core/services/employee_service.dart';
 import '../../../core/utils/theme.dart';
 
 class AssignShiftsScreen extends StatefulWidget {
-  final int factoryId;
-  final int userId;
-
-  const AssignShiftsScreen({
-    super.key,
-    required this.factoryId,
-    required this.userId,
-  });
+  const AssignShiftsScreen({super.key,});
 
   @override
   State<AssignShiftsScreen> createState() => _AssignShiftsScreenState();
@@ -25,44 +16,30 @@ class _AssignShiftsScreenState extends State<AssignShiftsScreen> {
   bool loading = true;
 
   // ✅ Sirf isi factory ke employees (dropdown ke liye)
-  List<dynamic> employees = [];
+  List factories = [];
+  List employees = [];
 
   @override
   void initState() {
     super.initState();
     load();
-    loadEmployees();
+    loadDropdowns();
+  }
+
+  Future<void> loadDropdowns() async {
+    factories = await service.fetchFactories();
+    employees = await service.fetchUsers();
+
+    setState(() {});
   }
 
   Future<void> load() async {
-    setState(() => loading = true);
+  setState(() => loading = true);
 
+  data = await service.fetchEmployees();
 
-    // ✅ Fix: sahi method call — sirf factoryId chahiye
-    data = await service.fetchEmployeesByFactory(widget.factoryId);
-
-    // ✅ Fix: sahi method call — factoryId aur userId dono chahiye
-    // data = await service.fetchEmployeesByFactory(widget.factoryId, widget.userId);
-
-
-    setState(() => loading = false);
-  }
-
-  // ✅ Fix: ab EmployeeService se hi data aata hai — koi crash nahi
-  Future<void> loadEmployees() async {
-    try {
-
-      final list = await service.fetchEmployeesByFactory(widget.factoryId);
-
-      // final list = await service.fetchEmployeesByFactory(widget.factoryId, widget.userId);
-
-      setState(() {
-        employees = list;
-      });
-    } catch (e) {
-      print("Employee Load Error: $e");
-    }
-  }
+  setState(() => loading = false);
+}
 
   Future<void> _pickTime(
     BuildContext context,
@@ -87,7 +64,8 @@ class _AssignShiftsScreenState extends State<AssignShiftsScreen> {
   final endCtrl   = TextEditingController(text: item?['shift_endtime'] ?? '');
 
   // ✅ Fix: Map ki jagah sirf id store karo
-  int? selectedEmployeeId;
+  int? selectedFactory = item?['factory_id'];
+  int? selectedEmployeeId = item?['user_id'];;
 
   if (item != null) {
     selectedEmployeeId = item['user_id'];
@@ -104,22 +82,41 @@ class _AssignShiftsScreenState extends State<AssignShiftsScreen> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // ✅ Fix: value int id hai ab
+                  DropdownButtonFormField<int>(
+                    value: selectedFactory,
+                    decoration: const InputDecoration(
+                      labelText: "Select Factory",
+                      border: OutlineInputBorder(),
+                    ),
+                    items: factories.map((factory) {
+                      return DropdownMenuItem<int>(
+                        value: factory['id'],
+                        child: Text(factory['name']),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setDialogState(() {
+                        selectedFactory = value;
+                      });
+                    },
+                  ),
+
+                  const SizedBox(height: 15),
                   DropdownButtonFormField<int>(
                     value: selectedEmployeeId,
                     decoration: const InputDecoration(
                       labelText: "Select Employee",
                       border: OutlineInputBorder(),
                     ),
-                    items: employees.map((emp) {
+                    items: employees.map((user) {
                       return DropdownMenuItem<int>(
-                        value: emp['id'] as int,          // ← employee table id
-                        child: Text(emp['name'] ?? 'Unnamed'),
+                        value: user['id'],
+                        child: Text(user['name']),
                       );
                     }).toList(),
                     onChanged: (value) {
                       setDialogState(() {
-                        selectedEmployeeId = value;       // ← sirf id store
+                        selectedEmployeeId = value;
                       });
                     },
                   ),
@@ -158,6 +155,14 @@ class _AssignShiftsScreenState extends State<AssignShiftsScreen> {
               ),
               ElevatedButton(
                 onPressed: () async {
+                  // ✅ Fix: employees list se user_id dhundo
+                  if (selectedFactory == null) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Please select factory")),
+                    );
+                    return;
+                  }
+
                   if (selectedEmployeeId == null) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Please select employee")),
@@ -165,16 +170,11 @@ class _AssignShiftsScreenState extends State<AssignShiftsScreen> {
                     return;
                   }
 
-                  // ✅ Fix: employees list se user_id dhundo
-                  final selectedEmp = employees.firstWhere(
-                    (e) => e['id'] == selectedEmployeeId,
-                  );
-
                   final body = {
-                    "factory_id":      widget.factoryId,
-                    "user_id":         selectedEmp['user_id'],  // ← sahi user_id
+                    "factory_id": selectedFactory,
+                    "user_id": selectedEmployeeId,
                     "shift_starttime": startCtrl.text,
-                    "shift_endtime":   endCtrl.text,
+                    "shift_endtime": endCtrl.text,
                   };
 
                   print("Body: $body"); // debug
@@ -213,7 +213,6 @@ class _AssignShiftsScreenState extends State<AssignShiftsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: FactoryDrawer(factoryId: widget.factoryId, userID: widget.userId),
       appBar: AppBar(title: const Text("Assign Shifts")),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppTheme.primary,
@@ -232,7 +231,7 @@ class _AssignShiftsScreenState extends State<AssignShiftsScreen> {
                       margin: const EdgeInsets.all(8),
                       child: ListTile(
                         title: Text(
-                          item['name'] ?? "Employee ${item['id']}",
+                         item['user']?['name'] ?? "Employee ${item['id']}",
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             color: AppTheme.primary,
@@ -258,10 +257,6 @@ class _AssignShiftsScreenState extends State<AssignShiftsScreen> {
                     );
                   },
                 ),
-      bottomNavigationBar: CustomBottomNav(
-        currentIndex: 3,
-        factoryId: widget.factoryId,
-      ),
     );
   }
 }

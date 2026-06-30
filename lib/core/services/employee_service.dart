@@ -19,6 +19,42 @@ class EmployeeService {
     return [];
   }
 
+  Future<List<dynamic>> fetchFactories() async {
+  try {
+    final res = await http.get(
+      Uri.parse("$baseUrl/employees/factories"),
+      headers: AuthService.authHeaders,
+    );
+
+    if (res.statusCode == 200) {
+      return jsonDecode(res.body);
+    }
+  } catch (e) {
+    print(e);
+  }
+
+  return [];
+}
+
+
+
+Future<List<dynamic>> fetchUsers() async {
+  try {
+    final res = await http.get(
+      Uri.parse("$baseUrl/employees/users"),
+      headers: AuthService.authHeaders,
+    );
+
+    if (res.statusCode == 200) {
+      return jsonDecode(res.body);
+    }
+  } catch (e) {
+    print(e);
+  }
+
+  return [];
+}
+
   // 🔹 ADD
   Future<bool> addEmployee(Map<String, dynamic> data) async {
     try {

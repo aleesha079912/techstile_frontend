@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:techstile_frontend/core/services/factory_user_services.dart';
-import 'package:techstile_frontend/screens/app_Owner_dashboard/employee/assign_shift.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
-import '../../../../core/utils/theme.dart';
 
 class FactoryUsersScreen extends StatefulWidget {
   final int factoryId;
@@ -39,89 +37,89 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
     final data = await _service.getUsersByFactory(widget.factoryId);
 
     setState(() {
-      manager       = data['manager'];
-      users         = data['data'] ?? [];
+      manager = data['manager'];
+      users = data['data'] ?? [];
       filteredUsers = users;
-      totalUsers    = data['total_users'] ?? 0;
-      activeUsers   = data['active_users'] ?? 0;
-      loading       = false;
+      totalUsers = data['total_users'] ?? 0;
+      activeUsers = data['active_users'] ?? 0;
+      loading = false;
     });
   }
 
   void search(String query) {
     setState(() {
       filteredUsers = users.where((u) {
-        return (u['name'] ?? '').toLowerCase().contains(query.toLowerCase()) ||
-            (u['email'] ?? '').toLowerCase().contains(query.toLowerCase());
+        final name = (u['name'] ?? '').toLowerCase();
+        final email = (u['email'] ?? '').toLowerCase();
+
+        return name.contains(query.toLowerCase()) ||
+            email.contains(query.toLowerCase());
       }).toList();
     });
   }
 
-  // ── Manager card — sirf Assign Shift button ──────────────────────────────
+  Widget statBox(String title, String value, Color color) {
+    return Expanded(
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.12),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          children: [
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 10, color: Colors.grey),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget managerCard() {
     if (manager == null) return const SizedBox();
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: const Color(0xFFE8F0FE),
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(color: const Color(0xFFB6D0FF)),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
         children: [
-          Row(
-            children: [
-              const CircleAvatar(
-                radius: 20,
-                backgroundColor: Color(0xFF1A73E8),
-                child: Icon(Icons.person, color: Colors.white),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      "Factory Manager",
-                      style: TextStyle(fontSize: 11, color: Colors.grey),
-                    ),
-                    Text(
-                      manager['name'] ?? '',
-                      style: const TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+          const CircleAvatar(
+            radius: 20,
+            backgroundColor: Color(0xFF1A73E8),
+            child: Icon(Icons.person, color: Colors.white),
           ),
-
-          const SizedBox(height: 14),
-
-          // ✅ Sirf Assign Shift button — full width
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.primary,
-                foregroundColor: Colors.white,
-              ),
-              icon: const Icon(Icons.schedule, size: 18),
-              label: const Text("Assign Shift"),
-              onPressed: () {
-                // ✅ AssignShiftsScreen khulta hai — wahan + FAB se popup khulta hai
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => AssignShiftsScreen(
-                      factoryId: widget.factoryId,
-                      userId: manager?['id'] ?? 0,
-                    ),
-                  ),
-                );
-              },
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Manager",
+                  style: TextStyle(fontSize: 11, color: Colors.grey),
+                ),
+                Text(
+                  manager['name'] ?? 'No Manager',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
           ),
         ],
@@ -129,32 +127,9 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
     );
   }
 
-  Widget statBox(String title, String value, Color color) {
-    return Expanded(
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 4),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.12),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color.withOpacity(0.3)),
-        ),
-        child: Column(
-          children: [
-            Text(value,
-                style: TextStyle(
-                    fontSize: 18, fontWeight: FontWeight.bold, color: color)),
-            const SizedBox(height: 2),
-            Text(title,
-                style: const TextStyle(fontSize: 11, color: Colors.grey)),
-          ],
-        ),
-      ),
-    );
-  }
-
   Widget userCard(dynamic user) {
-    String role = '';
+    String role = 'Unknown';
+
     if (user['roles'] != null && user['roles'].isNotEmpty) {
       role = user['roles'][0]['name'];
     }
@@ -163,9 +138,14 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFFF7FAFF),
+        color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFE3ECFF)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+          )
+        ],
       ),
       child: Row(
         children: [
@@ -175,26 +155,34 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
             child: Icon(Icons.person, size: 18, color: Colors.white),
           ),
           const SizedBox(width: 10),
+
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(user['name'] ?? '',
-                    style: const TextStyle(fontWeight: FontWeight.w600)),
-                const SizedBox(height: 2),
-                Text(role,
-                    style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                Text(
+                  user['name'] ?? '',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  user['email'] ?? '',
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: Colors.grey,
+                  ),
+                ),
+                Text(
+                  role,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    color: Color(0xFF1A73E8),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
               ],
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-            decoration: BoxDecoration(
-              color: Colors.green.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Text("ACTIVE",
-                style: TextStyle(fontSize: 10, color: Colors.green)),
           ),
         ],
       ),
@@ -205,19 +193,22 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xffF4F6FB),
+
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 235, 237, 241),
-        title: const Text("TextileOS"),
+        backgroundColor: const Color(0xFF1A73E8), // same as bottom nav
+        title: const Text("TECHSTILE"),
       ),
+
       body: loading
           ? const Center(child: CircularProgressIndicator())
           : Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(14),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 10),
-                  managerCard(),
+
+                  /// SEARCH ONLY
                   TextField(
                     controller: searchCtrl,
                     onChanged: search,
@@ -227,19 +218,30 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                       filled: true,
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
                       ),
                     ),
                   ),
+
                   const SizedBox(height: 10),
+
+                  /// STATS
                   Row(
                     children: [
-                      statBox("Total Users", "$totalUsers", const Color(0xFF1A73E8)),
-                      statBox("Active Users", "$activeUsers", Colors.green),
+                      statBox("Total Users", "$totalUsers",
+                          const Color(0xFF1A73E8)),
+                      statBox("Active Users", "$activeUsers",
+                          Colors.green),
                     ],
                   ),
+
                   const SizedBox(height: 10),
+
+                  /// MANAGER
+                  managerCard(),
+
+                  /// USERS LIST
                   Expanded(
                     child: ListView.builder(
                       itemCount: filteredUsers.length,
@@ -250,6 +252,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                 ],
               ),
             ),
+
       bottomNavigationBar: CustomBottomNav(
         currentIndex: 3,
         factoryId: widget.factoryId,
