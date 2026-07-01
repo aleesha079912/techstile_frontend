@@ -91,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
   InputDecoration inputDecoration({
     required String hint,
     required IconData icon,
-    Widget? suffixIcon,
+    Widget? suffixIcon, required Icon prefixIcon,
   }) {
     return InputDecoration(
       hintText: hint,
@@ -150,9 +150,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 5),
                 TextField(
                   controller: _emailController,
-                  decoration: inputDecoration(
-                    hint: "Enter Email",
-                    icon: Icons.email,
+                  decoration: InputDecoration(
+                    hintText: "Enter Email",
+                    prefixIcon: const Icon(
+                      Icons.email_outlined,
+                      color: AppTheme.primary,
+                    ),
                   ),
                 ),
 
@@ -164,9 +167,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 TextField(
                   controller: _passwordController,
                   obscureText: _obscureText,
-                  decoration: inputDecoration(
-                    hint: "Enter Password",
-                    icon: Icons.lock,
+                  decoration: InputDecoration(
+                    hintText: "Enter Password",
+                    prefixIcon: Icon(Icons.password, color: AppTheme.primary,),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscureText
@@ -201,7 +204,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: AppTheme.secondary,
+                      color: AppTheme.primary,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: const Row(

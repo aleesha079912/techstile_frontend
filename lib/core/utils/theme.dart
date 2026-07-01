@@ -6,6 +6,7 @@ class AppTheme {
   static const Color primary    = Color(0xFF122B7A); // Dark Navy
   static const Color secondary  = Color(0xFFFFFFFF); // White
   static const Color background = Color(0xFFFFFFFF); // White
+  static const Color neutral = Color(0xFF000000); // White
 
   static const Color active  = Color(0xFF0D9B8A); // Teal — active / selected / success
   static const Color success = Color(0xFF0D9B8A); // Teal (alias)
