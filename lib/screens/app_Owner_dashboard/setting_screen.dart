@@ -53,7 +53,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             items: [
               _SettingsTile(
                 icon: Icons.notifications_rounded,
-                iconColor: const Color(0xFFD97706),
+                iconColor:  AppTheme.surface,
                 label: "Push Notifications",
                 trailing: _toggle(_notifications,
                     (v) => setState(() => _notifications = v)),
@@ -212,7 +212,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const Text(
                   "owner@techstile.pk",
                   style: TextStyle(
-                    color: Colors.white60,
+                    color: AppTheme.neutral,
                     fontSize: 12,
                   ),
                 ),
@@ -295,7 +295,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       height: 1,
                       indent: 56,
                       endIndent: 16,
-                      color: const Color(0xFFF1F5F9),
+                      color:  AppTheme.secondary,
                     ),
                 ],
               );

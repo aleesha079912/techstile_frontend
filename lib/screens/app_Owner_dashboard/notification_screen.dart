@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:techstile_frontend/core/utils/theme.dart';
 
 const _navy   = Color(0xFF1E3A8A);
 const _blue   = Color(0xFF2563EB);
@@ -110,14 +111,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [_navy, Color(0xFF1D4ED8)],
+          colors: [AppTheme.primary, AppTheme.info],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: _navy.withOpacity(0.3),
+            color:AppTheme.primary.withOpacity(0.3),
             blurRadius: 20,
             offset: const Offset(0, 8),
           ),
@@ -129,11 +130,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
             width: 48,
             height: 48,
             decoration: BoxDecoration(
-              color: _white.withOpacity(0.15),
+              color: AppTheme.secondary.withOpacity(0.15),
               borderRadius: BorderRadius.circular(14),
             ),
             child: const Icon(
-                Icons.notifications_rounded, color: _white, size: 24),
+                Icons.notifications_rounded, color:AppTheme.secondary, size: 24),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -143,7 +144,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 const Text(
                   "Notifications",
                   style: TextStyle(
-                    color: _white,
+                    color: AppTheme.secondary,
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
                   ),
@@ -154,7 +155,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                       ? "$unread unread alerts"
                       : "All caught up",
                   style: const TextStyle(
-                    color: Colors.white60,
+                    color: AppTheme.neutral,
                     fontSize: 11.5,
                   ),
                 ),
@@ -172,13 +173,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 padding: const EdgeInsets.symmetric(
                     horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
-                  color: _white.withOpacity(0.15),
+                  color:AppTheme.secondary.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Text(
                   "Mark all read",
                   style: TextStyle(
-                    color: _white,
+                    color: AppTheme.secondary,
                     fontSize: 11,
                     fontWeight: FontWeight.w600,
                   ),
@@ -205,12 +206,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
               padding:
                   const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: active ? _navy : _white,
+                color: active ? AppTheme.primary :AppTheme.secondary,
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: active
                     ? [
                         BoxShadow(
-                          color: _navy.withOpacity(0.25),
+                          color: AppTheme.primary.withOpacity(0.25),
                           blurRadius: 8,
                           offset: const Offset(0, 3),
                         )
@@ -220,7 +221,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               child: Text(
                 labels[i],
                 style: TextStyle(
-                  color: active ? _white : _slate,
+                  color: active ? AppTheme.secondary : AppTheme.neutral,
                   fontWeight:
                       active ? FontWeight.w600 : FontWeight.w400,
                   fontSize: 13,
@@ -242,11 +243,11 @@ class _NotificationScreenState extends State<NotificationScreen> {
             width: 72,
             height: 72,
             decoration: BoxDecoration(
-              color: const Color(0xFFEFF6FF),
+              color: AppTheme.secondary,
               borderRadius: BorderRadius.circular(20),
             ),
             child: const Icon(
-                Icons.notifications_off_outlined, color: _navy, size: 34),
+                Icons.notifications_off_outlined, color:AppTheme.primary, size: 34),
           ),
           const SizedBox(height: 14),
           const Text(
@@ -254,13 +255,13 @@ class _NotificationScreenState extends State<NotificationScreen> {
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF1E293B),
+              color: AppTheme.neutral,
             ),
           ),
           const SizedBox(height: 5),
           const Text(
             "You're all caught up!",
-            style: TextStyle(fontSize: 13, color: _slate),
+            style: TextStyle(fontSize: 13, color:AppTheme.neutral),
           ),
         ],
       ),
@@ -296,23 +297,23 @@ class _NotifCard extends StatelessWidget {
 
   static const _configs = {
     NotifType.success: (
-      color: Color(0xFF059669),
+      color: AppTheme.success,
       bg: Color(0xFFD1FAE5),
       icon: Icons.check_circle_rounded,
     ),
     NotifType.warning: (
-      color: Color(0xFFD97706),
+      color:AppTheme.surface,
       bg: Color(0xFFFEF3C7),
       icon: Icons.warning_rounded,
     ),
     NotifType.error: (
-      color: Color(0xFFDC2626),
+      color:  AppTheme.error,
       bg: Color(0xFFFEE2E2),
       icon: Icons.error_rounded,
     ),
     NotifType.info: (
-      color: Color(0xFF2563EB),
-      bg: Color(0xFFDBEAFE),
+      color:AppTheme.info,
+      bg: AppTheme.background,
       icon: Icons.info_rounded,
     ),
   };
@@ -326,7 +327,7 @@ class _NotifCard extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
-          color: _white,
+          color: AppTheme.secondary,
           borderRadius: BorderRadius.circular(16),
           border: notif.isRead
               ? null
@@ -336,7 +337,7 @@ class _NotifCard extends StatelessWidget {
                 ),
           boxShadow: [
             BoxShadow(
-              color: _navy.withOpacity(0.05),
+              color: AppTheme.primary.withOpacity(0.05),
               blurRadius: 10,
               offset: const Offset(0, 3),
             ),
@@ -370,7 +371,7 @@ class _NotifCard extends StatelessWidget {
                             fontWeight: notif.isRead
                                 ? FontWeight.w500
                                 : FontWeight.w700,
-                            color: const Color(0xFF1E293B),
+                            color:  AppTheme.info,
                           ),
                         ),
                       ),
@@ -391,7 +392,7 @@ class _NotifCard extends StatelessWidget {
                     notif.body,
                     style: const TextStyle(
                       fontSize: 12,
-                      color: _slate,
+                      color: AppTheme.neutral,
                       height: 1.4,
                     ),
                   ),
@@ -400,7 +401,7 @@ class _NotifCard extends StatelessWidget {
                     notif.time,
                     style: TextStyle(
                       fontSize: 10.5,
-                      color: _slate.withOpacity(0.7),
+                      color: AppTheme.neutral.withOpacity(0.7),
                       fontWeight: FontWeight.w500,
                     ),
                   ),

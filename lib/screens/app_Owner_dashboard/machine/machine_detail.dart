@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/widgets/owner_drawer.dart';
 import '../../../../core/services/machines_service.dart';
 import '../../../../core/services/machine_details_service.dart';
@@ -389,11 +390,11 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 14),
       decoration: BoxDecoration(
-        color: _navy,
+        color: AppTheme.primary,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: _navy.withOpacity(0.25),
+            color:AppTheme.primary.withOpacity(0.25),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -404,7 +405,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
           Text(
             title,
             style: TextStyle(
-              color: _white.withOpacity(0.7),
+              color:AppTheme.secondary.withOpacity(0.7),
               fontSize: 11,
               fontWeight: FontWeight.w500,
             ),
@@ -413,7 +414,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
           Text(
             value,
             style: const TextStyle(
-              color: _teal,
+              color:AppTheme.success,
               fontSize: 18,
               fontWeight: FontWeight.w800,
             ),
@@ -458,13 +459,13 @@ class _ActionCard extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: _white, size: 28),
+            Icon(icon, color: AppTheme.secondary, size: 28),
             const SizedBox(height: 8),
             Text(
               label,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                color: _white,
+                color: AppTheme.secondary,
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
                 height: 1.3,
@@ -490,7 +491,7 @@ class _SectionLabel extends StatelessWidget {
           width: 4,
           height: 18,
           decoration: BoxDecoration(
-            color: _teal,
+            color: AppTheme.success,
             borderRadius: BorderRadius.circular(2),
           ),
         ),
@@ -498,7 +499,7 @@ class _SectionLabel extends StatelessWidget {
         Text(
           text,
           style: const TextStyle(
-            color: _navy,
+            color:AppTheme.primary,
             fontWeight: FontWeight.w700,
             fontSize: 16,
           ),

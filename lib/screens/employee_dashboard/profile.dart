@@ -54,13 +54,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Color(0xFF163172), // dark navy blue
-            Color(0xFF3E7BFA), // bright sky blue
+             AppTheme.primary
+            
           ],
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF163172).withOpacity(0.35),
+            color:  AppTheme.primary.withOpacity(0.35),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -70,13 +70,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         children: [
           CircleAvatar(
             radius: 32,
-            backgroundColor: Colors.white.withOpacity(0.25),
+            backgroundColor:  AppTheme.secondary.withOpacity(0.25),
             child: Text(
               firstLetter,
               style: const TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: AppTheme.secondary,
               ),
             ),
           ),
@@ -86,7 +86,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             style: const TextStyle(
               fontSize: 19,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color:  AppTheme.secondary,
             ),
           ),
           const SizedBox(height: 3),
@@ -94,7 +94,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             email,
             style: TextStyle(
               fontSize: 12,
-              color: Colors.white.withOpacity(0.85),
+              color:  AppTheme.secondary.withOpacity(0.85),
             ),
           ),
         ],
@@ -109,11 +109,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:  AppTheme.secondary,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: AppTheme.onsurface.withOpacity(0.05),
             blurRadius: 6,
             offset: const Offset(0, 3),
           ),
@@ -135,7 +135,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               title,
               style: const TextStyle(
                 fontSize: 14,
-                color: Colors.black87,
+                color:  AppTheme.onsurface,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -147,7 +147,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                color:  AppTheme.onsurface,
               ),
               overflow: TextOverflow.ellipsis,
             ),
@@ -177,7 +177,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color:  AppTheme.onsurface,
             ),
           ),
         ],
@@ -190,11 +190,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: AppTheme.onsurface.withOpacity(0.05),
             blurRadius: 6,
             offset: const Offset(0, 3),
           ),
@@ -217,7 +217,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color:  AppTheme.onsurface,
             ),
           ),
           const SizedBox(height: 4),
@@ -225,7 +225,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             title,
             style: const TextStyle(
               fontSize: 12,
-              color: Colors.black54,
+              color: AppTheme.onsurface,
             ),
           ),
         ],
@@ -236,7 +236,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F6FA), // light grey page background
+      backgroundColor:  AppTheme.background, // light grey page background
       appBar: AppBar(title: const Text("User Profile")),
       body: loading
           ? const Center(child: CircularProgressIndicator())
@@ -290,19 +290,19 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           Icons.precision_manufacturing,
                           "Assigned Machines",
                           "${profile?['total_machines'] ?? 0}",
-                          Colors.blue,
+                           AppTheme.info,
                         ),
                         statCard(
                           Icons.analytics,
                           "Total Production",
                           "${profile?['total_production'] ?? 0}",
-                          Colors.orange,
+                           AppTheme.surface,
                         ),
                         statCard(
                           Icons.check_circle,
                           "Ready Production",
                           "${profile?['total_ready_production'] ?? 0}",
-                          Colors.green,
+                           AppTheme.success,
                         ),
                         statCard(
                           Icons.fact_check,

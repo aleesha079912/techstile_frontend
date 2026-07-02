@@ -51,7 +51,7 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
           builder: (context) => IconButton(
             icon: Icon(
               Icons.menu,
-              color: Colors.white,
+              color: AppTheme.secondary,
             ),
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
@@ -59,7 +59,7 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
         title: Text(
           "Owner Dashboard",
           style: TextStyle(
-            color: Colors.white,
+            color: AppTheme.secondary,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -105,7 +105,7 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
               Text(
                 "Add Factory",
                 style: TextStyle(
-                  color: Colors.white,
+                  color:AppTheme.secondary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -417,7 +417,7 @@ class _FactoryCard extends StatelessWidget {
 
               icon: const Icon(Icons.delete_outline),
 
-              color: Colors.red,
+              color:AppTheme.error,
 
             ),
 

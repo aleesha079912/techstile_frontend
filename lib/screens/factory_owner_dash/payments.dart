@@ -59,7 +59,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     final colors = Theme.of(context).colorScheme;
     
     return AppBar(
-      backgroundColor: Colors.white, 
+      backgroundColor:  AppTheme.secondary, 
       elevation: 0,
       surfaceTintColor: Colors.transparent,
       
@@ -105,8 +105,8 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
 
           ElevatedButton.icon(
             onPressed: _approveAll,
-            icon: const Icon(Icons.check_circle_outline, size: 16, color: Colors.white),
-            label: Text('Approve All', style: _ts(13, FontWeight.w700, Colors.white)),
+            icon: const Icon(Icons.check_circle_outline, size: 16, color: AppTheme.secondary),
+            label: Text('Approve All', style: _ts(13, FontWeight.w700,  AppTheme.secondary)),
             style: ElevatedButton.styleFrom(
               backgroundColor: colors.primary,
               padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 13),
@@ -152,11 +152,11 @@ class _WorkerCard extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: isPriority ? colors.primary.withOpacity(0.9) : Colors.white,
+        color: isPriority ? colors.primary.withOpacity(0.9) :  AppTheme.secondary,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color:  AppTheme.onsurface.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -171,7 +171,7 @@ class _WorkerCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   worker.name,
-                  style: _ts(15, FontWeight.w700, isPriority ? Colors.white : colors.primary),
+                  style: _ts(15, FontWeight.w700, isPriority ?  AppTheme.secondary : colors.primary),
                 ),
               ),
               _StatusBadge(status: worker.status),
@@ -180,7 +180,7 @@ class _WorkerCard extends StatelessWidget {
           const SizedBox(height: 2),
           Text(
             worker.role,
-            style: _ts(11, FontWeight.w400, isPriority ? Colors.white70 : neutral),
+            style: _ts(11, FontWeight.w400, isPriority ? AppTheme.neutral: neutral),
           ),
           const SizedBox(height: 14),
 
@@ -191,11 +191,11 @@ class _WorkerCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('AMOUNT DUE',
-                      style: _ts(9, FontWeight.w600, isPriority ? Colors.white60 : neutral, ls: 1.2)),
+                      style: _ts(9, FontWeight.w600, isPriority ?  AppTheme.neutral: neutral, ls: 1.2)),
                   const SizedBox(height: 4),
                   Text(
                     worker.formattedAmount,
-                    style: _ts(26, FontWeight.w800, isPriority ? Colors.white : colors.primary),
+                    style: _ts(26, FontWeight.w800, isPriority ?  AppTheme.secondary: colors.primary),
                   ),
                 ],
               ),
@@ -204,11 +204,11 @@ class _WorkerCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text('PERIOD',
-                      style: _ts(9, FontWeight.w600, isPriority ? Colors.white60 : neutral, ls: 1.2)),
+                      style: _ts(9, FontWeight.w600, isPriority ?  AppTheme.neutral: neutral, ls: 1.2)),
                   const SizedBox(height: 4),
                   Text(
                     worker.period,
-                    style: _ts(11, FontWeight.w500, isPriority ? Colors.white : colors.primary),
+                    style: _ts(11, FontWeight.w500, isPriority ?  AppTheme.secondary : colors.primary),
                   ),
                 ],
               ),
@@ -243,9 +243,9 @@ class _StatusBadge extends StatelessWidget {
     
     final (label, bg, fg) = switch (status) {
       PaymentStatus.verified => ('VERIFIED', colors.secondary.withOpacity(0.2), colors.secondary),
-      PaymentStatus.pending => ('PENDING', const Color(0xFFEEEFF4), AppTheme.secondary),
-      PaymentStatus.priorityReview => ('PRIORITY REVIEW', Colors.black26, Colors.white),
-      PaymentStatus.adjustment => ('ADJUSTMENT', const Color(0xFFFFEEDD), Colors.orange),
+      PaymentStatus.pending => ('PENDING',  AppTheme.info, AppTheme.secondary),
+      PaymentStatus.priorityReview => ('PRIORITY REVIEW',  AppTheme.onsurface,  AppTheme.secondary),
+      PaymentStatus.adjustment => ('ADJUSTMENT',  AppTheme.secondary,  AppTheme.surface),
     };
 
     return Container(
@@ -268,14 +268,14 @@ class _HoldBtn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
-    final textColor = dark ? Colors.white : colors.primary;
+    final textColor = dark ?  AppTheme.secondary : colors.primary;
 
     return OutlinedButton.icon(
       onPressed: onTap,
       icon: Icon(Icons.pause, size: 14, color: textColor),
       label: Text('Hold', style: _ts(12, FontWeight.w700, textColor)),
       style: OutlinedButton.styleFrom(
-        side: BorderSide(color: dark ? const Color.fromARGB(77, 107, 101, 101) : const Color(0xFFE8EBF3), width: 1.5),
+        side: BorderSide(color: dark ?  AppTheme.onsurface: AppTheme.secondary, width: 1.5),
         padding: const EdgeInsets.symmetric(vertical: 11),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
@@ -293,10 +293,10 @@ class _ApproveBtn extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
     return ElevatedButton.icon(
       onPressed: onTap,
-      icon: const Icon(Icons.check, size: 14, color: Colors.white),
-      label: Text('Approve', style: _ts(12, FontWeight.w700, Colors.white)),
+      icon: const Icon(Icons.check, size: 14, color: AppTheme.secondary),
+      label: Text('Approve', style: _ts(12, FontWeight.w700 ,  AppTheme.secondary)),
       style: ElevatedButton.styleFrom(
-        backgroundColor: dark ? Colors.black26 : colors.primary,
+        backgroundColor: dark ?  AppTheme.onsurface: colors.primary,
         padding: const EdgeInsets.symmetric(vertical: 11),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         elevation: 0,
@@ -354,11 +354,11 @@ class _CutoffCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:  AppTheme.secondary,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: AppTheme.onsurface.withOpacity(0.04),
             blurRadius: 10,
             offset: const Offset(0, 3),
           ),
@@ -403,7 +403,7 @@ class _CutoffCard extends StatelessWidget {
             child: LinearProgressIndicator(
               value: info.complianceLevel / 100,
               minHeight: 5,
-              backgroundColor: const Color(0xFFE8EBF3),
+              backgroundColor:  AppTheme.background,
               valueColor: AlwaysStoppedAnimation<Color>(colors.primary),
             ),
           ),

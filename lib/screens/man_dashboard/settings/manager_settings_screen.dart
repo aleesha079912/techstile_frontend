@@ -26,7 +26,7 @@ class _ManagerSettingsScreenState
       appBar: AppBar(
         title: const Text("Settings"),
         backgroundColor: AppTheme.primary,
-        foregroundColor: Colors.white,
+        foregroundColor:  AppTheme.secondary,
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),

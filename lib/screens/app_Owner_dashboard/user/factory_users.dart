@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:techstile_frontend/core/services/factory_user_services.dart';
+import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
 
 class FactoryUsersScreen extends StatefulWidget {
@@ -80,7 +81,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
             const SizedBox(height: 2),
             Text(
               title,
-              style: const TextStyle(fontSize: 10, color: Colors.grey),
+              style: const TextStyle(fontSize: 10, color: AppTheme.neutral),
             ),
           ],
         ),
@@ -103,8 +104,8 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
         children: [
           const CircleAvatar(
             radius: 20,
-            backgroundColor: Color(0xFF1A73E8),
-            child: Icon(Icons.person, color: Colors.white),
+            backgroundColor: AppTheme.primary,
+            child: Icon(Icons.person, color:AppTheme.secondary),
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -113,7 +114,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
               children: [
                 const Text(
                   "Manager",
-                  style: TextStyle(fontSize: 11, color: Colors.grey),
+                  style: TextStyle(fontSize: 11, color: AppTheme.neutral),
                 ),
                 Text(
                   manager['name'] ?? 'No Manager',
@@ -138,11 +139,11 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: AppTheme.onsurface.withOpacity(0.05),
             blurRadius: 8,
           )
         ],
@@ -151,8 +152,8 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
         children: [
           const CircleAvatar(
             radius: 18,
-            backgroundColor: Color(0xFF1A73E8),
-            child: Icon(Icons.person, size: 18, color: Colors.white),
+            backgroundColor: AppTheme.primary,
+            child: Icon(Icons.person, size: 18, color:AppTheme.secondary),
           ),
           const SizedBox(width: 10),
 
@@ -170,14 +171,14 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                   user['email'] ?? '',
                   style: const TextStyle(
                     fontSize: 11,
-                    color: Colors.grey,
+                    color: AppTheme.neutral,
                   ),
                 ),
                 Text(
                   role,
                   style: const TextStyle(
                     fontSize: 11,
-                    color: Color(0xFF1A73E8),
+                    color: AppTheme.info,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -192,10 +193,10 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffF4F6FB),
+      backgroundColor: AppTheme.secondary,
 
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1A73E8), // same as bottom nav
+        backgroundColor: AppTheme.primary, // same as bottom nav
         title: const Text("TECHSTILE"),
       ),
 
@@ -216,7 +217,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                       hintText: "Search users...",
                       prefixIcon: const Icon(Icons.search),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: AppTheme.secondary,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
@@ -230,9 +231,9 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                   Row(
                     children: [
                       statBox("Total Users", "$totalUsers",
-                          const Color(0xFF1A73E8)),
+                          AppTheme.primary),
                       statBox("Active Users", "$activeUsers",
-                          Colors.green),
+                          AppTheme.success),
                     ],
                   ),
 

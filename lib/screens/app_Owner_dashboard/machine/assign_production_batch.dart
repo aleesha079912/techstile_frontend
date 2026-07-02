@@ -32,7 +32,7 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
   Future<void> submit() async {
     if (varietyCtrl.text.isEmpty || totalLengthCtrl.text.isEmpty) {
       Get.snackbar("Error", "Saare fields fill karo",
-          backgroundColor: AppTheme.secondary, colorText: Colors.white);
+          backgroundColor: AppTheme.secondary, colorText: AppTheme.secondary);
       return;
     }
 
@@ -50,10 +50,10 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
       Get.back();
       widget.onSuccess();
       Get.snackbar("Success", "Production assign ho gayi",
-          backgroundColor: Colors.green, colorText: Colors.white);
+          backgroundColor: AppTheme.active, colorText:AppTheme.secondary);
     } else {
       Get.snackbar("Error", "Kuch galat hua",
-          backgroundColor: Colors.red, colorText: Colors.white);
+          backgroundColor: AppTheme.error, colorText: AppTheme.secondary);
     }
   }
 
@@ -72,7 +72,7 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
             Container(
               width: 50, height: 5,
               decoration: BoxDecoration(
-                color: Colors.grey[300],
+                color: AppTheme.neutral,
                 borderRadius: BorderRadius.circular(10),
               ),
             ),
@@ -118,9 +118,9 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
                       borderRadius: BorderRadius.circular(12)),
                 ),
                 child: loading
-                    ? const CircularProgressIndicator(color: Colors.white)
+                    ? const CircularProgressIndicator(color: AppTheme.secondary)
                     : const Text("Assign Production",
-                        style: TextStyle(color: Colors.white, fontSize: 16)),
+                        style: TextStyle(color:AppTheme.secondary, fontSize: 16)),
               ),
             ),
             const SizedBox(height: 24),

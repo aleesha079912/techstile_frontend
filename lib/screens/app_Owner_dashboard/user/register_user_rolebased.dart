@@ -150,7 +150,7 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primary, padding: const EdgeInsets.all(15)),
                       onPressed: _handleSave,
-                      child: Text(widget.user == null ? "REGISTER" : "UPDATE", style: const TextStyle(color: Colors.white)),
+                      child: Text(widget.user == null ? "REGISTER" : "UPDATE", style: const TextStyle(color: AppTheme.secondary)),
                     ),
                   ),
                 ],

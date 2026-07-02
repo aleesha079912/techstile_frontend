@@ -89,7 +89,8 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppTheme.primary,
         onPressed: () => showForm(),
-        child: const Icon(Icons.add, color: Colors.white),
+        child: const Icon(Icons.add, color:AppTheme.secondary ),
+        
       ),
       body: loading
           ? const Center(child: CircularProgressIndicator())
@@ -112,7 +113,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         IconButton(
-                          icon: const Icon(Icons.edit_outlined, color: AppTheme.background),
+                          icon: const Icon(Icons.edit_outlined, color: AppTheme.secondary),
                           onPressed: () => showForm(item: item),
                         ),
                         IconButton(

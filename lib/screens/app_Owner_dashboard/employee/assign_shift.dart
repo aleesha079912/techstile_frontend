@@ -217,7 +217,7 @@ class _AssignShiftsScreenState extends State<AssignShiftsScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppTheme.primary,
         onPressed: () => showForm(),
-        child: const Icon(Icons.add, color: Colors.white),
+        child: const Icon(Icons.add, color: AppTheme.secondary),
       ),
       body: loading
           ? const Center(child: CircularProgressIndicator())
@@ -248,7 +248,7 @@ class _AssignShiftsScreenState extends State<AssignShiftsScreen> {
                               onPressed: () => showForm(item: item),
                             ),
                             IconButton(
-                              icon: const Icon(Icons.delete_outline, color: Colors.red),
+                              icon: const Icon(Icons.delete_outline, color: AppTheme.error),
                               onPressed: () => delete(item['id']),
                             ),
                           ],
