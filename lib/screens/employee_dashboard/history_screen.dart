@@ -35,6 +35,7 @@ class _HistoryScreenState extends State<HistoryScreen>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
     loadHistory();
+    
   }
 
   @override
@@ -43,24 +44,26 @@ class _HistoryScreenState extends State<HistoryScreen>
     super.dispose();
   }
 
-  Future<void> loadHistory() async {
-    try {
-      final user = AuthService.user;
-      if (user == null) return;
-      final data = await service.getHistory(user['id']);
-      setState(() {
-        pending   = data['pending']   ?? [];
-        completed = data['completed'] ?? [];
-        daily     = double.parse(data['daily'].toString());
-        weekly    = double.parse(data['weekly'].toString());
-        monthly   = double.parse(data['monthly'].toString());
-        loading   = false;
-      });
-    } catch (e) {
-      debugPrint(e.toString());
-      setState(() => loading = false);
-    }
+ Future<void> loadHistory() async {
+  try {
+    final user = AuthService.user;
+    if (user == null) return;
+
+    final data = await service.getHistory(user['id']);
+
+    setState(() {
+      pending = data['pending'] ?? [];
+      completed = data['completed'] ?? [];
+      daily = double.parse(data['daily'].toString());
+      weekly = double.parse(data['weekly'].toString());
+      monthly = double.parse(data['monthly'].toString());
+      loading = false;
+    });
+  } catch (e) {
+    debugPrint(e.toString());
+    setState(() => loading = false);
   }
+}
 
   @override
   Widget build(BuildContext context) {

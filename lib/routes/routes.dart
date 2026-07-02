@@ -46,6 +46,9 @@ import 'package:techstile_frontend/screens/man_dashboard/settings/editprofile.da
 import 'package:techstile_frontend/screens/man_dashboard/settings/help_faq.dart';
 import 'package:techstile_frontend/screens/man_dashboard/settings/manager_settings_screen.dart';
 import 'package:techstile_frontend/screens/man_dashboard/settings/about_app.dart';
+import 'package:techstile_frontend/screens/man_dashboard/manager_employee_notification.dart';
+import 'package:techstile_frontend/widgets/man_drawer.dart';
+import 'package:techstile_frontend/widgets/emp_drawer.dart';
 class AppRoutes {
   static const splash = "/";
   static const login = "/login";
@@ -70,11 +73,9 @@ static const String managersettings =
   static const  chnagePassword = "/change-password";
   static const  helpFaq = "/help-faq";
   static const  aboutApp = '/about-app';
-
-
-
-
-  // owner dashboard
+static const managerNotifications = "/manager-notifications";
+static const employeeNotifications = "/employee-notifications";
+ // owner dashboard
   static const addFactory = '/add-factory';
   static const scanMachine = "/scan-machine";
   static const calculator = '/calculator';
@@ -217,9 +218,29 @@ GetPage(
   page: () => const ManagerSettingsScreen(),
 ),
 // GetPage(
-//   name: '/change-password',
-//   page: () => const ChangePasswordScreen(),
+//   name: AppRoutes.managerNotifications,
+//   page: () => ManagerPaymentsScreen(
+//     factoryId: AuthService.factoryId,
+//   ),
 // ),
+GetPage(
+  name: AppRoutes.managerNotifications,
+  page: () => NotificationPage(
+    drawer: ManagerDrawer(
+      userId: AuthService.userId,
+      factoryId: AuthService.factoryId,
+    ),
+    title: "Manager Notifications",
+  ),
+),
+
+GetPage(
+  name: AppRoutes.employeeNotifications,
+  page: () => NotificationPage(
+    drawer: EmployeeDrawer(userId: AuthService.userId),
+    title: "Employee Notifications",
+  ),
+),
 
 GetPage(
   name: '/help-faq',

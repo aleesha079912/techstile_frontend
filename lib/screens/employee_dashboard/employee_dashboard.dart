@@ -34,8 +34,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
         machines = data["machines"] ?? [];
         totalMachines = data["total_machines"] ?? 0;
         totalProduction = (data["total_production"] ?? 0).toDouble();
-        totalReadyProduction =
-            (data["total_ready_production"] ?? 0).toDouble();
+        totalReadyProduction = (data["total_ready_production"] ?? 0).toDouble();
         loading = false;
       });
     } catch (e) {
@@ -52,7 +51,10 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
 
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
-        title: const Text("LOOM CONTROL", style: TextStyle(color: AppTheme.neutral),),
+        title: const Text(
+          "TECHstile",
+          style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+        ),
       ),
 
       body: loading
@@ -62,7 +64,9 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                 /// TITLE
                 Padding(
                   padding: const EdgeInsets.symmetric(
-                      horizontal: 16, vertical: 12),
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -98,7 +102,6 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                       //   ),
                       // ),
                       // const SizedBox(width: 8),
-
                       Expanded(
                         child: _buildOverviewButton(
                           icon: Icons.check_circle,
@@ -121,7 +124,9 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
 
                       return Container(
                         margin: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -130,7 +135,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                             BoxShadow(
                               color: AppTheme.primary.withOpacity(0.08),
                               blurRadius: 10,
-                            )
+                            ),
                           ],
                         ),
                         child: Column(
@@ -163,8 +168,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
 
                             Row(
                               children: [
-                                Icon(Icons.category,
-                                    color: AppTheme.primary),
+                                Icon(Icons.category, color: AppTheme.primary),
                                 const SizedBox(width: 8),
                                 Text(machine["variety_type"] ?? ""),
                               ],
@@ -177,9 +181,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
 
                             const SizedBox(height: 5),
 
-                            Text(
-                              "Total Length: ${machine["total_length"]}",
-                            ),
+                            Text("Total Length: ${machine["total_length"]}"),
 
                             const SizedBox(height: 10),
 
@@ -187,8 +189,9 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                               value: (machine["progress"] ?? 0) / 100,
                               minHeight: 10,
                               color: AppTheme.primary,
-                              backgroundColor:
-                                  AppTheme.primary.withOpacity(0.2),
+                              backgroundColor: AppTheme.primary.withOpacity(
+                                0.2,
+                              ),
                             ),
 
                             const SizedBox(height: 8),
@@ -225,10 +228,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
         color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
-          BoxShadow(
-            color: AppTheme.primary.withOpacity(0.08),
-            blurRadius: 8,
-          )
+          BoxShadow(color: AppTheme.primary.withOpacity(0.08), blurRadius: 8),
         ],
       ),
       child: Column(
