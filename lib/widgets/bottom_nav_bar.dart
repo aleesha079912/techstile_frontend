@@ -4,10 +4,7 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/payments.dart';
 import '../screens/factory_owner_dash/factorydashboard.dart';
 import 'package:get/get.dart';
-<<<<<<< HEAD
-=======
 import 'package:get/get_core/src/get_main.dart';
->>>>>>> 816ab67d9f66a05125d0f3a094c77867c7f4396a
 import '../screens/app_Owner_dashboard/machine/manage_machines.dart';
 import '../screens/app_Owner_dashboard/user/factory_users.dart';
 
