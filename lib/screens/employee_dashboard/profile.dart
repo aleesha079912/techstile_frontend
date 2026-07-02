@@ -4,21 +4,17 @@ import '../../core/utils/theme.dart';
 
 class UserProfileScreen extends StatefulWidget {
   final int userId;
-
   const UserProfileScreen({
     super.key,
     required this.userId,
   });
 
   @override
-  State<UserProfileScreen> createState() =>
-      _UserProfileScreenState();
+  State<UserProfileScreen> createState() => _UserProfileScreenState();
 }
 
-class _UserProfileScreenState
-    extends State<UserProfileScreen> {
+class _UserProfileScreenState extends State<UserProfileScreen> {
   final service = EmployeeProfileService();
-
   Map<String, dynamic>? profile;
   bool loading = true;
 
@@ -28,96 +24,276 @@ class _UserProfileScreenState
     loadProfile();
   }
 
+  // ===== LOGIC (UNCHANGED) =====
   Future<void> loadProfile() async {
+    print("Profile User ID = ${widget.userId}");
+    final response = await service.getProfile(widget.userId);
+    print(response);
+    setState(() {
+      profile = response?['data'];
+      loading = false;
+    });
+  }
 
-  print("Profile User ID = ${widget.userId}");
+  // ===== SIMPLE HELPER WIDGETS (DESIGN ONLY) =====
 
-  final response =
-      await service.getProfile(widget.userId);
+  // Top gradient profile card (avatar + name + email)
+  // Colors fixed to navy -> sky blue (like reference design) + smaller size
+  Widget buildProfileHeader() {
+    final name = profile?['name'] ?? '';
+    final email = profile?['email'] ?? '';
+    final firstLetter = name.isNotEmpty ? name[0].toUpperCase() : '?';
 
-  print(response);
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.fromLTRB(15, 15, 15, 12),
+      padding: const EdgeInsets.symmetric(vertical: 22),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xFF163172), // dark navy blue
+            Color(0xFF3E7BFA), // bright sky blue
+          ],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF163172).withOpacity(0.35),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          CircleAvatar(
+            radius: 32,
+            backgroundColor: Colors.white.withOpacity(0.25),
+            child: Text(
+              firstLetter,
+              style: const TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            name,
+            style: const TextStyle(
+              fontSize: 19,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 3),
+          Text(
+            email,
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.white.withOpacity(0.85),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-  setState(() {
-    profile = response?['data'];
-    loading = false;
-  });
-}
+  // Row style like "Shift Start / Shift End" boxes shown in the design
+  Widget infoRow(IconData icon, String title, String value) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: AppTheme.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: AppTheme.primary, size: 20),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              title,
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.black87,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          Flexible(
+            child: Text(
+              value,
+              textAlign: TextAlign.right,
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-  Widget tile(IconData icon, String title, String value) {
-    return ListTile(
-      leading: Icon(icon, color: AppTheme.primary),
-      title: Text(title),
-      subtitle: Text(value),
+  // Section title with small blue bar (like "Performance Overview")
+  Widget sectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+      child: Row(
+        children: [
+          Container(
+            width: 4,
+            height: 18,
+            decoration: BoxDecoration(
+              color: AppTheme.primary,
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Colorful stat card for performance overview grid
+  Widget statCard(IconData icon, String title, String value, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.15),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: color, size: 22),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            value,
+            style: const TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 12,
+              color: Colors.black54,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.secondary,
+      backgroundColor: const Color(0xFFF5F6FA), // light grey page background
       appBar: AppBar(title: const Text("User Profile")),
-
       body: loading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 20),
+                  // Top gradient header
+                  buildProfileHeader(),
 
-                  const CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Colors.blue,
-                    child: Icon(Icons.person,
-                        size: 50, color: Colors.white),
-                  ),
+                  // Personal info rows
+                  infoRow(Icons.phone, "Phone", profile?['phone_no'] ?? ''),
+                  infoRow(Icons.badge, "CNIC", profile?['cnic'] ?? ''),
+                  infoRow(Icons.home, "Address", profile?['address'] ?? ''),
+                  infoRow(Icons.info, "Details",
+                      profile?['employee_details'] ?? ''),
 
-                  const SizedBox(height: 10),
-
-                  Text(
-                    profile?['name'] ?? '',
-                    style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold),
-                  ),
-
-                  Text(profile?['email'] ?? ''),
-
-                  const SizedBox(height: 20),
-
-                  Card(
-                    margin: const EdgeInsets.all(15),
-                    child: Column(
+                  // Performance overview section
+                  sectionTitle("Performance Overview"),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: GridView.count(
+                      crossAxisCount: 2,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                      childAspectRatio: 1.3,
                       children: [
-                        tile(Icons.phone, "Phone",
-                            profile?['phone_no'] ?? ''),
-                        tile(Icons.badge, "CNIC",
-                            profile?['cnic'] ?? ''),
-                        tile(Icons.home, "Address",
-                            profile?['address'] ?? ''),
-                        tile(Icons.info, "Details",
-                            profile?['employee_details'] ?? ''),
+                        statCard(
+                          Icons.precision_manufacturing,
+                          "Assigned Machines",
+                          "${profile?['total_machines'] ?? 0}",
+                          Colors.blue,
+                        ),
+                        statCard(
+                          Icons.analytics,
+                          "Total Production",
+                          "${profile?['total_production'] ?? 0}",
+                          Colors.orange,
+                        ),
+                        statCard(
+                          Icons.check_circle,
+                          "Ready Production",
+                          "${profile?['total_ready_production'] ?? 0}",
+                          Colors.green,
+                        ),
+                        statCard(
+                          Icons.fact_check,
+                          "Attendance",
+                          "${profile?['attendance_count'] ?? 0}",
+                          Colors.purple,
+                        ),
                       ],
                     ),
                   ),
-
-                  Card(
-                    margin: const EdgeInsets.all(15),
-                    child: Column(
-                      children: [
-                        tile(Icons.precision_manufacturing,
-                            "Assigned Machines",
-                            "${profile?['total_machines'] ?? 0}"),
-                        tile(Icons.analytics,
-                            "Total Production",
-                            "${profile?['total_production'] ?? 0}"),
-                        tile(Icons.check_circle,
-                            "Ready Production",
-                            "${profile?['total_ready_production'] ?? 0}"),
-                        tile(Icons.fact_check, "Attendance",
-                            "${profile?['attendance_count'] ?? 0}"),
-                      ],
-                    ),
-                  ),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
