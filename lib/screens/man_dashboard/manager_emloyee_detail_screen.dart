@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../core/utils/theme.dart';
 import '../../../core/services/manager_service/manager_employee_detail_service.dart';
 import '../../../widgets/man_bottom_navbar.dart';
-
+import 'package:techstile_frontend/widgets/man_drawer.dart';
+import 'package:techstile_frontend/core/services/auth_service.dart';
 class ManagerEmployeeDetailScreen extends StatefulWidget {
   final int employeeId;
   final dynamic factoryId;
@@ -32,12 +33,17 @@ class _ManagerEmployeeDetailScreenState
   }
 
   Future<void> load() async {
-    final data = await service.getEmployeeDetail(widget.employeeId);
-    setState(() {
-      employee = data;
-      loading = false;
-    });
-  }
+  print("Employee ID = ${widget.employeeId}");
+
+  final data = await service.getEmployeeDetail(
+    widget.employeeId,
+  );
+
+  setState(() {
+    employee = data;
+    loading = false;
+  });
+}
 
   // ── Compact stat card — colored icon background ──────────────────────────
   Widget _statCard(String title, String value, IconData icon, Color color) {
@@ -116,6 +122,10 @@ class _ManagerEmployeeDetailScreenState
   Widget build(BuildContext context) {
     if (loading) {
       return const Scaffold(
+//         drawer: ManagerDrawer(
+//   userId: AuthService.userId,
+//   factoryId: AuthService.factoryId,
+// ),
         body: Center(child: CircularProgressIndicator(color: AppTheme.primary)),
       );
     }

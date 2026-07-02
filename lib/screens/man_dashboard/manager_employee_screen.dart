@@ -1,11 +1,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:techstile_frontend/widgets/man_drawer.dart';
 import '../../core/services/manager_service/manager_service.dart';
 import '../../core/utils/theme.dart';
 import '../../widgets/man_bottom_navbar.dart';
-import 'manager_emloyee_deatil_screen.dart';
+import 'manager_emloyee_detail_screen.dart';
+import 'package:techstile_frontend/core/services/auth_service.dart';
 
 class ManagerEmployeesScreen extends StatefulWidget {
   final dynamic factoryId;
@@ -80,11 +81,15 @@ class _ManagerEmployeesScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: ManagerDrawer(
+  userId: AuthService.userId,
+  factoryId: AuthService.factoryId,
+),
       backgroundColor: AppTheme.background,
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
         elevation: 0,
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

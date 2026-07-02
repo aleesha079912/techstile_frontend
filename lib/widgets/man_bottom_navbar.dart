@@ -14,30 +14,33 @@ class ManagerBottomNav extends StatelessWidget {
   });
 
   static const _items = [
-    (Icons.grid_view_rounded,                'DASHBOARD'),
+    (Icons.grid_view_rounded,                'HOME'),
     (Icons.precision_manufacturing_outlined, 'MACHINES'),
     (Icons.people_outline_rounded,           'EMPLOYEES'),
     (Icons.credit_card_outlined,             'PAYMENTS'),
   ];
 
   void _onTap(int index) {
-    if (index == currentIndex) return;
+  if (index == currentIndex) return;
 
-    switch (index) {
-      case 0:
-        Get.offNamed(AppRoutes.managerDashboard, arguments: factoryId);
-        break;
-      case 1:
-        Get.offNamed(AppRoutes.managerMachines, arguments: factoryId);
-        break;
-      case 2:
-        Get.offNamed(AppRoutes.managerEmployees, arguments: factoryId);
-        break;
-      case 3:
-        Get.offNamed(AppRoutes.managerPayments, arguments: factoryId);
-        break;
-    }
+  switch (index) {
+    case 0:
+      Get.offNamed(AppRoutes.managerDashboard);
+      break;
+
+    case 1:
+      Get.offNamed(AppRoutes.managerMachines);
+      break;
+
+    case 2:
+      Get.offNamed(AppRoutes.managerEmployees);
+      break;
+
+    case 3:
+      Get.offNamed(AppRoutes.managerPayments);
+      break;
   }
+}
 
   @override
   Widget build(BuildContext context) {

@@ -84,14 +84,14 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
           ? args['machineId']?.toString() ?? widget.machineId
           : widget.machineId;
 
-      final user = AuthService.user;
-      final employeeId = user?['id'];
+      // final user = AuthService.user;
+      // final userId = user?['id'];
 
       final bool success =
           await EmployeeProductionService().submitProduction(
         machineId: int.parse(machineId),
-        employeeId: employeeId,
-        factoryId: 1,
+      userId: AuthService.userId,
+       factoryId: AuthService.factoryId,
         varietyType: varietyController.text,
         totalLength: double.parse(lengthController.text.isEmpty ? '0' : lengthController.text),
         readyProduction: ready,

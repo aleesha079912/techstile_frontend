@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import '../../../core/services/production_service.dart';
 import '../../../core/utils/theme.dart';
 import '../../../widgets/man_bottom_navbar.dart';
+import 'package:techstile_frontend/widgets/man_drawer.dart';
+import 'package:techstile_frontend/core/services/auth_service.dart';
 class ManagerProductionsPage extends StatefulWidget {
   final dynamic factoryId;
   const ManagerProductionsPage({super.key, required this.factoryId});
@@ -74,6 +76,10 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       drawer: ManagerDrawer(
+  userId: AuthService.userId,
+  factoryId: AuthService.factoryId,
+),
       backgroundColor: AppTheme.background,
       appBar: AppBar(
         backgroundColor: AppTheme.primary,

@@ -8,7 +8,8 @@ class EmployeeProductionService {
 
  Future<bool> submitProduction({
   required int machineId,
-  required int employeeId,
+  // required int employeeId,
+   required int userId,
   required int factoryId,
   required String varietyType,
   required double totalLength,
@@ -22,7 +23,7 @@ class EmployeeProductionService {
       headers: AuthService.authHeaders,
       body: jsonEncode({
         "machine_id": machineId,
-        "employee_id": employeeId,
+        "user_id": userId,
         "factory_id": factoryId,
         "variety_type": varietyType,
         "total_length": totalLength,

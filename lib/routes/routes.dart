@@ -3,9 +3,9 @@ import 'package:techstile_frontend/screens/employee_dashboard/employee_enter_pro
 import 'package:techstile_frontend/screens/employee_dashboard/history_screen.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/machine_detail_screen.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/profile.dart';
-
+import 'package:techstile_frontend/core/services/auth_service.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/owner_production_page.dart';
-import 'package:techstile_frontend/screens/man_dashboard/manager_emloyee_deatil_screen.dart';
+import 'package:techstile_frontend/screens/man_dashboard/manager_emloyee_detail_screen.dart';
 
 
 
@@ -24,10 +24,10 @@ import 'package:techstile_frontend/screens/app_Owner_dashboard/notification_scre
 import 'package:techstile_frontend/screens/app_Owner_dashboard/setting_screen.dart';
 
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/manage_machines.dart';
-import 'package:techstile_frontend/screens/factory_owner_dash/payments.dart';
+// import 'package:techstile_frontend/screens/factory_owner_dash/payments.dart';
 // import '../screens/factory_owner_dash/factory_dashboard.dart';
 // import 'package:techstile_frontend/screens/factory_owner_dash/user/users.dart';
-
+import 'package:techstile_frontend/screens/man_dashboard/manager_scan_code.dart';
 import 'package:techstile_frontend/screens/man_dashboard/manager_dashboard.dart';
 
 import 'package:techstile_frontend/screens/man_dashboard/manager_machines_screen.dart';
@@ -39,11 +39,16 @@ import 'package:techstile_frontend/screens/employee_dashboard/employee_dashboard
 
 import 'package:techstile_frontend/core/services/factory_service.dart';
 import 'package:techstile_frontend/screens/man_dashboard/manager_production_page.dart';
-
-
-
+import 'package:techstile_frontend/screens/man_dashboard/manager_profile.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/generate_qrcode.dart';
-
+import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/scan_code.dart';
+import 'package:techstile_frontend/screens/man_dashboard/settings/editprofile.dart';
+import 'package:techstile_frontend/screens/man_dashboard/settings/help_faq.dart';
+import 'package:techstile_frontend/screens/man_dashboard/settings/manager_settings_screen.dart';
+import 'package:techstile_frontend/screens/man_dashboard/settings/about_app.dart';
+import 'package:techstile_frontend/screens/man_dashboard/manager_employee_notification.dart';
+import 'package:techstile_frontend/widgets/man_drawer.dart';
+import 'package:techstile_frontend/widgets/emp_drawer.dart';
 class AppRoutes {
   static const splash = "/";
   static const login = "/login";
@@ -59,8 +64,20 @@ class AppRoutes {
   static const managerPayments = "/manager-payments";
   static const MachineDetails = '/machine_details';
   static const managerEmployeeDetail = '/manager-employee-detail';
-  // owner dashboard
+  static const managerProfile = "/manager-profile";
+static const managerScanMachine = "/manager-scan-machine";
+static const String managersettings =
+    '/manager-settings';
+
+ static const editProfile = "/edit-profile";
+  static const  chnagePassword = "/change-password";
+  static const  helpFaq = "/help-faq";
+  static const  aboutApp = '/about-app';
+static const managerNotifications = "/manager-notifications";
+static const employeeNotifications = "/employee-notifications";
+ // owner dashboard
   static const addFactory = '/add-factory';
+  static const scanMachine = "/scan-machine";
   static const calculator = '/calculator';
   static const notifications = '/notifications';
   static const settings = '/settings';
@@ -97,43 +114,86 @@ class AppRoutes {
     ),
 
     // ── MANAGER DASHBOARD (Tab 1) ───────────────────────────────────────────
-    GetPage(
-      name: managerDashboard,
-      page: () {
-        final factoryId = Get.arguments;
-        return ManagerDashboard(factoryId: factoryId);
-      },
-    ),
+// MANAGER DASHBOARD
+GetPage(
+  name: AppRoutes.managerDashboard,
+  page: () => ManagerDashboard(
+    factoryId: AuthService.factoryId,
+  ),
+),
 
-    // ── MANAGER MACHINES (Tab 2) ────────────────────────────────────────────
-    GetPage(
-      name: AppRoutes.managerMachines,
-      page: () {
-        final factoryId = Get.arguments;
-        return ManagerMachinesScreen(factoryId: factoryId);
-      },
-    ),
+// MANAGER MACHINES
+GetPage(
+  name: AppRoutes.managerMachines,
+  page: () => ManagerMachinesScreen(
+    factoryId: AuthService.factoryId,
+  ),
+),
 
-    // ── MANAGER EMPLOYEES (Tab 3) ───────────────────────────────────────────
-    GetPage(
-      name: AppRoutes.managerEmployees,
-      page: () {
-        final factoryId = Get.arguments;
-        return ManagerEmployeesScreen(factoryId: factoryId);
-      },
-    ),
+// MANAGER EMPLOYEES
+GetPage(
+  name: AppRoutes.managerEmployees,
+  page: () => ManagerEmployeesScreen(
+    factoryId: AuthService.factoryId,
+  ),
+),
 
-    // ── MANAGER PAYMENTS (Tab 4) ────────────────────────────────────────────
-    GetPage(
-      name: AppRoutes.managerPayments,
-      page: () {
-        final factoryId = Get.arguments;
-        return ManagerPaymentsScreen(factoryId: factoryId);
-      },
-    ),
-    // --Manager Details 
-    
+// MANAGER PAYMENTS
+GetPage(
+  name: AppRoutes.managerPayments,
+  page: () => ManagerPaymentsScreen(
+    factoryId: AuthService.factoryId,
+  ),
+),
 
+// MANAGER PRODUCTIONS
+GetPage(
+  name: AppRoutes.managerProduction,
+  page: () => ManagerProductionsPage(
+    factoryId: AuthService.factoryId,
+  ),
+),
+
+// MACHINE DETAILS
+GetPage(
+  name: AppRoutes.MachineDetails,
+  page: () {
+    final args = Get.arguments as Map;
+
+    return MachineDetailsScreen(
+      machine: args['machine'],
+      factoryId: args['factoryId'],
+    );
+  },
+),
+
+// MANAGER EMPLOYEE DETAILS
+GetPage(
+  name: AppRoutes.managerEmployeeDetail,
+  page: () {
+    final args = Get.arguments as Map;
+
+    return ManagerEmployeeDetailScreen(
+      employeeId: args['employeeId'],
+      factoryId: AuthService.factoryId,
+    );
+  },
+),
+
+// MANAGER PROFILE
+GetPage(
+  name: AppRoutes.managerProfile,
+  page: () => ManagerProfileScreen(
+    userId: AuthService.userId,
+  ),
+),
+// MANAGER SCAN 
+GetPage(
+  name: AppRoutes.managerScanMachine,
+  page: () => ManagerScanQRScreen(
+    factoryId: AuthService.factoryId,
+  ),
+),
 GetPage(
   name: AppRoutes.MachineDetails,
   page: () {
@@ -148,54 +208,47 @@ GetPage(
   },
 ),
 
+//MANAGER SIDE SETTINGS
 GetPage(
-  name: AppRoutes.managerEmployeeDetail,
-  page: () {
-    final args = Get.arguments as Map;
-    return ManagerEmployeeDetailScreen(
-      employeeId: args['employeeId'],
-      factoryId: args['factoryId'], // ✅ yeh add karo
-    );
-  },
+  name: '/edit-profile',
+  page: () => const EditProfileScreen(),
 ),
-
- GetPage(
-  name: '/manager-production',
-  page: () => ManagerProductionsPage(
-    factoryId: Get.arguments,
+GetPage(
+  name: AppRoutes.managersettings,
+  page: () => const ManagerSettingsScreen(),
+),
+// GetPage(
+//   name: AppRoutes.managerNotifications,
+//   page: () => ManagerPaymentsScreen(
+//     factoryId: AuthService.factoryId,
+//   ),
+// ),
+GetPage(
+  name: AppRoutes.managerNotifications,
+  page: () => NotificationPage(
+    drawer: ManagerDrawer(
+      userId: AuthService.userId,
+      factoryId: AuthService.factoryId,
+    ),
+    title: "Manager Notifications",
   ),
 ),
 
 GetPage(
-  name: AppRoutes.MachineDetails,
-  page: () {
-
-    final data = Get.arguments as Map;
-
-    return MachineDetailsScreen(
-      machine: data['machine'],
-      factoryId: data['factoryId'],
-    );
-
-  },
+  name: AppRoutes.employeeNotifications,
+  page: () => NotificationPage(
+    drawer: EmployeeDrawer(userId: AuthService.userId),
+    title: "Employee Notifications",
+  ),
 ),
 
 GetPage(
-  name: AppRoutes.managerEmployeeDetail,
-  page: () {
-    final args = Get.arguments as Map;
-    return ManagerEmployeeDetailScreen(
-      employeeId: args['employeeId'],
-      factoryId: args['factoryId'], // ✅ yeh add karo
-    );
-  },
+  name: '/help-faq',
+  page: () => const HelpFaqScreen(),
 ),
-
- GetPage(
-  name: '/manager-production',
-  page: () => ManagerProductionsPage(
-    factoryId: Get.arguments,
-  ),
+GetPage(
+  name: '/about-app',
+  page: () => const AboutAppScreen(),
 ),
 
     /// EMPLOYEE DASHBOARD
@@ -223,16 +276,7 @@ GetPage(
       transition: Transition.rightToLeftWithFade,
     ),
     GetPage(name: machines, page: () => const MachinesScreen(factoryId: 0)),
-    GetPage(
-      name: payments,
-      page: () {
-        final args = Get.arguments;
-        final factoryId = args is int
-            ? args
-            : int.tryParse(args?.toString() ?? '') ?? 0;
-        return PaymentsScreen(factoryId: factoryId);
-      },
-    ),
+  
 
     GetPage(
       name: machines,
@@ -259,11 +303,12 @@ GetPage(
       },
     ),
 
-    GetPage(
-      name: AppRoutes.empmachineDetail,
-      page: () => MachineDetailScreen(machineId: Get.arguments),
-    ),
-
+   GetPage(
+  name: AppRoutes.empmachineDetail,
+  page: () => MachineDetailScreen(
+    machineId: Get.arguments,
+  ),
+),
     //employee dashboard side routes
     GetPage(name: empDashboard, page: () => const EmployeeDashboard()),
     GetPage(
@@ -278,16 +323,25 @@ GetPage(
         return EnterProductionScreen(machineId: machineId);
       },
     ),
-    GetPage(
-      name: AppRoutes.profile,
-      page: () {
-        final args = Get.arguments;
-        final userId = args is Map
-            ? int.tryParse(args['userId']?.toString() ?? '') ?? 0
-            : int.tryParse(args?.toString() ?? '') ?? 0;
-        return UserProfileScreen(userId: userId);
-      },
-    ),
+  GetPage(
+  name: AppRoutes.profile,
+  page: () {
+
+    print("Arguments = ${Get.arguments}");
+
+    final args = Get.arguments;
+
+    final userId = args is Map
+        ? args['userId']
+        : null;
+
+    print("User ID = $userId");
+
+    return UserProfileScreen(
+      userId: userId ?? 0,
+    );
+  },
+),
  GetPage(
   name: '/owner-production',
   page: () => OwnerProductionsPage(

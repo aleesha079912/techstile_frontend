@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/scan_code.dart';
-import 'package:techstile_frontend/screens/factory_owner_dash/pending_productions.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/employee/attendance.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/app_owner_dash.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/machine_assignment.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/role_management.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/assign_paermission.dart';
+import 'package:techstile_frontend/routes/routes.dart';
 class OwnerDrawer extends StatelessWidget {
 
   const OwnerDrawer({
@@ -95,30 +95,25 @@ class OwnerDrawer extends StatelessWidget {
                   "Machine Assignment",
                  () => Get.to(() => const MachineAssignmentPage()),
                 ),
-                // _item(
-                //   context,
-                //   Icons.factory_outlined,
-                //   "View Assignment",
-                //  () => Get.to(() => const ViewAssignments()),
-                // ),
-                // _item(
-                //   context,
-                //   Icons.badge_outlined,
-                //   "Manage Employees",
-                //     () => Get.to(() => EmployeeScreen(factoryId: factoryId, userId: userId)),
-                // ),
+               _item(
+                  context,
+                  Icons.qr_code_scanner,
+                  "Scan Machine",
+                  () {
+                    Get.back();
+
+                    Get.toNamed(
+                      AppRoutes.scanMachine,
+                    );
+                  },
+                ),
                 _item(
                   context,
                   Icons.access_time_rounded,
                   "Manage Attendance",
                   () => Get.to(() => const AttendanceScreen()),
                 ),
-                _item(
-                  context,
-                  Icons.badge_outlined,
-                  "Manage production",
-                    () => Get.to(() => const PendingProductionScreen()),
-                ),
+      
                  _item(
                   context,
                   Icons.qr_code_scanner,

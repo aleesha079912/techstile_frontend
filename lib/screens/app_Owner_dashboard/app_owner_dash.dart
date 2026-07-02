@@ -45,13 +45,13 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
     ): null,
       appBar: _currentIndex == 0
     ? AppBar(
-        backgroundColor: theme.appBarTheme.backgroundColor,
+        backgroundColor: AppTheme.primary,
         elevation: theme.appBarTheme.elevation,
         leading: Builder(
           builder: (context) => IconButton(
             icon: Icon(
               Icons.menu,
-              color: theme.appBarTheme.foregroundColor,
+              color: Colors.white,
             ),
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
@@ -59,7 +59,7 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
         title: Text(
           "Owner Dashboard",
           style: TextStyle(
-            color: theme.appBarTheme.foregroundColor,
+            color: Colors.white,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -105,7 +105,7 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
               Text(
                 "Add Factory",
                 style: TextStyle(
-                  color: theme.colorScheme.onPrimary,
+                  color: Colors.white,
                   fontWeight: FontWeight.w600,
                 ),
               ),

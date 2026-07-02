@@ -6,14 +6,18 @@ import 'package:techstile_frontend/core/services/machines_service.dart';
 class ManagerDashboardService {
   final String baseUrl = "http://localhost:8000/api/manager";
 
-  Future<Map<String, dynamic>> getDashboard(dynamic factoryId) async {
-    final response = await http.get(
-      Uri.parse("$baseUrl/dashboard/$factoryId"),
-      headers: AuthService.authHeaders,
-    );
-    if (response.statusCode == 200) return jsonDecode(response.body);
-    throw Exception("Could not load manager dashboard");
-  }
+  Future<Map<String, dynamic>> getDashboard(
+    dynamic factoryId) async {
+
+  final response = await http.get(
+    Uri.parse(
+      "$baseUrl/dashboard/$factoryId"
+    ),
+    headers: AuthService.authHeaders,
+  );
+
+  return jsonDecode(response.body);
+}
 
   Future<List<Machine>> getMachines(dynamic factoryId) async {
     final response = await http.get(

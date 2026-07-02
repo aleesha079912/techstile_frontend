@@ -1,36 +1,35 @@
 import 'package:flutter/material.dart';
-import '../../core/services/employee_service/profile_service.dart';
-import '../../core/utils/theme.dart';
+import 'package:techstile_frontend/core/services/manager_service/manager_profile_service.dart';
+import 'package:techstile_frontend/widgets/man_drawer.dart';
+import 'package:techstile_frontend/core/services/auth_service.dart';
 
-class UserProfileScreen extends StatefulWidget {
+class ManagerProfileScreen extends StatefulWidget {
   final int userId;
-  const UserProfileScreen({
-    super.key,
-    required this.userId,
-  });
+
+  const ManagerProfileScreen({super.key, required this.userId});
 
   @override
-  State<UserProfileScreen> createState() => _UserProfileScreenState();
+  State<ManagerProfileScreen> createState() => _ManagerProfileScreenState();
 }
 
-class _UserProfileScreenState extends State<UserProfileScreen> {
-  final service = EmployeeProfileService();
+class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
+  final service = ManagerProfileService();
+
   Map<String, dynamic>? profile;
   bool loading = true;
 
   @override
   void initState() {
     super.initState();
-    loadProfile();
+    load();
   }
 
   // ===== LOGIC (UNCHANGED) =====
-  Future<void> loadProfile() async {
-    print("Profile User ID = ${widget.userId}");
-    final response = await service.getProfile(widget.userId);
-    print(response);
+  Future<void> load() async {
+    final res = await service.getProfile(widget.userId);
+
     setState(() {
-      profile = response?['data'];
+      profile = res?['data'];
       loading = false;
     });
   }
@@ -38,7 +37,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   // ===== SIMPLE HELPER WIDGETS (DESIGN ONLY) =====
 
   // Top gradient profile card (avatar + name + email)
-  // Colors fixed to navy -> sky blue (like reference design) + smaller size
   Widget buildProfileHeader() {
     final name = profile?['name'] ?? '';
     final email = profile?['email'] ?? '';
@@ -102,61 +100,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
-  // Row style like "Shift Start / Shift End" boxes shown in the design
-  Widget infoRow(IconData icon, String title, String value) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 6,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: AppTheme.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(icon, color: AppTheme.primary, size: 20),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              title,
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.black87,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-          Flexible(
-            child: Text(
-              value,
-              textAlign: TextAlign.right,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   // Section title with small blue bar (like "Performance Overview")
   Widget sectionTitle(String title) {
     return Padding(
@@ -167,7 +110,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             width: 4,
             height: 18,
             decoration: BoxDecoration(
-              color: AppTheme.primary,
+              color: const Color(0xFF163172),
               borderRadius: BorderRadius.circular(4),
             ),
           ),
@@ -237,59 +180,36 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA), // light grey page background
-      appBar: AppBar(title: const Text("User Profile")),
+      drawer: ManagerDrawer(
+        userId: AuthService.userId,
+        factoryId: AuthService.factoryId,
+      ),
+      appBar: AppBar(title: const Text("Manager Profile")),
       body: loading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 20),
+                  // Top gradient header
+                  buildProfileHeader(),
 
-                  const CircleAvatar(
-                    radius: 50,
-                    backgroundColor: AppTheme.info,
-                    child: Icon(Icons.person,
-                        size: 50, color:AppTheme.secondary ),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  Text(
-                    profile?['name'] ?? '',
-                    style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold),
-                  ),
-
-                  Text(profile?['email'] ?? ''),
-
-                  const SizedBox(height: 20),
-
-                  Card(
-                    margin: const EdgeInsets.all(15),
-                    child: Column(
-                      children: [
-                        tile(Icons.phone, "Phone",
-                            profile?['phone_no'] ?? ''),
-                        tile(Icons.badge, "CNIC",
-                            profile?['cnic'] ?? ''),
-                        tile(Icons.home, "Address",
-                            profile?['address'] ?? ''),
-                        tile(Icons.info, "Details",
-                            profile?['employee_details'] ?? ''),
-                      ],
-                    ),
-                  ),
-
-                  Card(
-                    margin: const EdgeInsets.all(15),
-                    child: Column(
+                  // Performance overview section
+                  sectionTitle("Performance Overview"),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: GridView.count(
+                      crossAxisCount: 2,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                      childAspectRatio: 1.3,
                       children: [
                         statCard(
-                          Icons.precision_manufacturing,
-                          "Assigned Machines",
-                          "${profile?['total_machines'] ?? 0}",
+                          Icons.groups,
+                          "Total Employees",
+                          "${profile?['total_employees'] ?? 0}",
                           Colors.blue,
                         ),
                         statCard(
@@ -297,18 +217,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                           "Total Production",
                           "${profile?['total_production'] ?? 0}",
                           Colors.orange,
-                        ),
-                        statCard(
-                          Icons.check_circle,
-                          "Ready Production",
-                          "${profile?['total_ready_production'] ?? 0}",
-                          Colors.green,
-                        ),
-                        statCard(
-                          Icons.fact_check,
-                          "Attendance",
-                          "${profile?['attendance_count'] ?? 0}",
-                          Colors.purple,
                         ),
                       ],
                     ),
