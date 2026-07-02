@@ -6,14 +6,16 @@ class AppTheme {
   static const Color primary    = Color(0xFF122B7A); // Dark Navy
   static const Color secondary  = Color(0xFFFFFFFF); // White
   static const Color background = Color(0xFFFFFFFF); // White
-  static const Color neutral = Color(0xFF000000); // White
+  static const Color neutral = Color(0xFFB0A695);
+  static const Color surface  = Color(0xFFFFA02F); 
 
   static const Color active  = Color(0xFF0D9B8A); // Teal — active / selected / success
   static const Color success = Color(0xFF0D9B8A); // Teal (alias)
+   static const Color info= Color(0xFF64B5F6);
   static const Color error   = Color(0xFFE74C3C); // Red — error / reject
 
   static const Color textPrimary   = Color(0xFF122B7A); // Dark Navy
-  static const Color textSecondary = Color(0xFF122B7A); // Dark Navy (use with opacity)
+  static const Color textSecondary = Color(0xFFFFFFFF); // Dark Navy (use with opacity)
 
   // ===== Radius =====
 

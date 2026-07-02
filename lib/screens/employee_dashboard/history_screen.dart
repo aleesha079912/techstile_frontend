@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:techstile_frontend/core/services/auth_service.dart';
 import 'package:techstile_frontend/core/services/employee_service/history_service.dart';
+import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/widgets/emp_db_bot_nav_bar.dart';
 import 'package:techstile_frontend/widgets/emp_drawer.dart';
 
@@ -23,12 +24,6 @@ class _HistoryScreenState extends State<HistoryScreen>
   double weekly = 0;
   double monthly = 0;
 
-  // ── Colours ────────────────────────────────────────────────────────────────
-  static const _navy    = Color(0xFF0D1B4B);
-  static const _teal    = Color(0xFF00C8B0);
-  static const _bg      = Color(0xFFF5F6FA);
-  static const _white   = Colors.white;
-  static const _orange  = Color(0xFFFF8C42);
 
   @override
   void initState() {
@@ -65,23 +60,23 @@ class _HistoryScreenState extends State<HistoryScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _bg,
+      backgroundColor:AppTheme.background,
       drawer: const EmployeeDrawer(),
 
       // ── AppBar ──────────────────────────────────────────────────────────
       appBar: AppBar(
-        backgroundColor: _navy,
+        backgroundColor:AppTheme.primary,
         elevation: 0,
         leading: Builder(
           builder: (ctx) => IconButton(
-            icon: const Icon(Icons.menu_rounded, color: _white),
+            icon: const Icon(Icons.menu_rounded, color: AppTheme.secondary),
             onPressed: () => Scaffold.of(ctx).openDrawer(),
           ),
         ),
         title: const Text(
           'Production History',
           style: TextStyle(
-            color: _white,
+            color: AppTheme.secondary,
             fontWeight: FontWeight.w700,
             fontSize: 18,
           ),
@@ -90,12 +85,12 @@ class _HistoryScreenState extends State<HistoryScreen>
 
       body: loading
           ? const Center(
-              child: CircularProgressIndicator(color: _navy, strokeWidth: 2.5))
+              child: CircularProgressIndicator(color: AppTheme.primary, strokeWidth: 2.5))
           : Column(
               children: [
                 // ── Summary strip ──────────────────────────────────────────
                 Container(
-                  color: _navy,
+                  color: AppTheme.primary,
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
                   child: Row(
                     children: [
@@ -110,23 +105,23 @@ class _HistoryScreenState extends State<HistoryScreen>
 
                 // ── Tab bar — outside appBar, below summary ────────────────
                 Container(
-                  color: _navy,
+                  color:AppTheme.primary,
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                   child: Container(
                     height: 48,
                     decoration: BoxDecoration(
-                      color: _white.withOpacity(0.12),
+                      color:AppTheme.secondary.withOpacity(0.12),
                       borderRadius: BorderRadius.circular(30),
                     ),
                     child: TabBar(
                       controller: _tabController,
                       indicator: BoxDecoration(
-                        color: _teal,
+                        color: AppTheme.active,
                         borderRadius: BorderRadius.circular(30),
                       ),
                       indicatorSize: TabBarIndicatorSize.tab,
-                      labelColor: _white,
-                      unselectedLabelColor: _white.withOpacity(0.6),
+                      labelColor: AppTheme.secondary,
+                      unselectedLabelColor: AppTheme.secondary.withOpacity(0.6),
                       labelStyle: const TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 13,
@@ -162,16 +157,16 @@ class _HistoryScreenState extends State<HistoryScreen>
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
-          color: _white.withOpacity(0.10),
+          color: AppTheme.secondary.withOpacity(0.10),
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: _white.withOpacity(0.18)),
+          border: Border.all(color: AppTheme.secondary.withOpacity(0.18)),
         ),
         child: Column(
           children: [
             Text(
               label,
               style: TextStyle(
-                color: _white.withOpacity(0.7),
+                color: AppTheme.secondary.withOpacity(0.7),
                 fontSize: 11,
                 fontWeight: FontWeight.w500,
                 letterSpacing: 0.8,
@@ -181,7 +176,7 @@ class _HistoryScreenState extends State<HistoryScreen>
             Text(
               value.toStringAsFixed(1),
               style: const TextStyle(
-                color: _teal,
+                color: AppTheme.active,
                 fontSize: 16,
                 fontWeight: FontWeight.w800,
               ),
@@ -202,12 +197,12 @@ class _HistoryScreenState extends State<HistoryScreen>
             Icon(
               isApproved ? Icons.check_circle_outline : Icons.pending_outlined,
               size: 64,
-              color: Colors.grey.shade300,
+              color: AppTheme.neutral,
             ),
             const SizedBox(height: 12),
             Text(
               isApproved ? 'No completed records' : 'No pending records',
-              style: TextStyle(color: Colors.grey.shade400, fontSize: 15),
+              style: TextStyle(color: AppTheme.neutral, fontSize: 15),
             ),
           ],
         ),
@@ -215,7 +210,7 @@ class _HistoryScreenState extends State<HistoryScreen>
     }
 
     return RefreshIndicator(
-      color: _navy,
+      color:AppTheme.primary,
       onRefresh: loadHistory,
       child: ListView.builder(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
@@ -227,16 +222,16 @@ class _HistoryScreenState extends State<HistoryScreen>
 
   // ── Production card ───────────────────────────────────────────────────────
   Widget _productionCard(dynamic item, {required bool isApproved}) {
-    final accent = isApproved ? _teal : _orange;
+    final accent = isApproved ? AppTheme.active : AppTheme.surface;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: _white,
+        color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: _navy.withOpacity(0.06),
+            color: AppTheme.primary.withOpacity(0.06),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -261,7 +256,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                   ),
                   child: Icon(
                     isApproved ? Icons.check_rounded : Icons.schedule_rounded,
-                    color: _white,
+                    color: AppTheme.secondary,
                     size: 16,
                   ),
                 ),
@@ -272,7 +267,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                     style: const TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 15,
-                      color: _navy,
+                      color:AppTheme.primary,
                     ),
                   ),
                 ),
@@ -319,14 +314,14 @@ class _HistoryScreenState extends State<HistoryScreen>
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         children: [
-          Icon(icon, size: 18, color: _navy.withOpacity(0.5)),
+          Icon(icon, size: 18, color: AppTheme.primary.withOpacity(0.5)),
           const SizedBox(width: 8),
           Text(
             '$title: ',
             style: const TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 13,
-              color: _navy,
+              color: AppTheme.primary,
             ),
           ),
           Expanded(
@@ -334,7 +329,7 @@ class _HistoryScreenState extends State<HistoryScreen>
               value?.toString() ?? '—',
               style: TextStyle(
                 fontSize: 13,
-                color: _navy.withOpacity(0.7),
+                color:AppTheme.primary.withOpacity(0.7),
               ),
             ),
           ),

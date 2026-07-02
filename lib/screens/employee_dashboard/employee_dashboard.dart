@@ -49,10 +49,19 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
     return Scaffold(
       drawer: const EmployeeDrawer(),
       backgroundColor: AppTheme.background,
+ 
+      
 
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
-        title: const Text("LOOM CONTROL", style: TextStyle(color: AppTheme.primary),),
+         elevation: 0,
+        leading: Builder(
+          builder: (ctx) => IconButton(
+            icon: const Icon(Icons.menu_rounded, color: AppTheme.secondary),
+            onPressed: () => Scaffold.of(ctx).openDrawer(),
+          ),
+        ),
+        title: const Text("LOOM CONTROL", style: TextStyle(color: AppTheme.secondary),),
       ),
 
       body: loading
@@ -96,7 +105,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                       //     label: "Assigned",
                       //     value: "${totalProduction.toStringAsFixed(0)}",
                       //   ),
-                      // ),
+                      // ), 
                       // const SizedBox(width: 8),
 
                       Expanded(
@@ -238,7 +247,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
           Text(
             label,
             style: TextStyle(
-              color: AppTheme.background,
+              color: AppTheme.textPrimary,
               fontWeight: FontWeight.w600,
               fontSize: 12,
             ),

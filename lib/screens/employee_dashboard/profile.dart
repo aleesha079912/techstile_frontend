@@ -61,9 +61,9 @@ class _UserProfileScreenState
 
                   const CircleAvatar(
                     radius: 50,
-                    backgroundColor: Colors.blue,
+                    backgroundColor: AppTheme.info,
                     child: Icon(Icons.person,
-                        size: 50, color: Colors.white),
+                        size: 50, color:AppTheme.secondary ),
                   ),
 
                   const SizedBox(height: 10),
