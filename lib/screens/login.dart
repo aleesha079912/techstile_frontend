@@ -275,7 +275,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _login,
                     child: _isLoading
-                        ? const CircularProgressIndicator(color: Colors.white)
+                        ? const CircularProgressIndicator(color: AppTheme.secondary)
                         : const Text("Begin Shift →"),
                   ),
                 ),
@@ -313,17 +313,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Row(
                       children: [
                         const Icon(Icons.support_agent,
-                            color: Color.fromARGB(255, 0, 0, 0)),
+                            color:  AppTheme.secondary),
                         const SizedBox(width: 10),
                         const Expanded(
                           child: Text(
                             "System Help Contact Supervisor",
                             style: TextStyle(
-                                color: Color.fromARGB(255, 3, 3, 3)),
+                                color: AppTheme.secondary),
                           ),
                         ),
                         const Icon(Icons.arrow_forward_ios,
-                            size: 14, color: Color.fromARGB(255, 0, 0, 0)),
+                            size: 14, color:  AppTheme.secondary),
                       ],
                     ),
                   ),

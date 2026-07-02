@@ -67,7 +67,7 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
             Text(
               loading ? 'Loading...' : (factoryName ?? 'Factory'),
               style: TextStyle(
-                color: Colors.white.withOpacity(0.65),
+                color:  AppTheme.secondary.withOpacity(0.65),
                 fontSize: 12,
               ),
             ),
@@ -142,7 +142,7 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:  AppTheme.secondary,
         borderRadius: AppTheme.cardRadius,
         boxShadow: AppTheme.softShadow,
       ),

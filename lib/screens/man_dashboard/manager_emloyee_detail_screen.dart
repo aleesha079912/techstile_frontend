@@ -50,7 +50,7 @@ class _ManagerEmployeeDetailScreenState
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:  AppTheme.secondary,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -141,12 +141,12 @@ class _ManagerEmployeeDetailScreenState
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded,
-              color: Colors.white, size: 20),
+              color:  AppTheme.secondary, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
           "Employee Detail",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+          style: TextStyle(color:  AppTheme.secondary, fontWeight: FontWeight.w700),
         ),
       ),
 
@@ -162,7 +162,7 @@ class _ManagerEmployeeDetailScreenState
               padding: const EdgeInsets.symmetric(vertical: 24),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [AppTheme.primary, AppTheme.secondary],
+                  colors: [AppTheme.primary, AppTheme.info],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -179,13 +179,13 @@ class _ManagerEmployeeDetailScreenState
                 children: [
                   CircleAvatar(
                     radius: 38,
-                    backgroundColor: Colors.white.withOpacity(0.2),
+                    backgroundColor:  AppTheme.secondary.withOpacity(0.2),
                     child: Text(
                       name[0].toUpperCase(),
                       style: const TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.w800,
-                        color: Colors.white,
+                        color:  AppTheme.secondary,
                       ),
                     ),
                   ),
@@ -195,7 +195,7 @@ class _ManagerEmployeeDetailScreenState
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w800,
-                      color: Colors.white,
+                      color:  AppTheme.secondary,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -203,7 +203,7 @@ class _ManagerEmployeeDetailScreenState
                     employee!['email']?.toString() ?? '',
                     style: TextStyle(
                       fontSize: 13,
-                      color: Colors.white.withOpacity(0.75),
+                      color:  AppTheme.secondary.withOpacity(0.75),
                     ),
                   ),
                 ],
@@ -217,7 +217,7 @@ class _ManagerEmployeeDetailScreenState
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color:  AppTheme.secondary,
                 borderRadius: BorderRadius.circular(18),
                 boxShadow: [
                   BoxShadow(

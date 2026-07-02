@@ -8,6 +8,8 @@ class AppTheme {
   static const Color background = Color(0xFFFFFFFF); // White
   static const Color neutral = Color(0xFFB0A695);
   static const Color surface  = Color(0xFFFFA02F); 
+  static const Color onsurface  = Color(0xFF202020); 
+
 
   static const Color active  = Color(0xFF0D9B8A); // Teal — active / selected / success
   static const Color success = Color(0xFF0D9B8A); // Teal (alias)

@@ -170,11 +170,11 @@ print("Stored User ID = ${AuthService.userId}");
         children: [
           const Text('Manager Dashboard',
               style: TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.w800, fontSize: 17)),
+                  color: AppTheme.secondary, fontWeight: FontWeight.w800, fontSize: 17)),
           Text(
             loading ? 'Loading...' : (factory?['name'] ?? 'Factory'),
             style: TextStyle(
-                color: Colors.white.withOpacity(0.65), fontSize: 12),
+                color:  AppTheme.secondary.withOpacity(0.65), fontSize: 12),
           ),
         ],
       ),
@@ -192,7 +192,7 @@ print("Stored User ID = ${AuthService.userId}");
             const SizedBox(height: 12),
             Text(error ?? 'Something went wrong',
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13)),
+                style: const TextStyle(color: AppTheme.secondary, fontSize: 13)),
             const SizedBox(height: 16),
             ElevatedButton(onPressed: load, child: const Text('Retry')),
           ],
@@ -219,7 +219,7 @@ print("Stored User ID = ${AuthService.userId}");
             width: 56,
             height: 56,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.12),
+              color:  AppTheme.secondary.withOpacity(0.12),
               borderRadius: BorderRadius.circular(16),
             ),
             child: const Icon(Icons.factory_rounded,
@@ -232,18 +232,18 @@ print("Stored User ID = ${AuthService.userId}");
               children: [
                 Text(factory?['name'] ?? 'Factory',
                     style: const TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.w800, fontSize: 18)),
+                        color:  AppTheme.secondary, fontWeight: FontWeight.w800, fontSize: 18)),
                 const SizedBox(height: 4),
                 Row(
                   children: [
                     Icon(Icons.location_on_outlined,
-                        color: Colors.white.withOpacity(0.6), size: 14),
+                        color:  AppTheme.secondary.withOpacity(0.6), size: 14),
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(
                         '${factory?['address'] ?? ''}, ${factory?['city'] ?? ''}',
                         style: TextStyle(
-                            color: Colors.white.withOpacity(0.65), fontSize: 12),
+                            color:  AppTheme.secondary.withOpacity(0.65), fontSize: 12),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -276,8 +276,8 @@ print("Stored User ID = ${AuthService.userId}");
           style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
         ),
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppTheme.secondary,
-          foregroundColor: Colors.white,
+          backgroundColor: AppTheme.background,
+          foregroundColor: AppTheme.background,
           elevation: 0,
           padding: const EdgeInsets.symmetric(vertical: 14),
           shape: RoundedRectangleBorder(
@@ -298,7 +298,7 @@ print("Stored User ID = ${AuthService.userId}");
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color:  AppTheme.secondary,
           borderRadius: AppTheme.cardRadius,
           boxShadow: AppTheme.softShadow,
         ),
@@ -334,7 +334,7 @@ print("Stored User ID = ${AuthService.userId}");
       return Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 32),
-        decoration: BoxDecoration(color: Colors.white, borderRadius: AppTheme.cardRadius),
+        decoration: BoxDecoration(color:  AppTheme.secondary, borderRadius: AppTheme.cardRadius),
         child: Column(
           children: [
             const Icon(Icons.inventory_2_outlined, size: 40, color: AppTheme.secondary),
@@ -348,7 +348,7 @@ print("Stored User ID = ${AuthService.userId}");
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:  AppTheme.secondary,
         borderRadius: AppTheme.cardRadius,
         boxShadow: AppTheme.softShadow,
       ),
@@ -389,7 +389,7 @@ print("Stored User ID = ${AuthService.userId}");
                 ),
               ),
               if (!isLast)
-                Divider(height: 1, color: Colors.grey.shade100, indent: 16, endIndent: 16),
+                Divider(height: 1, color:  AppTheme.neutral, indent: 16, endIndent: 16),
             ],
           );
         }),
