@@ -46,9 +46,9 @@ class _State extends State<NotificationPage> {
   }
 
   void applyFilter(String filter) {
-    selectedFilter = filter;
-
     setState(() {
+      selectedFilter = filter;
+
       if (filter == "All") {
         filteredData = data;
       } else if (filter == "Unread") {
@@ -56,7 +56,7 @@ class _State extends State<NotificationPage> {
             .where((e) => e['is_read'].toString() != "true")
             .toList();
       } else {
-        filteredData = data; // Today / Week backend ho to refine hoga
+        filteredData = data;
       }
     });
   }
@@ -77,7 +77,7 @@ class _State extends State<NotificationPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: const Text("Search Notifications"),
+          title: const Text("Search"),
           content: TextField(
             controller: searchController,
             decoration: const InputDecoration(
@@ -173,8 +173,10 @@ class _State extends State<NotificationPage> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("You have",
-                  style: TextStyle(color: Colors.white70)),
+              const Text(
+                "You have",
+                style: TextStyle(color: Colors.white70),
+              ),
               Text(
                 "$unreadCount unread notifications",
                 style: const TextStyle(
@@ -190,7 +192,7 @@ class _State extends State<NotificationPage> {
     );
   }
 
-  /// ================= FILTER =================
+  /// ================= FILTER ROW =================
   Widget _filterRow() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -221,7 +223,7 @@ class _State extends State<NotificationPage> {
     );
   }
 
-  /// ================= CARD =================
+  /// ================= NOTIFICATION CARD =================
   Widget _notificationCard(dynamic n, bool isRead, String type) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -230,6 +232,13 @@ class _State extends State<NotificationPage> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(color: Colors.grey.shade200),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          )
+        ],
       ),
       child: InkWell(
         onTap: () async {
@@ -248,12 +257,15 @@ class _State extends State<NotificationPage> {
                 shape: BoxShape.circle,
               ),
               child: Icon(
-                type == "approved" ? Icons.check : Icons.warning,
+                type == "approved"
+                    ? Icons.check
+                    : Icons.warning,
                 color: type == "approved"
                     ? Colors.green
                     : Colors.orange,
               ),
             ),
+
             const SizedBox(width: 12),
 
             Expanded(
@@ -268,13 +280,45 @@ class _State extends State<NotificationPage> {
                   ),
                   const SizedBox(height: 6),
                   Text(n['message'] ?? ''),
+
+                  if (n['production'] != null) ...[
+                    const SizedBox(height: 10),
+
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Machine ID: ${n['production']?['machine_id'] ?? '-'}",
+                          ),
+                          Text(
+                            "Machine Name: ${n['production']?['machineemploye']?['machine_name'] ?? '-'}",
+                          ),
+                          Text(
+                            "Ready Production: ${n['production']?['ready_production'] ?? '-'}",
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
 
             if (!isRead)
-              const Icon(Icons.circle,
-                  size: 10, color: Colors.blue),
+              const Padding(
+                padding: EdgeInsets.only(left: 8),
+                child: Icon(
+                  Icons.circle,
+                  size: 10,
+                  color: Colors.blue,
+                ),
+              ),
           ],
         ),
       ),
@@ -300,8 +344,7 @@ class _Chip extends StatelessWidget {
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(right: 8),
-        padding:
-            const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
           color: selected
               ? const Color(0xFF4F46E5)
@@ -311,7 +354,9 @@ class _Chip extends StatelessWidget {
         child: Text(
           text,
           style: TextStyle(
-            color: selected ? Colors.white : Colors.black87,
+            color: selected
+                ? Colors.white
+                : Colors.black87,
           ),
         ),
       ),
