@@ -88,7 +88,7 @@ class _ManagerSettingsScreenState
                         Text(
                           user['email'] ?? '',
                           style: const TextStyle(
-                            color:  AppTheme.neutral,
+                            color:  AppTheme.primary,
                           ),
                         ),
 
@@ -101,7 +101,7 @@ class _ManagerSettingsScreenState
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color:  AppTheme.neutral,
+                            color:  AppTheme.primary,
                             borderRadius:
                                 BorderRadius.circular(20),
                           ),
@@ -218,7 +218,7 @@ class _ManagerSettingsScreenState
             child: Text(
               "TechStile v1.0.0",
               style: TextStyle(
-                color:  AppTheme.neutral,
+                color:   AppTheme.primary,
               ),
             ),
           ),
@@ -237,7 +237,7 @@ class _ManagerSettingsScreenState
         text,
         style: const TextStyle(
           fontWeight: FontWeight.bold,
-          color:  AppTheme.neutral,
+          color:   AppTheme.primary,
           letterSpacing: 1,
         ),
       ),

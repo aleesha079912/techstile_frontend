@@ -74,13 +74,14 @@ print("Stored User ID = ${AuthService.userId}");
   // final userId = widget.userId;
     return Scaffold(
    drawer: ManagerDrawer(
+
     // userId: userId,
     factoryId: factoryId,
   ),
       backgroundColor: AppTheme.background,
       appBar: _buildAppBar(),
       body: loading
-          ? const Center(child: CircularProgressIndicator(color: AppTheme.primary))
+          ? const Center(child: CircularProgressIndicator(color: AppTheme.primary,))
           : error != null
               ? _errorView()
               : RefreshIndicator(
@@ -163,6 +164,7 @@ print("Stored User ID = ${AuthService.userId}");
 
     return AppBar(
       backgroundColor: AppTheme.primary,
+      iconTheme: IconThemeData(color: AppTheme.secondary),
       elevation: 0,
       automaticallyImplyLeading: true,
       title: Column(

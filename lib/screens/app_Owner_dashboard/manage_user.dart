@@ -76,6 +76,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
 
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
+        iconTheme: IconThemeData(color: AppTheme.secondary),
         title: const Text(
          "TECHstile",
           style: TextStyle(

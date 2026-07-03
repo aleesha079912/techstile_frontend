@@ -118,7 +118,7 @@ void initState() {
           Icon(Icons.inbox_rounded, size: 52, color:  AppTheme.neutral),
           const SizedBox(height: 12),
           const Text('No records found',
-              style: TextStyle(color: AppTheme.textSecondary, fontSize: 14)),
+              style: TextStyle(color: AppTheme.secondary, fontSize: 14)),
         ]),
       );
     }

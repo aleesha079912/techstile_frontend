@@ -114,8 +114,8 @@ class _State extends State<NotificationPage> {
       appBar: AppBar(
         title: Text(widget.title),
         elevation: 0,
-        backgroundColor:  AppTheme.background,
-        foregroundColor: AppTheme.onsurface,
+        backgroundColor:  AppTheme.primary,
+        foregroundColor: AppTheme.secondary,
         leading: Builder(
           builder: (context) => IconButton(
             icon: const Icon(Icons.menu),
@@ -163,7 +163,7 @@ class _State extends State<NotificationPage> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [AppTheme.primary, Color(0xFF7C3AED)],
+          colors: [AppTheme.primary, AppTheme.info],
         ),
         borderRadius: BorderRadius.circular(16),
       ),

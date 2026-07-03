@@ -185,7 +185,7 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
         userId: AuthService.userId,
         factoryId: AuthService.factoryId,
       ),
-      appBar: AppBar(title: const Text("Manager Profile")),
+      appBar: AppBar(title: const Text("Manager Profile",style: TextStyle(color: AppTheme.secondary),),backgroundColor: AppTheme.primary,iconTheme: IconThemeData(color: AppTheme.secondary),),
       body: loading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(

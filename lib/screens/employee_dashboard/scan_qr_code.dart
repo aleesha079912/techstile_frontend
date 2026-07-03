@@ -77,6 +77,7 @@ class _ScanqrCodeScreenState extends State<ScanqrCodeScreen>
       
         appBar: AppBar(
           backgroundColor: AppTheme.primary,
+          title: Text("Scan Machine QR", style: TextStyle(color: AppTheme.secondary),),
           elevation: 0,
           iconTheme: IconThemeData(color: AppTheme.secondary),
           leading: Builder(

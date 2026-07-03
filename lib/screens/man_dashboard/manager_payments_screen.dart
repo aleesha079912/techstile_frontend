@@ -56,6 +56,7 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
       backgroundColor: AppTheme.background,
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
+        iconTheme: IconThemeData(color: AppTheme.secondary),
         elevation: 0,
         automaticallyImplyLeading: false,
         title: Column(
