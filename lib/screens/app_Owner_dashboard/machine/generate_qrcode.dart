@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:techstile_frontend/core/services/generate_qr_service.dart';
+import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
 import 'package:techstile_frontend/widgets/owner_drawer.dart';
 class GenerateQrCodeScreen extends StatefulWidget {
@@ -28,18 +29,18 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: const OwnerDrawer(),
-      backgroundColor: const Color(0xFFF5F6FA),
+      backgroundColor: AppTheme.background,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor:AppTheme.background,
         elevation: 0.5,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.black87, size: 20),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppTheme.onsurface, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
           "Machine QR Code",
           style: TextStyle(
-            color: Colors.black87,
+            color:AppTheme.onsurface,
             fontWeight: FontWeight.w600,
             fontSize: 18,
           ),
@@ -55,11 +56,11 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppTheme.secondary,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: AppTheme.onsurface.withOpacity(0.05),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -70,11 +71,11 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1A73E8).withOpacity(0.1),
+                      color: AppTheme.info.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: const Icon(Icons.precision_manufacturing_outlined,
-                        color: Color(0xFF1A73E8), size: 26),
+                        color: AppTheme.info, size: 26),
                   ),
                   const SizedBox(width: 14),
                   Column(
@@ -85,14 +86,14 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
-                          color: Colors.black87,
+                          color:AppTheme.onsurface,
                         ),
                       ),
                       Text(
                         "ID: ${widget.machineDbId}",
                         style: TextStyle(
                           fontSize: 13,
-                          color: Colors.grey.shade500,
+                          color: AppTheme.neutral,
                         ),
                       ),
                     ],
@@ -108,11 +109,11 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
               width: double.infinity,
               padding: const EdgeInsets.all(28),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppTheme.secondary,
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.06),
+                    color:AppTheme.onsurface.withOpacity(0.06),
                     blurRadius: 16,
                     offset: const Offset(0, 6),
                   ),
@@ -124,7 +125,7 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
                     "Scan to Identify Machine",
                     style: TextStyle(
                       fontSize: 14,
-                      color: Colors.grey,
+                      color:AppTheme.neutral,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -134,7 +135,7 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
                   RepaintBoundary(
                     key: _qrKey,
                     child: Container(
-                      color: Colors.white,
+                      color:AppTheme.secondary,
                       padding: const EdgeInsets.all(12),
                       child: QrImageView(
                         // ✅ Primary DB ID stored in QR
@@ -143,11 +144,11 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
                         size: 220,
                         eyeStyle: const QrEyeStyle(
                           eyeShape: QrEyeShape.square,
-                          color: Color(0xFF1A73E8),
+                          color: AppTheme.info
                         ),
                         dataModuleStyle: const QrDataModuleStyle(
                           dataModuleShape: QrDataModuleShape.square,
-                          color: Colors.black87,
+                          color: AppTheme.onsurface,
                         ),
                       ),
                     ),
@@ -159,7 +160,7 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1A73E8).withOpacity(0.08),
+                      color: AppTheme.info.withOpacity(0.08),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
@@ -167,7 +168,7 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 15,
-                        color: Color(0xFF1A73E8),
+                        color:AppTheme.info,
                       ),
                     ),
                   ),
@@ -185,7 +186,7 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
                   child: _ActionButton(
                     label: _isDownloading ? "Saving..." : "Download",
                     icon: Icons.download_rounded,
-                    color: const Color(0xFF1A73E8),
+                    color: AppTheme.info,
                     isLoading: _isDownloading,
                     onTap: () async {
                       setState(() => _isDownloading = true);
@@ -204,7 +205,7 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
                                 : "❌ Failed to save QR",
                           ),
                           backgroundColor:
-                              path != null ? Colors.green.shade700 : Colors.red.shade700,
+                              path != null ? AppTheme.success :AppTheme.error,
                           behavior: SnackBarBehavior.floating,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10)),
@@ -222,7 +223,7 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
                   child: _ActionButton(
                     label: _isPrinting ? "Opening..." : "Print / Share",
                     icon: Icons.print_rounded,
-                    color: const Color(0xFF2E7D32),
+                    color: AppTheme.success,
                     isLoading: _isPrinting,
                     onTap: () async {
                       setState(() => _isPrinting = true);
@@ -315,16 +316,16 @@ class _ActionButton extends StatelessWidget {
                 height: 16,
                 child: CircularProgressIndicator(
                   strokeWidth: 2,
-                  color: Colors.white,
+                  color:AppTheme.secondary,
                 ),
               )
             else
-              Icon(icon, color: Colors.white, size: 20),
+              Icon(icon, color: AppTheme.secondary, size: 20),
             const SizedBox(width: 8),
             Text(
               label,
               style: const TextStyle(
-                color: Colors.white,
+                color: AppTheme.secondary,
                 fontWeight: FontWeight.w600,
                 fontSize: 14,
               ),

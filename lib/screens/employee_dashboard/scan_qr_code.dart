@@ -45,11 +45,6 @@ class _ScanqrCodeScreenState extends State<ScanqrCodeScreen>
     super.dispose();
   }
 
- void _goBack() {
-  controller.stop();
-  Get.offAllNamed(AppRoutes.employeeDashboard);
-}
-
   void _onDetect(BarcodeCapture capture) {
     if (scanned) return;
     final code = capture.barcodes.firstOrNull?.rawValue ?? '';
@@ -79,13 +74,17 @@ class _ScanqrCodeScreenState extends State<ScanqrCodeScreen>
       child: Scaffold(
         drawer: const EmployeeDrawer(),
         backgroundColor: AppTheme.secondary,
-
+      
         appBar: AppBar(
-          title: const Text("Scan Machine"),
           backgroundColor: AppTheme.primary,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: _goBack, // ✅ camera stop + back
+          title: Text("Scan Machine QR", style: TextStyle(color: AppTheme.secondary),),
+          elevation: 0,
+          iconTheme: IconThemeData(color: AppTheme.secondary),
+          leading: Builder(
+            builder: (ctx) => IconButton(
+              icon: const Icon(Icons.menu_rounded, color: AppTheme.secondary),
+              onPressed: () => Scaffold.of(ctx).openDrawer(),
+            ),
           ),
         ),
 

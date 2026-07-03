@@ -56,6 +56,7 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
       backgroundColor: AppTheme.background,
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
+        iconTheme: IconThemeData(color: AppTheme.secondary),
         elevation: 0,
         automaticallyImplyLeading: false,
         title: Column(
@@ -67,7 +68,7 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
             Text(
               loading ? 'Loading...' : (factoryName ?? 'Factory'),
               style: TextStyle(
-                color: Colors.white.withOpacity(0.65),
+                color:  AppTheme.secondary.withOpacity(0.65),
                 fontSize: 12,
               ),
             ),
@@ -121,7 +122,7 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.credit_card_outlined, size: 48, color: AppTheme.neutral),
+          const Icon(Icons.credit_card_outlined, size: 48, color: AppTheme.primary),
           const SizedBox(height: 12),
           const Text('No production records yet',
               style: TextStyle(color: AppTheme.textSecondary, fontSize: 14)),
@@ -132,7 +133,7 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
 
   Widget _paymentCard(dynamic p) {
     final statusMap = {
-      1: ('Pending',  AppTheme.neutral),
+      1: ('Pending',  AppTheme.primary),
       2: ('Approved', AppTheme.success),
       3: ('Rejected', AppTheme.error),
     };
@@ -142,7 +143,7 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:  AppTheme.secondary,
         borderRadius: AppTheme.cardRadius,
         boxShadow: AppTheme.softShadow,
       ),

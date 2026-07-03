@@ -62,7 +62,7 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
           builder: (context) => IconButton(
             icon: Icon(
               Icons.menu,
-              color: Colors.white,
+              color: AppTheme.secondary,
             ),
             onPressed: () => Scaffold.of(context).openDrawer(),
           ),
@@ -70,7 +70,7 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
         title: Text(
           "Owner Dashboard",
           style: TextStyle(
-            color: Colors.white,
+            color: AppTheme.secondary,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -116,7 +116,7 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
               Text(
                 "Add Factory",
                 style: TextStyle(
-                  color: Colors.white,
+                  color:AppTheme.secondary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -136,15 +136,17 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
         () => _currentIndex = i,
       ), // when Tab change reload (rebuild) the UI with new index.
       type: BottomNavigationBarType.fixed,
-      backgroundColor: theme
-          .colorScheme
-          .onPrimary,
-      selectedItemColor: theme.colorScheme.primary, 
-      unselectedItemColor: AppTheme.neutral,
+      backgroundColor: AppTheme.primary,
+      
+       selectedItemColor: theme.colorScheme.secondary, 
+       unselectedItemColor: theme.colorScheme.secondary,
       items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: "Home"),
+        BottomNavigationBarItem
+        (icon: Icon(Icons.home_outlined), 
+        label: "Home",
+        ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.people_outline),
+          icon: Icon(Icons.people_outlined),
           label: "Users",
         ),
         BottomNavigationBarItem(
@@ -244,9 +246,7 @@ class _HomeTab extends StatelessWidget {
               value:
                   "${controller.factoryList.map((f) => f.city).toSet().length}",
               icon: Icons.location_city,
-              color: theme
-                  .colorScheme
-                  .secondary, 
+              color: theme.colorScheme.primary, 
             ),
           ],
         ),
@@ -428,7 +428,7 @@ class _FactoryCard extends StatelessWidget {
 
               icon: const Icon(Icons.delete_outline),
 
-              color: Colors.red,
+              color:AppTheme.error,
 
             ),
 

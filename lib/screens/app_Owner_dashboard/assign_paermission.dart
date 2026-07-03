@@ -79,7 +79,7 @@ class _AssignPermissionsScreenState extends State<AssignPermissionsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: const OwnerDrawer(),
-      backgroundColor: const Color(0xffF5F7FB),
+      backgroundColor: AppTheme.background,
 
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
@@ -97,7 +97,7 @@ class _AssignPermissionsScreenState extends State<AssignPermissionsScreen> {
             width: double.infinity,
             padding: const EdgeInsets.all(16),
             decoration: const BoxDecoration(
-              color: Colors.white,
+              color:AppTheme.secondary,
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(20),
                 bottomRight: Radius.circular(20),
@@ -168,8 +168,8 @@ class _AssignPermissionsScreenState extends State<AssignPermissionsScreen> {
                           ? Icons.check_circle
                           : Icons.circle_outlined,
                       color: isSelected
-                          ? Colors.green
-                          : Colors.grey,
+                          ? AppTheme.success
+                          :AppTheme.neutral,
                     ),
                     title: Text(
                       perm['name'],
@@ -182,13 +182,13 @@ class _AssignPermissionsScreenState extends State<AssignPermissionsScreen> {
                             padding: const EdgeInsets.symmetric(
                                 horizontal: 10, vertical: 4),
                             decoration: BoxDecoration(
-                              color: Colors.green.withOpacity(0.15),
+                              color: AppTheme.success.withOpacity(0.15),
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: const Text(
                               "Selected",
                               style: TextStyle(
-                                  color: Colors.green,
+                                  color: AppTheme.success,
                                   fontSize: 12),
                             ),
                           )
@@ -211,7 +211,7 @@ class _AssignPermissionsScreenState extends State<AssignPermissionsScreen> {
                 ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppTheme.primary,
-                  foregroundColor: Colors.white,
+                  foregroundColor:AppTheme.secondary,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -221,7 +221,7 @@ class _AssignPermissionsScreenState extends State<AssignPermissionsScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text("Select a role"),
-                        backgroundColor: Colors.red,
+                        backgroundColor: AppTheme.error,
                       ),
                     );
                     return;
@@ -231,7 +231,7 @@ class _AssignPermissionsScreenState extends State<AssignPermissionsScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text("Select permissions"),
-                        backgroundColor: Colors.red,
+                        backgroundColor: AppTheme.error,
                       ),
                     );
                     return;
@@ -246,7 +246,7 @@ class _AssignPermissionsScreenState extends State<AssignPermissionsScreen> {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text("Updated Successfully"),
-                        backgroundColor: Colors.green,
+                        backgroundColor: AppTheme.success,
                       ),
                     );
                   }

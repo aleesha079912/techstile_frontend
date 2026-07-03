@@ -65,7 +65,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor:AppTheme.secondary,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
       ),
@@ -84,7 +84,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
                 width: 50,
                 height: 5,
                 decoration: BoxDecoration(
-                  color: Colors.grey[300],
+                  color: AppTheme.neutral,
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
@@ -142,7 +142,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
                   },
                   child: Text(
                     machine == null ? "Register Machine" : "Update Machine",
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(color: AppTheme.secondary),
                   ),
                 ),
               ),
@@ -181,8 +181,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background,
-
+      backgroundColor: AppTheme.secondary,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -191,7 +190,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppTheme.primary,
         onPressed: () => _showMachineForm(context),
-        child: const Icon(Icons.add, color: Colors.white),
+        child: const Icon(Icons.add, color: AppTheme.secondary),
       ),
 
       body: isLoading
@@ -219,7 +218,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
                       hintText: "Search machines...",
                       prefixIcon: const Icon(Icons.search),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: AppTheme.secondary,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
@@ -270,7 +269,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppTheme.secondary,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
@@ -302,7 +301,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppTheme.secondary,
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -320,7 +319,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
                   ),
                   Text(
                     m.type,
-                    style: const TextStyle(color: Colors.grey),
+                    style: const TextStyle(color: AppTheme.neutral),
                   ),
                 ],
               ),
@@ -334,7 +333,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
                 const SizedBox(width: 10),
                 GestureDetector(
                   onTap: () => _handleDelete(m.id),
-                  child: const Icon(Icons.delete, color: Colors.red),
+                  child: const Icon(Icons.delete, color:AppTheme.error),
                 ),
               ],
             ),
@@ -354,7 +353,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
           prefixIcon: Icon(icon, color: AppTheme.primary),
           hintText: hint,
           filled: true,
-          fillColor: Colors.grey.shade100,
+          fillColor: AppTheme.neutral,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide.none,

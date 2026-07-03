@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:techstile_frontend/core/services/factory_dashboard_service.dart';
+import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
 // import 'package:techstile_frontend/screens/factory_owner_dash/owner_production_page.dart'; // ← add this import
 import 'package:get/get.dart';
 import 'package:techstile_frontend/routes/routes.dart';
-// ── Palette ────────────────────────────────────────────────────────────────────
-const _navy   = Color(0xFF0D1B4B);
-const _navy2  = Color(0xFF1A3570);
-const _teal   = Color(0xFF00C8B0);
-const _bg     = Color(0xFFF5F6FA);
-const _white  = Colors.white;
-const _amber  = Color(0xFFFF8C42);
+
 
 class FactoryDashboard extends StatefulWidget {
   final String factoryId;
@@ -50,13 +45,13 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _bg,
+      backgroundColor: AppTheme.background,
       appBar: _buildAppBar(),
       body: loading
           ? const Center(
-              child: CircularProgressIndicator(color: _navy, strokeWidth: 2.5))
+              child: CircularProgressIndicator(color: AppTheme.primary, strokeWidth: 2.5))
           : RefreshIndicator(
-              color: _navy,
+              color: AppTheme.primary,
               onRefresh: load,
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -76,7 +71,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                           label: 'Today',
                           value: "${data['today_units'] ?? 0}",
                           unit:  'yards',
-                          color: _teal,
+                          color:AppTheme.success,
                         ),
                         const SizedBox(width: 12),
                         _statCard(
@@ -84,7 +79,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                           label: 'Weekly',
                           value: "${data['weekly_units'] ?? 0}",
                           unit:  'yards',
-                          color: _amber,
+                          color: AppTheme.surface,
                         ),
                       ],
                     ),
@@ -99,7 +94,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                           label: 'Machines',
                           value: "${data['machines_count'] ?? 0}",
                           unit:  'active',
-                          color: _navy2,
+                          color:AppTheme.primary,
                         ),
                         const SizedBox(width: 12),
                         _statCard(
@@ -129,10 +124,10 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
   // ── AppBar ──────────────────────────────────────────────────────────────────
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
-      backgroundColor: _navy,
+      backgroundColor: AppTheme.primary,
       elevation: 0,
       leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios_new_rounded, color: _white, size: 20),
+        icon: const Icon(Icons.arrow_back_ios_new_rounded, color:AppTheme.secondary, size: 20),
         onPressed: () => Navigator.pop(context),
       ),
       title: Column(
@@ -140,11 +135,11 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
         children: [
           const Text('TechStile',
               style: TextStyle(
-                  color: _white, fontWeight: FontWeight.w800, fontSize: 17)),
+                  color:AppTheme.secondary, fontWeight: FontWeight.w800, fontSize: 17)),
           Text(
             data['factory']?['name'] ?? 'Loading…',
             style: TextStyle(
-                color: _white.withOpacity(0.65),
+                color: AppTheme.secondary.withOpacity(0.65),
                 fontSize: 12,
                 fontWeight: FontWeight.w400),
           ),
@@ -161,14 +156,14 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [_navy, _navy2],
+          colors: [AppTheme.primary, AppTheme.secondary],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-              color: _navy.withOpacity(0.3),
+              color: AppTheme.primary.withOpacity(0.3),
               blurRadius: 16,
               offset: const Offset(0, 6)),
         ],
@@ -183,10 +178,10 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                 width: 56,
                 height: 56,
                 decoration: BoxDecoration(
-                  color: _white.withOpacity(0.12),
+                  color: AppTheme.secondary.withOpacity(0.12),
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: const Icon(Icons.factory_rounded, color: _teal, size: 28),
+                child: const Icon(Icons.factory_rounded, color:AppTheme.success, size: 28),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -196,19 +191,19 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                     Text(
                       factory?['name'] ?? 'Factory',
                       style: const TextStyle(
-                          color: _white, fontWeight: FontWeight.w800, fontSize: 18),
+                          color: AppTheme.secondary, fontWeight: FontWeight.w800, fontSize: 18),
                     ),
                     const SizedBox(height: 4),
                     Row(
                       children: [
                         Icon(Icons.location_on_outlined,
-                            color: _white.withOpacity(0.6), size: 14),
+                            color: AppTheme.secondary.withOpacity(0.6), size: 14),
                         const SizedBox(width: 4),
                         Expanded(
                           child: Text(
                             '${factory?['address'] ?? ''}, ${factory?['city'] ?? ''}',
                             style: TextStyle(
-                                color: _white.withOpacity(0.65), fontSize: 12),
+                                color: AppTheme.secondary.withOpacity(0.65), fontSize: 12),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -244,8 +239,8 @@ SizedBox(
       ),
     ),
     style: ElevatedButton.styleFrom(
-      backgroundColor: _teal,
-      foregroundColor: _navy,
+      backgroundColor: AppTheme.success,
+      foregroundColor: AppTheme.primary,
       elevation: 0,
       padding: const EdgeInsets.symmetric(vertical: 13),
       shape: RoundedRectangleBorder(
@@ -271,11 +266,11 @@ SizedBox(
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: _white,
+          color: AppTheme.secondary,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-                color: Colors.black.withOpacity(0.04),
+                color: AppTheme.onsurface.withOpacity(0.04),
                 blurRadius: 10,
                 offset: const Offset(0, 3)),
           ],
@@ -294,11 +289,11 @@ SizedBox(
             const SizedBox(height: 12),
             Text(value,
                 style: const TextStyle(
-                    color: _navy, fontSize: 24, fontWeight: FontWeight.w800)),
+                    color:AppTheme.primary, fontSize: 24, fontWeight: FontWeight.w800)),
             const SizedBox(height: 2),
             Text('$label · $unit',
                 style: TextStyle(
-                    color: _navy.withOpacity(0.5),
+                    color:AppTheme.primary.withOpacity(0.5),
                     fontSize: 11,
                     fontWeight: FontWeight.w500)),
           ],
@@ -316,13 +311,13 @@ SizedBox(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 32),
         decoration: BoxDecoration(
-            color: _white, borderRadius: BorderRadius.circular(16)),
+            color:AppTheme.secondary, borderRadius: BorderRadius.circular(16)),
         child: Column(
           children: [
-            Icon(Icons.inventory_2_outlined, size: 40, color: Colors.grey.shade300),
+            Icon(Icons.inventory_2_outlined, size: 40, color: AppTheme.neutral),
             const SizedBox(height: 10),
             Text('No varieties produced yet',
-                style: TextStyle(color: Colors.grey.shade400, fontSize: 13)),
+                style: TextStyle(color: AppTheme.neutral, fontSize: 13)),
           ],
         ),
       );
@@ -330,11 +325,11 @@ SizedBox(
 
     return Container(
       decoration: BoxDecoration(
-        color: _white,
+        color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: AppTheme.onsurface.withOpacity(0.04),
               blurRadius: 10,
               offset: const Offset(0, 3)),
         ],
@@ -353,18 +348,18 @@ SizedBox(
                       width: 32,
                       height: 32,
                       decoration: BoxDecoration(
-                        color: _teal.withOpacity(0.12),
+                        color:AppTheme.success.withOpacity(0.12),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Icon(Icons.texture_rounded,
-                          color: _teal, size: 16),
+                          color:AppTheme.success, size: 16),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         item['variety_type']?.toString() ?? '',
                         style: const TextStyle(
-                            color: _navy,
+                            color: AppTheme.primary,
                             fontSize: 14,
                             fontWeight: FontWeight.w600),
                       ),
@@ -372,7 +367,7 @@ SizedBox(
                     Text(
                       '${item['ready_production'] ?? 0}',
                       style: const TextStyle(
-                          color: _teal,
+                          color: AppTheme.success,
                           fontSize: 16,
                           fontWeight: FontWeight.w800),
                     ),
@@ -382,7 +377,7 @@ SizedBox(
               if (!isLast)
                 Divider(
                     height: 1,
-                    color: Colors.grey.shade100,
+                    color: AppTheme.neutral,
                     indent: 16,
                     endIndent: 16),
             ],
@@ -406,12 +401,12 @@ class _SectionLabel extends StatelessWidget {
           width: 4,
           height: 16,
           decoration: BoxDecoration(
-              color: _teal, borderRadius: BorderRadius.circular(2)),
+              color: AppTheme.success, borderRadius: BorderRadius.circular(2)),
         ),
         const SizedBox(width: 8),
         Text(text,
             style: const TextStyle(
-                color: _navy, fontWeight: FontWeight.w700, fontSize: 15)),
+                color:AppTheme.primary, fontWeight: FontWeight.w700, fontSize: 15)),
       ],
     );
   }

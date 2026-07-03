@@ -88,6 +88,7 @@ class _ManagerEmployeesScreenState
       backgroundColor: AppTheme.background,
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
+        iconTheme: IconThemeData(color: AppTheme.secondary),
         elevation: 0,
         automaticallyImplyLeading: true,
         title: Column(
@@ -96,7 +97,7 @@ class _ManagerEmployeesScreenState
             const Text(
               'All Employees',
               style: TextStyle(
-                color: Colors.white,
+                color:  AppTheme.secondary,
                 fontWeight: FontWeight.w800,
                 fontSize: 17,
               ),
@@ -104,7 +105,7 @@ class _ManagerEmployeesScreenState
             Text(
               loading ? 'Loading...' : (factoryName ?? 'Factory'),
               style: TextStyle(
-                color: Colors.white.withOpacity(0.65),
+                color: AppTheme.secondary.withOpacity(0.65),
                 fontSize: 12,
               ),
             ),
@@ -131,7 +132,7 @@ class _ManagerEmployeesScreenState
                               hintText: "Search Employee",
                               prefixIcon: const Icon(Icons.search),
                               filled: true,
-                              fillColor: Colors.white,
+                              fillColor: AppTheme.secondary,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -208,7 +209,7 @@ class _ManagerEmployeesScreenState
           Expanded(
             child: Text(
               text,
-              style: const TextStyle(fontSize: 11.5, color: Colors.grey),
+              style: const TextStyle(fontSize: 11.5, color:  AppTheme.neutral),
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -238,7 +239,7 @@ class _ManagerEmployeesScreenState
         margin: const EdgeInsets.only(bottom: 10),       // ✅ kam margin
         padding: const EdgeInsets.all(12),                // ✅ kam padding
         decoration: BoxDecoration(
-          color: Colors.white,
+          color:  AppTheme.secondary,
           borderRadius: AppTheme.cardRadius,
           boxShadow: AppTheme.softShadow,
         ),

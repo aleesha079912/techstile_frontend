@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:techstile_frontend/core/services/factory_user_services.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/profile.dart';
 import 'package:techstile_frontend/screens/man_dashboard/manager_profile.dart';
+import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
 
 class FactoryUsersScreen extends StatefulWidget {
@@ -105,7 +106,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
             const SizedBox(height: 2),
             Text(
               title,
-              style: const TextStyle(fontSize: 10, color: Colors.grey),
+              style: const TextStyle(fontSize: 10, color: AppTheme.neutral),
             ),
           ],
         ),
@@ -134,8 +135,8 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
         children: [
           const CircleAvatar(
             radius: 20,
-            backgroundColor: Color(0xFF1A73E8),
-            child: Icon(Icons.person, color: Colors.white),
+            backgroundColor: AppTheme.primary,
+            child: Icon(Icons.person, color:AppTheme.secondary),
           ),
           const SizedBox(width: 10),
           Expanded(
@@ -144,7 +145,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
               children: [
                 const Text(
                   "Manager",
-                  style: TextStyle(fontSize: 11, color: Colors.grey),
+                  style: TextStyle(fontSize: 11, color: AppTheme.neutral),
                 ),
                 Text(
                   manager['name'] ?? 'No Manager',
@@ -289,10 +290,10 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffF4F6FB),
+      backgroundColor: AppTheme.secondary,
 
       appBar: AppBar(
-        backgroundColor: const Color(0xFF1A73E8), // same as bottom nav
+        backgroundColor: AppTheme.primary, // same as bottom nav
         title: const Text("TECHSTILE"),
       ),
 
@@ -313,7 +314,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                       hintText: "Search users...",
                       prefixIcon: const Icon(Icons.search),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: AppTheme.secondary,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: BorderSide.none,
@@ -327,9 +328,9 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                   Row(
                     children: [
                       statBox("Total Users", "$totalUsers",
-                          const Color(0xFF1A73E8)),
+                          AppTheme.primary),
                       statBox("Active Users", "$activeUsers",
-                          Colors.green),
+                          AppTheme.success),
                     ],
                   ),
 

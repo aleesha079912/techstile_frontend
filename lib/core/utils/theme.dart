@@ -3,31 +3,32 @@ import 'package:flutter/material.dart';
 class AppTheme {
   // ===== Colors =====
 
-  static const Color primary = Color(0xFF122B7A); // Dark Navy
-  static const Color secondary = Color(0xFF3498F7); // Bright Blue
-  static const Color neutral = Color(0xFFACD0EC);
-  static const Color background = Color(0xFFF5FAFF);
-  static const Color cardBackground = Color(0xFFB3D6EF);
+  static const Color primary    = Color(0xFF122B7A); // Dark Navy
+  static const Color secondary  = Color(0xFFFFFFFF); // White
+  static const Color background = Color(0xFFFFFFFF); // White
+  static const Color neutral = Color(0xFFB0A695);
+  static const Color surface  = Color(0xFFFFA02F); 
+  static const Color onsurface  = Color(0xFF202020); 
 
-  static const Color textPrimary = Color(0xFF122B7A);
-  static const Color textSecondary = Color(0xFF6D7A96);
 
-  static const Color success = Color(0xFF2ECC71);
-  static const Color error = Color(0xFFE74C3C);
+  static const Color active  = Color(0xFF0D9B8A); // Teal — active / selected / success
+  static const Color success = Color(0xFF0D9B8A); // Teal (alias)
+   static const Color info= Color(0xFF64B5F6);
+  static const Color error   = Color(0xFFE74C3C); // Red — error / reject
+
+  static const Color textPrimary   = Color(0xFF122B7A); // Dark Navy
+  static const Color textSecondary = Color(0xFFFFFFFF); // Dark Navy (use with opacity)
 
   // ===== Radius =====
 
-  static const BorderRadius cardRadius =
-      BorderRadius.all(Radius.circular(28));
-
-  static const BorderRadius buttonRadius =
-      BorderRadius.all(Radius.circular(18));
+  static const BorderRadius cardRadius   = BorderRadius.all(Radius.circular(28));
+  static const BorderRadius buttonRadius = BorderRadius.all(Radius.circular(18));
 
   // ===== Shadows =====
 
   static List<BoxShadow> softShadow = [
     BoxShadow(
-      color: Colors.blueGrey.withOpacity(0.08),
+      color: Color(0xFF122B7A).withOpacity(0.08),
       blurRadius: 30,
       offset: const Offset(0, 10),
     ),
@@ -41,26 +42,31 @@ class AppTheme {
     scaffoldBackgroundColor: background,
 
     colorScheme: const ColorScheme.light(
-      primary: primary,
-      secondary: secondary,
-      surface: cardBackground,
-      onPrimary: Colors.white,
-      onSecondary: Colors.white,
-      onSurface: textPrimary,
+      primary:         primary,
+      secondary:       secondary,
+      surface:         background,
+      onPrimary:       Colors.white,
+      onSecondary:     primary,
+      onSurface:       primary,
+      tertiary:        active,   // teal — use for active/selected indicators
+      onTertiary:      Colors.white,
+      error:           error,
+      onError:         Colors.white,
     ),
 
     appBarTheme: const AppBarTheme(
-      elevation: 0,
+      elevation:       0,
       backgroundColor: background,
-      foregroundColor: textPrimary,
-      centerTitle: false,
+      foregroundColor: primary,
+      centerTitle:     false,
     ),
 
     cardTheme: CardThemeData(
-      color: cardBackground,
+      color:     background,
       elevation: 0,
-      shape: RoundedRectangleBorder(
+      shape:     RoundedRectangleBorder(
         borderRadius: cardRadius,
+        side: BorderSide(color: primary, width: 1),
       ),
     ),
 
@@ -68,71 +74,91 @@ class AppTheme {
       style: ElevatedButton.styleFrom(
         backgroundColor: primary,
         foregroundColor: Colors.white,
-        minimumSize: const Size(double.infinity, 56),
-        shape: RoundedRectangleBorder(
-          borderRadius: buttonRadius,
-        ),
+        minimumSize:     const Size(double.infinity, 56),
+        shape: RoundedRectangleBorder(borderRadius: buttonRadius),
       ),
     ),
 
+    // For teal "confirm / accept" buttons — apply manually where needed:
+    // ElevatedButton.styleFrom(backgroundColor: AppTheme.active, ...)
+
+    // For red "reject / delete" buttons — apply manually where needed:
+    // ElevatedButton.styleFrom(backgroundColor: AppTheme.error, ...)
+
     inputDecorationTheme: InputDecorationTheme(
-      filled: true,
+      filled:    true,
       fillColor: Colors.white,
       contentPadding: const EdgeInsets.symmetric(
         horizontal: 20,
-        vertical: 18,
+        vertical:   18,
       ),
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(18),
-        borderSide: BorderSide.none,
+        borderSide:   const BorderSide(color: primary, width: 1),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(18),
-        borderSide: BorderSide.none,
+        borderSide:   const BorderSide(color: primary, width: 1),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(18),
-        borderSide: const BorderSide(
-          color: secondary,
-          width: 1.5,
-        ),
+        borderSide:   const BorderSide(color: active, width: 2), // teal on focus
       ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(18),
+        borderSide:   const BorderSide(color: error, width: 1),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(18),
+        borderSide:   const BorderSide(color: error, width: 2),
+      ),
+      errorStyle: const TextStyle(color: error),
     ),
 
     textTheme: const TextTheme(
-      headlineLarge: TextStyle(
-        fontSize: 32,
-        fontWeight: FontWeight.bold,
-        color: textPrimary,
-      ),
-      headlineMedium: TextStyle(
-        fontSize: 24,
-        fontWeight: FontWeight.w700,
-        color: textPrimary,
-      ),
-      titleLarge: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.w600,
-        color: textPrimary,
-      ),
-      bodyLarge: TextStyle(
-        fontSize: 16,
-        color: textPrimary,
-      ),
-      bodyMedium: TextStyle(
-        fontSize: 14,
-        color: textSecondary,
-      ),
-      labelLarge: TextStyle(
-        fontSize: 14,
-        fontWeight: FontWeight.w600,
-        color: Colors.white,
-      ),
+      headlineLarge: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: primary),
+      headlineMedium: TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: primary),
+      titleLarge: TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: primary),
+      bodyLarge: TextStyle(fontSize: 16, color: primary),
+      bodyMedium: TextStyle(fontSize: 14, color: primary),
+      labelLarge: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white),
     ),
 
-    iconTheme: const IconThemeData(
-      color: primary,
-      size: 24,
+    iconTheme: const IconThemeData(color: primary, size: 24),
+
+    // Teal checkboxes / switches / radio buttons when active
+    checkboxTheme: CheckboxThemeData(
+      fillColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) return active;
+        return Colors.transparent;
+      }),
+      checkColor: WidgetStateProperty.all(Colors.white),
+      side: const BorderSide(color: primary, width: 1.5),
+    ),
+
+    radioTheme: RadioThemeData(
+      fillColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) return active;
+        return primary;
+      }),
+    ),
+
+    switchTheme: SwitchThemeData(
+      thumbColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) return Colors.white;
+        return primary;
+      }),
+      trackColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) return active;
+        return primary.withOpacity(0.2);
+      }),
+    ),
+
+    // Tab indicator in teal
+    tabBarTheme: const TabBarThemeData(
+      labelColor:        active,
+      unselectedLabelColor: primary,
+      indicatorColor:    active,
     ),
   );
 }

@@ -38,7 +38,7 @@ class _ManagerSettingsScreenState
       appBar: AppBar(
         title: const Text("Settings"),
         backgroundColor: AppTheme.primary,
-        foregroundColor: Colors.white,
+        foregroundColor:  AppTheme.secondary,
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -66,7 +66,7 @@ class _ManagerSettingsScreenState
 
                   CircleAvatar(
                     radius: 28,
-                    backgroundColor: Colors.white,
+                    backgroundColor:  AppTheme.secondary,
                     child: Text(
                       (user['name'] ?? 'M')
                           .toString()
@@ -90,7 +90,7 @@ class _ManagerSettingsScreenState
                         Text(
                           user['name'] ?? '',
                           style: const TextStyle(
-                            color: Colors.white,
+                            color: AppTheme.secondary,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
@@ -101,7 +101,7 @@ class _ManagerSettingsScreenState
                         Text(
                           user['email'] ?? '',
                           style: const TextStyle(
-                            color: Colors.white70,
+                            color:  AppTheme.primary,
                           ),
                         ),
 
@@ -114,14 +114,21 @@ class _ManagerSettingsScreenState
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.white24,
+                            color:  AppTheme.primary,
                             borderRadius:
                                 BorderRadius.circular(20),
                           ),
+<<<<<<< HEAD
                           child: Text(
                             widget.roleLabel,
                             style: const TextStyle(
                               color: Colors.white,
+=======
+                          child: const Text(
+                            "Manager",
+                            style: TextStyle(
+                              color: AppTheme.secondary,
+>>>>>>> 3ea7225fac93876f8be0e60ffff8be667dad1601
                               fontSize: 11,
                             ),
                           ),
@@ -132,7 +139,7 @@ class _ManagerSettingsScreenState
 
                   const Icon(
                     Icons.arrow_forward_ios,
-                    color: Colors.white,
+                    color:  AppTheme.secondary,
                     size: 16,
                   ),
                 ],
@@ -221,7 +228,7 @@ class _ManagerSettingsScreenState
           _tile(
             icon: Icons.logout,
             title: "Logout",
-            textColor: Colors.red,
+            textColor:  AppTheme.error,
             onTap: _logout,
           ),
 
@@ -231,7 +238,7 @@ class _ManagerSettingsScreenState
             child: Text(
               "TechStile v1.0.0",
               style: TextStyle(
-                color: Colors.grey,
+                color:   AppTheme.primary,
               ),
             ),
           ),
@@ -250,7 +257,7 @@ class _ManagerSettingsScreenState
         text,
         style: const TextStyle(
           fontWeight: FontWeight.bold,
-          color: Colors.grey,
+          color:   AppTheme.primary,
           letterSpacing: 1,
         ),
       ),
@@ -261,7 +268,7 @@ class _ManagerSettingsScreenState
     required IconData icon,
     required String title,
     required VoidCallback onTap,
-    Color textColor = Colors.black,
+    Color textColor =  AppTheme.onsurface,
   }) {
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
@@ -322,7 +329,7 @@ class _ManagerSettingsScreenState
           "Are you sure you want to logout?",
       textCancel: "Cancel",
       textConfirm: "Logout",
-      confirmTextColor: Colors.white,
+      confirmTextColor:  AppTheme.secondary,
       onConfirm: () {
         AuthService.logout();
 

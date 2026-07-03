@@ -97,8 +97,10 @@ class _ManagerMachinesScreenState
 ),
       backgroundColor: AppTheme.background,
 
+
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
+        iconTheme: IconThemeData(color: AppTheme.secondary),
         elevation: 0,
         automaticallyImplyLeading: true,
         title: Column(
@@ -107,7 +109,7 @@ class _ManagerMachinesScreenState
             const Text(
               'All Machines',
               style: TextStyle(
-                color: Colors.white,
+                color:  AppTheme.secondary,
                 fontWeight: FontWeight.w800,
                 fontSize: 17,
               ),
@@ -117,7 +119,7 @@ class _ManagerMachinesScreenState
             Text(
               loading ? 'Loading...' : (factoryName ?? 'Factory'),
               style: TextStyle(
-                color: Colors.white.withOpacity(0.65),
+                color:  AppTheme.secondary.withOpacity(0.65),
                 fontSize: 12,
               ),
             ),
@@ -150,7 +152,7 @@ class _ManagerMachinesScreenState
                               prefixIcon:
                                   const Icon(Icons.search),
                               filled: true,
-                              fillColor: Colors.white,
+                              fillColor:  AppTheme.secondary,
                               border: OutlineInputBorder(
                                 borderRadius:
                                     BorderRadius.circular(12),
@@ -336,7 +338,7 @@ class _ManagerMachinesScreenState
         padding: const EdgeInsets.all(16),
 
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppTheme.secondary,
           borderRadius: AppTheme.cardRadius,
           boxShadow: AppTheme.softShadow,
         ),

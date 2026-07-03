@@ -64,8 +64,8 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
           "Success", 
           existing != null ? "Factory updated!" : "Factory added!",
           snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green.withOpacity(0.8),
-          colorText: Colors.white,
+          backgroundColor: AppTheme.success.withOpacity(0.8),
+          colorText: AppTheme.secondary,
         );
       }
     } catch (e) {
@@ -78,7 +78,7 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
     final existing = Get.arguments;
     
     return Scaffold(
-     backgroundColor: AppTheme.secondary,
+     backgroundColor: AppTheme.background,
       appBar: _buildAppBar(existing != null),
       body: SafeArea(
         child: Form(
@@ -138,7 +138,7 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
               children: [
                 IconButton(
                   onPressed: () => Get.back(),
-                  icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white, size: 18),
+                  icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppTheme.secondary, size: 18),
                 ),
                 const SizedBox(width: 4),
                 Column(
@@ -147,11 +147,11 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
                   children: [
                     Text(
                       isEdit ? "Edit Factory" : "Add Factory",
-                      style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.w600),
+                      style: const TextStyle(color: AppTheme.secondary, fontSize: 18, fontWeight: FontWeight.w600),
                     ),
                     Text(
                       isEdit ? "Update existing unit details" : "Register a new production unit",
-                      style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 11),
+                      style: TextStyle(color:AppTheme.secondary.withOpacity(0.6), fontSize: 11),
                     ),
                   ],
                 ),
@@ -166,7 +166,7 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
   Widget _buildHeroCard(bool isEdit) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [BoxShadow(color: AppTheme.primary.withOpacity(0.08), blurRadius: 16, offset: const Offset(0, 4))],
       ),
@@ -180,7 +180,7 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
                      AppTheme.background,]),
               borderRadius: BorderRadius.circular(14),
             ),
-            child: Icon(isEdit ? Icons.edit_note_rounded : Icons.factory_rounded, color: Colors.white, size: 26),
+            child: Icon(isEdit ? Icons.edit_note_rounded : Icons.factory_rounded, color:AppTheme.secondary, size: 26),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -212,14 +212,14 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
   Widget _buildField({required TextEditingController controller, required String label, required String hint, required IconData icon, String? Function(String?)? validator}) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [BoxShadow(color: AppTheme.primary.withOpacity(0.05), blurRadius: 8, offset: const Offset(0, 2))],
       ),
       child: TextFormField(
         controller: controller,
         validator: validator,
-        style: const TextStyle(fontSize: 14, color: Color(0xFF1E293B)),
+        style: const TextStyle(fontSize: 14, color: AppTheme.textPrimary),
         decoration: InputDecoration(
           labelText: label,
           hintText: hint,
@@ -233,7 +233,7 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
           focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide( color: AppTheme.primary, width: 1.5)),
           filled: true,
-          fillColor: Colors.white,
+          fillColor: AppTheme.secondary,
           contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         ),
       ),
@@ -258,12 +258,12 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
             padding: const EdgeInsets.symmetric(vertical: 16),
             child: Center(
               child: controller.isLoading.value 
-                ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2))
+                ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: AppTheme.secondary, strokeWidth: 2))
                 : const Column(
                     children: [
-                      Text("Save Factory", style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600)),
+                      Text("Save Factory", style: TextStyle(color:AppTheme.secondary, fontSize: 15, fontWeight: FontWeight.w600)),
                       SizedBox(height: 2),
-                      Text("All fields are required", style: TextStyle(color: Colors.white60, fontSize: 10.5)),
+                      Text("All fields are required", style: TextStyle(color:AppTheme.neutral, fontSize: 10.5)),
                     ],
                   ),
             ),

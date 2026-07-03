@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../core/services/manager_service/man_emp_notification_service.dart';
 import '../../core/services/auth_service.dart';
+import '../../../core/utils/theme.dart';
 
 class NotificationPage extends StatefulWidget {
   final Widget drawer;
@@ -106,15 +107,15 @@ class _State extends State<NotificationPage> {
         data.where((e) => e['is_read'].toString() != "true").length;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F6FB),
+      backgroundColor: AppTheme.background,
       drawer: widget.drawer,
 
       /// APP BAR
       appBar: AppBar(
         title: Text(widget.title),
         elevation: 0,
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
+        backgroundColor:  AppTheme.primary,
+        foregroundColor: AppTheme.secondary,
         leading: Builder(
           builder: (context) => IconButton(
             icon: const Icon(Icons.menu),
@@ -162,25 +163,25 @@ class _State extends State<NotificationPage> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [Color(0xFF4F46E5), Color(0xFF7C3AED)],
+          colors: [AppTheme.primary, AppTheme.info],
         ),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
         children: [
-          const Icon(Icons.notifications, color: Colors.white, size: 40),
+          const Icon(Icons.notifications, color: AppTheme.secondary, size: 40),
           const SizedBox(width: 12),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
                 "You have",
-                style: TextStyle(color: Colors.white70),
+                style: TextStyle(color: AppTheme.neutral),
               ),
               Text(
                 "$unreadCount unread notifications",
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: AppTheme.secondary,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
@@ -229,9 +230,9 @@ class _State extends State<NotificationPage> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color:  AppTheme.neutral),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.03),
@@ -252,8 +253,8 @@ class _State extends State<NotificationPage> {
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: type == "approved"
-                    ? Colors.green.shade50
-                    : Colors.orange.shade50,
+                    ?  AppTheme.success
+                    :  AppTheme.surface,
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -261,8 +262,8 @@ class _State extends State<NotificationPage> {
                     ? Icons.check
                     : Icons.warning,
                 color: type == "approved"
-                    ? Colors.green
-                    : Colors.orange,
+                    ?  AppTheme.success
+                    :   AppTheme.surface,
               ),
             ),
 
@@ -287,7 +288,7 @@ class _State extends State<NotificationPage> {
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
+                        color:  AppTheme.neutral,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Column(
@@ -316,7 +317,7 @@ class _State extends State<NotificationPage> {
                 child: Icon(
                   Icons.circle,
                   size: 10,
-                  color: Colors.blue,
+                  color:  AppTheme.info,
                 ),
               ),
           ],
@@ -347,16 +348,16 @@ class _Chip extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
           color: selected
-              ? const Color(0xFF4F46E5)
-              : Colors.grey.shade200,
+              ?  AppTheme.primary
+              :  AppTheme.neutral,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
           text,
           style: TextStyle(
             color: selected
-                ? Colors.white
-                : Colors.black87,
+                ?  AppTheme.secondary
+                :  AppTheme.onsurface,
           ),
         ),
       ),

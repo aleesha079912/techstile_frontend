@@ -72,14 +72,15 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xffF5F7FB),
+      backgroundColor: AppTheme.background,
 
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
+        iconTheme: IconThemeData(color: AppTheme.secondary),
         title: const Text(
          "TECHstile",
           style: TextStyle(
-            color: Colors.white,
+            color: AppTheme.secondary,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -103,7 +104,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
             if (value == true) _refresh();
           });
         },
-        child: const Icon(Icons.person_add, color: Colors.white),
+        child: const Icon(Icons.person_add, color: AppTheme.secondary),
       ),
 
       /// ✅ FIX: SafeArea ADDED
@@ -115,7 +116,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
               margin: EdgeInsets.zero,
               padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
               decoration: const BoxDecoration(
-                color: Colors.white,
+                color: AppTheme.secondary,
                 borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(25),
                   bottomRight: Radius.circular(25),
@@ -144,7 +145,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                         hintText: "Search user...",
                         prefixIcon: const Icon(Icons.search, size: 18),
                         filled: true,
-                        fillColor: Colors.grey.shade100,
+                        fillColor: AppTheme.secondary,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
@@ -321,13 +322,13 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
         decoration: BoxDecoration(
           color: isSelected
               ? AppTheme.primary
-              : Colors.grey.shade200,
+              : AppTheme.secondary,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: isSelected ? Colors.white : Colors.black,
+            color: isSelected ?AppTheme.secondary: AppTheme.onsurface,
           ),
         ),
       ),
@@ -342,7 +343,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
       child: ElevatedButton.icon(
         style: ElevatedButton.styleFrom(
           backgroundColor: AppTheme.primary,
-          foregroundColor: Colors.white,
+          foregroundColor: AppTheme.secondary,
           padding: const EdgeInsets.symmetric(horizontal: 8),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
@@ -369,11 +370,11 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color:AppTheme.onsurface.withOpacity(0.05),
             blurRadius: 10,
           )
         ],
@@ -398,7 +399,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                 ),
                 Text(
                   user.email,
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  style: const TextStyle(fontSize: 12, color: AppTheme.neutral),
                 ),
                 Text(
                   user.role,
@@ -413,11 +414,11 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
             children: [
               IconButton(
                 onPressed: onEdit,
-                icon: const Icon(Icons.edit, color: Colors.blue),
+                icon: const Icon(Icons.edit, color: AppTheme.info),
               ),
               IconButton(
                 onPressed: onDelete,
-                icon: const Icon(Icons.delete, color: Colors.red),
+                icon: const Icon(Icons.delete, color: AppTheme.error),
               ),
             ],
           ),

@@ -19,7 +19,6 @@ class ManagerDashboardService {
   return jsonDecode(response.body);
 }
 
-
   Future<List<Machine>> getMachines(dynamic factoryId) async {
     final response = await http.get(
       Uri.parse("$baseUrl/machines/$factoryId"),

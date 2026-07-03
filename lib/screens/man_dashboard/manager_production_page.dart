@@ -85,14 +85,14 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
         backgroundColor: AppTheme.primary,
         elevation: 0,
         title: const Text('Manager Productions',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 17)),
-        iconTheme: const IconThemeData(color: Colors.white),
+            style: TextStyle(color:  AppTheme.secondary, fontWeight: FontWeight.w800, fontSize: 17)),
+        iconTheme: const IconThemeData(color:  AppTheme.secondary),
         bottom: TabBar(
           controller: _tab,
           indicatorColor: AppTheme.secondary,
           indicatorWeight: 3,
-          labelColor: Colors.white,
-          unselectedLabelColor: Colors.white54,
+          labelColor:  AppTheme.secondary,
+          unselectedLabelColor:  AppTheme.neutral,
           labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
           tabs: [
             Tab(text: 'Pending (${_pending.length})'),
@@ -126,7 +126,7 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
     if (items.isEmpty) {
       return Center(
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Icon(Icons.inbox_rounded, size: 52, color: Colors.grey.shade300),
+          Icon(Icons.inbox_rounded, size: 52, color:  AppTheme.neutral),
           const SizedBox(height: 12),
           const Text('No records found',
               style: TextStyle(color: AppTheme.textSecondary, fontSize: 14)),
@@ -147,7 +147,7 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.secondary,
         borderRadius: AppTheme.cardRadius,
         boxShadow: AppTheme.softShadow,
       ),
@@ -207,14 +207,14 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
-                color: Colors.blue.shade50,
+                color:  AppTheme.info,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Row(children: [
-                Icon(Icons.verified_outlined, size: 14, color: Colors.blue.shade700),
+                Icon(Icons.verified_outlined, size: 14, color: AppTheme.info),
                 const SizedBox(width: 6),
                 Text('Owner already approved this production',
-                    style: TextStyle(color: Colors.blue.shade700, fontSize: 12)),
+                    style: TextStyle(color:  AppTheme.info, fontSize: 12)),
               ]),
             ),
           ],
@@ -244,7 +244,7 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
                   label: const Text('Approve'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.success,
-                    foregroundColor: Colors.white,
+                    foregroundColor:  AppTheme.secondary,
                     elevation: 0,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     padding: const EdgeInsets.symmetric(vertical: 10),
@@ -283,10 +283,10 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
 
   Widget _statusChip(int status, bool isOwnerApproved) {
     Color bg; Color fg; String label;
-    if (isOwnerApproved)  { bg = Colors.blue.shade50;              fg = Colors.blue.shade700;    label = 'Owner ✓'; }
+    if (isOwnerApproved)  { bg =  AppTheme.info;              fg =  AppTheme.info;    label = 'Owner ✓'; }
     else if (status == 2) { bg = AppTheme.success.withOpacity(.12); fg = AppTheme.success;        label = 'Approved'; }
     else if (status == 3) { bg = AppTheme.error.withOpacity(.12);   fg = AppTheme.error;          label = 'Rejected'; }
-    else                  { bg = Colors.orange.shade50;             fg = Colors.orange.shade700;  label = 'Pending'; }
+    else                  { bg =  AppTheme.surface;             fg =  AppTheme.surface;  label = 'Pending'; }
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(20)),

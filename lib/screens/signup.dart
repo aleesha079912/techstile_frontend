@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/routes/routes.dart';
 
 class SignupScreen extends StatelessWidget {
@@ -21,7 +22,7 @@ class SignupScreen extends StatelessWidget {
                 const Icon(
                   Icons.home_repair_service_outlined,
                   size: 70,
-                  color: Color(0xFF5B8DEF),
+                  color: AppTheme.info,
                 ),
                 const SizedBox(height: 20),
                 const Text(
@@ -34,7 +35,7 @@ class SignupScreen extends StatelessWidget {
                 const SizedBox(height: 10),
                 const Text(
                   "Sign up to get started",
-                  style: TextStyle(color: Colors.grey),
+                  style: TextStyle(color:  AppTheme.neutral),
                 ),
                 const SizedBox(height: 40),
                 TextField(
@@ -79,7 +80,7 @@ class SignupScreen extends StatelessWidget {
                       // TODO: implement signup logic
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF5B8DEF),
+                      backgroundColor: AppTheme.secondary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),

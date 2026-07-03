@@ -62,7 +62,7 @@ class _MachineDetailScreenState
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(15),
         boxShadow: const [
           BoxShadow(color: Colors.black12, blurRadius: 5, offset: Offset(0, 2)),
@@ -89,7 +89,7 @@ class _MachineDetailScreenState
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(15),
         boxShadow: const [
           BoxShadow(color: Colors.black12, blurRadius: 5, offset: Offset(0, 2)),
@@ -123,9 +123,9 @@ class _MachineDetailScreenState
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
         title: const Text("Machine Details",
-            style: TextStyle(color: Colors.white)),
+            style: TextStyle(color: AppTheme.secondary)),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(Icons.arrow_back, color: AppTheme.secondary),
           onPressed: () => Get.back(),
         ),
       ),
@@ -188,8 +188,8 @@ class _MachineDetailScreenState
                     child: ElevatedButton.icon(
                       style: ElevatedButton.styleFrom(
                         backgroundColor:
-                            canAdd ? AppTheme.primary : Colors.green,
-                        foregroundColor: Colors.white,
+                            canAdd ? AppTheme.primary : AppTheme.active,
+                        foregroundColor: AppTheme.background,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12)),
                       ),
@@ -211,8 +211,8 @@ class _MachineDetailScreenState
                               Get.snackbar(
                                 "Complete",
                                 "The Production is Completed of this Machine",
-                                backgroundColor: Colors.orange,
-                                colorText: Colors.white,
+                                backgroundColor: AppTheme.surface,
+                                colorText: AppTheme.secondary,
                               );
                             },
                       icon: Icon(canAdd ? Icons.add : Icons.lock),
@@ -236,8 +236,8 @@ class _MachineDetailScreenState
                           Get.snackbar(
                             "Already Marked",
                             "Already Marked",
-                            backgroundColor: Colors.orange,
-                            colorText: Colors.white,
+                            backgroundColor: AppTheme.surface,
+                            colorText: AppTheme.textSecondary,
                           );
                         }
                       : () async{ final success =
@@ -257,8 +257,8 @@ class _MachineDetailScreenState
                         Get.snackbar(
                         "Success",
                         "Attendance Marked",
-                        backgroundColor: Colors.green,
-                        colorText: Colors.white
+                        backgroundColor: AppTheme.active,
+                        colorText: AppTheme.textSecondary
                         );
                         loadData();
 
@@ -268,8 +268,8 @@ class _MachineDetailScreenState
                         Get.snackbar(
                         "Error",
                         "Attendance Failed",
-                        backgroundColor: Colors.red,
-                        colorText: Colors.white
+                        backgroundColor: AppTheme.error,
+                        colorText: AppTheme.textPrimary
                         );
 
                       }
@@ -292,8 +292,8 @@ class _MachineDetailScreenState
 
 
                     style:ElevatedButton.styleFrom(
-                    backgroundColor:Colors.green,
-                    foregroundColor:Colors.white,
+                    backgroundColor:AppTheme.active,
+                    foregroundColor:AppTheme.background,
                     shape:RoundedRectangleBorder(
                     borderRadius:BorderRadius.circular(12)
                     )

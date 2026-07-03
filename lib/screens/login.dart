@@ -171,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
   InputDecoration inputDecoration({
     required String hint,
     required IconData icon,
-    Widget? suffixIcon,
+    Widget? suffixIcon, required Icon prefixIcon,
   }) {
     return InputDecoration(
       hintText: hint,
@@ -234,10 +234,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 5),
                 TextField(
                   controller: _emailController,
-                  keyboardType: TextInputType.emailAddress,
-                  decoration: inputDecoration(
-                    hint: "Enter Email",
-                    icon: Icons.email,
+                  decoration: InputDecoration(
+                    hintText: "Enter Email",
+                    prefixIcon: const Icon(
+                      Icons.email_outlined,
+                      color: AppTheme.primary,
+                    ),
                   ),
                 ),
 
@@ -249,9 +251,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 TextField(
                   controller: _passwordController,
                   obscureText: _obscureText,
-                  decoration: inputDecoration(
-                    hint: "Enter Password",
-                    icon: Icons.lock_outline,
+                  decoration: InputDecoration(
+                    hintText: "Enter Password",
+                    prefixIcon: Icon(Icons.password, color: AppTheme.primary,),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _obscureText
@@ -273,7 +275,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _login,
                     child: _isLoading
-                        ? const CircularProgressIndicator(color: Colors.white)
+                        ? const CircularProgressIndicator(color: AppTheme.secondary)
                         : const Text("Begin Shift →"),
                   ),
                 ),
@@ -305,23 +307,23 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: const Color.fromARGB(255, 223, 231, 238),
+                      color: AppTheme.primary,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
                       children: [
                         const Icon(Icons.support_agent,
-                            color: Color.fromARGB(255, 0, 0, 0)),
+                            color:  AppTheme.secondary),
                         const SizedBox(width: 10),
                         const Expanded(
                           child: Text(
                             "System Help Contact Supervisor",
                             style: TextStyle(
-                                color: Color.fromARGB(255, 3, 3, 3)),
+                                color: AppTheme.secondary),
                           ),
                         ),
                         const Icon(Icons.arrow_forward_ios,
-                            size: 14, color: Color.fromARGB(255, 0, 0, 0)),
+                            size: 14, color:  AppTheme.secondary),
                       ],
                     ),
                   ),

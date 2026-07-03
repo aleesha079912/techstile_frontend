@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:techstile_frontend/core/services/role_service.dart';
+import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/widgets/owner_drawer.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
 
@@ -30,7 +31,7 @@ class _RoleManagementScreenState extends State<RoleManagementScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: const OwnerDrawer(),
-      backgroundColor: const Color(0xffF5F7FB),
+      backgroundColor:  AppTheme.background,
 
       appBar: AppBar(
   title: const Text("Role Management"),
@@ -55,14 +56,14 @@ class _RoleManagementScreenState extends State<RoleManagementScreen> {
               margin: const EdgeInsets.all(12),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color:  AppTheme.secondary,
                 borderRadius: BorderRadius.circular(16),
               ),
               child: const Text(
                 "Manage system roles (Owner only)",
                 style: TextStyle(
                   fontSize: 14,
-                  color: Colors.grey,
+                  color:  AppTheme.neutral,
                 ),
               ),
             ),
@@ -72,11 +73,11 @@ class _RoleManagementScreenState extends State<RoleManagementScreen> {
               margin: const EdgeInsets.symmetric(horizontal: 12),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color:  AppTheme.secondary,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color:  AppTheme.onsurface.withOpacity(0.05),
                     blurRadius: 10,
                   )
                 ],
@@ -102,7 +103,7 @@ class _RoleManagementScreenState extends State<RoleManagementScreen> {
                       hintText: "Enter role name",
                       prefixIcon: const Icon(Icons.badge_outlined),
                       filled: true,
-                      fillColor: Colors.grey.shade100,
+                      fillColor:  AppTheme.neutral,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
@@ -118,7 +119,7 @@ class _RoleManagementScreenState extends State<RoleManagementScreen> {
                     height: 45,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
+                        backgroundColor:  AppTheme.primary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
@@ -134,14 +135,14 @@ class _RoleManagementScreenState extends State<RoleManagementScreen> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text("Role added successfully"),
-                              backgroundColor: Colors.green,
+                              backgroundColor: AppTheme.success,
                             ),
                           );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text(result['message']),
-                              backgroundColor: Colors.red,
+                              backgroundColor: AppTheme.error,
                             ),
                           );
                         }
@@ -180,11 +181,11 @@ class _RoleManagementScreenState extends State<RoleManagementScreen> {
                     margin: const EdgeInsets.only(bottom: 10),
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color:  AppTheme.secondary,
                       borderRadius: BorderRadius.circular(14),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.04),
+                          color: AppTheme.onsurface.withOpacity(0.04),
                           blurRadius: 8,
                         )
                       ],
@@ -193,7 +194,7 @@ class _RoleManagementScreenState extends State<RoleManagementScreen> {
                       children: [
 
                         const Icon(Icons.verified_user,
-                            color: Colors.blue),
+                            color:  AppTheme.info),
 
                         const SizedBox(width: 10),
 
@@ -213,7 +214,7 @@ class _RoleManagementScreenState extends State<RoleManagementScreen> {
                                 "Created: ${roles[index]['created_at']}",
                                 style: const TextStyle(
                                   fontSize: 12,
-                                  color: Colors.grey,
+                                  color:  AppTheme.neutral,
                                 ),
                               ),
                             ],
@@ -223,13 +224,13 @@ class _RoleManagementScreenState extends State<RoleManagementScreen> {
                         /// ACTIONS
                         IconButton(
                           icon: const Icon(Icons.edit_outlined,
-                              color: Colors.green),
+                              color:  AppTheme.success),
                           onPressed: () => _showEditDialog(roles[index]),
                         ),
 
                         IconButton(
                           icon: const Icon(Icons.delete_outline,
-                              color: Colors.red),
+                              color: AppTheme.error),
                           onPressed: () =>
                               _confirmDelete(roles[index]['id']),
                         ),
@@ -308,7 +309,7 @@ class _RoleManagementScreenState extends State<RoleManagementScreen> {
             },
             child: const Text(
               "Yes, Delete",
-              style: TextStyle(color: Colors.red),
+              style: TextStyle(color: AppTheme.error),
             ),
           ),
         ],

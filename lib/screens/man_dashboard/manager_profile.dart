@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:techstile_frontend/core/services/manager_service/manager_profile_service.dart';
 import 'package:techstile_frontend/widgets/man_drawer.dart';
 import 'package:techstile_frontend/core/services/auth_service.dart';
+import '../../../core/utils/theme.dart';
 
 class ManagerProfileScreen extends StatefulWidget {
   final int userId;
@@ -52,13 +53,13 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Color(0xFF163172), // dark navy blue
-            Color(0xFF3E7BFA), // bright sky blue
+             AppTheme.primary,
+             AppTheme.info,
           ],
         ),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF163172).withOpacity(0.35),
+            color: AppTheme.primary.withOpacity(0.35),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -68,13 +69,13 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
         children: [
           CircleAvatar(
             radius: 32,
-            backgroundColor: Colors.white.withOpacity(0.25),
+            backgroundColor: AppTheme.secondary.withOpacity(0.25),
             child: Text(
               firstLetter,
               style: const TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color:  AppTheme.secondary,
               ),
             ),
           ),
@@ -84,7 +85,7 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
             style: const TextStyle(
               fontSize: 19,
               fontWeight: FontWeight.bold,
-              color: Colors.white,
+              color:  AppTheme.secondary,
             ),
           ),
           const SizedBox(height: 3),
@@ -92,7 +93,7 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
             email,
             style: TextStyle(
               fontSize: 12,
-              color: Colors.white.withOpacity(0.85),
+              color:  AppTheme.secondary.withOpacity(0.85),
             ),
           ),
         ],
@@ -110,7 +111,7 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
             width: 4,
             height: 18,
             decoration: BoxDecoration(
-              color: const Color(0xFF163172),
+              color: AppTheme.primary,
               borderRadius: BorderRadius.circular(4),
             ),
           ),
@@ -120,7 +121,7 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color:  AppTheme.onsurface,
             ),
           ),
         ],
@@ -133,11 +134,11 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color:  AppTheme.secondary.withOpacity(0.05),
             blurRadius: 6,
             offset: const Offset(0, 3),
           ),
@@ -160,7 +161,7 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: Colors.black87,
+              color:  AppTheme.onsurface,
             ),
           ),
           const SizedBox(height: 4),
@@ -168,7 +169,7 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
             title,
             style: const TextStyle(
               fontSize: 12,
-              color: Colors.black54,
+              color:  AppTheme.onsurface,
             ),
           ),
         ],
@@ -225,12 +226,12 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F6FA), // light grey page background
+      backgroundColor:  AppTheme.secondary, // light grey page background
       drawer: ManagerDrawer(
         userId: AuthService.userId,
         factoryId: AuthService.factoryId,
       ),
-      appBar: AppBar(title: const Text("Manager Profile")),
+      appBar: AppBar(title: const Text("Manager Profile",style: TextStyle(color: AppTheme.secondary),),backgroundColor: AppTheme.primary,iconTheme: IconThemeData(color: AppTheme.secondary),),
       body: loading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
@@ -272,13 +273,13 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
                           Icons.groups,
                           "Total Employees",
                           "${profile?['total_employees'] ?? 0}",
-                          Colors.blue,
+                           AppTheme.info,
                         ),
                         statCard(
                           Icons.analytics,
                           "Total Production",
                           "${profile?['total_production'] ?? 0}",
-                          Colors.orange,
+                           AppTheme.surface,
                         ),
                       ],
                     ),
