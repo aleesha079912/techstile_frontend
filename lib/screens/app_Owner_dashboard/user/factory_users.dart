@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:techstile_frontend/core/services/factory_user_services.dart';
+import 'package:techstile_frontend/screens/employee_dashboard/profile.dart';
+import 'package:techstile_frontend/screens/man_dashboard/manager_profile.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
 
 class FactoryUsersScreen extends StatefulWidget {
@@ -58,6 +61,28 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
     });
   }
 
+  Widget infoRow(IconData icon, String text) {
+  return Padding(
+    padding: const EdgeInsets.only(top: 4),
+    child: Row(
+      children: [
+        Icon(icon, size: 13, color: Color(0xFF1A73E8)),
+        const SizedBox(width: 6),
+        Expanded(
+          child: Text(
+            text,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 11.5,
+              color: Colors.grey,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
   Widget statBox(String title, String value, Color color) {
     return Expanded(
       child: Container(
@@ -91,7 +116,13 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
   Widget managerCard() {
     if (manager == null) return const SizedBox();
 
-    return Container(
+    return GestureDetector(
+      onTap: () {
+        final id = manager['id'];
+        if (id == null) return;
+        Get.to(() => ManagerProfileScreen(userId: int.parse(id.toString())));
+      },
+      child: Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -122,74 +153,140 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
               ],
             ),
           ),
+          const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
         ],
+      ),
       ),
     );
   }
 
   Widget userCard(dynamic user) {
-    String role = 'Unknown';
+    String role = "Unknown";
 
     if (user['roles'] != null && user['roles'].isNotEmpty) {
       role = user['roles'][0]['name'];
     }
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 8,
-          )
-        ],
-      ),
-      child: Row(
-        children: [
-          const CircleAvatar(
-            radius: 18,
-            backgroundColor: Color(0xFF1A73E8),
-            child: Icon(Icons.person, size: 18, color: Colors.white),
-          ),
-          const SizedBox(width: 10),
+    final bool isEmployee = role.toLowerCase() == "employee";
+    final bool isActive = user['is_active'] == true;
 
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    final String name = user['name'] ?? "User";
+    final String email = user['email'] ?? "--";
+    final String phone = user['phone_no'] ?? "--";
+    final String shiftStart = user['shift_starttime'] ?? "--";
+    final String shiftEnd = user['shift_endtime'] ?? "--";
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: !isEmployee || user['id'] == null
+        ? null
+        : () {
+            Get.to(
+              () => UserProfileScreen(
+                userId: user['id'],
+              ),
+            );
+          },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(.05),
+              blurRadius: 8,
+            ),
+          ],
+        ),
+        child: Row(
+          children: [
+            Stack(
               children: [
-                Text(
-                  user['name'] ?? '',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
+                CircleAvatar(
+                  radius: 19,
+                  backgroundColor: const Color(0xFF1A73E8).withOpacity(.15),
+                  child: Text(
+                    name[0].toUpperCase(),
+                    style: const TextStyle(
+                      color: Color(0xFF1A73E8),
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-                Text(
-                  user['email'] ?? '',
-                  style: const TextStyle(
-                    fontSize: 11,
-                    color: Colors.grey,
+                if (isActive)
+                  Positioned(
+                    right: 0,
+                    bottom: 0,
+                    child: Container(
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                        color: Colors.green,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 1.5),
+                      ),
+                    ),
                   ),
-                ),
-                Text(
-                  role,
-                  style: const TextStyle(
-                    fontSize: 11,
-                    color: Color(0xFF1A73E8),
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
               ],
             ),
-          ),
-        ],
+
+            const SizedBox(width: 12),
+
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                    ),
+                  ),
+
+                  Text(
+                    "ID: ${user['employee_id'] ?? '--'}",
+                    style: const TextStyle(
+                      fontSize: 10.5,
+                      color: Colors.grey,
+                    ),
+                  ),
+
+                  infoRow(Icons.email_outlined, email),
+                  infoRow(Icons.phone_outlined, phone),
+                  infoRow(
+                    Icons.access_time_rounded,
+                    "$shiftStart - $shiftEnd",
+                  ),
+
+                  const SizedBox(height: 3),
+
+                  Text(
+                    role,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: Color(0xFF1A73E8),
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            if (isEmployee)
+              const Icon(
+                Icons.arrow_forward_ios,
+                size: 13,
+                color: Colors.grey,
+              ),
+          ],
+        ),
       ),
     );
   }
 
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xffF4F6FB),

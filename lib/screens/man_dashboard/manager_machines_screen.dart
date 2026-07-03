@@ -160,6 +160,33 @@ class _ManagerMachinesScreenState
                           ),
                         ),
 
+                        /// TOTAL / ACTIVE BOXES
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: _statBox(
+                                  "Total Machines",
+                                  "${machines.length}",
+                                  AppTheme.primary,
+                                  Icons.precision_manufacturing_rounded,
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: _statBox(
+                                  "Active",
+                                  "${machines.where((m) => m.isActive).length}",
+                                  AppTheme.success,
+                                  Icons.bolt_rounded,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+
                         /// MACHINE LIST
                         Expanded(
                           child: RefreshIndicator(
@@ -184,6 +211,48 @@ class _ManagerMachinesScreenState
       bottomNavigationBar: ManagerBottomNav(
         currentIndex: 1,
         factoryId: widget.factoryId,
+      ),
+    );
+  }
+
+  Widget _statBox(String label, String value, Color color, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.12),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: color, size: 18),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(value,
+                    style: TextStyle(
+                        color: color, fontSize: 18, fontWeight: FontWeight.w800)),
+                Text(label,
+                    style: const TextStyle(color: AppTheme.textSecondary,fontSize: 11,)),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

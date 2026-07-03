@@ -84,21 +84,21 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
           ? args['machineId']?.toString() ?? widget.machineId
           : widget.machineId;
 
-      final user = AuthService.user;
-      final employeeId = user?['id'];
+      // final user = AuthService.user;
+      // final userId = user?['id'];
 
-      final bool success =
-          await EmployeeProductionService().submitProduction(
+      final result =
+          await EmployeeProductionService().submitProductionWithMessage(
         machineId: int.parse(machineId),
-        employeeId: employeeId,
-        factoryId: 1,
+      userId: AuthService.userId,
+       factoryId: AuthService.factoryId,
         varietyType: varietyController.text,
         totalLength: double.parse(lengthController.text.isEmpty ? '0' : lengthController.text),
         readyProduction: ready,
         wasteProduction: double.parse(wasteController.text.isEmpty ? '0' : wasteController.text), // 🔥 FIX
       );
 
-      if (success) {
+      if (result['success'] == true) {
         Get.off(() => EmployeeDashboard());
 
         Get.snackbar(
@@ -110,7 +110,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
       } else {
         Get.snackbar(
           "Error",
-          "Production not added",
+          result['message']?.toString() ?? "Production not added",
           backgroundColor: Colors.red,
           colorText: Colors.white,
         );
@@ -125,7 +125,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.secondary,
+      backgroundColor: AppTheme.background,
 
       appBar: AppBar(
         title: const Text("Enter Production"),

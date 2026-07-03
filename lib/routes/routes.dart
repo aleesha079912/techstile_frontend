@@ -42,6 +42,13 @@ import 'package:techstile_frontend/screens/man_dashboard/manager_production_page
 import 'package:techstile_frontend/screens/man_dashboard/manager_profile.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/generate_qrcode.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/scan_code.dart';
+import 'package:techstile_frontend/screens/man_dashboard/settings/editprofile.dart';
+import 'package:techstile_frontend/screens/man_dashboard/settings/help_faq.dart';
+import 'package:techstile_frontend/screens/man_dashboard/settings/manager_settings_screen.dart';
+import 'package:techstile_frontend/screens/man_dashboard/settings/about_app.dart';
+import 'package:techstile_frontend/screens/man_dashboard/manager_employee_notification.dart';
+import 'package:techstile_frontend/widgets/man_drawer.dart';
+import 'package:techstile_frontend/widgets/emp_drawer.dart';
 class AppRoutes {
   static const splash = "/";
   static const login = "/login";
@@ -59,7 +66,16 @@ class AppRoutes {
   static const managerEmployeeDetail = '/manager-employee-detail';
   static const managerProfile = "/manager-profile";
 static const managerScanMachine = "/manager-scan-machine";
-  // owner dashboard
+static const String managersettings =
+    '/manager-settings';
+
+ static const editProfile = "/edit-profile";
+  static const  chnagePassword = "/change-password";
+  static const  helpFaq = "/help-faq";
+  static const  aboutApp = '/about-app';
+static const managerNotifications = "/manager-notifications";
+static const employeeNotifications = "/employee-notifications";
+ // owner dashboard
   static const addFactory = '/add-factory';
   static const scanMachine = "/scan-machine";
   static const calculator = '/calculator';
@@ -190,6 +206,49 @@ GetPage(
     );
 
   },
+),
+
+//MANAGER SIDE SETTINGS
+GetPage(
+  name: '/edit-profile',
+  page: () => const EditProfileScreen(),
+),
+GetPage(
+  name: AppRoutes.managersettings,
+  page: () => const ManagerSettingsScreen(),
+),
+// GetPage(
+//   name: AppRoutes.managerNotifications,
+//   page: () => ManagerPaymentsScreen(
+//     factoryId: AuthService.factoryId,
+//   ),
+// ),
+GetPage(
+  name: AppRoutes.managerNotifications,
+  page: () => NotificationPage(
+    drawer: ManagerDrawer(
+      userId: AuthService.userId,
+      factoryId: AuthService.factoryId,
+    ),
+    title: "Manager Notifications",
+  ),
+),
+
+GetPage(
+  name: AppRoutes.employeeNotifications,
+  page: () => NotificationPage(
+    drawer: EmployeeDrawer(userId: AuthService.userId),
+    title: "Employee Notifications",
+  ),
+),
+
+GetPage(
+  name: '/help-faq',
+  page: () => const HelpFaqScreen(),
+),
+GetPage(
+  name: '/about-app',
+  page: () => const AboutAppScreen(),
 ),
 
     /// EMPLOYEE DASHBOARD

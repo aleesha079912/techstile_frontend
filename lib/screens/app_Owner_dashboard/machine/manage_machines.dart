@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import '../../../../core/services/machines_service.dart';
 import '../../../../core/utils/theme.dart';
 import '../../../../widgets/bottom_nav_bar.dart';
-import '../../../widgets/factorydrawer.dart';
-import 'generate_qrcode.dart';
 import 'package:get/get.dart';
 import 'machine_detail.dart';
 
@@ -183,7 +181,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.secondary,
+      backgroundColor: AppTheme.background,
 
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -234,10 +232,10 @@ class _MachinesScreenState extends State<MachinesScreen> {
                   Row(
                     children: [
                       _statCard("Total Assets",
-                          data?.machines.length ?? 0, AppTheme.primary),
+                          data?.totalMachines ?? (data?.machines.length ?? 0), AppTheme.primary),
                       const SizedBox(width: 8),
                       _statCard("Active",
-                          data?.machines.length ?? 0, Colors.green),
+                          data?.activeMachines ?? 0, Colors.green),
                     ],
                   ),
 

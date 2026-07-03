@@ -115,48 +115,34 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
                       'Machine Type',
                       m.type,
                     ),
-                    _infoCard(
-                      Icons.login_rounded,
-                      'Shift Start',
-                      _detail['shift_start']?.toString() ?? '—',
-                    ),
-                    _infoCard(
-                      Icons.logout_rounded,
-                      'Shift End',
-                      _detail['shift_end']?.toString() ?? '—',
-                    ),
 
                     const SizedBox(height: 20),
 
-                    // ── Production Stats ───────────────────────────────
-                    const _SectionLabel(text: 'Production Stats'),
+                    // ── Shift-wise Employees ────────────────────────────
+                    const _SectionLabel(text: 'Shift-wise Production'),
                     const SizedBox(height: 12),
-
-                    _infoCard(
-                      Icons.person_outline_rounded,
-                      'Employee',
-                      _detail['employee_name']?.toString() ?? '—',
-                    ),
-                    _infoCard(
-                      Icons.category_outlined,
-                      'Variety Type',
-                      _detail['variety_type']?.toString() ?? '—',
-                    ),
-                    _infoCard(
-                      Icons.straighten_rounded,
-                      'Total Length',
-                      _detail['total_length']?.toString() ?? '—',
-                    ),
-                    _infoCard(
-                      Icons.check_circle_outline,
-                      'Ready Production',
-                      _detail['ready_production']?.toString() ?? '—',
-                    ),
-                    _infoCard(
-                      Icons.hourglass_bottom_rounded,
-                      'Remaining',
-                      _detail['remaining']?.toString() ?? '—',
-                    ),
+                    if ((_detail['shifts'] as List?)?.isEmpty ?? true)
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 28),
+                        decoration: BoxDecoration(
+                          color: _white,
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: Column(
+                          children: [
+                            Icon(Icons.person_off_outlined,
+                                size: 34, color: Colors.grey.shade300),
+                            const SizedBox(height: 8),
+                            Text('No employee assigned to this machine yet',
+                                style: TextStyle(
+                                    color: Colors.grey.shade400, fontSize: 13)),
+                          ],
+                        ),
+                      )
+                    else
+                      ...List<Map<String, dynamic>>.from(_detail['shifts'])
+                          .map((s) => _shiftCard(s)),
 
                     const SizedBox(height: 16),
 
@@ -272,6 +258,82 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  // ── Shift card (one employee's shift assignment on this machine) ───────────
+  Widget _shiftCard(Map<String, dynamic> s) {
+    final start = s['shift_start']?.toString() ?? '';
+    final end = s['shift_end']?.toString() ?? '';
+    final isDayShift = start.startsWith('08');
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: _white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: (isDayShift ? Colors.orange : _navy).withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                  isDayShift ? Icons.wb_sunny_rounded : Icons.nightlight_round,
+                  color: isDayShift ? Colors.orange : _navy,
+                  size: 16,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  s['employee_name']?.toString().isNotEmpty == true
+                      ? s['employee_name'].toString()
+                      : 'Employee #${s['employee_id'] ?? '-'}',
+                  style: const TextStyle(
+                      color: _navy, fontWeight: FontWeight.w700, fontSize: 14),
+                ),
+              ),
+              Text(
+                '$start - $end',
+                style: TextStyle(color: _navy.withOpacity(0.55), fontSize: 11),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                  child: _statCard('Total', '${s['total_length'] ?? 0}')),
+              const SizedBox(width: 8),
+              Expanded(
+                  child: _statCard('Ready', '${s['ready_production'] ?? 0}')),
+              const SizedBox(width: 8),
+              Expanded(
+                  child: _statCard('Remaining', '${s['remaining'] ?? 0}')),
+            ],
+          ),
+          if ((s['variety_type'] ?? '').toString().isNotEmpty) ...[
+            const SizedBox(height: 8),
+            Text('Variety: ${s['variety_type']}',
+                style: TextStyle(color: _navy.withOpacity(0.6), fontSize: 12)),
+          ],
         ],
       ),
     );

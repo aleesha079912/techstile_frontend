@@ -8,12 +8,14 @@ class Machine {
   final String machineName; // ✅ field name
   final String type;
   final String time;
+  final bool isActive;
 
   Machine({
     required this.id,
     required this.machineName, // ✅ constructor mein same naam
     required this.type,
     required this.time,
+    this.isActive = false,
   });
 
   factory Machine.fromJson(Map<String, dynamic> json) {
@@ -22,13 +24,22 @@ class Machine {
       machineName: json['machine_name'] ?? '', // ✅ DB column → dart field
       type: json['machine_type'] ?? '',
       time: json['time'] ?? '',
+      isActive: json['is_active'] == true,
     );
   }
 }
 
 class MachinesData {
   final List<Machine> machines;
-  MachinesData({required this.machines});
+  final int totalMachines;
+  final int activeMachines;
+  MachinesData({
+    required this.machines,
+    int? totalMachines,
+    int? activeMachines,
+  })  : totalMachines = totalMachines ?? machines.length,
+        activeMachines =
+            activeMachines ?? machines.where((m) => m.isActive).length;
 
   int get running => machines.length;
   int get maintenance => 0;
@@ -55,6 +66,8 @@ class MachinesService {
         final List<dynamic> data = body['data'];
         return MachinesData(
           machines: data.map((m) => Machine.fromJson(m)).toList(),
+          totalMachines: body['total_machines'],
+          activeMachines: body['active_machines'],
         );
       }
     } catch (e) {

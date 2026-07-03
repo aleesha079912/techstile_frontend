@@ -3,10 +3,13 @@ import 'package:get/get.dart';
 
 import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/core/services/factory_service.dart';
+import 'package:techstile_frontend/core/services/auth_service.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/add_factories.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/manage_user.dart';
-import 'package:techstile_frontend/screens/app_Owner_dashboard/notification_screen.dart';
-import 'package:techstile_frontend/screens/app_Owner_dashboard/setting_screen.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/owner_profile.dart';
+import 'package:techstile_frontend/screens/man_dashboard/manager_employee_notification.dart';
+import 'package:techstile_frontend/screens/man_dashboard/settings/manager_settings_screen.dart';
+import 'package:techstile_frontend/widgets/owner_drawer.dart';
 
 // import 'package:techstile_frontend/screens/factory_owner_dash/factory_dashboard.dart';
 import 'package:techstile_frontend/core/models/factory_model.dart';
@@ -28,11 +31,19 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
   //  variable that tracks current active tab index (0, 1, 2, 3)
   int _currentIndex = 0;
   //  Navigation Target List
-  final List<Widget> _pages = const [
-    _HomeTab(),
-    ManageUsersScreen(),
-    NotificationScreen(),
-    SettingsScreen(),
+  final List<Widget> _pages = [
+    const _HomeTab(),
+    const ManageUsersScreen(),
+    NotificationPage(
+      drawer: const OwnerDrawer(),
+      title: "Owner Notifications",
+    ),
+    ManagerSettingsScreen(
+      roleLabel: "Owner",
+      profilePageBuilder: () => OwnerProfileScreen(
+        userId: AuthService.userId ?? 0,
+      ),
+    ),
   ];
   @override
   Widget build(BuildContext context) {
@@ -432,4 +443,3 @@ class _FactoryCard extends StatelessWidget {
 
   }
 }
-

@@ -114,12 +114,19 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
 } else if (roleName == 'employee') {
+    final empUserId = userData['id'];
 
-  Get.offAllNamed(
-    AppRoutes.employeeDashboard,
-  );
+    try {
+      final factoryId = userData['factory_id'];
 
-} else {
+      await AuthService.saveFactoryInfo(factoryId, empUserId);
+
+      Get.offAllNamed(AppRoutes.employeeDashboard);
+    } catch (e) {
+      Get.snackbar("Error", "Could not load employee dashboard");
+    }
+
+  } else {
 
   Get.snackbar(
     "Invalid Role",
