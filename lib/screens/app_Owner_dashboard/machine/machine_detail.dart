@@ -8,10 +8,7 @@ import 'assign_production_batch.dart';
 import 'generate_qrcode.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
 // ── Colours ───────────────────────────────────────────────────────────────────
-const _navy = Color(0xFF0D1B4B);
-const _teal = Color(0xFF00C8B0);
-const _bg = Color(0xFFF5F6FA);
-const _white = Colors.white;
+
 
 class MachineDetailScreen extends StatefulWidget {
   final Machine machine;
@@ -55,7 +52,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: _white,
+      backgroundColor:AppTheme.background,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
@@ -86,14 +83,14 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
 
     return Scaffold(
       drawer: const OwnerDrawer(),
-      backgroundColor: _bg,
+      backgroundColor: AppTheme.background,
       appBar: AppBar(
-        backgroundColor: _navy,
+        backgroundColor: AppTheme.primary,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
-            color: _white,
+            color: AppTheme.secondary,
             size: 20,
           ),
           onPressed: () => Get.back(),
@@ -101,7 +98,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
         title: Text(
           m.machineName,
           style: const TextStyle(
-            color: _white,
+            color: AppTheme.secondary,
             fontWeight: FontWeight.w700,
             fontSize: 18,
           ),
@@ -111,13 +108,13 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
             margin: const EdgeInsets.only(right: 16),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: _teal.withOpacity(0.18),
+              color: AppTheme.success.withOpacity(0.18),
               borderRadius: BorderRadius.circular(20),
             ),
             child: const Text(
               'Active',
               style: TextStyle(
-                color: _teal,
+                color: AppTheme.success,
                 fontWeight: FontWeight.w700,
                 fontSize: 12,
               ),
@@ -127,10 +124,10 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
       ),
 
       body: _detailLoading
-          ? const Center(child: CircularProgressIndicator(color: _navy))
+          ? const Center(child: CircularProgressIndicator(color: AppTheme.primary))
           : RefreshIndicator(
               onRefresh: _loadDetail,
-              color: _navy,
+              color: AppTheme.primary,
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.all(16),
@@ -150,7 +147,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                           child: _ActionCard(
                             icon: Icons.add_task_rounded,
                             label: 'Assign\nProduction',
-                            color: _navy,
+                            color: AppTheme.primary,
                             onTap: _openAssignProduction,
                           ),
                         ),
@@ -159,7 +156,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                           child: _ActionCard(
                             icon: Icons.qr_code_2_rounded,
                             label: 'Generate\nQR Code',
-                            color: const Color(0xFF1A73E8),
+                            color: AppTheme.info,
                             onTap: _openQr,
                           ),
                         ),
@@ -263,14 +260,14 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [_navy, Color(0xFF1A3570)],
+          colors: [AppTheme.primary, AppTheme.info],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: _navy.withOpacity(0.3),
+            color: AppTheme.primary.withOpacity(0.3),
             blurRadius: 16,
             offset: const Offset(0, 6),
           ),
@@ -282,12 +279,12 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
             width: 60,
             height: 60,
             decoration: BoxDecoration(
-              color: _white.withOpacity(0.12),
+              color: AppTheme.secondary.withOpacity(0.12),
               borderRadius: BorderRadius.circular(16),
             ),
             child: const Icon(
               Icons.precision_manufacturing_rounded,
-              color: _teal,
+              color: AppTheme.success,
               size: 32,
             ),
           ),
@@ -299,7 +296,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                 Text(
                   m.machineName,
                   style: const TextStyle(
-                    color: _white,
+                    color:AppTheme.secondary ,
                     fontWeight: FontWeight.w800,
                     fontSize: 20,
                   ),
@@ -308,19 +305,19 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                 Text(
                   m.type,
                   style: TextStyle(
-                    color: _white.withOpacity(0.65),
+                    color: AppTheme.secondary.withOpacity(0.65),
                     fontSize: 13,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    const Icon(Icons.circle, color: _teal, size: 8),
+                    const Icon(Icons.circle, color: AppTheme.success, size: 8),
                     const SizedBox(width: 5),
                     Text(
                       'Running',
                       style: TextStyle(
-                        color: _white.withOpacity(0.8),
+                        color: AppTheme.secondary.withOpacity(0.8),
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),
@@ -341,11 +338,11 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: _white,
+        color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: AppTheme.onsurface.withOpacity(0.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -356,17 +353,17 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: _navy.withOpacity(0.07),
+              color: AppTheme.primary.withOpacity(0.07),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(icon, color: _navy, size: 18),
+            child: Icon(icon, color: AppTheme.primary, size: 18),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               title,
               style: TextStyle(
-                color: _navy.withOpacity(0.6),
+                color: AppTheme.primary.withOpacity(0.6),
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
               ),
@@ -375,7 +372,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
           Text(
             value,
             style: const TextStyle(
-              color: _navy,
+              color: AppTheme.primary,
               fontSize: 14,
               fontWeight: FontWeight.w700,
             ),
