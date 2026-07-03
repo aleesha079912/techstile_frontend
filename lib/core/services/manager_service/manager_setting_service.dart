@@ -5,7 +5,7 @@ import '../auth_service.dart';
 class ManagerSettingService {
 
   static const String baseUrl =
-      "http://localhost:8000/api";
+      "http://textstile.sandbox.pk/api";
 
   Future<bool> updateProfile({
     required String name,

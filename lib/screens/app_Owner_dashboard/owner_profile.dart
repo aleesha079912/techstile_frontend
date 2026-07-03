@@ -182,8 +182,20 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F6FA),
-      drawer: const OwnerDrawer(),
-      appBar: AppBar(title: const Text("Owner Profile")),
+      appBar: AppBar(
+        backgroundColor: AppTheme.primary,
+        iconTheme: const IconThemeData(color: AppTheme.secondary),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppTheme.secondary),
+          onPressed: () {
+            Navigator.pop(context); // or Get.back()
+          },
+        ),
+        title: const Text(
+          "Owner Profile",
+          style: TextStyle(color: AppTheme.secondary),
+        ),
+      ),
       body: loading
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(

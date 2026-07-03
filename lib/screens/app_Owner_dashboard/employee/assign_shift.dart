@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
 import '../../../core/services/employee_service.dart';
 import '../../../core/utils/theme.dart';
 
 class AssignShiftsScreen extends StatefulWidget {
-  const AssignShiftsScreen({super.key,});
+  final int? factoryId;
+
+  const AssignShiftsScreen({super.key, this.factoryId});
 
   @override
   State<AssignShiftsScreen> createState() => _AssignShiftsScreenState();
@@ -213,11 +216,23 @@ class _AssignShiftsScreenState extends State<AssignShiftsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Assign Shifts")),
-      floatingActionButton: FloatingActionButton(
+      appBar: AppBar(
         backgroundColor: AppTheme.primary,
-        onPressed: () => showForm(),
-        child: const Icon(Icons.add, color: AppTheme.secondary),
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back_ios_new,
+            color: AppTheme.secondary,
+            size: 18,
+          ),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text(
+          "TECHSTILE",
+          style: TextStyle(
+            color: AppTheme.secondary,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: loading
           ? const Center(child: CircularProgressIndicator())

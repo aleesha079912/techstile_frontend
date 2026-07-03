@@ -181,36 +181,31 @@ class _MachinesScreenState extends State<MachinesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.secondary,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-
-      floatingActionButton: FloatingActionButton(
         backgroundColor: AppTheme.primary,
-        onPressed: () => _showMachineForm(context),
-        child: const Icon(Icons.add, color: AppTheme.secondary),
+        elevation: 0,
+        centerTitle: true,
+        iconTheme: const IconThemeData(
+          color: AppTheme.secondary,
+        ),
+        title: const Text(
+          "All Machines",
+          style: TextStyle(
+            color: AppTheme.secondary,
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
-
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
                 children: [
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "All Machines",
-                      style:
-                          TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
-                    ),
-                  ),
 
-                  const SizedBox(height: 10),
-
-                  /// 🔍 SEARCH ADDED
+                  const SizedBox(height: 16),
+                  
                   TextField(
                     controller: searchCtrl,
                     onChanged: searchMachines,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:techstile_frontend/core/services/factory_dashboard_service.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/app_owner_dash.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
 // import 'package:techstile_frontend/screens/factory_owner_dash/owner_production_page.dart'; // ← add this import
 import 'package:get/get.dart';
@@ -123,30 +124,46 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
 
   // ── AppBar ──────────────────────────────────────────────────────────────────
   PreferredSizeWidget _buildAppBar() {
-    return AppBar(
-      backgroundColor: AppTheme.primary,
-      elevation: 0,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back_ios_new_rounded, color:AppTheme.secondary, size: 20),
-        onPressed: () => Navigator.pop(context),
+  return AppBar(
+    backgroundColor: AppTheme.primary,
+    elevation: 0,
+
+    leading: IconButton(
+      icon: const Icon(
+        Icons.arrow_back,
+        color: AppTheme.secondary,
       ),
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('TechStile',
-              style: TextStyle(
-                  color:AppTheme.secondary, fontWeight: FontWeight.w800, fontSize: 17)),
-          Text(
-            data['factory']?['name'] ?? 'Loading…',
-            style: TextStyle(
-                color: AppTheme.secondary.withOpacity(0.65),
-                fontSize: 12,
-                fontWeight: FontWeight.w400),
+      onPressed: () {
+        Get.off(
+          () => OwnerDashboardScreen(
+            factoryId: factoryId,
           ),
-        ],
-      ),
-    );
-  }
+        );
+      },
+    ),
+
+    title: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'TechStile',
+          style: TextStyle(
+            color: AppTheme.secondary,
+            fontWeight: FontWeight.bold,
+            fontSize: 17,
+          ),
+        ),
+        Text(
+          data['factory']?['name'] ?? 'Loading...',
+          style: TextStyle(
+            color: AppTheme.secondary.withOpacity(0.7),
+            fontSize: 12,
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
   // ── Hero card — factory info + Productions button ───────────────────────────
   Widget _heroCard() {

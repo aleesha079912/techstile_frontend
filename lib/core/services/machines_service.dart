@@ -50,7 +50,7 @@ class MachinesService {
   static final MachinesService instance = MachinesService._();
   MachinesService._();
 
-  final String baseUrl = "http://localhost:8000/api/machines";
+  final String baseUrl = "http://textstile.sandbox.pk/api/machines";
 
   // 🔹 1. FETCH ALL (Laravel: machines/all)
   Future<MachinesData> fetchMachines(int factoryId) async {
