@@ -118,17 +118,10 @@ class _ManagerSettingsScreenState
                             borderRadius:
                                 BorderRadius.circular(20),
                           ),
-<<<<<<< HEAD
-                          child: Text(
-                            widget.roleLabel,
-                            style: const TextStyle(
-                              color: Colors.white,
-=======
                           child: const Text(
                             "Manager",
                             style: TextStyle(
                               color: AppTheme.secondary,
->>>>>>> 3ea7225fac93876f8be0e60ffff8be667dad1601
                               fontSize: 11,
                             ),
                           ),

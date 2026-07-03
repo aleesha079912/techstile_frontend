@@ -416,7 +416,7 @@ class _FactoryCard extends StatelessWidget {
 
               icon: const Icon(Icons.edit_outlined),
 
-              color: theme.colorScheme.secondary,
+              color: AppTheme.success,
 
             ),
 

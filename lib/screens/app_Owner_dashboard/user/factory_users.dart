@@ -294,7 +294,8 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
 
       appBar: AppBar(
         backgroundColor: AppTheme.primary, // same as bottom nav
-        title: const Text("TECHSTILE"),
+        title: const Text("TECHSTILE"
+            , style: TextStyle(color: AppTheme.secondary) ),
       ),
 
       body: loading

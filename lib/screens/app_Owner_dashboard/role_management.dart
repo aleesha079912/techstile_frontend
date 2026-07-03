@@ -103,7 +103,7 @@ class _RoleManagementScreenState extends State<RoleManagementScreen> {
                       hintText: "Enter role name",
                       prefixIcon: const Icon(Icons.badge_outlined),
                       filled: true,
-                      fillColor:  AppTheme.neutral,
+                      fillColor:  AppTheme.secondary,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:techstile_frontend/core/utils/theme.dart';
 import '../../../../core/services/machines_service.dart';
 import '../../../../core/services/machine_details_service.dart';
 import 'package:techstile_frontend/widgets/man_bottom_navbar.dart';
 
-
+// ── Colours ───────────────────────────────────────────────────────────────────
+const _navy = Color(0xFF0D1B4B);
+const _teal = Color(0xFF00C8B0);
+const _bg = Color(0xFFF5F6FA);
+const _white = Colors.white;
 
 class MachineDetailsScreen extends StatefulWidget {
   final Machine machine;
@@ -48,14 +51,14 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
     final m = widget.machine;
 
     return Scaffold(
-      backgroundColor:  AppTheme.background,
+      backgroundColor: _bg,
       appBar: AppBar(
-        backgroundColor:  AppTheme.primary,
+        backgroundColor: _navy,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
             Icons.arrow_back_ios_new_rounded,
-            color: AppTheme.secondary,
+            color: _white,
             size: 20,
           ),
           onPressed: () => Get.back(),
@@ -63,7 +66,7 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
         title: Text(
           m.machineName,
           style: const TextStyle(
-            color:  AppTheme.secondary,
+            color: _white,
             fontWeight: FontWeight.w700,
             fontSize: 18,
           ),
@@ -73,13 +76,13 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
             margin: const EdgeInsets.only(right: 16),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color:  AppTheme.success.withOpacity(0.18),
+              color: _teal.withOpacity(0.18),
               borderRadius: BorderRadius.circular(20),
             ),
             child: const Text(
               'Active',
               style: TextStyle(
-                color:  AppTheme.active,
+                color: _teal,
                 fontWeight: FontWeight.w700,
                 fontSize: 12,
               ),
@@ -89,10 +92,10 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
       ),
 
       body: _detailLoading
-          ? const Center(child: CircularProgressIndicator(color:  AppTheme.primary))
+          ? const Center(child: CircularProgressIndicator(color: _navy))
           : RefreshIndicator(
               onRefresh: _loadDetail,
-              color:  AppTheme.primary,
+              color: _navy,
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.all(16),
@@ -188,14 +191,14 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [AppTheme.primary, AppTheme.info],
+          colors: [_navy, Color(0xFF1A3570)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color:  AppTheme.primary.withOpacity(0.3),
+            color: _navy.withOpacity(0.3),
             blurRadius: 16,
             offset: const Offset(0, 6),
           ),
@@ -207,12 +210,12 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
             width: 60,
             height: 60,
             decoration: BoxDecoration(
-              color:  AppTheme.secondary.withOpacity(0.12),
+              color: _white.withOpacity(0.12),
               borderRadius: BorderRadius.circular(16),
             ),
             child: const Icon(
               Icons.precision_manufacturing_rounded,
-              color:  AppTheme.success,
+              color: _teal,
               size: 32,
             ),
           ),
@@ -224,7 +227,7 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
                 Text(
                   m.machineName,
                   style: const TextStyle(
-                    color: AppTheme.secondary,
+                    color: _white,
                     fontWeight: FontWeight.w800,
                     fontSize: 20,
                   ),
@@ -233,19 +236,19 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
                 Text(
                   m.type,
                   style: TextStyle(
-                    color:  AppTheme.secondary.withOpacity(0.65),
+                    color: _white.withOpacity(0.65),
                     fontSize: 13,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    const Icon(Icons.circle, color:  AppTheme.success, size: 8),
+                    const Icon(Icons.circle, color: _teal, size: 8),
                     const SizedBox(width: 5),
                     Text(
                       'Running',
                       style: TextStyle(
-                        color:  AppTheme.secondary.withOpacity(0.8),
+                        color: _white.withOpacity(0.8),
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),
@@ -342,11 +345,11 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color:  AppTheme.secondary,
+        color: _white,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color:  AppTheme.onsurface.withOpacity(0.04),
+            color: Colors.black.withOpacity(0.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -357,17 +360,17 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color:  AppTheme.primary.withOpacity(0.07),
+              color: _navy.withOpacity(0.07),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(icon, color: AppTheme.primary, size: 18),
+            child: Icon(icon, color: _navy, size: 18),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               title,
               style: TextStyle(
-                color:  AppTheme.primary.withOpacity(0.6),
+                color: _navy.withOpacity(0.6),
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
               ),
@@ -376,7 +379,7 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
           Text(
             value,
             style: const TextStyle(
-              color:  AppTheme.primary,
+              color: _navy,
               fontSize: 14,
               fontWeight: FontWeight.w700,
             ),
@@ -391,11 +394,11 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 14),
       decoration: BoxDecoration(
-        color:  AppTheme.primary,
+        color: _navy,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color:  AppTheme.primary.withOpacity(0.25),
+            color: _navy.withOpacity(0.25),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -406,7 +409,7 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
           Text(
             title,
             style: TextStyle(
-              color:  AppTheme.secondary.withOpacity(0.7),
+              color: _white.withOpacity(0.7),
               fontSize: 11,
               fontWeight: FontWeight.w500,
             ),
@@ -415,7 +418,7 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
           Text(
             value,
             style: const TextStyle(
-              color:  AppTheme.success,
+              color: _teal,
               fontSize: 18,
               fontWeight: FontWeight.w800,
             ),
@@ -439,7 +442,7 @@ class _SectionLabel extends StatelessWidget {
           width: 4,
           height: 18,
           decoration: BoxDecoration(
-            color:  AppTheme.secondary,
+            color: _teal,
             borderRadius: BorderRadius.circular(2),
           ),
         ),
@@ -447,7 +450,7 @@ class _SectionLabel extends StatelessWidget {
         Text(
           text,
           style: const TextStyle(
-            color:  AppTheme.primary,
+            color: _navy,
             fontWeight: FontWeight.w700,
             fontSize: 16,
           ),
@@ -456,6 +459,3 @@ class _SectionLabel extends StatelessWidget {
     );
   }
 }
-
-
-//comment kuch bhi
