@@ -145,7 +145,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                         hintText: "Search user...",
                         prefixIcon: const Icon(Icons.search, size: 18),
                         filled: true,
-                        fillColor: AppTheme.neutral,
+                        fillColor: AppTheme.secondary,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
@@ -322,7 +322,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
         decoration: BoxDecoration(
           color: isSelected
               ? AppTheme.primary
-              : AppTheme.neutral,
+              : AppTheme.secondary,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(

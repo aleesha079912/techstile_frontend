@@ -125,15 +125,17 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
         () => _currentIndex = i,
       ), // when Tab change reload (rebuild) the UI with new index.
       type: BottomNavigationBarType.fixed,
-      backgroundColor: theme
-          .colorScheme
-          .onPrimary,
-      selectedItemColor: theme.colorScheme.primary, 
-      unselectedItemColor: AppTheme.secondary,
+      backgroundColor: AppTheme.primary,
+      
+       selectedItemColor: theme.colorScheme.secondary, 
+       unselectedItemColor: theme.colorScheme.secondary,
       items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: "Home"),
+        BottomNavigationBarItem
+        (icon: Icon(Icons.home_outlined), 
+        label: "Home",
+        ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.people_outline),
+          icon: Icon(Icons.people_outlined),
           label: "Users",
         ),
         BottomNavigationBarItem(
@@ -233,9 +235,7 @@ class _HomeTab extends StatelessWidget {
               value:
                   "${controller.factoryList.map((f) => f.city).toSet().length}",
               icon: Icons.location_city,
-              color: theme
-                  .colorScheme
-                  .secondary, 
+              color: theme.colorScheme.primary, 
             ),
           ],
         ),
