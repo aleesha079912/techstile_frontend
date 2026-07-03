@@ -8,6 +8,11 @@ import '../../../../core/services/machine_details_service.dart';
 import 'assign_production_batch.dart';
 import 'generate_qrcode.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
+// ── Colours ───────────────────────────────────────────────────────────────────
+const _navy = Color(0xFF0D1B4B);
+const _teal = Color(0xFF00C8B0);
+const _bg = Color(0xFFF5F6FA);
+const _white = Colors.white;
 
 class MachineDetailScreen extends StatefulWidget {
   final Machine machine;
