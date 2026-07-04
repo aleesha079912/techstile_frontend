@@ -6,7 +6,7 @@ class AssignMachineService {
   static final AssignMachineService instance = AssignMachineService._();
   AssignMachineService._();
 
-  final String baseUrl = "http://textstile.sandbox.pk/api";
+  final String baseUrl = "http://localhost:8000/api";
 
   Map<String, String> get _headers => {
         "Content-Type": "application/json",

@@ -3,7 +3,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  static const String baseUrl = "http://textstile.sandbox.pk/api";
+  static const String baseUrl = "http://localhost:8000/api";
   static final box = GetStorage();
 
   // ── Getters ────────────────────────────────────────────────────────────────

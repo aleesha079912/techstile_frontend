@@ -4,7 +4,7 @@ import '../auth_service.dart';
 
 class EmployeeProductionService {
   static const String baseUrl =
-      "http://textstile.sandbox.pk/api/productions";
+      "http://localhost:8000/api/productions";
 
  /// Returns a map: { success: bool, message: String }
  Future<Map<String, dynamic>> submitProductionWithMessage({

@@ -5,7 +5,7 @@ class AppTheme {
 
   static const Color primary    = Color(0xFF122B7A); // Dark Navy
   static const Color secondary  = Color(0xFFFFFFFF); // White
-  static const Color background = Color(0xFFFFFFFF); // White
+  static const Color background = Color(0xFFF2F8FC); // White
   static const Color neutral = Color(0xFFB0A695);
   static const Color surface  = Color(0xFFFFA02F); 
   static const Color onsurface  = Color(0xFF202020); 
