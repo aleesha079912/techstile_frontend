@@ -32,7 +32,7 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
   Future<void> submit() async {
     if (varietyCtrl.text.isEmpty || totalLengthCtrl.text.isEmpty) {
       Get.snackbar("Error", "Saare fields fill karo",
-          backgroundColor: AppTheme.secondary, colorText: AppTheme.secondary);
+          backgroundColor: AppTheme.background, colorText: AppTheme.secondary);
       return;
     }
 

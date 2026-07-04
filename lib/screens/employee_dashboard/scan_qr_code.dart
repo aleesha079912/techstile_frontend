@@ -73,7 +73,7 @@ class _ScanqrCodeScreenState extends State<ScanqrCodeScreen>
       },
       child: Scaffold(
         drawer: const EmployeeDrawer(),
-        backgroundColor: AppTheme.secondary,
+        backgroundColor: AppTheme.background,
       
         appBar: AppBar(
           backgroundColor: AppTheme.primary,

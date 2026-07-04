@@ -70,7 +70,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         children: [
           CircleAvatar(
             radius: 32,
-            backgroundColor:  AppTheme.secondary.withOpacity(0.25),
+            backgroundColor:  AppTheme.background.withOpacity(0.25),
             child: Text(
               firstLetter,
               style: const TextStyle(

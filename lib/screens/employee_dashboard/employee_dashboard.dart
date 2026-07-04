@@ -106,13 +106,13 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                       children: [
                         CircleAvatar(
                           radius: 26,
-                          backgroundColor: Colors.white.withOpacity(0.2),
+                          backgroundColor:  AppTheme.secondary.withOpacity(0.2),
                           child: Text(
                             employeeName.isNotEmpty
                                 ? employeeName[0].toUpperCase()
                                 : '?',
                             style: const TextStyle(
-                                color: Colors.white,
+                                color:  AppTheme.secondary,
                                 fontSize: 22,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -125,7 +125,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                               Text(
                                 employeeName.isNotEmpty ? employeeName : 'Employee',
                                 style: const TextStyle(
-                                    color: Colors.white,
+                                    color:  AppTheme.secondary,
                                     fontSize: 17,
                                     fontWeight: FontWeight.w700),
                               ),
@@ -133,13 +133,13 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                               Text(
                                 'View your profile',
                                 style: TextStyle(
-                                    color: Colors.white.withOpacity(0.75), fontSize: 12),
+                                    color:  AppTheme.secondary.withOpacity(0.75), fontSize: 12),
                               ),
                             ],
                           ),
                         ),
                         Icon(Icons.arrow_forward_ios_rounded,
-                            color: Colors.white.withOpacity(0.8), size: 16),
+                            color:  AppTheme.secondary.withOpacity(0.8), size: 16),
                       ],
                     ),
                   ),
@@ -359,7 +359,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:  AppTheme.secondary,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(color: AppTheme.primary.withOpacity(0.06), blurRadius: 8),

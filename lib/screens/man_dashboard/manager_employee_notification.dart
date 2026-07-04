@@ -235,7 +235,7 @@ class _State extends State<NotificationPage> {
         border: Border.all(color:  AppTheme.neutral),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: AppTheme.onsurface.withOpacity(0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           )

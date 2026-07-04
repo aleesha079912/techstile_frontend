@@ -183,11 +183,11 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:  AppTheme.secondary,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color:  AppTheme.onsurface.withOpacity(0.04),
             blurRadius: 6,
             offset: const Offset(0, 2),
           ),
@@ -198,10 +198,10 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: const Color(0xFF163172).withOpacity(0.08),
+              color:  AppTheme.primary.withOpacity(0.08),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(icon, color: const Color(0xFF163172), size: 18),
+            child: Icon(icon, color:  AppTheme.primary, size: 18),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -209,11 +209,11 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(label,
-                    style: const TextStyle(fontSize: 11, color: Colors.black45)),
+                    style: const TextStyle(fontSize: 11, color:  AppTheme.onsurface)),
                 Text(
                   value.isNotEmpty ? value : '—',
                   style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black87),
+                      fontSize: 14, fontWeight: FontWeight.w600, color: AppTheme.onsurface),
                 ),
               ],
             ),
@@ -226,7 +226,7 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:  AppTheme.secondary, // light grey page background
+      backgroundColor:  AppTheme.background, // light grey page background
       drawer: ManagerDrawer(
         userId: AuthService.userId,
         factoryId: AuthService.factoryId,

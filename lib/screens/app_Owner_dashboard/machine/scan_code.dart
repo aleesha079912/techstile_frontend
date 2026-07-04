@@ -134,7 +134,7 @@ Get.to(
       },
       child: Scaffold(
         drawer: const Drawer(),
-        backgroundColor: AppTheme.secondary,
+        backgroundColor: AppTheme.background,
 
         appBar: AppBar(
           title: const Text("Scan Machine"),

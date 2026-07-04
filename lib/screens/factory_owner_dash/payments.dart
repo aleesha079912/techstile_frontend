@@ -59,7 +59,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     final colors = Theme.of(context).colorScheme;
     
     return AppBar(
-      backgroundColor:  AppTheme.secondary, 
+      backgroundColor:  AppTheme.background, 
       elevation: 0,
       surfaceTintColor: Colors.transparent,
       

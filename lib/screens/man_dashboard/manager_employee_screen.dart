@@ -272,7 +272,7 @@ class _ManagerEmployeesScreenState
                   ),
                   Text(
                     "ID: ${e['id']}",
-                    style: const TextStyle(fontSize: 10.5, color: Colors.grey),
+                    style: const TextStyle(fontSize: 10.5, color:  AppTheme.neutral),
                   ),
                   const SizedBox(height: 4),
                   _infoRow(Icons.email_outlined, email),
