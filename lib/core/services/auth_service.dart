@@ -89,4 +89,30 @@ class AuthService {
     box.remove('factoryId'); // ✅ logout pe clear karo
     box.remove('userId');
   }
+
+  static Future<Map<String, dynamic>> forgotPassword(String email) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/forgot-password'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'email': email}),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && data['success'] == true) {
+        return {
+          'success': true,
+          'message': data['message'] ?? 'Reset link sent successfully'
+        };
+      } else {
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Request failed'
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'message': e.toString()};
+    }
+  }
 }
