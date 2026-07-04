@@ -177,6 +177,52 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
     );
   }
 
+  // Basic info row (icon + label + value)
+  Widget infoRow(IconData icon, String label, String value) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: const Color(0xFF163172).withOpacity(0.08),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Icon(icon, color: const Color(0xFF163172), size: 18),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label,
+                    style: const TextStyle(fontSize: 11, color: Colors.black45)),
+                Text(
+                  value.isNotEmpty ? value : '—',
+                  style: const TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black87),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -194,6 +240,22 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
                 children: [
                   // Top gradient header
                   buildProfileHeader(),
+
+                  // Basic information section
+                  sectionTitle("Basic Information"),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Column(
+                      children: [
+                        infoRow(Icons.factory_outlined, "Factory",
+                            profile?['factory_name']?.toString() ?? ''),
+                        infoRow(Icons.phone_outlined, "Phone",
+                            profile?['phone_no']?.toString() ?? ''),
+                        infoRow(Icons.location_on_outlined, "Address",
+                            profile?['address']?.toString() ?? ''),
+                      ],
+                    ),
+                  ),
 
                   // Performance overview section
                   sectionTitle("Performance Overview"),

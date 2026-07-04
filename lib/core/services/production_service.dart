@@ -4,11 +4,21 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../services/auth_service.dart'; // ← AuthService import
 
+class ProductionAuthException implements Exception {
+  final String message;
+  ProductionAuthException([this.message = 'Session expired. Please login again.']);
+  @override
+  String toString() => message;
+}
+
 class ProductionService {
   static const String _base = AuthService.baseUrl;
 
   // ── Manager: fetch all productions for factory ────────────
   Future<List<Map<String, dynamic>>> getManagerProductions(dynamic factoryId) async {
+    if (factoryId == null || AuthService.token.isEmpty) {
+      throw ProductionAuthException();
+    }
     final res = await http.get(
       Uri.parse('$_base/manager/productions/$factoryId'),
       headers: AuthService.authHeaders,   // ← auth headers
@@ -17,7 +27,10 @@ class ProductionService {
       final body = jsonDecode(res.body);
       return List<Map<String, dynamic>>.from(body['productions'] ?? []);
     }
-    throw Exception('Failed to load productions');
+    if (res.statusCode == 401) {
+      throw ProductionAuthException();
+    }
+    throw Exception('Failed to load productions (${res.statusCode})');
   }
 
   // ── Manager: approve or reject ────────────────────────────
@@ -32,6 +45,9 @@ class ProductionService {
 
   // ── Owner: fetch all productions for factory ──────────────
   Future<List<Map<String, dynamic>>> getOwnerProductions(dynamic factoryId) async {
+    if (factoryId == null || AuthService.token.isEmpty) {
+      throw ProductionAuthException();
+    }
     final res = await http.get(
       Uri.parse('$_base/owner/productions/$factoryId'),
       headers: AuthService.authHeaders,
@@ -40,7 +56,10 @@ class ProductionService {
       final body = jsonDecode(res.body);
       return List<Map<String, dynamic>>.from(body['productions'] ?? []);
     }
-    throw Exception('Failed to load productions');
+    if (res.statusCode == 401) {
+      throw ProductionAuthException();
+    }
+    throw Exception('Failed to load productions (${res.statusCode})');
   }
 
   // ── Owner: approve or reject ──────────────────────────────

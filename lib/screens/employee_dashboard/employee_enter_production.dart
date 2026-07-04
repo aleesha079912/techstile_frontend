@@ -87,8 +87,8 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
       // final user = AuthService.user;
       // final userId = user?['id'];
 
-      final bool success =
-          await EmployeeProductionService().submitProduction(
+      final result =
+          await EmployeeProductionService().submitProductionWithMessage(
         machineId: int.parse(machineId),
       userId: AuthService.userId,
        factoryId: AuthService.factoryId,
@@ -98,7 +98,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
         wasteProduction: double.parse(wasteController.text.isEmpty ? '0' : wasteController.text), // 🔥 FIX
       );
 
-      if (success) {
+      if (result['success'] == true) {
         Get.off(() => EmployeeDashboard());
 
         Get.snackbar(
@@ -125,7 +125,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.secondary,
+      backgroundColor: AppTheme.background,
 
       appBar: AppBar(
         title: const Text("Enter Production"),

@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:techstile_frontend/core/services/auth_service.dart';
 
 class AssignProductionService {
-  final String baseUrl = "http://localhost:8000/api";
+  final String baseUrl = "http://textstile.sandbox.pk/api";
 
   Future<bool> assign({
     required int machineId,

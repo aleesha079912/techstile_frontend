@@ -4,9 +4,21 @@ import 'package:get/get.dart';
 import '../../../core/services/auth_service.dart';
 import '../../../core/utils/theme.dart';
 import '../manager_profile.dart';
+import '../../employee_dashboard/profile.dart';
 
 class ManagerSettingsScreen extends StatefulWidget {
-  const ManagerSettingsScreen({super.key});
+  /// Role badge shown on the profile card. Defaults to "Manager".
+  final String roleLabel;
+
+  /// Where the profile card / "Edit Profile" tile navigates to.
+  /// Defaults to the Manager profile screen.
+  final Widget Function()? profilePageBuilder;
+
+  const ManagerSettingsScreen({
+    super.key,
+    this.roleLabel = "Manager",
+    this.profilePageBuilder,
+  });
 
   @override
   State<ManagerSettingsScreen> createState() =>
@@ -37,9 +49,10 @@ class _ManagerSettingsScreenState
           GestureDetector(
             onTap: () {
               Get.to(
-                () => ManagerProfileScreen(
-                  userId: AuthService.userId,
-                ),
+                widget.profilePageBuilder ??
+                    () => ManagerProfileScreen(
+                          userId: AuthService.userId,
+                        ),
               );
             },
             child: Container(

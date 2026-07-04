@@ -75,22 +75,23 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
       backgroundColor: AppTheme.background,
 
       appBar: AppBar(
-        backgroundColor: AppTheme.primary,
-        iconTheme: IconThemeData(color: AppTheme.secondary),
-        title: const Text(
-         "TECHstile",
-          style: TextStyle(
-            color: AppTheme.secondary,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 12),
-            child: Icon(Icons.notifications_none),
-          )
-        ],
-      ),
+  backgroundColor: AppTheme.primary,
+  leading: IconButton(
+    icon: const Icon(
+      Icons.arrow_back_ios_new,
+      color: AppTheme.secondary,
+      size: 18,
+    ),
+    onPressed: () => Navigator.pop(context),
+  ),
+  title: const Text(
+    "TECHSTILE",
+    style: TextStyle(
+      color: AppTheme.secondary,
+      fontWeight: FontWeight.bold,
+    ),
+  ),
+),
 
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppTheme.primary,
