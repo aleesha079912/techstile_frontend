@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'auth_service.dart';
 class RoleService {
-  final String baseUrl = "http://textstile.sandbox.pk/api/roles"; // Emulator ke liye localhost IP
+  final String baseUrl = "http://localhost:8000/api/roles"; // Emulator ke liye localhost IP
 
   // 1. Fetch Roles
   Future<List<dynamic>> getRoles() async {
@@ -54,14 +54,14 @@ Future<bool> updateRole(int id, String newName) async {
 }
 // Permissions list fetch karna
 Future<List<dynamic>> getAllPermissions() async {
-  final response = await http.get(Uri.parse('http://textstile.sandbox.pk/api/permissions/all'),
+  final response = await http.get(Uri.parse('http://localhost:8000/api/permissions/all'),
   headers: AuthService.authHeaders,);
   return json.decode(response.body)['data'];
 }
 
 // Role ki maujooda permissions lana
 Future<List<dynamic>> getRolePermissions(int roleId) async {
-  final response = await http.get(Uri.parse('http://textstile.sandbox.pk/api/role-permissions/$roleId'),
+  final response = await http.get(Uri.parse('http://localhost:8000/api/role-permissions/$roleId'),
   headers: AuthService.authHeaders,);
   return json.decode(response.body)['data'];
 }
@@ -69,7 +69,7 @@ Future<List<dynamic>> getRolePermissions(int roleId) async {
 // Permissions update karna
 Future<bool> syncPermissions(int roleId, List<int> permIds) async {
   final response = await http.post(
-    Uri.parse('http://textstile.sandbox.pk/api/permissions/sync'),
+    Uri.parse('http://localhost:8000/api/permissions/sync'),
   headers: AuthService.authHeaders,
     body: json.encode({"role_id": roleId, "permissions": permIds}),
   );

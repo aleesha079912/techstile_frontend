@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../auth_service.dart';
 
 class ManagerEmployeeDetailService {
-  final String baseUrl = "http://textstile.sandbox.pk/api";
+  final String baseUrl = "http://localhost:8000/api";
 
   Future<Map<String, dynamic>> getEmployeeDetail(
       int employeeId) async {

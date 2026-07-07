@@ -6,7 +6,7 @@ class AttendanceService {
 
 
 final String baseUrl =
-    "http://textstile.sandbox.pk/api/attendence";
+    "http://localhost:8000/api/attendence";
 
 Future<bool> markAttendance({
   required int employeeId,
