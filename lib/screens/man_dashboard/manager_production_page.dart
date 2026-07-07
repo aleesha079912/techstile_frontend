@@ -6,6 +6,7 @@ import '../../../core/utils/theme.dart';
 import '../../../widgets/man_bottom_navbar.dart';
 import 'package:techstile_frontend/widgets/man_drawer.dart';
 import 'package:techstile_frontend/core/services/auth_service.dart';
+
 class ManagerProductionsPage extends StatefulWidget {
   final dynamic factoryId;
   const ManagerProductionsPage({super.key, required this.factoryId});
@@ -76,30 +77,33 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       drawer: ManagerDrawer(
-  userId: AuthService.userId,
-  factoryId: AuthService.factoryId,
-),
+      drawer: ManagerDrawer(
+        userId: AuthService.userId,
+        factoryId: AuthService.factoryId,
+      ),
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        backgroundColor: AppTheme.primary,
-        elevation: 0,
-        title: const Text('Manager Productions',
-            style: TextStyle(color:  AppTheme.secondary, fontWeight: FontWeight.w800, fontSize: 17)),
-        iconTheme: const IconThemeData(color:  AppTheme.secondary),
-        bottom: TabBar(
-          controller: _tab,
-          indicatorColor: AppTheme.secondary,
-          indicatorWeight: 3,
-          labelColor:  AppTheme.secondary,
-          unselectedLabelColor:  AppTheme.neutral,
-          labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
-          tabs: [
-            Tab(text: 'Pending (${_pending.length})'),
-            Tab(text: 'Approved (${_approved.length})'),
-          ],
-        ),
-      ),
+  backgroundColor: AppTheme.primary,
+  elevation: 0,
+  title: const Text(
+    'Manager Productions',
+    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 17),
+  ),
+  iconTheme: const IconThemeData(color: Colors.white),
+  bottom: TabBar(
+    controller: _tab,
+    indicatorColor: AppTheme.surface,
+    indicatorWeight: 3,
+    labelColor: Colors.white,
+    unselectedLabelColor: AppTheme.surface,
+    labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+    unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
+    tabs: [
+      Tab(text: 'Pending (${_pending.length})'),
+      Tab(text: 'Approved (${_approved.length})'),
+    ],
+  ),
+),
       body: loading
           ? const Center(child: CircularProgressIndicator(color: AppTheme.primary))
           : error != null
@@ -115,7 +119,7 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
                     ],
                   ),
                 ),
-                 bottomNavigationBar: ManagerBottomNav(
+      bottomNavigationBar: ManagerBottomNav(
         currentIndex: 0,
         factoryId: widget.factoryId,
       ),
@@ -126,10 +130,10 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
     if (items.isEmpty) {
       return Center(
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Icon(Icons.inbox_rounded, size: 52, color:  AppTheme.neutral),
+          Icon(Icons.inbox_rounded, size: 52, color: AppTheme.neutral),
           const SizedBox(height: 12),
           const Text('No records found',
-              style: TextStyle(color: AppTheme.textSecondary, fontSize: 14)),
+              style: TextStyle(color: AppTheme.primary, fontSize: 14, fontWeight: FontWeight.w600)),
         ]),
       );
     }
@@ -148,8 +152,9 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
     return Container(
       decoration: BoxDecoration(
         color: AppTheme.secondary,
-        borderRadius: AppTheme.cardRadius,
+        borderRadius: BorderRadius.circular(18),
         boxShadow: AppTheme.softShadow,
+        border: Border.all(color: AppTheme.primary.withOpacity(0.06)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -158,29 +163,31 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
           // ── Top row: variety + employee + status chip ──────
           Row(children: [
             Container(
-              padding: const EdgeInsets.all(9),
+              padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: AppTheme.secondary.withOpacity(0.12),
-                borderRadius: BorderRadius.circular(10),
+                color: AppTheme.primary.withOpacity(0.08),
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(Icons.texture_rounded, color: AppTheme.secondary, size: 18),
+              child: const Icon(Icons.texture_rounded, color: AppTheme.primary, size: 20),
             ),
             const SizedBox(width: 12),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
-                p['variety_type']?.toString() ?? '-',   // ← direct column
+                p['variety_type']?.toString() ?? '-',
                 style: const TextStyle(
-                    color: AppTheme.textPrimary, fontWeight: FontWeight.w700, fontSize: 14),
+                    color: AppTheme.textPrimary, fontWeight: FontWeight.w700, fontSize: 15),
               ),
+              const SizedBox(height: 2),
               Text(
                 'Batch: ${p['batch_id'] ?? '-'}  •  Employee #${p['employee_id'] ?? '-'}',
-                style: const TextStyle(color: AppTheme.textSecondary, fontSize: 11),
+                style: TextStyle(color: AppTheme.primary.withOpacity(0.55), fontSize: 11),
               ),
             ])),
+            const SizedBox(width: 8),
             _statusChip(status, isOwnerApproved),
           ]),
 
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
 
           // ── Stats row ─────────────────────────────────────
           Row(children: [
@@ -205,16 +212,22 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
           if (isOwnerApproved) ...[
             const SizedBox(height: 10),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               decoration: BoxDecoration(
-                color:  AppTheme.info,
-                borderRadius: BorderRadius.circular(8),
+                color: AppTheme.info.withOpacity(0.12),
+                borderRadius: BorderRadius.circular(10),
               ),
               child: Row(children: [
-                Icon(Icons.verified_outlined, size: 14, color: AppTheme.info),
+                const Icon(Icons.verified_outlined, size: 15, color: AppTheme.info),
                 const SizedBox(width: 6),
-                Text('Owner already approved this production',
-                    style: TextStyle(color:  AppTheme.info, fontSize: 12)),
+                Expanded(
+                  child: Text('Owner already approved this production',
+                      style: TextStyle(
+                          color: AppTheme.info.withOpacity(0.9),
+                          fontSize: 11.5,
+                          fontWeight: FontWeight.w600)),
+                ),
               ]),
             ),
           ],
@@ -231,8 +244,8 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
                   style: OutlinedButton.styleFrom(
                     foregroundColor: AppTheme.error,
                     side: const BorderSide(color: AppTheme.error),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.symmetric(vertical: 11),
                   ),
                 ),
               ),
@@ -244,10 +257,10 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
                   label: const Text('Approve'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.success,
-                    foregroundColor:  AppTheme.secondary,
+                    foregroundColor: Colors.white,
                     elevation: 0,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.symmetric(vertical: 11),
                   ),
                 ),
               ),
@@ -282,13 +295,30 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
   }
 
   Widget _statusChip(int status, bool isOwnerApproved) {
-    Color bg; Color fg; String label;
-    if (isOwnerApproved)  { bg =  AppTheme.info;              fg =  AppTheme.info;    label = 'Owner ✓'; }
-    else if (status == 2) { bg = AppTheme.success.withOpacity(.12); fg = AppTheme.success;        label = 'Approved'; }
-    else if (status == 3) { bg = AppTheme.error.withOpacity(.12);   fg = AppTheme.error;          label = 'Rejected'; }
-    else                  { bg =  AppTheme.surface;             fg =  AppTheme.surface;  label = 'Pending'; }
+    Color bg;
+    Color fg;
+    String label;
+
+    if (isOwnerApproved) {
+      bg = AppTheme.info.withOpacity(0.15);
+      fg = AppTheme.info;
+      label = 'Owner ✓';
+    } else if (status == 2) {
+      bg = AppTheme.success.withOpacity(0.15);
+      fg = AppTheme.success;
+      label = 'Approved';
+    } else if (status == 3) {
+      bg = AppTheme.error.withOpacity(0.15);
+      fg = AppTheme.error;
+      label = 'Rejected';
+    } else {
+      bg = AppTheme.surface.withOpacity(0.15);
+      fg = AppTheme.surface;
+      label = 'Pending';
+    }
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(20)),
       child: Text(label, style: TextStyle(color: fg, fontSize: 11, fontWeight: FontWeight.w700)),
     );
@@ -297,17 +327,22 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
   Widget _infoBox({required String label, required String value}) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 7),
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         decoration: BoxDecoration(
-          color: AppTheme.neutral.withOpacity(0.3),
-          borderRadius: BorderRadius.circular(8),
+          color: AppTheme.background,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: AppTheme.primary.withOpacity(0.06)),
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(label, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 9)),
-          const SizedBox(height: 2),
+          Text(label,
+              style: TextStyle(
+                  color: AppTheme.primary.withOpacity(0.5),
+                  fontSize: 9,
+                  fontWeight: FontWeight.w600)),
+          const SizedBox(height: 3),
           Text(value,
               style: const TextStyle(
-                  color: AppTheme.textPrimary, fontSize: 12, fontWeight: FontWeight.w700)),
+                  color: AppTheme.textPrimary, fontSize: 12.5, fontWeight: FontWeight.w700)),
         ]),
       ),
     );
@@ -318,7 +353,7 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
       const Icon(Icons.error_outline_rounded, size: 48, color: AppTheme.error),
       const SizedBox(height: 12),
       Text(error ?? 'Something went wrong',
-          style: const TextStyle(color: AppTheme.textSecondary)),
+          style: const TextStyle(color: AppTheme.primary)),
       const SizedBox(height: 16),
       ElevatedButton(onPressed: _load, child: const Text('Retry')),
     ]),

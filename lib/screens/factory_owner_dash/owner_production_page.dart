@@ -77,15 +77,16 @@ void initState() {
         backgroundColor: AppTheme.primary,
         elevation: 0,
         title: const Text('Owner Productions',
-            style: TextStyle(color:  AppTheme.secondary, fontWeight: FontWeight.w800, fontSize: 17)),
-        iconTheme: const IconThemeData(color:  AppTheme.secondary),
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 17)),
+        iconTheme: const IconThemeData(color: Colors.white),
         bottom: TabBar(
           controller: _tab,
-          indicatorColor: AppTheme.secondary,
+          indicatorColor: AppTheme.surface,
           indicatorWeight: 3,
-          labelColor:  AppTheme.secondary,
-          unselectedLabelColor:  AppTheme.neutral,
+          labelColor: Colors.white,
+          unselectedLabelColor: AppTheme.surface,
           labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+          unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
           tabs: [
             Tab(text: 'Pending (${_pending.length})'),
             Tab(text: 'Approved (${_approved.length})'),
@@ -115,10 +116,10 @@ void initState() {
     if (items.isEmpty) {
       return Center(
         child: Column(mainAxisSize: MainAxisSize.min, children: [
-          Icon(Icons.inbox_rounded, size: 52, color:  AppTheme.neutral),
+          Icon(Icons.inbox_rounded, size: 52, color: AppTheme.neutral),
           const SizedBox(height: 12),
           const Text('No records found',
-              style: TextStyle(color: AppTheme.textSecondary, fontSize: 14)),
+              style: TextStyle(color: AppTheme.primary, fontSize: 14, fontWeight: FontWeight.w600)),
         ]),
       );
     }
@@ -148,10 +149,10 @@ void initState() {
             Container(
               padding: const EdgeInsets.all(9),
               decoration: BoxDecoration(
-                color: AppTheme.secondary.withOpacity(0.12),
+                color: AppTheme.primary.withOpacity(0.08),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: const Icon(Icons.texture_rounded, color: AppTheme.secondary, size: 18),
+              child: const Icon(Icons.texture_rounded, color: AppTheme.primary, size: 18),
             ),
             const SizedBox(width: 12),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -162,7 +163,7 @@ void initState() {
               ),
               Text(
                 'Batch: ${p['batch_id'] ?? '-'}  •  Emp #${p['employee_id'] ?? '-'}',
-                style: const TextStyle(color: AppTheme.textSecondary, fontSize: 11),
+                style: TextStyle(color: AppTheme.primary.withOpacity(0.55), fontSize: 11),
               ),
             ])),
             _statusChip(status),
@@ -216,7 +217,7 @@ void initState() {
                   label: const Text('Approve'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.success,
-                    foregroundColor:  AppTheme.secondary,
+                    foregroundColor: Colors.white,
                     elevation: 0,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     padding: const EdgeInsets.symmetric(vertical: 10),
@@ -233,7 +234,7 @@ void initState() {
   Widget _managerNote(int status) {
     String text; Color color; IconData icon;
     switch (status) {
-      case 1: text = 'Manager: Not reviewed'; color =  AppTheme.surface;
+      case 1: text = 'Manager: Not reviewed'; color = AppTheme.surface;
               icon = Icons.hourglass_empty_rounded; break;
       case 2: text = 'Manager: Approved';     color = AppTheme.success;
               icon = Icons.check_circle_outline_rounded; break;
@@ -244,13 +245,13 @@ void initState() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: color.withOpacity(0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(children: [
         Icon(icon, size: 14, color: color),
         const SizedBox(width: 6),
-        Text(text, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w500)),
+        Text(text, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.w600)),
       ]),
     );
   }
@@ -279,11 +280,11 @@ void initState() {
   Widget _statusChip(int status) {
     Color bg; Color fg; String label;
     switch (status) {
-      case 2: bg = AppTheme.success.withOpacity(.12); fg = AppTheme.success;       label = 'Mgr ✓'; break;
-      case 3: bg = AppTheme.error.withOpacity(.12);   fg = AppTheme.error;         label = 'Mgr ✗'; break;
-      case 4: bg =  AppTheme.info;               fg =  AppTheme.info;   label = 'Approved'; break;
-      case 5: bg = AppTheme.error.withOpacity(.12);   fg = AppTheme.error;         label = 'Rejected'; break;
-      default: bg =  AppTheme.secondary;            fg =  AppTheme.surface; label = 'Pending';
+      case 2: bg = AppTheme.success.withOpacity(.15); fg = AppTheme.success; label = 'Mgr ✓'; break;
+      case 3: bg = AppTheme.error.withOpacity(.15);   fg = AppTheme.error;   label = 'Mgr ✗'; break;
+      case 4: bg = AppTheme.info.withOpacity(.15);    fg = AppTheme.info;    label = 'Approved'; break;
+      case 5: bg = AppTheme.error.withOpacity(.15);   fg = AppTheme.error;   label = 'Rejected'; break;
+      default: bg = AppTheme.surface.withOpacity(.15); fg = AppTheme.surface; label = 'Pending';
     }
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
@@ -297,11 +298,16 @@ void initState() {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 7),
         decoration: BoxDecoration(
-          color: AppTheme.neutral.withOpacity(0.3),
+          color: AppTheme.background,
           borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: AppTheme.primary.withOpacity(0.06)),
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(label, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 9)),
+          Text(label,
+              style: TextStyle(
+                  color: AppTheme.primary.withOpacity(0.5),
+                  fontSize: 9,
+                  fontWeight: FontWeight.w600)),
           const SizedBox(height: 2),
           Text(value,
               style: const TextStyle(
@@ -316,7 +322,7 @@ void initState() {
       const Icon(Icons.error_outline_rounded, size: 48, color: AppTheme.error),
       const SizedBox(height: 12),
       Text(error ?? 'Something went wrong',
-          style: const TextStyle(color: AppTheme.secondary)),
+          style: const TextStyle(color: AppTheme.primary)),
       const SizedBox(height: 16),
       ElevatedButton(onPressed: _load, child: const Text('Retry')),
     ]),
