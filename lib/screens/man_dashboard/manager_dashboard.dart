@@ -278,7 +278,7 @@ print("Stored User ID = ${AuthService.userId}");
           style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
         ),
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppTheme.background,
+          backgroundColor: AppTheme.primary,
           foregroundColor: AppTheme.background,
           elevation: 0,
           padding: const EdgeInsets.symmetric(vertical: 14),

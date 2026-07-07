@@ -235,6 +235,24 @@ class _MachinesScreenState extends State<MachinesScreen> {
 
                   const SizedBox(height: 16),
 
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppTheme.primary,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                      ),
+                      onPressed: () => _showMachineForm(context),
+                      icon: const Icon(Icons.add, color: Colors.white),
+                      label: const Text(
+                        "Add Machine",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
                   Expanded(
                     child: RefreshIndicator(
                       onRefresh: () async => load(),

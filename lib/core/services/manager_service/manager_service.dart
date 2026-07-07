@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:techstile_frontend/core/services/machines_service.dart'; 
 class ManagerDashboardService {
-  final String baseUrl = "http://localhost:8000/api/manager";
+  final String baseUrl = "http://techstile.sandbox.pk/api/manager";
 
   Future<Map<String, dynamic>> getDashboard(
     dynamic factoryId) async {

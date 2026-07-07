@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../../../core/services/production_service.dart';
 import '../../../core/utils/theme.dart';
 import '../../../widgets/man_bottom_navbar.dart';
-import 'package:techstile_frontend/widgets/man_drawer.dart';
 import 'package:techstile_frontend/core/services/auth_service.dart';
 
 class ManagerProductionsPage extends StatefulWidget {
@@ -77,34 +76,43 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: ManagerDrawer(
-        userId: AuthService.userId,
-        factoryId: AuthService.factoryId,
-      ),
       backgroundColor: AppTheme.background,
-      appBar: AppBar(
-  backgroundColor: AppTheme.primary,
-  elevation: 0,
-  title: const Text(
-    'Manager Productions',
-    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 17),
-  ),
-  iconTheme: const IconThemeData(color: Colors.white),
-  bottom: TabBar(
-    controller: _tab,
-    indicatorColor: AppTheme.surface,
-    indicatorWeight: 3,
-    labelColor: Colors.white,
-    unselectedLabelColor: AppTheme.surface,
-    labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
-    unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
-    tabs: [
-      Tab(text: 'Pending (${_pending.length})'),
-      Tab(text: 'Approved (${_approved.length})'),
-    ],
-  ),
-),
-      body: loading
+     appBar: AppBar(
+        backgroundColor: AppTheme.primary,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text(
+          'Manager Productions',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w800,
+            fontSize: 17,
+          ),
+        ),
+        bottom: TabBar(
+          controller: _tab,
+          indicatorColor: AppTheme.surface,
+          indicatorWeight: 3,
+          labelColor: Colors.white,
+          unselectedLabelColor: AppTheme.surface,
+          labelStyle: const TextStyle(
+            fontWeight: FontWeight.w700,
+            fontSize: 13,
+          ),
+          unselectedLabelStyle: const TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: 13,
+          ),
+          tabs: [
+            Tab(text: 'Pending (${_pending.length})'),
+            Tab(text: 'Approved (${_approved.length})'),
+          ],
+        ),
+      ),
+            body: loading
           ? const Center(child: CircularProgressIndicator(color: AppTheme.primary))
           : error != null
               ? _errorView()
