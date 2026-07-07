@@ -54,13 +54,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-             AppTheme.primary
-            
+            Color(0xFF163172), // dark navy blue
+            Color(0xFF3E7BFA), // bright sky blue
           ],
         ),
         boxShadow: [
           BoxShadow(
-            color:  AppTheme.primary.withOpacity(0.35),
+            color: const Color(0xFF163172).withOpacity(0.35),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -70,13 +70,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         children: [
           CircleAvatar(
             radius: 32,
-            backgroundColor:  AppTheme.background.withOpacity(0.25),
+            backgroundColor: Colors.white.withOpacity(0.25),
             child: Text(
               firstLetter,
               style: const TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
-                color: AppTheme.secondary,
+                color: Colors.white,
               ),
             ),
           ),
@@ -86,7 +86,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             style: const TextStyle(
               fontSize: 19,
               fontWeight: FontWeight.bold,
-              color:  AppTheme.secondary,
+              color: Colors.white,
             ),
           ),
           const SizedBox(height: 3),
@@ -94,7 +94,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             email,
             style: TextStyle(
               fontSize: 12,
-              color:  AppTheme.secondary.withOpacity(0.85),
+              color: Colors.white.withOpacity(0.85),
             ),
           ),
         ],
@@ -109,11 +109,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 6),
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
       decoration: BoxDecoration(
-        color:  AppTheme.secondary,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.onsurface.withOpacity(0.05),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 6,
             offset: const Offset(0, 3),
           ),
@@ -135,7 +135,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               title,
               style: const TextStyle(
                 fontSize: 14,
-                color:  AppTheme.onsurface,
+                color: Colors.black87,
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -147,7 +147,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               style: const TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.bold,
-                color:  AppTheme.onsurface,
+                color: Colors.black87,
               ),
               overflow: TextOverflow.ellipsis,
             ),
@@ -177,7 +177,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
-              color:  AppTheme.onsurface,
+              color: Colors.black87,
             ),
           ),
         ],
@@ -190,11 +190,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: AppTheme.secondary,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.onsurface.withOpacity(0.05),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 6,
             offset: const Offset(0, 3),
           ),
@@ -217,7 +217,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color:  AppTheme.onsurface,
+              color: Colors.black87,
             ),
           ),
           const SizedBox(height: 4),
@@ -225,7 +225,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             title,
             style: const TextStyle(
               fontSize: 12,
-              color: AppTheme.onsurface,
+              color: Colors.black54,
             ),
           ),
         ],
@@ -236,7 +236,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:  AppTheme.background, // light grey page background
+      backgroundColor: const Color(0xFFF5F6FA), // light grey page background
       appBar: AppBar(title: const Text("User Profile")),
       body: loading
           ? const Center(child: CircularProgressIndicator())
@@ -244,65 +244,45 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 20),
+                  // Top gradient header
+                  buildProfileHeader(),
 
-                  const CircleAvatar(
-                    radius: 50,
-                    backgroundColor: AppTheme.info,
-                    child: Icon(Icons.person,
-                        size: 50, color:AppTheme.secondary ),
-                  ),
+                  // Personal info rows
+                  infoRow(Icons.phone, "Phone", profile?['phone_no'] ?? ''),
+                  infoRow(Icons.badge, "CNIC", profile?['cnic'] ?? ''),
+                  infoRow(Icons.home, "Address", profile?['address'] ?? ''),
+                  infoRow(Icons.info, "Details",
+                      profile?['employee_details'] ?? ''),
 
-                  const SizedBox(height: 10),
-
-                  Text(
-                    profile?['name'] ?? '',
-                    style: const TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold),
-                  ),
-
-                  Text(profile?['email'] ?? ''),
-
-                  const SizedBox(height: 20),
-
-                  Card(
-                    margin: const EdgeInsets.all(15),
-                    child: Column(
-                      children: [
-                        // tile(Icons.phone, "Phone",
-                        //     profile?['phone_no'] ?? ''),
-                        // tile(Icons.badge, "CNIC",
-                        //     profile?['cnic'] ?? ''),
-                        // tile(Icons.home, "Address",
-                        //     profile?['address'] ?? ''),
-                        // tile(Icons.info, "Details",
-                        //     profile?['employee_details'] ?? ''),
-                      ],
-                    ),
-                  ),
-
-                  Card(
-                    margin: const EdgeInsets.all(15),
-                    child: Column(
+                  // Performance overview section
+                  sectionTitle("Performance Overview"),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: GridView.count(
+                      crossAxisCount: 2,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                      childAspectRatio: 1.3,
                       children: [
                         statCard(
                           Icons.precision_manufacturing,
                           "Assigned Machines",
                           "${profile?['total_machines'] ?? 0}",
-                           AppTheme.info,
+                          Colors.blue,
                         ),
                         statCard(
                           Icons.analytics,
                           "Total Production",
                           "${profile?['total_production'] ?? 0}",
-                           AppTheme.surface,
+                          Colors.orange,
                         ),
                         statCard(
                           Icons.check_circle,
                           "Ready Production",
                           "${profile?['total_ready_production'] ?? 0}",
-                           AppTheme.success,
+                          Colors.green,
                         ),
                         statCard(
                           Icons.fact_check,
