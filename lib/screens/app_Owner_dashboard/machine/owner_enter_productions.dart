@@ -74,7 +74,7 @@ class _OwnerEnterProductionScreenState
         "Error",
         "Maximum $remaining allowed (ready + waste)",
         backgroundColor: AppTheme.error,
-        colorText: Colors.white,
+        colorText:  AppTheme.secondary,
       );
       return;
     }
@@ -104,14 +104,14 @@ class _OwnerEnterProductionScreenState
           "Success",
           "Production submitted for approval",
           backgroundColor: AppTheme.success,
-          colorText: Colors.white,
+          colorText: AppTheme.secondary ,
         );
       } else {
         Get.snackbar(
           "Error",
           "Production not added",
           backgroundColor: AppTheme.error,
-          colorText: Colors.white,
+          colorText:  AppTheme.secondary,
         );
       }
     } catch (e) {
@@ -128,7 +128,7 @@ class _OwnerEnterProductionScreenState
       appBar: AppBar(
         title: const Text("Enter Production"),
         backgroundColor: AppTheme.primary,
-        foregroundColor: Colors.white,
+        foregroundColor:  AppTheme.secondary,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -141,7 +141,7 @@ class _OwnerEnterProductionScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text("Employee (Shift)",
-                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+                    style: TextStyle(fontSize: 12, color: AppTheme.neutral)),
                 const SizedBox(height: 6),
                 DropdownButtonFormField<Map<String, dynamic>>(
                   value: _selectedShift,
@@ -160,7 +160,7 @@ class _OwnerEnterProductionScreenState
 
                 const SizedBox(height: 15),
                 const Text("Variety Type",
-                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+                    style: TextStyle(fontSize: 12, color: AppTheme.neutral)),
                 const SizedBox(height: 6),
                 TextField(
                   controller: varietyController,
@@ -171,7 +171,7 @@ class _OwnerEnterProductionScreenState
 
                 const SizedBox(height: 15),
                 const Text("Total Length",
-                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+                    style: TextStyle(fontSize: 12, color: AppTheme.neutral)),
                 const SizedBox(height: 6),
                 TextField(
                   controller: lengthController,
@@ -182,7 +182,7 @@ class _OwnerEnterProductionScreenState
 
                 const SizedBox(height: 15),
                 const Text("Remaining",
-                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+                    style: TextStyle(fontSize: 12, color: AppTheme.neutral)),
                 const SizedBox(height: 6),
                 TextField(
                   controller: remainingController,
@@ -193,7 +193,7 @@ class _OwnerEnterProductionScreenState
 
                 const SizedBox(height: 15),
                 const Text("Ready Production",
-                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+                    style: TextStyle(fontSize: 12, color:  AppTheme.neutral)),
                 const SizedBox(height: 6),
                 TextField(
                   controller: readyController,
@@ -206,7 +206,7 @@ class _OwnerEnterProductionScreenState
 
                 const SizedBox(height: 15),
                 const Text("Waste Production",
-                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+                    style: TextStyle(fontSize: 12, color:  AppTheme.neutral)),
                 const SizedBox(height: 6),
                 TextField(
                   controller: wasteController,
@@ -228,11 +228,11 @@ class _OwnerEnterProductionScreenState
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                     child: loading
-                        ? const CircularProgressIndicator(color: Colors.white)
+                        ? const CircularProgressIndicator(color:  AppTheme.secondary)
                         : const Text(
                             "Submit Production",
                             style: TextStyle(
-                                color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                                color:  AppTheme.secondary, fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                   ),
                 ),

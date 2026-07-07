@@ -118,7 +118,7 @@ class _MachineDetailScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: const EmployeeDrawer(),
-      backgroundColor: AppTheme.secondary,
+      backgroundColor: AppTheme.background,
 
       appBar: AppBar(
         backgroundColor: AppTheme.primary,

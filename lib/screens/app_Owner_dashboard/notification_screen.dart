@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
 
-const _navy   = Color(0xFF1E3A8A);
-const _blue   = Color(0xFF2563EB);
-const _bgPage = Color(0xFFF0F4FF);
-const _white  = Colors.white;
-const _slate  = Color(0xFF64748B);
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});

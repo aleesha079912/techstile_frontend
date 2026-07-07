@@ -272,6 +272,14 @@ class _AssignShiftsScreenState extends State<AssignShiftsScreen> {
                     );
                   },
                 ),
+                floatingActionButton: FloatingActionButton(
+                  backgroundColor: AppTheme.primary,
+                  onPressed: () => showForm(),
+                  child: const Icon(
+                    Icons.add,
+                    color: AppTheme.secondary,
+                  ),
+                ),
     );
   }
 }

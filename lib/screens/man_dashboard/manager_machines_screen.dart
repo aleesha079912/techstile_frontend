@@ -221,11 +221,11 @@ class _ManagerMachinesScreenState
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:  AppTheme.secondary,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color:  AppTheme.onsurface.withOpacity(0.05),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),

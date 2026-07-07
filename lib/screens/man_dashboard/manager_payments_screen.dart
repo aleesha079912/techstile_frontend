@@ -63,7 +63,7 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Payments',
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 17)),
+                style: TextStyle(color:AppTheme.secondary, fontWeight: FontWeight.w700, fontSize: 17)),
             // ✅ Fix: state se aata hai — Get.arguments se nahi
             Text(
               loading ? 'Loading...' : (factoryName ?? 'Factory'),

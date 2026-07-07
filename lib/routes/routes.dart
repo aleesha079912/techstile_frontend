@@ -5,6 +5,7 @@ import 'package:techstile_frontend/screens/employee_dashboard/machine_detail_scr
 import 'package:techstile_frontend/screens/employee_dashboard/profile.dart';
 import 'package:techstile_frontend/core/services/auth_service.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/owner_production_page.dart';
+import 'package:techstile_frontend/screens/forget_password_screen.dart';
 import 'package:techstile_frontend/screens/man_dashboard/manager_emloyee_detail_screen.dart';
 
 
@@ -53,6 +54,8 @@ class AppRoutes {
   static const splash = "/";
   static const login = "/login";
   static const signup = "/signup";
+  static const forgotPassword = '/forgot-password';
+
 
   static const ownerDashboard = "/owner-dashboard";
   static const String managerDashboard = "/manager-dashboard";
@@ -102,6 +105,8 @@ static const employeeNotifications = "/employee-notifications";
     GetPage(name: login, page: () => LoginScreen()),
 
     GetPage(name: signup, page: () => SignupScreen()),
+    
+    GetPage(name: forgotPassword, page: () => ForgotPasswordScreen(), ),
 
     /// OWNER DASHBOARD
     GetPage(

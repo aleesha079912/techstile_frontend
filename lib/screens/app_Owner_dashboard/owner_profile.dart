@@ -44,7 +44,7 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [AppTheme.primary, Color(0xFF2A4FAE)],
+          colors: [AppTheme.primary,  AppTheme.info],
         ),
         boxShadow: [
           BoxShadow(
@@ -64,20 +64,20 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
             ),
             child: CircleAvatar(
               radius: 34,
-              backgroundColor: Colors.white.withOpacity(0.2),
+              backgroundColor:  AppTheme.background.withOpacity(0.2),
               child: Text(
                 firstLetter,
                 style: const TextStyle(
-                    fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
+                    fontSize: 28, fontWeight: FontWeight.bold, color:  AppTheme.secondary),
               ),
             ),
           ),
           const SizedBox(height: 12),
           Text(name,
               style: const TextStyle(
-                  fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white)),
+                  fontSize: 20, fontWeight: FontWeight.bold, color:  AppTheme.secondary)),
           const SizedBox(height: 3),
-          Text(email, style: TextStyle(fontSize: 12, color: Colors.white.withOpacity(0.85))),
+          Text(email, style: TextStyle(fontSize: 12, color:  AppTheme.secondary.withOpacity(0.85))),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -87,7 +87,7 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
             ),
             child: const Text(
               "Owner",
-              style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w700),
+              style: TextStyle(color:  AppTheme.secondary, fontSize: 11, fontWeight: FontWeight.w700),
             ),
           ),
         ],
@@ -119,10 +119,10 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
     return Container(
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:  AppTheme.secondary,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 6, offset: const Offset(0, 3)),
+          BoxShadow(color:  AppTheme.onsurface.withOpacity(0.05), blurRadius: 6, offset: const Offset(0, 3)),
         ],
       ),
       child: Column(
@@ -135,9 +135,9 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
           ),
           const SizedBox(height: 12),
           Text(value,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87)),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color:  AppTheme.onsurface)),
           const SizedBox(height: 4),
-          Text(title, style: const TextStyle(fontSize: 12, color: Colors.black54)),
+          Text(title, style: const TextStyle(fontSize: 12, color:  AppTheme.onsurface)),
         ],
       ),
     );
@@ -148,10 +148,10 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:  AppTheme.secondary,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 6, offset: const Offset(0, 2)),
+          BoxShadow(color:  AppTheme.onsurface.withOpacity(0.04), blurRadius: 6, offset: const Offset(0, 2)),
         ],
       ),
       child: Row(
@@ -167,9 +167,9 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label, style: const TextStyle(fontSize: 11, color: Colors.black45)),
+                Text(label, style: const TextStyle(fontSize: 11, color:  AppTheme.onsurface)),
                 Text(value.isNotEmpty ? value : '—',
-                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.black87)),
+                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppTheme.onsurface)),
               ],
             ),
           ),
@@ -181,7 +181,7 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F6FA),
+      backgroundColor: AppTheme.background,
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
         iconTheme: const IconThemeData(color: AppTheme.secondary),
@@ -236,7 +236,7 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
                           _statCard(Icons.precision_manufacturing_rounded, "Total Machines",
                               "${profile?['total_machines'] ?? 0}", Colors.deepPurple),
                           _statCard(Icons.groups_rounded, "Total Employees",
-                              "${profile?['total_employees'] ?? 0}", Colors.orange),
+                              "${profile?['total_employees'] ?? 0}",  AppTheme.surface),
                           _statCard(Icons.supervisor_account_rounded, "Total Managers",
                               "${profile?['total_managers'] ?? 0}", AppTheme.success),
                         ],

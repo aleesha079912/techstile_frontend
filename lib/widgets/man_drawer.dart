@@ -75,11 +75,11 @@ class _ManagerDrawerState extends State<ManagerDrawer> {
               padding: EdgeInsets.zero,
 
               children: [
-                _item(context, Icons.dashboard, "Dashboard", () {
-                  Get.back();
+                // _item(context, Icons.dashboard, "Dashboard", () {
+                //   Get.back();
 
-                  Get.offNamed(AppRoutes.managerDashboard);
-                }),
+                //   Get.offNamed(AppRoutes.managerDashboard);
+                // }),
 
                 _item(
                   context,

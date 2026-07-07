@@ -61,7 +61,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               _SettingsTile(
                 icon: Icons.email_rounded,
-                iconColor: const Color(0xFF0891B2),
+                iconColor: AppTheme.info,
                 label: "Email Alerts",
                 trailing: _toggle(
                     _emailAlerts, (v) => setState(() => _emailAlerts = v)),
@@ -77,7 +77,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               _SettingsTile(
                 icon: Icons.cloud_upload_rounded,
-                iconColor: const Color(0xFF059669),
+                iconColor:AppTheme.success,
                 label: "Auto Backup",
                 trailing: _toggle(
                     _autoBackup, (v) => setState(() => _autoBackup = v)),
@@ -97,7 +97,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               _SettingsTile(
                 icon: Icons.feedback_rounded,
-                iconColor: const Color(0xFFD97706),
+                iconColor:AppTheme.surface,
                 label: "Send Feedback",
                 onTap: () => _showSnack("Send Feedback"),
               ),
@@ -145,7 +145,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [AppTheme.primary, AppTheme.primary],
+          colors: [AppTheme.primary,AppTheme.info],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -187,7 +187,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   width: 18,
                   height: 18,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF059669),
+                    color: AppTheme.success,
                     shape: BoxShape.circle,
                     border: Border.all(color: AppTheme.primary, width: 2),
                   ),
@@ -318,7 +318,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         style: TextStyle(
           fontSize: 11,
           fontWeight: FontWeight.w600,
-          color: Color(0xFF065F46),
+          color:AppTheme.success,
         ),
       ),
     );
@@ -406,7 +406,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFDC2626),
+              backgroundColor: AppTheme.error,
               foregroundColor: AppTheme.primary,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),

@@ -65,7 +65,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor:AppTheme.secondary,
+      backgroundColor:AppTheme.background,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
       ),

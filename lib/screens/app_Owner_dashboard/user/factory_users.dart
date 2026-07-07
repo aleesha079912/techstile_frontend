@@ -67,7 +67,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
     padding: const EdgeInsets.only(top: 4),
     child: Row(
       children: [
-        Icon(icon, size: 13, color: Color(0xFF1A73E8)),
+        Icon(icon, size: 13, color:  AppTheme.primary),
         const SizedBox(width: 6),
         Expanded(
           child: Text(
@@ -75,7 +75,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               fontSize: 11.5,
-              color: Colors.grey,
+              color:  AppTheme.neutral,
             ),
           ),
         ),
@@ -127,9 +127,9 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFFE8F0FE),
+        color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFB6D0FF)),
+        border: Border.all(color: AppTheme.info),
       ),
       child: Row(
         children: [
@@ -154,7 +154,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
               ],
             ),
           ),
-          const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+          const Icon(Icons.arrow_forward_ios, size: 14, color: AppTheme.neutral),
         ],
       ),
       ),
@@ -192,11 +192,11 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color:  AppTheme.secondary,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(.05),
+              color:  AppTheme.onsurface.withOpacity(.05),
               blurRadius: 8,
             ),
           ],
@@ -207,11 +207,11 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
               children: [
                 CircleAvatar(
                   radius: 19,
-                  backgroundColor: const Color(0xFF1A73E8).withOpacity(.15),
+                  backgroundColor:  AppTheme.primary.withOpacity(.15),
                   child: Text(
                     name[0].toUpperCase(),
                     style: const TextStyle(
-                      color: Color(0xFF1A73E8),
+                      color: AppTheme.secondary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -224,9 +224,9 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                       width: 10,
                       height: 10,
                       decoration: BoxDecoration(
-                        color: Colors.green,
+                        color: AppTheme.success,
                         shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 1.5),
+                        border: Border.all(color:  AppTheme.secondary, width: 1.5),
                       ),
                     ),
                   ),
@@ -251,7 +251,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                     "ID: ${user['employee_id'] ?? '--'}",
                     style: const TextStyle(
                       fontSize: 10.5,
-                      color: Colors.grey,
+                      color:  AppTheme.neutral,
                     ),
                   ),
 
@@ -268,7 +268,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                     role,
                     style: const TextStyle(
                       fontSize: 11,
-                      color: Color(0xFF1A73E8),
+                      color:  AppTheme.primary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -280,7 +280,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
               const Icon(
                 Icons.arrow_forward_ios,
                 size: 13,
-                color: Colors.grey,
+                color:  AppTheme.neutral,
               ),
           ],
         ),
@@ -290,7 +290,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.secondary,
+      backgroundColor: AppTheme.background,
 
       appBar: AppBar(
         backgroundColor: AppTheme.primary,

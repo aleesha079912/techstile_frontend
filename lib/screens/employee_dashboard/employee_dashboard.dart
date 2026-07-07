@@ -5,7 +5,7 @@ import 'package:techstile_frontend/core/services/employee_service/employee_dashb
 import 'package:techstile_frontend/core/services/auth_service.dart';
 import 'package:techstile_frontend/widgets/emp_db_bot_nav_bar.dart';
 import 'package:techstile_frontend/widgets/emp_drawer.dart';
-import 'profile.dart';
+
 
 class EmployeeDashboard extends StatefulWidget {
   const EmployeeDashboard({super.key});
@@ -57,19 +57,13 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
     return Scaffold(
       drawer: const EmployeeDrawer(),
       backgroundColor: AppTheme.background,
- 
-      
 
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
-         elevation: 0,
-        leading: Builder(
-          builder: (ctx) => IconButton(
-            icon: const Icon(Icons.menu_rounded, color: AppTheme.secondary),
-            onPressed: () => Scaffold.of(ctx).openDrawer(),
-          ),
+        title: const Text(
+          "TECHstile",
+          style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
         ),
-        title: const Text("LOOM CONTROL", style: TextStyle(color: AppTheme.secondary),),
       ),
 
       body: loading
@@ -79,71 +73,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
               child: ListView(
               padding: EdgeInsets.zero,
               children: [
-                /// EMPLOYEE CARD (tap -> profile)
-                GestureDetector(
-                  onTap: () => Get.to(
-                    () => UserProfileScreen(userId: AuthService.userId),
-                  ),
-                  child: Container(
-                    margin: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-                    padding: const EdgeInsets.all(18),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [AppTheme.primary, AppTheme.primary.withOpacity(0.8)],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppTheme.primary.withOpacity(0.3),
-                          blurRadius: 14,
-                          offset: const Offset(0, 6),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 26,
-                          backgroundColor: Colors.white.withOpacity(0.2),
-                          child: Text(
-                            employeeName.isNotEmpty
-                                ? employeeName[0].toUpperCase()
-                                : '?',
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        const SizedBox(width: 14),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                employeeName.isNotEmpty ? employeeName : 'Employee',
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.w700),
-                              ),
-                              const SizedBox(height: 3),
-                              Text(
-                                'View your profile',
-                                style: TextStyle(
-                                    color: Colors.white.withOpacity(0.75), fontSize: 12),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Icon(Icons.arrow_forward_ios_rounded,
-                            color: Colors.white.withOpacity(0.8), size: 16),
-                      ],
-                    ),
-                  ),
-                ),
+
 
                 /// TITLE
                 Padding(
@@ -174,7 +104,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                           icon: Icons.today_rounded,
                           label: "Today (Approved)",
                           value: dailyApproved.toStringAsFixed(0),
-                          color: AppTheme.primary,
+                          color: AppTheme.active,
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -183,7 +113,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                           icon: Icons.calendar_month_rounded,
                           label: "This Week (Approved)",
                           value: weeklyApproved.toStringAsFixed(0),
-                          color: AppTheme.primary,
+                          color: AppTheme.surface,
                         ),
                       ),
                     ],
@@ -205,15 +135,6 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                         ),
                       ),
                       const SizedBox(width: 8),
-
-                      // Expanded(
-                      //   child: _buildOverviewButton(
-                      //     icon: Icons.straighten,
-                      //     label: "Assigned",
-                      //     value: "${totalProduction.toStringAsFixed(0)}",
-                      //   ),
-                      // ), 
-                      // const SizedBox(width: 8),
                       Expanded(
                         child: _buildOverviewButton(
                           icon: Icons.check_circle,
@@ -249,11 +170,11 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                     child: Column(
                       children: [
                         Icon(Icons.precision_manufacturing_outlined,
-                            size: 40, color: AppTheme.textSecondary.withOpacity(0.5)),
+                            size: 40, color: AppTheme.primary.withOpacity(0.5)),
                         const SizedBox(height: 10),
                         Text(
                           "No machines assigned yet",
-                          style: TextStyle(color: AppTheme.textSecondary),
+                          style: TextStyle(color: AppTheme.primary),
                         ),
                       ],
                     ),
@@ -267,7 +188,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                         ),
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: AppTheme.primary,
+                          color: Colors.white,
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
@@ -382,7 +303,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                   color: AppTheme.primary, fontSize: 20, fontWeight: FontWeight.w800)),
           const SizedBox(height: 2),
           Text(label,
-              style: TextStyle(color: AppTheme.textSecondary, fontSize: 11)),
+              style: TextStyle(color: AppTheme.primary, fontSize: 11)),
         ],
       ),
     );
@@ -397,7 +318,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
-        color: AppTheme.primary,
+        color: AppTheme.active,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(color: AppTheme.primary.withOpacity(0.08), blurRadius: 8),
@@ -410,7 +331,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
           Text(
             label,
             style: TextStyle(
-              color: AppTheme.textPrimary,
+              color: AppTheme.background,
               fontWeight: FontWeight.w600,
               fontSize: 12,
             ),
