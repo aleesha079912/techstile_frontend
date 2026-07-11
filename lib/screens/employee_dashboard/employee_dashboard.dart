@@ -56,13 +56,20 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: const EmployeeDrawer(),
-      backgroundColor: AppTheme.background,
+      backgroundColor: AppTheme.secondary,
 
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
+        elevation: 0,
+        iconTheme: const IconThemeData(
+          color: AppTheme.secondary,
+        ),
         title: const Text(
           "TECHstile",
-          style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+          style: TextStyle(
+            color: AppTheme.secondary,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
 

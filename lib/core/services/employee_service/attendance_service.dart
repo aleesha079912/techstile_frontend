@@ -15,9 +15,6 @@ class AttendanceService {
       body: jsonEncode({"employee_id": employeeId, "machine_id": machineId}),
     );
 
-    print(response.statusCode);
-    print(response.body);
-
     return response.statusCode == 201;
   }
 }

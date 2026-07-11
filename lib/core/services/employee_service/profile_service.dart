@@ -3,7 +3,8 @@ import 'package:http/http.dart' as http;
 import '../auth_service.dart';
 
 class EmployeeProfileService {
-  static const String baseUrl = "http://techstile.sandbox.pk/api";
+  static const String baseUrl =
+      "http://techstile.sandbox.pk/api";
 
   Future<Map<String, dynamic>?> getProfile(int userId) async {
     try {
