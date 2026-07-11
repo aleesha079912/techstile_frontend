@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:techstile_frontend/core/services/machine_assignment_service.dart';
-import 'package:techstile_frontend/core/utils/theme.dart';
 
 class MachineAssignmentPage extends StatefulWidget {
   const MachineAssignmentPage({super.key});
@@ -11,9 +10,6 @@ class MachineAssignmentPage extends StatefulWidget {
 
 class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
   final _service = AssignMachineService.instance;
-
-  final _varietyTypeController = TextEditingController();
-  final _totalLengthController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -80,8 +76,6 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
       managerId: selManager!,
       factoryId: selFactory!,
       machineIds: [selectedMachine!],
-      varietyType: _varietyTypeController.text,
-      totalLength: _totalLengthController.text,
     );
 
     if (!mounted) return;
@@ -90,7 +84,7 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Machine Assigned Successfully"),
-          backgroundColor:AppTheme.success,
+          backgroundColor: Colors.green,
         ),
       );
 
@@ -99,7 +93,7 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Assignment Failed"),
-          backgroundColor: AppTheme.error,
+          backgroundColor: Colors.red,
         ),
       );
     }
@@ -187,35 +181,25 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
 
                     const SizedBox(height: 15),
 
-                    TextFormField(
-                      controller: _varietyTypeController,
-                      decoration: const InputDecoration(
-                        labelText: "Variety Type",
-                        border: OutlineInputBorder(),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.shade50,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Colors.blue.shade100),
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Enter Variety Type";
-                        }
-                        return null;
-                      },
-                    ),
-
-                    const SizedBox(height: 15),
-
-                    TextFormField(
-                      controller: _totalLengthController,
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: "Total Length",
-                        border: OutlineInputBorder(),
+                      child: const Row(
+                        children: [
+                          Icon(Icons.info_outline, color: Colors.blueGrey, size: 18),
+                          SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              "Variety & Total Length is set separately from the machine's page using \"Assign Production Batch\".",
+                              style: TextStyle(fontSize: 12, color: Colors.blueGrey),
+                            ),
+                          ),
+                        ],
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Enter Total Length";
-                        }
-                        return null;
-                      },
                     ),
 
                     const SizedBox(height: 20),

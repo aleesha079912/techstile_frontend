@@ -6,7 +6,7 @@ import '../auth_service.dart';
 class HistoryService {
 
 final String baseUrl =
-"http://techstile.sandbox.pk/api";
+"http://localhost:8000/api";
 
 
 Future<Map<String,dynamic>> getHistory(int id) async {

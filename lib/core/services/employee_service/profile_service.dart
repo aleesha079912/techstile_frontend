@@ -4,7 +4,7 @@ import '../auth_service.dart';
 
 class EmployeeProfileService {
   static const String baseUrl =
-      "http://techstile.sandbox.pk/api";
+      "http://localhost:8000/api";
 
   Future<Map<String, dynamic>?>
       getProfile(int userId) async {

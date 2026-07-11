@@ -3,24 +3,36 @@ import 'package:get/get.dart';
 
 import '../../../core/utils/theme.dart';
 import '../../../core/services/employee_service/employee_production_service.dart';
-import '../../../core/services/auth_service.dart';
 
 /// Owner-side production entry.
 /// Owner khud production "karta" nahi — is liye yahan employee select
 /// karna zaroori hai taake pata rahe ye production kis employee/shift ki hai.
+///
+/// ✅ Variety/Total Length/Remaining ab SHARED (machine ke current batch) hain —
+/// dono shift-employees ke liye same. Sirf "Ready Production" har employee ki
+/// apni hoti hai.
 class OwnerEnterProductionScreen extends StatefulWidget {
   final int machineId;
   final int factoryId;
 
-  /// Shift assignments for this machine — from MachineController::details 'shifts' array.
-  /// Each item: {employee_id, user_id, employee_name, shift_start, shift_end,
-  ///             variety_type, total_length, remaining, ...}
+  /// Shared batch info (machine-wide), MachineController::details se.
+  final String? batchId;
+  final String varietyType;
+  final double totalLength;
+  final double remaining;
+
+  /// Employees currently assigned to this machine's shifts.
+  /// Each item: {employee_id, user_id, employee_name, shift_start, shift_end}
   final List<Map<String, dynamic>> shifts;
 
   const OwnerEnterProductionScreen({
     super.key,
     required this.machineId,
     required this.factoryId,
+    required this.batchId,
+    required this.varietyType,
+    required this.totalLength,
+    required this.remaining,
     required this.shifts,
   });
 
@@ -33,24 +45,10 @@ class _OwnerEnterProductionScreenState
     extends State<OwnerEnterProductionScreen> {
   Map<String, dynamic>? _selectedShift;
 
-  final varietyController = TextEditingController();
-  final lengthController = TextEditingController();
-  final remainingController = TextEditingController();
   final readyController = TextEditingController();
   final wasteController = TextEditingController();
 
   bool loading = false;
-
-  void _onShiftSelected(Map<String, dynamic>? shift) {
-    setState(() {
-      _selectedShift = shift;
-      varietyController.text = shift?['variety_type']?.toString() ?? '';
-      lengthController.text = shift?['total_length']?.toString() ?? '';
-      remainingController.text = shift?['remaining']?.toString() ?? '0';
-      readyController.clear();
-      wasteController.clear();
-    });
-  }
 
   Future<void> _submit() async {
     if (_selectedShift == null) {
@@ -62,19 +60,18 @@ class _OwnerEnterProductionScreenState
       return;
     }
 
-    final remaining = double.tryParse(remainingController.text) ?? 0;
     final ready = double.tryParse(readyController.text) ?? 0;
     final waste = double.tryParse(
           wasteController.text.isEmpty ? '0' : wasteController.text,
         ) ??
         0;
 
-    if (ready + waste > remaining) {
+    if (ready + waste > widget.remaining) {
       Get.snackbar(
         "Error",
-        "Maximum $remaining allowed (ready + waste)",
+        "Maximum ${widget.remaining} allowed (ready + waste) — ye remaining dono shifts mila kar hai",
         backgroundColor: AppTheme.error,
-        colorText:  AppTheme.secondary,
+        colorText: Colors.white,
       );
       return;
     }
@@ -87,31 +84,30 @@ class _OwnerEnterProductionScreenState
 
     setState(() => loading = true);
     try {
-      final success = await EmployeeProductionService().submitProduction(
+      final result = await EmployeeProductionService().submitProductionWithMessage(
         machineId: widget.machineId,
         userId: userId is int ? userId : int.parse(userId.toString()),
         factoryId: widget.factoryId,
-        varietyType: varietyController.text,
-        totalLength:
-            double.tryParse(lengthController.text.isEmpty ? '0' : lengthController.text) ?? 0,
+        varietyType: widget.varietyType,
+        totalLength: widget.totalLength,
         readyProduction: ready,
         wasteProduction: waste,
       );
 
-      if (success) {
+      if (result['success'] == true) {
         Get.back(result: true);
         Get.snackbar(
           "Success",
           "Production submitted for approval",
           backgroundColor: AppTheme.success,
-          colorText: AppTheme.secondary ,
+          colorText: Colors.white,
         );
       } else {
         Get.snackbar(
           "Error",
-          "Production not added",
+          result['message']?.toString() ?? "Production not added",
           backgroundColor: AppTheme.error,
-          colorText:  AppTheme.secondary,
+          colorText: Colors.white,
         );
       }
     } catch (e) {
@@ -121,6 +117,26 @@ class _OwnerEnterProductionScreenState
     }
   }
 
+  Widget _readonlyField(String label, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+        const SizedBox(height: 6),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF3F4F6),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: Colors.grey.shade300),
+          ),
+          child: Text(value, style: const TextStyle(fontSize: 15)),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -128,7 +144,7 @@ class _OwnerEnterProductionScreenState
       appBar: AppBar(
         title: const Text("Enter Production"),
         backgroundColor: AppTheme.primary,
-        foregroundColor:  AppTheme.secondary,
+        foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -140,8 +156,26 @@ class _OwnerEnterProductionScreenState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // ── Shared batch info (read-only, machine-wide) ──
+                _readonlyField("Variety Type", widget.varietyType),
+                const SizedBox(height: 15),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _readonlyField(
+                          "Total Length", "${widget.totalLength}"),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: _readonlyField(
+                          "Remaining (shared)", "${widget.remaining}"),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 20),
                 const Text("Employee (Shift)",
-                    style: TextStyle(fontSize: 12, color: AppTheme.neutral)),
+                    style: TextStyle(fontSize: 12, color: Colors.grey)),
                 const SizedBox(height: 6),
                 DropdownButtonFormField<Map<String, dynamic>>(
                   value: _selectedShift,
@@ -155,45 +189,12 @@ class _OwnerEnterProductionScreenState
                         "${s['employee_name'] ?? 'Employee #${s['employee_id']}'}  (${s['shift_start'] ?? ''}-${s['shift_end'] ?? ''})";
                     return DropdownMenuItem(value: s, child: Text(label));
                   }).toList(),
-                  onChanged: _onShiftSelected,
-                ),
-
-                const SizedBox(height: 15),
-                const Text("Variety Type",
-                    style: TextStyle(fontSize: 12, color: AppTheme.neutral)),
-                const SizedBox(height: 6),
-                TextField(
-                  controller: varietyController,
-                  readOnly: true,
-                  decoration:
-                      const InputDecoration(border: OutlineInputBorder(), filled: true),
-                ),
-
-                const SizedBox(height: 15),
-                const Text("Total Length",
-                    style: TextStyle(fontSize: 12, color: AppTheme.neutral)),
-                const SizedBox(height: 6),
-                TextField(
-                  controller: lengthController,
-                  readOnly: true,
-                  decoration:
-                      const InputDecoration(border: OutlineInputBorder(), filled: true),
-                ),
-
-                const SizedBox(height: 15),
-                const Text("Remaining",
-                    style: TextStyle(fontSize: 12, color: AppTheme.neutral)),
-                const SizedBox(height: 6),
-                TextField(
-                  controller: remainingController,
-                  readOnly: true,
-                  decoration:
-                      const InputDecoration(border: OutlineInputBorder(), filled: true),
+                  onChanged: (v) => setState(() => _selectedShift = v),
                 ),
 
                 const SizedBox(height: 15),
                 const Text("Ready Production",
-                    style: TextStyle(fontSize: 12, color:  AppTheme.neutral)),
+                    style: TextStyle(fontSize: 12, color: Colors.grey)),
                 const SizedBox(height: 6),
                 TextField(
                   controller: readyController,
@@ -206,7 +207,7 @@ class _OwnerEnterProductionScreenState
 
                 const SizedBox(height: 15),
                 const Text("Waste Production",
-                    style: TextStyle(fontSize: 12, color:  AppTheme.neutral)),
+                    style: TextStyle(fontSize: 12, color: Colors.grey)),
                 const SizedBox(height: 6),
                 TextField(
                   controller: wasteController,
@@ -228,11 +229,11 @@ class _OwnerEnterProductionScreenState
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                     child: loading
-                        ? const CircularProgressIndicator(color:  AppTheme.secondary)
+                        ? const CircularProgressIndicator(color: Colors.white)
                         : const Text(
                             "Submit Production",
                             style: TextStyle(
-                                color:  AppTheme.secondary, fontSize: 16, fontWeight: FontWeight.bold),
+                                color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                   ),
                 ),
