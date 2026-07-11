@@ -6,13 +6,10 @@ class EmployeeProfileService {
   final String baseUrl =
       "http://localhost:8000/api";
 
-  Future<Map<String, dynamic>?> getProfile(
-      int userId) async {
+  Future<Map<String, dynamic>?> getProfile(int userId) async {
     try {
       final response = await http.get(
-        Uri.parse(
-          "$baseUrl/employee/profile/$userId",
-        ),
+        Uri.parse("$baseUrl/employee/profile/$userId"),
         headers: AuthService.authHeaders,
       );
 

@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../auth_service.dart';
 
-
 class HistoryService {
 
 final String baseUrl =
@@ -21,19 +20,11 @@ headers: AuthService.authHeaders
 );
 
 
-if(response.statusCode==200){
 
-return jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    }
 
-}
-
-
-throw Exception(
-response.body
-);
-
-
-}
-
-
+    throw Exception(response.body);
+  }
 }

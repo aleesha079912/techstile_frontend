@@ -67,10 +67,10 @@ class ManageUsersService {
   final String baseUrl = "http://localhost:8000/api";
 
   Map<String, String> get _headers => {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        ...AuthService.authHeaders,
-      };
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    ...AuthService.authHeaders,
+  };
 
   // ───────────────────────── USERS ─────────────────────────
 
@@ -84,8 +84,7 @@ class ManageUsersService {
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
 
-        final List data =
-            decoded is List ? decoded : decoded['data'] ?? [];
+        final List data = decoded is List ? decoded : decoded['data'] ?? [];
 
         return data.map((e) => UserData.fromJson(e)).toList();
       }
@@ -108,8 +107,7 @@ class ManageUsersService {
         body: jsonEncode(data),
       );
 
-      return response.statusCode == 200 ||
-          response.statusCode == 201;
+      return response.statusCode == 200 || response.statusCode == 201;
     } catch (e) {
       print("addUser error: $e");
       return false;
@@ -117,19 +115,19 @@ class ManageUsersService {
   }
 
   Future<bool> updateUser(int id, Map<String, dynamic> data) async {
-  try {
-    final response = await http.put(
-      Uri.parse('$baseUrl/users/update/$id'),
-      headers: _headers,
-      body: jsonEncode(data),
-    );
+    try {
+      final response = await http.put(
+        Uri.parse('$baseUrl/users/update/$id'),
+        headers: _headers,
+        body: jsonEncode(data),
+      );
 
-    return response.statusCode == 200;
-  } catch (e) {
-    print("updateUser error: $e");
-    return false;
+      return response.statusCode == 200;
+    } catch (e) {
+      print("updateUser error: $e");
+      return false;
+    }
   }
-}
 
   Future<bool> deleteUser(int id) async {
     try {
@@ -147,38 +145,37 @@ class ManageUsersService {
 
   // ───────────────────────── ROLES ─────────────────────────
 
-Future<List<String>> fetchRoles() async {
-  try {
-    final response = await http.get(
-      Uri.parse('$baseUrl/users/all'),
-      headers: _headers,
-    );
+  Future<List<String>> fetchRoles() async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/users/all'),
+        headers: _headers,
+      );
 
-    if (response.statusCode == 200) {
-      final decoded = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        final decoded = jsonDecode(response.body);
 
-      final List users =
-          decoded is List ? decoded : decoded['data'] ?? [];
+        final List users = decoded is List ? decoded : decoded['data'] ?? [];
 
-      final Set<String> roles = {};
+        final Set<String> roles = {};
 
-      for (final user in users) {
-        if (user['roles'] != null &&
-            user['roles'] is List &&
-            (user['roles'] as List).isNotEmpty) {
-          roles.add(user['roles'][0]['name'].toString());
+        for (final user in users) {
+          if (user['roles'] != null &&
+              user['roles'] is List &&
+              (user['roles'] as List).isNotEmpty) {
+            roles.add(user['roles'][0]['name'].toString());
+          }
         }
+
+        return roles.toList();
       }
 
-      return roles.toList();
+      return [];
+    } catch (e) {
+      print("fetchRoles error: $e");
+      return [];
     }
-
-    return [];
-  } catch (e) {
-    print("fetchRoles error: $e");
-    return [];
   }
-}
 
   // ───────────────────────── FACTORIES ─────────────────────────
 
@@ -250,8 +247,7 @@ Future<List<String>> fetchRoles() async {
 
       print("assignMachines: ${response.body}");
 
-      return response.statusCode == 200 ||
-          response.statusCode == 201;
+      return response.statusCode == 200 || response.statusCode == 201;
     } catch (e) {
       print("assignMachines error: $e");
       return false;

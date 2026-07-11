@@ -17,9 +17,9 @@ class FactoryUsersService {
     final data = jsonDecode(response.body);
 
     return {
-      "manager":      data["manager"],
-      "data":         data["data"] ?? [],
-      "total_users":  data["total_users"] ?? 0,
+      "manager": data["manager"],
+      "data": data["data"] ?? [],
+      "total_users": data["total_users"] ?? 0,
       "active_users": data["active_users"] ?? 0,
     };
   }

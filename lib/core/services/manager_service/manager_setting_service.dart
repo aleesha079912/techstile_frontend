@@ -13,11 +13,8 @@ class ManagerSettingService {
     required String cnic,
     required String address,
   }) async {
-
     final response = await http.put(
-      Uri.parse(
-        "$baseUrl/manager/profile/${AuthService.userId}",
-      ),
+      Uri.parse("$baseUrl/manager/profile/${AuthService.userId}"),
       headers: AuthService.authHeaders,
       body: jsonEncode({
         "name": name,
@@ -34,11 +31,8 @@ class ManagerSettingService {
     required String currentPassword,
     required String newPassword,
   }) async {
-
     final response = await http.post(
-      Uri.parse(
-        "$baseUrl/manager/change-password",
-      ),
+      Uri.parse("$baseUrl/manager/change-password"),
       headers: AuthService.authHeaders,
       body: jsonEncode({
         "current_password": currentPassword,

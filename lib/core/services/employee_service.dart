@@ -20,40 +20,38 @@ class EmployeeService {
   }
 
   Future<List<dynamic>> fetchFactories() async {
-  try {
-    final res = await http.get(
-      Uri.parse("$baseUrl/employees/factories"),
-      headers: AuthService.authHeaders,
-    );
+    try {
+      final res = await http.get(
+        Uri.parse("$baseUrl/employees/factories"),
+        headers: AuthService.authHeaders,
+      );
 
-    if (res.statusCode == 200) {
-      return jsonDecode(res.body);
+      if (res.statusCode == 200) {
+        return jsonDecode(res.body);
+      }
+    } catch (e) {
+      print(e);
     }
-  } catch (e) {
-    print(e);
+
+    return [];
   }
 
-  return [];
-}
+  Future<List<dynamic>> fetchUsers() async {
+    try {
+      final res = await http.get(
+        Uri.parse("$baseUrl/employees/users"),
+        headers: AuthService.authHeaders,
+      );
 
-
-
-Future<List<dynamic>> fetchUsers() async {
-  try {
-    final res = await http.get(
-      Uri.parse("$baseUrl/employees/users"),
-      headers: AuthService.authHeaders,
-    );
-
-    if (res.statusCode == 200) {
-      return jsonDecode(res.body);
+      if (res.statusCode == 200) {
+        return jsonDecode(res.body);
+      }
+    } catch (e) {
+      print(e);
     }
-  } catch (e) {
-    print(e);
-  }
 
-  return [];
-}
+    return [];
+  }
 
   // 🔹 ADD
   Future<bool> addEmployee(Map<String, dynamic> data) async {

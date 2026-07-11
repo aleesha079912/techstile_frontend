@@ -33,45 +33,44 @@ class EmployeeProductionService {
       }),
     );
 
-    print(response.statusCode);
-    print(response.body);
+      print(response.statusCode);
+      print(response.body);
 
-    final ok = response.statusCode >= 200 && response.statusCode < 300;
-    String message = ok ? 'Submitted successfully' : 'Production not added';
-    try {
-      final body = jsonDecode(response.body);
-      if (body is Map && body['message'] != null) {
-        message = body['message'].toString();
-      }
-    } catch (_) {}
+      final ok = response.statusCode >= 200 && response.statusCode < 300;
+      String message = ok ? 'Submitted successfully' : 'Production not added';
+      try {
+        final body = jsonDecode(response.body);
+        if (body is Map && body['message'] != null) {
+          message = body['message'].toString();
+        }
+      } catch (_) {}
 
-    return {'success': ok, 'message': message};
-
-  } catch(e){
-    print(e);
-    return {'success': false, 'message': e.toString()};
+      return {'success': ok, 'message': message};
+    } catch (e) {
+      print(e);
+      return {'success': false, 'message': e.toString()};
+    }
   }
-}
 
- Future<bool> submitProduction({
-  required int machineId,
-  // required int employeeId,
-   required int userId,
-  required int factoryId,
-  required String varietyType,
-  required double totalLength,
-  required double readyProduction,
-  required double wasteProduction,
-}) async {
-  final res = await submitProductionWithMessage(
-    machineId: machineId,
-    userId: userId,
-    factoryId: factoryId,
-    varietyType: varietyType,
-    totalLength: totalLength,
-    readyProduction: readyProduction,
-    wasteProduction: wasteProduction,
-  );
-  return res['success'] == true;
-}
+  Future<bool> submitProduction({
+    required int machineId,
+    // required int employeeId,
+    required int userId,
+    required int factoryId,
+    required String varietyType,
+    required double totalLength,
+    required double readyProduction,
+    required double wasteProduction,
+  }) async {
+    final res = await submitProductionWithMessage(
+      machineId: machineId,
+      userId: userId,
+      factoryId: factoryId,
+      varietyType: varietyType,
+      totalLength: totalLength,
+      readyProduction: readyProduction,
+      wasteProduction: wasteProduction,
+    );
+    return res['success'] == true;
+  }
 }

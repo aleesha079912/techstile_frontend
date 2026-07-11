@@ -1,23 +1,19 @@
-
 import '../auth_service.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:techstile_frontend/core/services/machines_service.dart'; 
+import 'package:techstile_frontend/core/services/machines_service.dart';
+
 class ManagerDashboardService {
   final String baseUrl = "http://localhost:8000/api/manager";
 
-  Future<Map<String, dynamic>> getDashboard(
-    dynamic factoryId) async {
+  Future<Map<String, dynamic>> getDashboard(dynamic factoryId) async {
+    final response = await http.get(
+      Uri.parse("$baseUrl/dashboard/$factoryId"),
+      headers: AuthService.authHeaders,
+    );
 
-  final response = await http.get(
-    Uri.parse(
-      "$baseUrl/dashboard/$factoryId"
-    ),
-    headers: AuthService.authHeaders,
-  );
-
-  return jsonDecode(response.body);
-}
+    return jsonDecode(response.body);
+  }
 
   Future<List<Machine>> getMachines(dynamic factoryId) async {
     final response = await http.get(

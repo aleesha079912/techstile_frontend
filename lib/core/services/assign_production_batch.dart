@@ -20,7 +20,6 @@ class AssignProductionService {
       }),
     );
 
-    return response.statusCode == 200 ||
-    response.statusCode == 201;
+    return response.statusCode == 200 || response.statusCode == 201;
   }
 }

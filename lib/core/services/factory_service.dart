@@ -13,30 +13,33 @@ class FactoryController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchFactories(); 
+    fetchFactories();
   }
 
   // 1. GET ALL (Backend index function)
   Future<void> fetchFactories() async {
-  final token = AuthService.token; // ya jaise bhi token lo
-  print("🔑 Token: $token");       // ← token print karo
-  final box = GetStorage();
+    final token = AuthService.token; // ya jaise bhi token lo
+    print("🔑 Token: $token"); // ← token print karo
+    final box = GetStorage();
 
-  print("Token: box.read('token') = ${box.read('token')}"); // ← GetStorage se bhi check karo
-  final response = await http.get(
-    Uri.parse('$baseUrl/allfactories'),
-    headers: AuthService.authHeaders,
-  );
-  if (response.statusCode == 200) {
-  final res = jsonDecode(response.body);
-  if (res['status'] == true) {        // ← 'status' hai ya 'success'?
-    List<dynamic> data = res['data'];
-    factoryList.assignAll(
-      data.map((e) => FactoryModel.fromJson(e)).toList()
+    print(
+      "Token: box.read('token') = ${box.read('token')}",
+    ); // ← GetStorage se bhi check karo
+    final response = await http.get(
+      Uri.parse('$baseUrl/allfactories'),
+      headers: AuthService.authHeaders,
     );
+    if (response.statusCode == 200) {
+      final res = jsonDecode(response.body);
+      if (res['status'] == true) {
+        // ← 'status' hai ya 'success'?
+        List<dynamic> data = res['data'];
+        factoryList.assignAll(
+          data.map((e) => FactoryModel.fromJson(e)).toList(),
+        );
+      }
+    }
   }
-}  
-}
 
   // 2. CREATE (Backend store function)
   Future<bool> addFactory(Map<String, dynamic> data) async {
@@ -51,7 +54,7 @@ class FactoryController extends GetxController {
       if (response.statusCode == 200) {
         final res = jsonDecode(response.body);
         if (res['status'] == true) {
-          await fetchFactories(); // List refresh 
+          await fetchFactories(); // List refresh
           return true;
         }
       }
@@ -90,10 +93,11 @@ class FactoryController extends GetxController {
   // 4. DELETE (Backend destroy function)
   Future<void> deleteFactory(dynamic id) async {
     try {
-      final response = await http.delete(Uri.parse('$baseUrl/deletefactory/$id'),
-       headers: AuthService.authHeaders,
-       );
-      
+      final response = await http.delete(
+        Uri.parse('$baseUrl/deletefactory/$id'),
+        headers: AuthService.authHeaders,
+      );
+
       if (response.statusCode == 200) {
         factoryList.removeWhere((f) => f.id == id);
         Get.snackbar("Success", "Factory deleted from server");
