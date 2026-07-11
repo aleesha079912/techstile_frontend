@@ -21,7 +21,7 @@ import 'package:techstile_frontend/screens/signup.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/app_owner_dash.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/add_factories.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/manage_user.dart';
-import 'package:techstile_frontend/screens/app_Owner_dashboard/notification_screen.dart';
+
 import 'package:techstile_frontend/screens/app_Owner_dashboard/setting_screen.dart';
 
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/manage_machines.dart';
@@ -222,12 +222,6 @@ GetPage(
   name: AppRoutes.managersettings,
   page: () => const ManagerSettingsScreen(),
 ),
-// GetPage(
-//   name: AppRoutes.managerNotifications,
-//   page: () => ManagerPaymentsScreen(
-//     factoryId: AuthService.factoryId,
-//   ),
-// ),
 GetPage(
   name: AppRoutes.managerNotifications,
   page: () => NotificationPage(
@@ -266,12 +260,6 @@ GetPage(
     GetPage(
       name: addFactory,
       page: () => const AddFactoryScreen(),
-      transition: Transition.rightToLeftWithFade,
-    ),
-
-    GetPage(
-      name: notifications,
-      page: () => const NotificationScreen(),
       transition: Transition.rightToLeftWithFade,
     ),
 

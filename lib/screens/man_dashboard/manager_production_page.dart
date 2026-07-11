@@ -83,27 +83,27 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
       ),
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-  backgroundColor: AppTheme.primary,
-  elevation: 0,
-  title: const Text(
-    'Manager Productions',
-    style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 17),
-  ),
-  iconTheme: const IconThemeData(color: Colors.white),
-  bottom: TabBar(
-    controller: _tab,
-    indicatorColor: AppTheme.surface,
-    indicatorWeight: 3,
-    labelColor: Colors.white,
-    unselectedLabelColor: AppTheme.surface,
-    labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
-    unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
-    tabs: [
-      Tab(text: 'Pending (${_pending.length})'),
-      Tab(text: 'Approved (${_approved.length})'),
-    ],
-  ),
-),
+        backgroundColor: AppTheme.primary,
+        elevation: 0,
+        title: const Text(
+          'Manager Productions',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 17),
+        ),
+        iconTheme: const IconThemeData(color: Colors.white),
+        bottom: TabBar(
+          controller: _tab,
+          indicatorColor: AppTheme.surface,
+          indicatorWeight: 3,
+          labelColor: Colors.white,
+          unselectedLabelColor: AppTheme.surface,
+          labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+          unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
+          tabs: [
+            Tab(text: 'Pending (${_pending.length})'),
+            Tab(text: 'Approved (${_approved.length})'),
+          ],
+        ),
+      ),
       body: loading
           ? const Center(child: CircularProgressIndicator(color: AppTheme.primary))
           : error != null
@@ -149,6 +149,18 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
     final status         = p['status'] as int? ?? 1;
     final isOwnerApproved = status == 4;
 
+    // ✅ employee ka naam (fallback: Employee #id)
+    final employeeName = p['employeedetails']?['user']?['name']?.toString()
+        ?? 'Employee #${p['employee_id'] ?? '-'}';
+
+    // ✅ machine ka naam (fallback: Machine #id)
+   final machineName = p['machineemploye']?['machine_name']?.toString()
+    ?? 'Machine #${p['machine_id'] ?? '-'}';
+
+    // ✅ pending mein "Submitted" (created_at), approved mein "Approved" (updated_at)
+    final dateLabel = showActions ? 'Submitted' : 'Approved';
+    final dateValue = showActions ? p['created_at'] : p['updated_at'];
+
     return Container(
       decoration: BoxDecoration(
         color: AppTheme.secondary,
@@ -179,7 +191,7 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
               ),
               const SizedBox(height: 2),
               Text(
-                'Batch: ${p['batch_id'] ?? '-'}  •  Employee #${p['employee_id'] ?? '-'}',
+                'Batch: ${p['batch_id'] ?? '-'}  •  $employeeName',
                 style: TextStyle(color: AppTheme.primary.withOpacity(0.55), fontSize: 11),
               ),
             ])),
@@ -203,9 +215,9 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
           Row(children: [
             _infoBox(label: 'Remaining', value: '${p['remaining'] ?? 0}'),
             const SizedBox(width: 8),
-            _infoBox(label: 'Shift Start', value: _fmtDate(p['shift_start'])),
+            _infoBox(label: 'Machine', value: machineName),
             const SizedBox(width: 8),
-            _infoBox(label: 'Machine',  value: '#${p['machine_id'] ?? '-'}'),
+            _infoBox(label: dateLabel, value: _fmtDateTime(dateValue)),
           ]),
 
           // ── Owner-approved note ───────────────────────────
@@ -324,29 +336,34 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
     );
   }
 
-  Widget _infoBox({required String label, required String value}) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-        decoration: BoxDecoration(
-          color: AppTheme.background,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: AppTheme.primary.withOpacity(0.06)),
-        ),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(label,
-              style: TextStyle(
-                  color: AppTheme.primary.withOpacity(0.5),
-                  fontSize: 9,
-                  fontWeight: FontWeight.w600)),
-          const SizedBox(height: 3),
-          Text(value,
+ Widget _infoBox({required String label, required String value}) {
+  return Expanded(
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppTheme.background,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: AppTheme.primary.withOpacity(0.06)),
+      ),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(label,
+            style: TextStyle(
+                color: AppTheme.primary.withOpacity(0.5),
+                fontSize: 9,
+                fontWeight: FontWeight.w600)),
+        const SizedBox(height: 3),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Text(value,
+              maxLines: 1,
               style: const TextStyle(
                   color: AppTheme.textPrimary, fontSize: 12.5, fontWeight: FontWeight.w700)),
-        ]),
-      ),
-    );
-  }
+        ),
+      ]),
+    ),
+  );
+}
 
   Widget _errorView() => Center(
     child: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -359,11 +376,17 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
     ]),
   );
 
-  String _fmtDate(dynamic raw) {
+  // ✅ date + time dono show karta hai
+  String _fmtDateTime(dynamic raw) {
     if (raw == null) return '-';
     try {
-      final dt = DateTime.parse(raw.toString());
-      return '${dt.day}/${dt.month}/${dt.year}';
-    } catch (_) { return raw.toString(); }
+      final dt = DateTime.parse(raw.toString()).toLocal();
+      final hour = dt.hour == 0 ? 12 : (dt.hour > 12 ? dt.hour - 12 : dt.hour);
+      final period = dt.hour >= 12 ? 'PM' : 'AM';
+      final minute = dt.minute.toString().padLeft(2, '0');
+      return '${dt.day}/${dt.month}/${dt.year} $hour:$minute $period';
+    } catch (_) {
+      return raw.toString();
+    }
   }
 }

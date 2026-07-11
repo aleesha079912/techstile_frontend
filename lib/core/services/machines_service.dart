@@ -37,9 +37,9 @@ class MachinesData {
     required this.machines,
     int? totalMachines,
     int? activeMachines,
-  })  : totalMachines = totalMachines ?? machines.length,
-        activeMachines =
-            activeMachines ?? machines.where((m) => m.isActive).length;
+  }) : totalMachines = totalMachines ?? machines.length,
+       activeMachines =
+           activeMachines ?? machines.where((m) => m.isActive).length;
 
   int get running => machines.length;
   int get maintenance => 0;
@@ -50,16 +50,14 @@ class MachinesService {
   static final MachinesService instance = MachinesService._();
   MachinesService._();
 
-  final String baseUrl = "http://localhost:8000/api/machines";
+  final String baseUrl = "http://techstile.sandbox.pk/api/machines";
 
   // 🔹 1. FETCH ALL (Laravel: machines/all)
   Future<MachinesData> fetchMachines(int factoryId) async {
     try {
       final response = await http.get(
-        Uri.parse(
-          "$baseUrl/all/$factoryId",
-        ),
-       headers: AuthService.authHeaders,
+        Uri.parse("$baseUrl/all/$factoryId"),
+        headers: AuthService.authHeaders,
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> body = jsonDecode(response.body);
@@ -81,25 +79,22 @@ class MachinesService {
     String machineId,
     String type,
     int factoryId,
-    ) async {
+  ) async {
     try {
       final response = await http.post(
         Uri.parse("$baseUrl/add_machine"),
         headers: AuthService.authHeaders,
         body: jsonEncode({
-         "machine_name": machineId,
-         "machine_type": type,
-         "factory_id": factoryId,
-         "time": DateTime.now().toIso8601String(),
+          "machine_name": machineId,
+          "machine_type": type,
+          "factory_id": factoryId,
+          "time": DateTime.now().toIso8601String(),
         }),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final decoded = jsonDecode(response.body);
-        return {
-          'success': true,
-          'id': decoded['data']['id'].toString(),
-        };
+        return {'success': true, 'id': decoded['data']['id'].toString()};
       }
       return null;
     } catch (e) {
@@ -109,7 +104,12 @@ class MachinesService {
   }
 
   // 🔹 3. UPDATE (Laravel: machines/update_machine/{id})
-  Future<bool> updateMachine(String id, String machineId, String type, int factoryId) async {
+  Future<bool> updateMachine(
+    String id,
+    String machineId,
+    String type,
+    int factoryId,
+  ) async {
     try {
       final response = await http.put(
         Uri.parse("$baseUrl/update_machine/$id"),

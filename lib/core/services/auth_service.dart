@@ -3,7 +3,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  static const String baseUrl = "http://localhost:8000/api";
+  static const String baseUrl = "http://techstile.sandbox.pk/api";
   static final box = GetStorage();
 
   // ── Getters ────────────────────────────────────────────────────────────────
@@ -19,10 +19,10 @@ class AuthService {
 
   /// Every authenticated API call mein yahi headers use karo
   static Map<String, String> get authHeaders => {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token',
-      };
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': 'Bearer $token',
+  };
 
   // ── LOGIN ──────────────────────────────────────────────────────────────────
 
@@ -56,10 +56,7 @@ class AuthService {
 
         return {'success': true, 'data': actualData};
       } else {
-        return {
-          'success': false,
-          'message': data['message'] ?? 'Login failed'
-        };
+        return {'success': false, 'message': data['message'] ?? 'Login failed'};
       }
     } catch (e) {
       return {'success': false, 'message': e.toString()};
@@ -68,17 +65,14 @@ class AuthService {
 
   // ✅ Manual save — agar factoryId login response mein nahi aata,
   // balki ek alag API call se milta hai (jaisa manager ke case mein hota hai)
- static Future<void> saveFactoryInfo(
-  dynamic factoryId,
-  dynamic userId,
-) async {
-  print("Saving Factory ID = $factoryId");
+  static Future<void> saveFactoryInfo(dynamic factoryId, dynamic userId) async {
+    print("Saving Factory ID = $factoryId");
 
-  await box.write('factoryId', factoryId);
-  await box.write('userId', userId);
+    await box.write('factoryId', factoryId);
+    await box.write('userId', userId);
 
-  print("Stored Factory ID = ${box.read('factoryId')}");
-}
+    print("Stored Factory ID = ${box.read('factoryId')}");
+  }
 
   // ── LOGOUT ─────────────────────────────────────────────────────────────────
 
@@ -103,12 +97,12 @@ class AuthService {
       if (response.statusCode == 200 && data['success'] == true) {
         return {
           'success': true,
-          'message': data['message'] ?? 'Reset link sent successfully'
+          'message': data['message'] ?? 'Reset link sent successfully',
         };
       } else {
         return {
           'success': false,
-          'message': data['message'] ?? 'Request failed'
+          'message': data['message'] ?? 'Request failed',
         };
       }
     } catch (e) {

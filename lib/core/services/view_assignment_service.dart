@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'auth_service.dart';
+
 class ProductionService {
-  static const String baseUrl = "http://localhost:8000/api/productions";
+  static const String baseUrl = "http://techstile.sandbox.pk/api/productions";
 
   Future<List<dynamic>> getProductions() async {
     final response = await http.get(

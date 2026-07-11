@@ -6,31 +6,32 @@ class AssignMachineService {
   static final AssignMachineService instance = AssignMachineService._();
   AssignMachineService._();
 
-  final String baseUrl = "http://localhost:8000/api";
+  final String baseUrl = "http://techstile.sandbox.pk/api";
 
   Map<String, String> get _headers => {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        ...AuthService.authHeaders,
-      };
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    ...AuthService.authHeaders,
+  };
 
   Future<Map<String, List<dynamic>>> getAssignmentFormData() async {
-  final factories = await getFactories();
-  final managers = await getManagers();
-  final employees = await getEmployees();
+    final factories = await getFactories();
+    final managers = await getManagers();
+    final employees = await getEmployees();
 
-  return {
-    "factories": factories,
-    "managers": managers,
-    "employees": employees,
-  };
-}
-  
-  
+    return {
+      "factories": factories,
+      "managers": managers,
+      "employees": employees,
+    };
+  }
+
   // FACTORIES
   Future<List<dynamic>> getFactories() async {
-    final res = await http.get(Uri.parse('$baseUrl/factories/allfactories'),
-        headers: _headers);
+    final res = await http.get(
+      Uri.parse('$baseUrl/factories/allfactories'),
+      headers: _headers,
+    );
 
     if (res.statusCode == 200) {
       final body = jsonDecode(res.body);
@@ -41,8 +42,10 @@ class AssignMachineService {
 
   // MANAGERS
   Future<List<dynamic>> getManagers() async {
-    final res = await http.get(Uri.parse('$baseUrl/users/managers'),
-        headers: _headers);
+    final res = await http.get(
+      Uri.parse('$baseUrl/users/managers'),
+      headers: _headers,
+    );
 
     if (res.statusCode == 200) {
       final body = jsonDecode(res.body);
@@ -53,8 +56,10 @@ class AssignMachineService {
 
   // EMPLOYEES
   Future<List<dynamic>> getEmployees() async {
-    final res = await http.get(Uri.parse('$baseUrl/users/employees'),
-        headers: _headers);
+    final res = await http.get(
+      Uri.parse('$baseUrl/users/employees'),
+      headers: _headers,
+    );
 
     if (res.statusCode == 200) {
       final body = jsonDecode(res.body);
@@ -66,8 +71,9 @@ class AssignMachineService {
   // MACHINES BY FACTORY
   Future<List<dynamic>> getFactoryMachines(int factoryId) async {
     final res = await http.get(
-        Uri.parse('$baseUrl/machines/all/$factoryId'),
-        headers: _headers);
+      Uri.parse('$baseUrl/machines/all/$factoryId'),
+      headers: _headers,
+    );
 
     if (res.statusCode == 200) {
       final body = jsonDecode(res.body);
@@ -77,43 +83,42 @@ class AssignMachineService {
   }
 
   Future<List<dynamic>> getEmployeesByFactory(int factoryId) async {
-  final res = await http.get(
-    Uri.parse('$baseUrl/employees-with-shift/$factoryId'),
-    headers: _headers,
-  );
+    final res = await http.get(
+      Uri.parse('$baseUrl/employees-with-shift/$factoryId'),
+      headers: _headers,
+    );
 
-  if (res.statusCode == 200) {
-    final body = jsonDecode(res.body);
-    return body['data'] ?? [];
+    if (res.statusCode == 200) {
+      final body = jsonDecode(res.body);
+      return body['data'] ?? [];
+    }
+    return [];
   }
-  return [];
-}
 
   // ASSIGN API
- Future<bool> assign({
-  required int employeeId,
-  required int managerId,
-  required int factoryId,
-  required List<int> machineIds,
-  required String varietyType,
-  required String totalLength,
-}) async {
-  final res = await http.post(
-    Uri.parse('$baseUrl/assign-machines'),
-    headers: _headers,
-    body: jsonEncode({
-  "employee_id": employeeId,
-  "manager_id": managerId,
-  "factory_id": factoryId,
-  "machine_ids": machineIds,
-  "variety_type": varietyType,
-  "total_length": totalLength,
-}),
-  );
+  Future<bool> assign({
+    required int employeeId,
+    required int managerId,
+    required int factoryId,
+    required List<int> machineIds,
+    required String varietyType,
+    required String totalLength,
+  }) async {
+    final res = await http.post(
+      Uri.parse('$baseUrl/assign-machines'),
+      headers: _headers,
+      body: jsonEncode({
+        "employee_id": employeeId,
+        "manager_id": managerId,
+        "factory_id": factoryId,
+        "machine_ids": machineIds,
+        "variety_type": varietyType,
+        "total_length": totalLength,
+      }),
+    );
 
-  print(res.body);
+    print(res.body);
 
-  return res.statusCode == 200 ||
-      res.statusCode == 201;
-}
+    return res.statusCode == 200 || res.statusCode == 201;
+  }
 }

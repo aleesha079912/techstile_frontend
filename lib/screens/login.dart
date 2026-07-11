@@ -6,8 +6,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:techstile_frontend/core/services/auth_service.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/routes/routes.dart';
-import 'package:techstile_frontend/core/services/manager_service/manager_service.dart';
-import 'package:techstile_frontend/views/auth/forgot_password_screen.dart'; // apna actual path lagayen
+// import 'package:techstile_frontend/core/services/manager_service/manager_service.dart';
+// import 'package:techstile_frontend/views/auth/forgot_password_screen.dart'; // apna actual path lagayen
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -38,11 +38,6 @@ class _LoginScreenState extends State<LoginScreen> {
       return;
     }
 
-    if (mounted) {
-      setState(() {
-        _isLoading = true;
-      });
-    }
     if (mounted) setState(() => _isLoading = true);
 
     try {
@@ -135,16 +130,16 @@ class _LoginScreenState extends State<LoginScreen> {
   );
 
 }
-        if (roleName == 'owner') {
-          Get.offAllNamed(AppRoutes.ownerDashboard);
-        } else if (roleName == 'manager') {
-          Get.offAllNamed(AppRoutes.managerDashboard,
-              arguments: userData['id']);
-        } else if (roleName == 'employee') {
-          Get.offAllNamed(AppRoutes.employeeDashboard);
-        } else {
-          Get.snackbar("Invalid Role", "This Account is not linked with any role.");
-        }
+        // if (roleName == 'owner') {
+        //   Get.offAllNamed(AppRoutes.ownerDashboard);
+        // } else if (roleName == 'manager') {
+        //   Get.offAllNamed(AppRoutes.managerDashboard,
+        //       arguments: userData['id']);
+        // } else if (roleName == 'employee') {
+        //   Get.offAllNamed(AppRoutes.employeeDashboard);
+        // } else {
+        //   Get.snackbar("Invalid Role", "This Account is not linked with any role.");
+        // }
       } else {
         Get.snackbar("Login Failed", result['message'] ?? "Check credentials");
       }

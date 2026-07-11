@@ -22,14 +22,14 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage>
   List<Map<String, dynamic>> _all = [];
 
   @override
-void initState() {
-  super.initState();
+  void initState() {
+    super.initState();
 
-  print("Received Factory ID = ${widget.factoryId}");
+    print("Received Factory ID = ${widget.factoryId}");
 
-  _tab = TabController(length: 2, vsync: this);
-  _load();
-}
+    _tab = TabController(length: 2, vsync: this);
+    _load();
+  }
 
   @override
   void dispose() { _tab.dispose(); super.dispose(); }
@@ -134,6 +134,18 @@ void initState() {
   Widget _card(Map<String, dynamic> p, {required bool showActions}) {
     final status = p['status'] as int? ?? 1;
 
+    // ✅ employee ka naam (fallback: Emp #id)
+    final employeeName = p['employeedetails']?['user']?['name']?.toString()
+        ?? 'Emp #${p['employee_id'] ?? '-'}';
+
+    // ✅ machine ka naam (fallback: Machine #id)
+    final machineName = p['machineemploye']?['machine_name']?.toString()
+        ?? 'Machine #${p['machine_id'] ?? '-'}';
+
+    // ✅ pending mein "Submitted" (created_at), approved mein "Approved" (updated_at)
+    final dateLabel = showActions ? 'Submitted' : 'Approved';
+    final dateValue = showActions ? p['created_at'] : p['updated_at'];
+
     return Container(
       decoration: BoxDecoration(
         color: AppTheme.secondary,
@@ -157,12 +169,12 @@ void initState() {
             const SizedBox(width: 12),
             Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(
-                p['variety_type']?.toString() ?? '-',   // ← direct column
+                p['variety_type']?.toString() ?? '-',
                 style: const TextStyle(
                     color: AppTheme.textPrimary, fontWeight: FontWeight.w700, fontSize: 14),
               ),
               Text(
-                'Batch: ${p['batch_id'] ?? '-'}  •  Emp #${p['employee_id'] ?? '-'}',
+                'Batch: ${p['batch_id'] ?? '-'}  •  $employeeName',
                 style: TextStyle(color: AppTheme.primary.withOpacity(0.55), fontSize: 11),
               ),
             ])),
@@ -183,9 +195,9 @@ void initState() {
           Row(children: [
             _infoBox(label: 'Remaining',   value: '${p['remaining'] ?? 0}'),
             const SizedBox(width: 8),
-            _infoBox(label: 'Machine',     value: '#${p['machine_id'] ?? '-'}'),
+            _infoBox(label: 'Machine',     value: machineName),
             const SizedBox(width: 8),
-            _infoBox(label: 'Date',        value: _fmtDate(p['created_at'])),
+            _infoBox(label: dateLabel,     value: _fmtDateTime(dateValue)),
           ]),
 
           // ── Manager status note ───────────────────────────
@@ -296,7 +308,7 @@ void initState() {
   Widget _infoBox({required String label, required String value}) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 7),
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 7),
         decoration: BoxDecoration(
           color: AppTheme.background,
           borderRadius: BorderRadius.circular(8),
@@ -309,9 +321,14 @@ void initState() {
                   fontSize: 9,
                   fontWeight: FontWeight.w600)),
           const SizedBox(height: 2),
-          Text(value,
-              style: const TextStyle(
-                  color: AppTheme.textPrimary, fontSize: 12, fontWeight: FontWeight.w700)),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(value,
+                maxLines: 1,
+                style: const TextStyle(
+                    color: AppTheme.textPrimary, fontSize: 12, fontWeight: FontWeight.w700)),
+          ),
         ]),
       ),
     );
@@ -328,11 +345,18 @@ void initState() {
     ]),
   );
 
-  String _fmtDate(dynamic raw) {
+  // ✅ date + time dono show karta hai (compact year)
+  String _fmtDateTime(dynamic raw) {
     if (raw == null) return '-';
     try {
-      final dt = DateTime.parse(raw.toString());
-      return '${dt.day}/${dt.month}/${dt.year}';
-    } catch (_) { return raw.toString(); }
+      final dt = DateTime.parse(raw.toString()).toLocal();
+      final hour = dt.hour == 0 ? 12 : (dt.hour > 12 ? dt.hour - 12 : dt.hour);
+      final period = dt.hour >= 12 ? 'PM' : 'AM';
+      final minute = dt.minute.toString().padLeft(2, '0');
+      final year = dt.year.toString().substring(2);
+      return '${dt.day}/${dt.month}/$year $hour:$minute$period';
+    } catch (_) {
+      return raw.toString();
+    }
   }
 }

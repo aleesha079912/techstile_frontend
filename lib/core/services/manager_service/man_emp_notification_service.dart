@@ -1,9 +1,10 @@
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
+
 class NotificationService extends GetConnect {
-    final Dio dio = Dio();
+  final Dio dio = Dio();
   @override
-  String? baseUrl = "http://localhost:8000/api";
+  String? baseUrl = "http://techstile.sandbox.pk/api";
 
   Future<List> getNotifications(userId) async {
     final res = await get("/notifications/$userId");
@@ -21,13 +22,10 @@ class NotificationService extends GetConnect {
   Future<void> read(id) async {
     await post("/notifications/read/$id", {});
   }
+
   Future<int> getUnreadCount(int userId) async {
+    final response = await dio.get("$baseUrl/notifications/unread/$userId");
 
-  final response = await dio.get(
-    "$baseUrl/notifications/unread/$userId"
-  );
-
-  return response.data['count'];
-
-}
+    return response.data['count'];
+  }
 }
