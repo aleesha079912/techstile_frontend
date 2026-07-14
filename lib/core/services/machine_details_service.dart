@@ -12,7 +12,7 @@ class MachineDetailsService extends GetxController {
     try {
       final response = await http.get(
         Uri.parse(
-          "http://localhost:8000/api/machines/details/$machineId",
+          "http://techstile.sandbox.pk/api/machines/details/$machineId",
         ),
         headers: AuthService.authHeaders,
       );
