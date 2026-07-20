@@ -138,8 +138,8 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
       type: BottomNavigationBarType.fixed,
       backgroundColor: AppTheme.primary,
       
-       selectedItemColor: theme.colorScheme.secondary, 
-       unselectedItemColor: theme.colorScheme.secondary,
+       selectedItemColor: AppTheme.secondary, 
+       unselectedItemColor:  AppTheme.neutral,
       items: const [
         BottomNavigationBarItem
         (icon: Icon(Icons.home_outlined), 

@@ -197,7 +197,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                         ),
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: AppTheme.secondary,
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [
                             BoxShadow(
@@ -289,7 +289,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:  AppTheme.secondary,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(color: AppTheme.primary.withOpacity(0.06), blurRadius: 8),

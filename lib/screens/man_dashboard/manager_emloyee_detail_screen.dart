@@ -82,7 +82,7 @@ class _ManagerEmployeeDetailScreenState
           const SizedBox(height: 2),
           Text(
             title,
-            style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary),
+            style: const TextStyle(fontSize: 11, color: AppTheme.textPrimary),
           ),
         ],
       ),
@@ -299,7 +299,7 @@ class _ManagerEmployeeDetailScreenState
                   "Machines",
                   employee!['machines_worked'].toString(),
                   Icons.precision_manufacturing_rounded,
-                  AppTheme.secondary,
+                  AppTheme.primary,
                 ),
                 _statCard(
                   "Entries",
