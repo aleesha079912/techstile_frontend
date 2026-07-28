@@ -76,7 +76,7 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
         ),
       )
     : null,
-      backgroundColor: theme.scaffoldBackgroundColor,
+      backgroundColor:  AppTheme.background,
       // CONCEPT: Preserve State (IndexedStack)
       // `IndexedStack` ka faida yeh hai ke jab aap tabs badalte hain (e.g., Home se Calculator par gaye),
       // toh purani screen ka data/scroll position khoti nahi hai, balkay background mein save rehti hai.
@@ -97,8 +97,8 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            theme.colorScheme.primary,
-            theme.colorScheme.primary.withOpacity(0.8),
+             AppTheme.primary,
+             AppTheme.primary.withOpacity(0.8),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
@@ -111,7 +111,7 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.add, color: theme.colorScheme.onPrimary),
+              Icon(Icons.add, color:AppTheme.secondary ),
               const SizedBox(width: 6),
               Text(
                 "Add Factory",
