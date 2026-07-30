@@ -236,7 +236,7 @@ class _HomeTab extends StatelessWidget {
               label: "Factories",
               value: "${controller.factoryList.length}",
               icon: Icons.factory,
-              color: theme.colorScheme.primary,
+              color: AppTheme.primary,
             ),
             const SizedBox(width: 10),
             _StatCard(
@@ -246,7 +246,7 @@ class _HomeTab extends StatelessWidget {
               value:
                   "${controller.factoryList.map((f) => f.city).toSet().length}",
               icon: Icons.location_city,
-              color: theme.colorScheme.primary, 
+              color:  AppTheme.primary, 
             ),
           ],
         ),
@@ -263,13 +263,13 @@ class _HomeTab extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-             color: theme.colorScheme.primary.withOpacity(0.08),
+             color:  AppTheme.primary.withOpacity(0.08),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Icon(
               Icons.factory_outlined,
               size: 40,
-              color: theme.colorScheme.primary,
+              color:  AppTheme.primary,
             ),
           ),
           const SizedBox(height: 16),
@@ -365,7 +365,7 @@ class _FactoryCard extends StatelessWidget {
         leading: CircleAvatar(
 
           backgroundColor:
-          theme.colorScheme.primary.withOpacity(0.1),
+           AppTheme.primary.withOpacity(0.1),
 
           child: Text(
 
@@ -374,7 +374,7 @@ class _FactoryCard extends StatelessWidget {
                 : "?",
 
             style: TextStyle(
-              color: theme.colorScheme.primary,
+              color: AppTheme.primary,
             ),
 
           ),
