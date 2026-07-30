@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'auth_service.dart';
 
 class FactoryDashboardService {
-  final String baseUrl = "http://localhost:8000/api/factories";
+  final String baseUrl = "http://techstile.sandbox.pk/api/factories";
 
   Future<Map<String, dynamic>> getDashboard(String factoryId) async {
     final response = await http.get(

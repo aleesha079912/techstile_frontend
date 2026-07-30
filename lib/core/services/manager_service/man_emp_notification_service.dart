@@ -4,7 +4,7 @@ import 'package:dio/dio.dart';
 class NotificationService extends GetConnect {
   final Dio dio = Dio();
   @override
-  String? baseUrl = "http://localhost:8000/api";
+  String? baseUrl = "http://techstile.sandbox.pk/api";
 
   Future<List> getNotifications(userId) async {
     final res = await get("/notifications/$userId");
