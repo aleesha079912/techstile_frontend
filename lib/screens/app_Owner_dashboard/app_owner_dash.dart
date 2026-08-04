@@ -435,7 +435,7 @@ class _FactoryCard extends StatelessWidget {
 
           ],
 
-        ),
+        ), 
 
       ),
 

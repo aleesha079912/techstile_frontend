@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/history_screen.dart';
+import 'package:techstile_frontend/screens/employee_dashboard/payment_screen.dart';
 
 import '../screens/employee_dashboard/employee_dashboard.dart';
 import '../screens/employee_dashboard/scan_qr_code.dart';
@@ -32,7 +33,7 @@ class EmployeeBottomNav extends StatelessWidget {
         break;
 
       case 3:
-        // Get.off(() => const PaymentScreen());
+        Get.off(() => const PaymentScreen());
         break;
     }
   }
