@@ -93,13 +93,13 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('FINANCIAL CONTROL', style: _ts(10, FontWeight.w600, neutral, ls: 1.4)),
+          Text('FINANCIAL CONTROL', style: _ts(10, FontWeight.w600, AppTheme.primary, ls: 1.4)),
           const SizedBox(height: 4),
           Text('Payments', style: _ts(34, FontWeight.w800, colors.primary)),
           const SizedBox(height: 6),
           Text(
             'Review and authorize pending worker disbursements for the current production cycle.',
-            style: _ts(13, FontWeight.w400, neutral),
+            style: _ts(13, FontWeight.w400, AppTheme.primary),
           ),
           const SizedBox(height: 18),
 

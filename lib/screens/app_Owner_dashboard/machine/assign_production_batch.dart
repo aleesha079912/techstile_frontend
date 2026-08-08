@@ -52,6 +52,7 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
       Get.snackbar("Success", "Production assign ho gayi",
           backgroundColor: AppTheme.active, colorText:AppTheme.secondary);
     } else {
+      print(success);
       Get.snackbar("Error", "Kuch galat hua",
           backgroundColor: AppTheme.error, colorText: AppTheme.secondary);
     }
