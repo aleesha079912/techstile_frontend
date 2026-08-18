@@ -73,19 +73,12 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
         ),
       ),
 
-      body: loading
-          ? const Center(child: CircularProgressIndicator())
-          : RefreshIndicator(
+      body: loading ? const Center(child: CircularProgressIndicator()) : RefreshIndicator(
               onRefresh: loadDashboard,
               child: ListView(
               padding: EdgeInsets.zero,
               children: [
-
-
-
-
-                /// TITLE
-                Padding(
+              Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
                     vertical: 12,

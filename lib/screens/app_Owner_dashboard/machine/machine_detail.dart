@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/owner_enter_productions.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
-import 'package:techstile_frontend/widgets/owner_drawer.dart';
+import 'package:techstile_frontend/widgets/owner_drawer12.dart';
 import '../../../../core/services/machines_service.dart';
 import '../../../../core/services/machine_details_service.dart';
 import 'assign_production_batch.dart';

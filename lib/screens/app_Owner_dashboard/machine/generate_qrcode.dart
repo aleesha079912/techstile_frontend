@@ -3,7 +3,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:techstile_frontend/core/services/generate_qr_service.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
-import 'package:techstile_frontend/widgets/owner_drawer.dart';
+import 'package:techstile_frontend/widgets/owner_drawer12.dart';
 class GenerateQrCodeScreen extends StatefulWidget {
   final String machineDbId;   // primary id from DB (e.g. "3")
   final String machineLabel;  // display label (e.g. "LM-1")
