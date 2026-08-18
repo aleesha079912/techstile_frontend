@@ -270,10 +270,10 @@ class _MachinesScreenState extends State<MachinesScreen> {
               ),
             ),
 
-      bottomNavigationBar: CustomBottomNav(
-        currentIndex: 1,
-        factoryId: widget.factoryId,
-      ),
+       bottomNavigationBar: CustomBottomNav(
+          currentIndex: 1,
+          factoryId: widget.factoryId,
+        ),
     );
   }
 
