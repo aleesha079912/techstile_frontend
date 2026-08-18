@@ -272,7 +272,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: _isLoading ? null : _login,
                     child: _isLoading
                         ? const CircularProgressIndicator(color: AppTheme.secondary)
-                        : const Text("Begin Shift →"),
+                        : const Text(" Login"),
                   ),
                 ),
                 const SizedBox(height: 10),
