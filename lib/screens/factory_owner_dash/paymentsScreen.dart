@@ -17,7 +17,7 @@ class PaymentsScreen extends StatefulWidget {
 class _PaymentsScreenState extends State<PaymentsScreen> {
   final PaymentService _paymentService = PaymentService();
 
-  List<BatchPayment> _batches = [];
+  List<varietytypePayment> _varietytype = [];
   bool _isLoading = true;
   String? _error;
 
@@ -27,6 +27,43 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     _fetchPayments();
   }
 
+  Widget _buildFPB(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [
+             AppTheme.primary,
+             AppTheme.primary.withOpacity(0.8),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () => (){},
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.add, color:AppTheme.secondary ),
+              const SizedBox(width: 6),
+              Text(
+                "Add Payments",
+                style: TextStyle(
+                  color:AppTheme.secondary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Future<void> _fetchPayments() async {
     setState(() {
       _isLoading = true;
@@ -34,10 +71,10 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     });
 
     try {
-      final data = await _paymentService.fetchBatchPayments(widget.factoryId);
+      final data = await _paymentService.fetchvarietytypePayments(widget.factoryId);
 
       setState(() {
-        _batches = data.batches;
+        _varietytype = data.varietytype;
         _isLoading = false;
       });
     } catch (e) {
@@ -49,12 +86,12 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
   }
 
   // Everything below is derived automatically from the 3 fields the API
-  // gives us per batch (batch_id, total_length, amount_per_meter).
+  // gives us per varietytype (variety_type, total_length, amount_per_meter).
   double get _grandTotalAmount =>
-      _batches.fold(0, (sum, b) => sum + b.totalAmount);
+      _varietytype.fold(0, (sum, b) => sum + b.totalAmount);
 
   double get _grandTotalLength =>
-      _batches.fold(0, (sum, b) => sum + b.totalLength);
+      _varietytype.fold(0, (sum, b) => sum + b.totalLength);
 
   double get _overallRatePerMeter =>
       _grandTotalLength == 0 ? 0 : _grandTotalAmount / _grandTotalLength;
@@ -68,12 +105,13 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
         foregroundColor: AppTheme.secondary,
         elevation: 0,
         title: const Text(
-          'Batch Payments',
+          'Variety Payments',
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
         centerTitle: false,
       ),
       body: _buildBody(),
+      floatingActionButton: _buildFPB(context),
     );
   }
 
@@ -114,7 +152,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  'Total Payment (All Batches)',
+                  'Total Payment (All Varieties)',
                   style: TextStyle(color: AppTheme.neutral, fontSize: 13),
                 ),
                 const SizedBox(height: 4),
@@ -140,8 +178,8 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                     ),
                     const SizedBox(width: 12),
                     _SummaryStat(
-                      label: 'Batches',
-                      value: '${_batches.length}',
+                      label: 'Varieties',
+                      value: '${_varietytype.length}',
                     ),
                   ],
                 ),
@@ -152,22 +190,22 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
           const SizedBox(height: 20),
 
           const Text(
-            'Batch Wise Calculation',
+            'Variety Wise Calculation',
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: 12),
 
-          if (_batches.isEmpty)
+          if (_varietytype.isEmpty)
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 40),
-              child: Center(child: Text('No payment batches found')),
+              child: Center(child: Text('No payment variety found')),
             )
           else
-            ...List.generate(_batches.length, (index) {
-              final batch = _batches[index];
+            ...List.generate(_varietytype.length, (index) {
+              final varietytype = _varietytype[index];
               return Padding(
                 padding: const EdgeInsets.only(bottom: 12),
-                child: _BatchPaymentTile(record: batch),
+                child: _varietytypePaymentTile(record: varietytype),
               );
             }),
         ],
@@ -229,10 +267,11 @@ class _SummaryStat extends StatelessWidget {
   }
 }
 
-class _BatchPaymentTile extends StatelessWidget {
-  final BatchPayment record;
+class _varietytypePaymentTile extends StatelessWidget {
+ 
+   final varietytypePayment record;
 
-  const _BatchPaymentTile({required this.record});
+  const _varietytypePaymentTile({required this.record});
 
   @override
   Widget build(BuildContext context) {
@@ -252,14 +291,24 @@ class _BatchPaymentTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ---- Header: batch id ----
+          // ---- Header: varietytype ----
           Text(
-            'Batch #${record.batchId}',
+            'Variety #${record.varietytype}',
             style: const TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 14,
             ),
           ),
+          if (record.employeeName != null && record.employeeName!.isNotEmpty) ...[
+            const SizedBox(height: 2),
+            Text(
+              'By ${record.employeeName}',
+              style: const TextStyle(
+                fontSize: 12,
+                color: AppTheme.neutral,
+              ),
+            ),
+          ],
 
           const SizedBox(height: 14),
           const Divider(height: 1, color: AppTheme.background),

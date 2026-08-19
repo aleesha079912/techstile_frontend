@@ -8,13 +8,13 @@ class PaymentService {
 
   // 🔹 FETCH ALL BATCH PAYMENTS (Laravel: payments/view-payments/{factoryId})
   //
-  // Backend now reads straight from the `production` table, grouped by
-  // batch_id, and only ever sends 3 fields per batch:
-  //   batch_id, total_length, amount_per_meter
+  // Backend reads from the `production` table, grouped by variety_type,
+  // and sends per group: variety_type, total_length, amount_per_meter,
+  // select_days, employee_name.
   //
   // total_amount is NEVER read from the API - it is always computed here
-  // on the client as total_length * amount_per_meter (see BatchPayment.totalAmount).
-  Future<PaymentsData> fetchBatchPayments(int factoryId) async {
+  // on the client as total_length * amount_per_meter (see varietytypePayment.totalAmount).
+  Future<PaymentsData> fetchvarietytypePayments(int factoryId) async {
     try {
       final response = await http.get(
         Uri.parse("$baseUrl/view-payments/$factoryId"),
@@ -25,18 +25,18 @@ class PaymentService {
         final Map<String, dynamic> body = jsonDecode(response.body);
         final List<dynamic> data = body['data'] ?? [];
 
-        final batches = data.map((b) => BatchPayment.fromJson(b)).toList();
+        final varietytype = data.map((b) => varietytypePayment.fromJson(b)).toList();
 
         return PaymentsData(
-          batches: batches,
-          totalAmount: batches.fold(0.0, (sum, b) => sum + b.totalAmount),
-          totalLength: batches.fold(0.0, (sum, b) => sum + b.totalLength),
+          varietytype: varietytype,
+          totalAmount: varietytype.fold(0.0, (sum, b) => sum + b.totalAmount),
+          totalLength: varietytype.fold(0.0, (sum, b) => sum + b.totalLength),
         );
       }
     } catch (e) {
       debugPrint("Fetch Payments Error: $e");
     }
-    return PaymentsData(batches: []);
+    return PaymentsData(varietytype: []);
   }
 }
 
@@ -45,33 +45,39 @@ class PaymentService {
 // ============================================================
 
 class PaymentsData {
-  final List<BatchPayment> batches;
+  final List<varietytypePayment> varietytype;
   final double totalAmount;
   final double totalLength;
 
   PaymentsData({
-    required this.batches,
+    required this.varietytype,
     this.totalAmount = 0,
     this.totalLength = 0,
   });
 }
 
-class BatchPayment {
-  final String batchId;
-  final double totalLength;
-  final double amountPerMeter;
+class varietytypePayment {
+  final String varietytype;      // <- backend: variety_type
+  final double totalLength;      // <- backend: total_length
+  final double amountPerMeter;   // <- backend: amount_per_meter
+  final String? selectDays;      // <- backend: select_days
+  final String? employeeName;    // <- backend: employee_name
 
-  BatchPayment({
-    required this.batchId,
+  varietytypePayment({
+    required this.varietytype,
     required this.totalLength,
     required this.amountPerMeter,
+    this.selectDays,
+    this.employeeName,
   });
 
-  factory BatchPayment.fromJson(Map<String, dynamic> json) {
-    return BatchPayment(
-      batchId: json['batch_id'].toString(),
+  factory varietytypePayment.fromJson(Map<String, dynamic> json) {
+    return varietytypePayment(
+      varietytype: json['variety_type'].toString(),
       totalLength: (json['total_length'] as num?)?.toDouble() ?? 0,
       amountPerMeter: (json['amount_per_meter'] as num?)?.toDouble() ?? 0,
+      selectDays: json['select_days']?.toString(),
+      employeeName: json['employee_name']?.toString(),
     );
   }
 

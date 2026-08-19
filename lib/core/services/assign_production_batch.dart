@@ -8,7 +8,7 @@ class AssignProductionService {
   Future<bool> assign({
     required int machineId,
     required String varietyType,
-    required double totalLength, required double amountPerMeter, 
+    required double totalLength, required double amountPerMeter, required selectDays, 
   }) async {
     final response = await http.post(
       Uri.parse("$baseUrl/assign-production"),
@@ -18,6 +18,7 @@ class AssignProductionService {
         'variety_type': varietyType,
         'total_length': totalLength,
         'amount_per_meter': amountPerMeter,
+        'select_days': selectDays,
 
       }),
     );
