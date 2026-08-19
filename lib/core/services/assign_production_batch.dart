@@ -9,6 +9,7 @@ class AssignProductionService {
     required int machineId,
     required String varietyType,
     required double totalLength,
+    required double amountPerMeter,
   }) async {
     final response = await http.post(
       Uri.parse("$baseUrl/assign-production"),
@@ -17,9 +18,10 @@ class AssignProductionService {
         'machine_id': machineId,
         'variety_type': varietyType,
         'total_length': totalLength,
+        'amount_per_meter': amountPerMeter,
       }),
     );
-
+    print(response.body);
     return response.statusCode == 200 || response.statusCode == 201;
   }
 }

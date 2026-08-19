@@ -101,8 +101,6 @@ class AssignMachineService {
     required int managerId,
     required int factoryId,
     required List<int> machineIds,
-    required String varietyType,
-    required String totalLength,
   }) async {
     final res = await http.post(
       Uri.parse('$baseUrl/assign-machines'),
@@ -112,8 +110,6 @@ class AssignMachineService {
         "manager_id": managerId,
         "factory_id": factoryId,
         "machine_ids": machineIds,
-        "variety_type": varietyType,
-        "total_length": totalLength,
       }),
     );
 

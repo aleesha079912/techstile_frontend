@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../core/utils/theme.dart';
 import '../../../core/services/manager_service/manager_employee_detail_service.dart';
 import '../../../widgets/man_bottom_navbar.dart';
-import 'package:techstile_frontend/widgets/man_drawer.dart';
-import 'package:techstile_frontend/core/services/auth_service.dart';
+// import 'package:techstile_frontend/widgets/man_drawer.dart';
+// import 'package:techstile_frontend/core/services/auth_service.dart';
 class ManagerEmployeeDetailScreen extends StatefulWidget {
   final int employeeId;
   final dynamic factoryId;
@@ -45,7 +45,7 @@ class _ManagerEmployeeDetailScreenState
   });
 }
 
-  // ── Compact stat card — colored icon background ──────────────────────────
+  //Compact stat card colored icon background
   Widget _statCard(String title, String value, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 10),
@@ -82,14 +82,14 @@ class _ManagerEmployeeDetailScreenState
           const SizedBox(height: 2),
           Text(
             title,
-            style: const TextStyle(fontSize: 11, color: AppTheme.textSecondary),
+            style: const TextStyle(fontSize: 11, color: AppTheme.textPrimary),
           ),
         ],
       ),
     );
   }
 
-  // ── Shift info row ────────────────────────────────────────────────────────
+  // Shift info row 
   Widget _shiftRow(IconData icon, String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -135,7 +135,7 @@ class _ManagerEmployeeDetailScreenState
     return Scaffold(
       backgroundColor: AppTheme.background,
 
-      // ── AppBar with back button ───────────────────────────────────────────
+      //  AppBar with back button
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
         elevation: 0,
@@ -155,7 +155,7 @@ class _ManagerEmployeeDetailScreenState
         child: Column(
           children: [
 
-            // ── Profile header card (gradient) ──────────────────────────────
+            //Profile header card 
             Container(
               width: double.infinity,
               margin: const EdgeInsets.only(top: 16),
@@ -212,7 +212,7 @@ class _ManagerEmployeeDetailScreenState
 
             const SizedBox(height: 20),
 
-            // ── Shift info card ──────────────────────────────────────────────
+            //Shift info card
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -246,7 +246,7 @@ class _ManagerEmployeeDetailScreenState
 
             const SizedBox(height: 20),
 
-            // ── Section label ────────────────────────────────────────────────
+            //Section label
             Align(
               alignment: Alignment.centerLeft,
               child: Row(
@@ -274,7 +274,7 @@ class _ManagerEmployeeDetailScreenState
 
             const SizedBox(height: 12),
 
-            // ── Stat grid — compact 2x2 ──────────────────────────────────────
+            // Stat grid 
             GridView.count(
               crossAxisCount: 2,
               shrinkWrap: true,
@@ -299,7 +299,7 @@ class _ManagerEmployeeDetailScreenState
                   "Machines",
                   employee!['machines_worked'].toString(),
                   Icons.precision_manufacturing_rounded,
-                  AppTheme.secondary,
+                  AppTheme.primary,
                 ),
                 _statCard(
                   "Entries",

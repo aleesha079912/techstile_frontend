@@ -73,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
         box.write('role', roleName);
         box.write('isLoggedIn', true);
 
-        // ✅ Role based navigation — fixed syntax
+        //Role based navigation
      if (roleName == 'owner') {
 
   Get.offAllNamed(
@@ -130,16 +130,6 @@ class _LoginScreenState extends State<LoginScreen> {
   );
 
 }
-        // if (roleName == 'owner') {
-        //   Get.offAllNamed(AppRoutes.ownerDashboard);
-        // } else if (roleName == 'manager') {
-        //   Get.offAllNamed(AppRoutes.managerDashboard,
-        //       arguments: userData['id']);
-        // } else if (roleName == 'employee') {
-        //   Get.offAllNamed(AppRoutes.employeeDashboard);
-        // } else {
-        //   Get.snackbar("Invalid Role", "This Account is not linked with any role.");
-        // }
       } else {
         Get.snackbar("Login Failed", result['message'] ?? "Check credentials");
       }
@@ -156,7 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> openWhatsApp() async {
-    const phone = "923216427668"; // 🔴 apna number
+    const phone = "923216427668"; // 
     final Uri url = Uri.parse("https://wa.me/$phone");
 
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
@@ -194,7 +184,7 @@ class _LoginScreenState extends State<LoginScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
 
-                // ================= HEADER =================
+                //HEADER
                 Row(
                   children: [
                     Icon(Icons.bar_chart, color: AppTheme.primary),
@@ -225,7 +215,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 25),
 
-                // ================= EMAIL =================
+                // EMAIL 
                 const Text("Email"),
                 const SizedBox(height: 5),
                 TextField(
@@ -241,7 +231,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 15),
 
-                // ================= PASSWORD =================
+                //PASSWORD
                 const Text("Password"),
                 const SizedBox(height: 5),
                 TextField(
@@ -265,7 +255,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 20),
 
-                // ================= LOGIN BUTTON =================
+                //LOGIN BUTTON 
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
@@ -294,7 +284,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 20),
                 const SizedBox(height: 30),
 
-                // ================= CONTACT SUPERVISOR =================
+                //CONTACT SUPERVISOR 
                 GestureDetector(
                   onTap: openWhatsApp,
                   child: Container(
@@ -324,7 +314,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 20),
 
-                // ================= FOOTER =================
+                //FOOTER 
                 const Center(
                   child: Text(
                     "© 2024 LOOMCONTROL\nVERSION 4.2.0-ALPHA",

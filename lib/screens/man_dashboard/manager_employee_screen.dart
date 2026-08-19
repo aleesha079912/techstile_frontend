@@ -198,7 +198,7 @@ class _ManagerEmployeesScreenState
     );
   }
 
-  // ── Compact info row — chota icon + chota text ──────────────────────────
+  //  Compact info row 
   Widget _infoRow(IconData icon, String text) {
     return Padding(
       padding: const EdgeInsets.only(top: 4),
@@ -218,7 +218,7 @@ class _ManagerEmployeesScreenState
     );
   }
 
-  // ── ✅ Compact employee card — size kam kiya ──────────────────────────────
+  //  Compact employee card
   Widget _employeeCard(dynamic e) {
     final user = e['user'];
     final name = user?['name']?.toString() ?? 'Employee';
@@ -236,8 +236,8 @@ class _ManagerEmployeesScreenState
         );
       },
       child: Container(
-        margin: const EdgeInsets.only(bottom: 10),       // ✅ kam margin
-        padding: const EdgeInsets.all(12),                // ✅ kam padding
+        margin: const EdgeInsets.only(bottom: 10),      
+        padding: const EdgeInsets.all(12),                
         decoration: BoxDecoration(
           color:  AppTheme.secondary,
           borderRadius: AppTheme.cardRadius,
@@ -246,7 +246,7 @@ class _ManagerEmployeesScreenState
         child: Row(
           children: [
             CircleAvatar(
-              radius: 19,                                  // ✅ chota avatar (pehle 25)
+              radius: 19,                                 
               backgroundColor: AppTheme.secondary.withOpacity(.2),
               child: Text(
                 name[0].toUpperCase(),
@@ -265,7 +265,7 @@ class _ManagerEmployeesScreenState
                   Text(
                     name,
                     style: const TextStyle(
-                      fontSize: 14,                          // ✅ chota (pehle 17)
+                      fontSize: 14,                         
                       fontWeight: FontWeight.w700,
                     ),
                     overflow: TextOverflow.ellipsis,

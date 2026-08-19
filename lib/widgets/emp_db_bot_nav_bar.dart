@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/history_screen.dart';
+// import 'package:techstile_frontend/screens/employee_dashboard/payment_screen.dart';
 
 import '../screens/employee_dashboard/employee_dashboard.dart';
 import '../screens/employee_dashboard/scan_qr_code.dart';
@@ -29,10 +31,6 @@ class EmployeeBottomNav extends StatelessWidget {
       case 2:
         Get.off(() => const HistoryScreen());
         break;
-
-      case 3:
-        // Get.off(() => const PaymentScreen());
-        break;
     }
   }
 
@@ -47,7 +45,7 @@ class EmployeeBottomNav extends StatelessWidget {
 
     return Container(
       decoration: const BoxDecoration(
-        color: Color(0xFF0D1B4B), // from your theme
+        color: AppTheme.primary, 
       ),
       child: SafeArea(
         child: SizedBox(
@@ -57,8 +55,8 @@ class EmployeeBottomNav extends StatelessWidget {
               final isActive = index == currentIndex;
 
               final color = isActive
-                  ? const Color(0xFF00C8B0)
-                  : const Color(0xFF8FA3C8);
+                  ?  AppTheme.secondary
+                  :  AppTheme.neutral;
 
               return Expanded(
                 child: InkWell(
@@ -87,3 +85,4 @@ class EmployeeBottomNav extends StatelessWidget {
     );
   }
 }
+

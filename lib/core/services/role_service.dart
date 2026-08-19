@@ -3,8 +3,7 @@ import 'dart:convert';
 import 'auth_service.dart';
 
 class RoleService {
-  final String baseUrl =
-      "http://techstile.sandbox.pk/api/roles"; // Emulator ke liye localhost IP
+  final String baseUrl = "http://techstile.sandbox.pk/api/roles";
 
   // 1. Fetch Roles
   Future<List<dynamic>> getRoles() async {
@@ -38,7 +37,7 @@ class RoleService {
     };
   }
 
-  // Role delete karne ke liye
+  // delete role
   Future<bool> deleteRole(int id) async {
     final response = await http.delete(
       Uri.parse('$baseUrl/delete/$id'),
@@ -47,7 +46,7 @@ class RoleService {
     return response.statusCode == 200;
   }
 
-  // Role update karne ke liye
+  // Role update
   Future<bool> updateRole(int id, String newName) async {
     final response = await http.put(
       Uri.parse('$baseUrl/update/$id'),
@@ -57,7 +56,7 @@ class RoleService {
     return response.statusCode == 200;
   }
 
-  // Permissions list fetch karna
+  //fetch Permissions list
   Future<List<dynamic>> getAllPermissions() async {
     final response = await http.get(
       Uri.parse('http://techstile.sandbox.pk/api/permissions/all'),
@@ -66,7 +65,7 @@ class RoleService {
     return json.decode(response.body)['data'];
   }
 
-  // Role ki maujooda permissions lana
+  // Fetch Role present permissions
   Future<List<dynamic>> getRolePermissions(int roleId) async {
     final response = await http.get(
       Uri.parse('http://techstile.sandbox.pk/api/role-permissions/$roleId'),
@@ -75,7 +74,7 @@ class RoleService {
     return json.decode(response.body)['data'];
   }
 
-  // Permissions update karna
+  // Permissions update
   Future<bool> syncPermissions(int roleId, List<int> permIds) async {
     final response = await http.post(
       Uri.parse('http://techstile.sandbox.pk/api/permissions/sync'),

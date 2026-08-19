@@ -410,7 +410,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
             ),
           ),
 
-          // 🔥 ACTION BUTTONS (EDIT + DELETE)
+          // ACTION BUTTONS 
           Row(
             children: [
               IconButton(

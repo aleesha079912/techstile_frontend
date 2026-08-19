@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:techstile_frontend/core/services/owner_profile_service.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
-import 'package:techstile_frontend/widgets/owner_drawer12.dart';
+import 'package:techstile_frontend/widgets/owner_drawer.dart';
 
 class OwnerProfileScreen extends StatefulWidget {
   final int userId;
@@ -234,7 +234,7 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
                           _statCard(Icons.factory_rounded, "Total Factories",
                               "${profile?['total_factories'] ?? 0}", AppTheme.primary),
                           _statCard(Icons.precision_manufacturing_rounded, "Total Machines",
-                              "${profile?['total_machines'] ?? 0}", Colors.deepPurple),
+                              "${profile?['total_machines'] ?? 0}",  AppTheme.primary),
                           _statCard(Icons.groups_rounded, "Total Employees",
                               "${profile?['total_employees'] ?? 0}",  AppTheme.surface),
                           _statCard(Icons.supervisor_account_rounded, "Total Managers",

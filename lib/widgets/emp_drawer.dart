@@ -26,83 +26,43 @@ class EmployeeDrawer extends StatefulWidget {
   State<EmployeeDrawer> createState() => _EmployeeDrawerState();
 
 }
-
-
-
 class _EmployeeDrawerState extends State<EmployeeDrawer> {
-
-
 final NotificationService notificationService =
     NotificationService();
-
-
 int unread = 0;
-
-
-
 @override
 void initState(){
-
- super.initState();
-
- getUnread();
+super.initState();
+getUnread();
 
 }
-
-
-
 void getUnread() async {
-
-
- final count =
+final count =
  await notificationService.getUnreadCount(
     AuthService.userId
  );
-
-
- if(mounted){
-
- setState(() {
+if(mounted){
+setState(() {
    unread = count;
  });
 
  }
 
 }
-
-
-
 @override
 Widget build(BuildContext context) {
-
-
 final colors = Theme.of(context).colorScheme;
-
-
-
 return Drawer(
-
 backgroundColor: Colors.white,
-
-
 child: Column(
-
 children: [
-
-
 Container(
-
 height:80,
-
 width:double.infinity,
-
 padding:const EdgeInsets.all(20),
-
 decoration:BoxDecoration(
 color:colors.primary
 ),
-
-
 child:const Align(
 
 alignment:Alignment.bottomLeft,
@@ -121,9 +81,6 @@ fontWeight:FontWeight.bold
 ),
 
 ),
-
-
-
 Expanded(
 
 child:ListView(
@@ -131,9 +88,6 @@ child:ListView(
 padding:EdgeInsets.zero,
 
 children:[
-
-
-
 _item(
 context,
 Icons.dashboard,
@@ -147,10 +101,6 @@ Get.off(
 }
 
 ),
-
-
-
-
 _item(
 context,
 Icons.qr_code_scanner,
@@ -164,10 +114,6 @@ Get.off(
 }
 
 ),
-
-
-
-
 _item(
 context,
 Icons.person,
@@ -183,13 +129,6 @@ userId: AuthService.userId!,
 }
 
 ),
-
-
-
-
-
-// ⭐ Notifications + Count
-
 ListTile(
 
 leading: Badge(
@@ -211,19 +150,11 @@ color:colors.primary,
 title:const Text(
 "Notifications"
 ),
-
-
 onTap:() async {
-
-
 Get.back();
-
-
 await Get.toNamed(
 AppRoutes.employeeNotifications
 );
-
-
 getUnread();
 
 
@@ -231,11 +162,6 @@ getUnread();
 
 
 ),
-
-
-
-
-
 _item(
 context,
 Icons.payment,
@@ -249,16 +175,7 @@ Get.off(
 }
 
 ),
-
-
-
-
 const Divider(),
-
-
-
-
-
 _item(
 context,
 Icons.logout,
@@ -293,10 +210,6 @@ Get.offAllNamed(
 );
 
 }
-
-
-
-
 Widget _item(
 BuildContext context,
 IconData icon,

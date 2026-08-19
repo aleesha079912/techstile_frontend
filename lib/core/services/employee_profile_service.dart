@@ -3,8 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:techstile_frontend/core/services/auth_service.dart';
 
 class EmployeeProfileService {
-  final String baseUrl =
-      "http://techstile.sandbox.pk/api";
+  final String baseUrl = "http://techstile.sandbox.pk/api";
 
   Future<Map<String, dynamic>?> getProfile(int userId) async {
     try {

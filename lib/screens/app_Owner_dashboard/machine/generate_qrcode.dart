@@ -3,10 +3,10 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:techstile_frontend/core/services/generate_qr_service.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
-import 'package:techstile_frontend/widgets/owner_drawer12.dart';
+import 'package:techstile_frontend/widgets/owner_drawer.dart';
 class GenerateQrCodeScreen extends StatefulWidget {
-  final String machineDbId;   // primary id from DB (e.g. "3")
-  final String machineLabel;  // display label (e.g. "LM-1")
+  final String machineDbId;   // primary id from DB 
+  final String machineLabel;  // display label 
   final int factoryId;        // factory identifier for navigation
 
   const GenerateQrCodeScreen({
@@ -51,7 +51,7 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
         child: Column(
           children: [
-            // ── Header Info Card ──
+            // Header Info Card 
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -104,7 +104,7 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
 
             const SizedBox(height: 28),
 
-            // ── QR Code Card ──
+            //  QR Code Card 
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(28),
@@ -201,8 +201,8 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
                         SnackBar(
                           content: Text(
                             path != null
-                                ? "✅ QR saved to device"
-                                : "❌ Failed to save QR",
+                                ? " QR saved to device"
+                                : " Failed to save QR",
                           ),
                           backgroundColor:
                               path != null ? AppTheme.success :AppTheme.error,
@@ -240,7 +240,7 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
 
             const SizedBox(height: 20),
 
-            // ── Info Note ──
+            //Info Note 
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
@@ -273,7 +273,7 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
   }
 }
 
-// ── Reusable Action Button Widget ──
+//Reusable Action Button Widget 
 class _ActionButton extends StatelessWidget {
   final String label;
   final IconData icon;

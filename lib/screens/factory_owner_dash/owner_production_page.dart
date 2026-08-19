@@ -44,7 +44,7 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage>
     }
   }
 
-  // Owner pending = everything NOT yet owner-approved/rejected (status 1,2,3)
+  // Owner pending
   List<Map<String, dynamic>> get _pending =>
       _all.where((p) {
         final s = p['status'] as int? ?? 1;
@@ -133,16 +133,10 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage>
 
   Widget _card(Map<String, dynamic> p, {required bool showActions}) {
     final status = p['status'] as int? ?? 1;
-
-    // ✅ employee ka naam (fallback: Emp #id)
     final employeeName = p['employeedetails']?['user']?['name']?.toString()
         ?? 'Emp #${p['employee_id'] ?? '-'}';
-
-    // ✅ machine ka naam (fallback: Machine #id)
     final machineName = p['machineemploye']?['machine_name']?.toString()
         ?? 'Machine #${p['machine_id'] ?? '-'}';
-
-    // ✅ pending mein "Submitted" (created_at), approved mein "Approved" (updated_at)
     final dateLabel = showActions ? 'Submitted' : 'Approved';
     final dateValue = showActions ? p['created_at'] : p['updated_at'];
 
@@ -156,7 +150,7 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage>
         padding: const EdgeInsets.all(16),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
 
-          // ── Header ────────────────────────────────────────
+          //  Header 
           Row(children: [
             Container(
               padding: const EdgeInsets.all(9),
@@ -183,7 +177,7 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage>
 
           const SizedBox(height: 12),
 
-          // ── Stats ─────────────────────────────────────────
+          //Stats 
           Row(children: [
             _infoBox(label: 'Total',   value: '${p['total_length'] ?? 0} yds'),
             const SizedBox(width: 8),
@@ -200,11 +194,11 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage>
             _infoBox(label: dateLabel,     value: _fmtDateTime(dateValue)),
           ]),
 
-          // ── Manager status note ───────────────────────────
+          // Manager status note 
           const SizedBox(height: 8),
           _managerNote(status),
 
-          // ── Action buttons ────────────────────────────────
+          //  Action buttons
           if (showActions) ...[
             const SizedBox(height: 14),
             Row(children: [
@@ -345,7 +339,7 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage>
     ]),
   );
 
-  // ✅ date + time dono show karta hai (compact year)
+  // date + time 
   String _fmtDateTime(dynamic raw) {
     if (raw == null) return '-';
     try {

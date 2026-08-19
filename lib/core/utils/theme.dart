@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  // ===== Colors =====
+  //  Colors
 
   static const Color primary    = Color(0xFF122B7A); // Dark Navy
   static const Color secondary  = Color(0xFFFFFFFF); // White
@@ -19,12 +19,12 @@ class AppTheme {
   static const Color textPrimary   = Color(0xFF122B7A); // Dark Navy
   static const Color textSecondary = Color(0xFFFFFFFF); // Dark Navy (use with opacity)
 
-  // ===== Radius =====
+  //Radius
 
   static const BorderRadius cardRadius   = BorderRadius.all(Radius.circular(28));
   static const BorderRadius buttonRadius = BorderRadius.all(Radius.circular(18));
 
-  // ===== Shadows =====
+  //  Shadows 
 
   static List<BoxShadow> softShadow = [
     BoxShadow(
@@ -34,7 +34,7 @@ class AppTheme {
     ),
   ];
 
-  // ===== Theme =====
+  //  Theme
 
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
@@ -79,11 +79,11 @@ class AppTheme {
       ),
     ),
 
-    // For teal "confirm / accept" buttons — apply manually where needed:
-    // ElevatedButton.styleFrom(backgroundColor: AppTheme.active, ...)
+    // For teal "confirm / accept" buttons  apply manually where needed
+    
 
-    // For red "reject / delete" buttons — apply manually where needed:
-    // ElevatedButton.styleFrom(backgroundColor: AppTheme.error, ...)
+    // For red "reject / delete" buttons  apply manually where needed
+   
 
     inputDecorationTheme: InputDecorationTheme(
       filled:    true,

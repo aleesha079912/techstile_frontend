@@ -16,10 +16,10 @@ class FactoryController extends GetxController {
     fetchFactories();
   }
 
-  // 1. GET ALL (Backend index function)
+  // GET ALL
   Future<void> fetchFactories() async {
-    final token = AuthService.token; // ya jaise bhi token lo
-    print("🔑 Token: $token"); // ← token print karo
+    final token = AuthService.token;
+    print(" Token: $token"); // print token
     final box = GetStorage();
 
     print(
@@ -32,7 +32,6 @@ class FactoryController extends GetxController {
     if (response.statusCode == 200) {
       final res = jsonDecode(response.body);
       if (res['status'] == true) {
-        // ← 'status' hai ya 'success'?
         List<dynamic> data = res['data'];
         factoryList.assignAll(
           data.map((e) => FactoryModel.fromJson(e)).toList(),
@@ -41,7 +40,7 @@ class FactoryController extends GetxController {
     }
   }
 
-  // 2. CREATE (Backend store function)
+  // CREATE
   Future<bool> addFactory(Map<String, dynamic> data) async {
     isLoading.value = true;
     try {
@@ -67,7 +66,7 @@ class FactoryController extends GetxController {
     }
   }
 
-  // 3. UPDATE (Backend update function)
+  //  UPDATE
   Future<bool> updateFactory(dynamic id, Map<String, dynamic> data) async {
     isLoading.value = true;
     try {
@@ -90,7 +89,7 @@ class FactoryController extends GetxController {
     }
   }
 
-  // 4. DELETE (Backend destroy function)
+  // DELETE
   Future<void> deleteFactory(dynamic id) async {
     try {
       final response = await http.delete(

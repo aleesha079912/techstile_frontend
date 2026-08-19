@@ -20,7 +20,7 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // ================= Top Section =================
+            //Top Section 
             Column(
               children: [
                 const SizedBox(height: 30),
@@ -96,7 +96,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ],
             ),
 
-            // ================= Bottom Section =================
+            //Bottom Section 
             Column(
               children: [
                 Container(

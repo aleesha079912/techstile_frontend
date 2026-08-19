@@ -25,7 +25,7 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
     load();
   }
 
-  // ===== LOGIC (UNCHANGED) =====
+  //LOGIC 
   Future<void> load() async {
     final res = await service.getProfile(widget.userId);
 
@@ -35,9 +35,9 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
     });
   }
 
-  // ===== SIMPLE HELPER WIDGETS (DESIGN ONLY) =====
+  //SIMPLE HELPER WIDGETS
 
-  // Top gradient profile card (avatar + name + email)
+  // Top gradient profile card 
   Widget buildProfileHeader() {
     final name = profile?['name'] ?? '';
     final email = profile?['email'] ?? '';
@@ -101,7 +101,7 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
     );
   }
 
-  // Section title with small blue bar (like "Performance Overview")
+  // Section title with small blue bar 
   Widget sectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
@@ -177,7 +177,7 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
     );
   }
 
-  // Basic info row (icon + label + value)
+  // Basic info row 
   Widget infoRow(IconData icon, String label, String value) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),

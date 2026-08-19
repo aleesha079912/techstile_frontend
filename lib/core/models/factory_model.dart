@@ -1,5 +1,5 @@
 class FactoryModel {
-  final int id; // ❗ MUST be int
+  final int id; 
 
   final String name;
   final String address;
@@ -14,7 +14,7 @@ class FactoryModel {
 
   factory FactoryModel.fromJson(Map<String, dynamic> json) {
     return FactoryModel(
-      id: int.parse(json['id'].toString()), // 🔥 FIX HERE
+      id: int.parse(json['id'].toString()), 
       name: json['name'] ?? '',
       address: json['address'] ?? '',
       city: json['city'] ?? '',

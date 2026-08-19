@@ -96,7 +96,7 @@ print("Stored User ID = ${AuthService.userId}");
                         _heroCard(),
                         const SizedBox(height: 14),
 
-                        // ✅ Button hero card se BAHAR — apni jagah pe
+                        //  Button 
                         _viewProductionsButton(),
 
                         const SizedBox(height: 20),
@@ -203,7 +203,7 @@ print("Stored User ID = ${AuthService.userId}");
     );
   }
 
-  // ── Hero card — sirf factory info, button alag hai ────────────────────────
+  //  Hero card
   Widget _heroCard() {
     final factory = data['factory'];
     return Container(
@@ -259,7 +259,7 @@ print("Stored User ID = ${AuthService.userId}");
     );
   }
 
-  // ── ✅ View Productions button — full width, alag container, mobile-friendly ──
+  //  View Productions button 
   Widget _viewProductionsButton() {
     return SizedBox(
       width: double.infinity,
@@ -278,7 +278,7 @@ print("Stored User ID = ${AuthService.userId}");
           style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
         ),
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppTheme.primary,
+          backgroundColor: AppTheme.success,
           foregroundColor: AppTheme.background,
           elevation: 0,
           padding: const EdgeInsets.symmetric(vertical: 14),
@@ -322,7 +322,7 @@ print("Stored User ID = ${AuthService.userId}");
             const SizedBox(height: 2),
             Text('$label · $unit',
                 style: const TextStyle(
-                    color: AppTheme.textSecondary, fontSize: 11, fontWeight: FontWeight.w500)),
+                    color: AppTheme.textPrimary, fontSize: 11, fontWeight: FontWeight.w500)),
           ],
         ),
       ),
@@ -339,10 +339,10 @@ print("Stored User ID = ${AuthService.userId}");
         decoration: BoxDecoration(color:  AppTheme.secondary, borderRadius: AppTheme.cardRadius),
         child: Column(
           children: [
-            const Icon(Icons.inventory_2_outlined, size: 40, color: AppTheme.secondary),
+            const Icon(Icons.inventory_2_outlined, size: 40, color: AppTheme.primary),
             const SizedBox(height: 10),
             const Text('No varieties produced yet',
-                style: TextStyle(color: AppTheme.textSecondary, fontSize: 13)),
+                style: TextStyle(color: AppTheme.textPrimary, fontSize: 13)),
           ],
         ),
       );
@@ -372,7 +372,7 @@ print("Stored User ID = ${AuthService.userId}");
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Icon(Icons.texture_rounded,
-                          color: AppTheme.secondary, size: 16),
+                          color: AppTheme.primary, size: 16),
                     ),
                     const SizedBox(width: 12),
                     Expanded(

@@ -118,7 +118,7 @@ static const employeeNotifications = "/employee-notifications";
       transition: Transition.fadeIn,
     ),
 
-    // ── MANAGER DASHBOARD (Tab 1) ───────────────────────────────────────────
+    //  MANAGER DASHBOARD 
 // MANAGER DASHBOARD
 GetPage(
   name: AppRoutes.managerDashboard,
@@ -308,7 +308,6 @@ GetPage(
       name: AppRoutes.enterProduction,
       page: () {
         final args = Get.arguments;
-        // ✅ Map se machineId nikalo
         final machineId = args is Map
             ? args['machineId']?.toString() ?? ''
             : args?.toString() ?? '';
@@ -343,8 +342,5 @@ GetPage(
 ),
     GetPage(name: AppRoutes.history, page: () => const HistoryScreen()),
   ];
-
-  
-
 }
 

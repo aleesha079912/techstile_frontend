@@ -5,14 +5,14 @@ import 'auth_service.dart';
 
 class Machine {
   final String id;
-  final String machineName; // ✅ field name
+  final String machineName;
   final String type;
   final String time;
   final bool isActive;
 
   Machine({
     required this.id,
-    required this.machineName, // ✅ constructor mein same naam
+    required this.machineName,
     required this.type,
     required this.time,
     this.isActive = false,
@@ -21,7 +21,7 @@ class Machine {
   factory Machine.fromJson(Map<String, dynamic> json) {
     return Machine(
       id: json['id'].toString(),
-      machineName: json['machine_name'] ?? '', // ✅ DB column → dart field
+      machineName: json['machine_name'] ?? '',
       type: json['machine_type'] ?? '',
       time: json['time'] ?? '',
       isActive: json['is_active'] == true,
@@ -74,7 +74,7 @@ class MachinesService {
     return MachinesData(machines: []);
   }
 
-  // 🔹 2. CREATE (Laravel: machines/add_machine)
+  // CREATE
   Future<Map<String, Object>?> addMachine(
     String machineId,
     String type,
@@ -103,7 +103,7 @@ class MachinesService {
     }
   }
 
-  // 🔹 3. UPDATE (Laravel: machines/update_machine/{id})
+  //UPDATE
   Future<bool> updateMachine(
     String id,
     String machineId,
@@ -128,7 +128,7 @@ class MachinesService {
     }
   }
 
-  // 🔹 4. DELETE
+  //  DELETE
   Future<bool> deleteMachine(String id) async {
     try {
       final response = await http.delete(

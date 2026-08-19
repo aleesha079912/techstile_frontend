@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../core/services/production_service.dart';
 import '../../../core/utils/theme.dart';
 import '../../../widgets/man_bottom_navbar.dart';
-import 'package:techstile_frontend/core/services/auth_service.dart';
+// import 'package:techstile_frontend/core/services/auth_service.dart';
 
 class ManagerProductionsPage extends StatefulWidget {
   final dynamic factoryId;
@@ -45,16 +45,13 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
       setState(() { error = e.toString(); loading = false; });
     }
   }
-
-  // status 1 = pending (employee submitted)
-  // status 4 = owner approved before manager → show in approved too
   List<Map<String, dynamic>> get _pending  =>
       _all.where((p) => (p['status'] as int? ?? 1) == 1).toList();
 
   List<Map<String, dynamic>> get _approved =>
       _all.where((p) {
         final s = p['status'] as int? ?? 1;
-        return s == 2 || s == 4; // manager approved OR owner approved
+        return s == 2 || s == 4; 
       }).toList();
 
   Future<void> _doAction(dynamic id, String action) async {
@@ -143,16 +140,10 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
   Widget _card(Map<String, dynamic> p, {required bool showActions}) {
     final status         = p['status'] as int? ?? 1;
     final isOwnerApproved = status == 4;
-
-    // ✅ employee ka naam (fallback: Employee #id)
     final employeeName = p['employeedetails']?['user']?['name']?.toString()
         ?? 'Employee #${p['employee_id'] ?? '-'}';
-
-    // ✅ machine ka naam (fallback: Machine #id)
    final machineName = p['machineemploye']?['machine_name']?.toString()
     ?? 'Machine #${p['machine_id'] ?? '-'}';
-
-    // ✅ pending mein "Submitted" (created_at), approved mein "Approved" (updated_at)
     final dateLabel = showActions ? 'Submitted' : 'Approved';
     final dateValue = showActions ? p['created_at'] : p['updated_at'];
 
@@ -166,8 +157,6 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-
-          // ── Top row: variety + employee + status chip ──────
           Row(children: [
             Container(
               padding: const EdgeInsets.all(10),
@@ -371,7 +360,7 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
     ]),
   );
 
-  // ✅ date + time dono show karta hai
+  //show date and time
   String _fmtDateTime(dynamic raw) {
     if (raw == null) return '-';
     try {

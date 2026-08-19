@@ -75,7 +75,7 @@ final MachineDetailsService machineService =
 
 
 
-  // QR se machine id mili
+  //get machine id from QR 
   await machineService.getMachineDetails(code);
 
 final data = machineService.data;

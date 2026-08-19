@@ -46,6 +46,7 @@ class AuthService {
         box.write('token', actualData['token']);
         box.write('user', userData);
         box.write('role', userData['role'] ?? '');
+        loginemail(email);
 
         // ✅ Yahin save karo — agar backend response mein factoryId aata hai
         // Agar 'factory_id' ya 'factoryId' key se aata hai to wahi use karo
@@ -63,8 +64,16 @@ class AuthService {
     }
   }
 
-  // ✅ Manual save — agar factoryId login response mein nahi aata,
-  // balki ek alag API call se milta hai (jaisa manager ke case mein hota hai)
+  static loginemail(String email) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/login-email'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'email': email}),
+    );
+    print(response);
+  }
+
+  // manually save the factory id
   static Future<void> saveFactoryInfo(dynamic factoryId, dynamic userId) async {
     print("Saving Factory ID = $factoryId");
 
@@ -74,13 +83,13 @@ class AuthService {
     print("Stored Factory ID = ${box.read('factoryId')}");
   }
 
-  // ── LOGOUT ─────────────────────────────────────────────────────────────────
+  // logout
 
   static void logout() {
     box.remove('token');
     box.remove('user');
     box.remove('role');
-    box.remove('factoryId'); // ✅ logout pe clear karo
+    box.remove('factoryId');
     box.remove('userId');
   }
 

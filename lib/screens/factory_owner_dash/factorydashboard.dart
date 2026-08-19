@@ -60,7 +60,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _heroCard(),          // ← production button is inside here
+                    _heroCard(),          //  production button is inside here
                     const SizedBox(height: 20),
 
                     const _SectionLabel(text: 'This Week'),
@@ -122,7 +122,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
     );
   }
 
-  // ── AppBar ──────────────────────────────────────────────────────────────────
+  //AppBar 
   PreferredSizeWidget _buildAppBar() {
   return AppBar(
     backgroundColor: AppTheme.primary,
@@ -165,7 +165,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
   );
 }
 
-  // ── Hero card — factory info + Productions button ───────────────────────────
+  // Hero card 
   Widget _heroCard() {
     final factory = data['factory'];
     return Container(
@@ -188,7 +188,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Factory info row (same as before) ───────────
+          // Factory info row 
           Row(
             children: [
               Container(
@@ -232,7 +232,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
             ],
           ),
 
-          // ── Productions button ───────────────────────────
+          //Productions button 
          const SizedBox(height: 16),
 
 SizedBox(
@@ -271,7 +271,7 @@ SizedBox(
     );
   }
 
-  // ── Stat card ───────────────────────────────────────────────────────────────
+  // Stat card
   Widget _statCard({
     required IconData icon,
     required String label,
@@ -319,7 +319,7 @@ SizedBox(
     );
   }
 
-  // ── Varieties list ──────────────────────────────────────────────────────────
+  //  Varieties list
   Widget _varietiesList() {
     final varieties = (data['varieties'] as List?) ?? [];
 
@@ -405,7 +405,7 @@ SizedBox(
   }
 }
 
-// ── Section label ────────────────────────────────────────────────────────────
+//  Section label 
 class _SectionLabel extends StatelessWidget {
   final String text;
   const _SectionLabel({required this.text});

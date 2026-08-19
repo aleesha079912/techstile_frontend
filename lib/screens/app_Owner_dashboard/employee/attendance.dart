@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/services/attendance_service.dart';
 import '../../../core/utils/theme.dart';
-import '../../../widgets/owner_drawer12.dart';
+import '../../../widgets/owner_drawer.dart';
 import '../../../../../widgets/bottom_nav_bar.dart';
 class AttendanceScreen extends StatefulWidget {
   const AttendanceScreen({super.key});
@@ -29,7 +29,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     setState(() {});
   }
 
-  // 🔹 Add/Edit Dialog
+  // Add/Edit Dialog
   void showForm({dynamic item}) {
     final empCtrl = TextEditingController(text: item?['employee_id']?.toString() ?? '');
     final typeCtrl = TextEditingController(text: item?['type'] ?? '');
@@ -75,7 +75,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     );
   }
 
-  // 🔹 Delete
+  // Delete
   void delete(int id) async {
     await service.deleteAttendance(id);
     load();

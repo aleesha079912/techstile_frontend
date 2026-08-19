@@ -23,8 +23,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     super.initState();
     loadProfile();
   }
-
-  // ===== LOGIC (UNCHANGED) =====
   Future<void> loadProfile() async {
     print("Profile User ID = ${widget.userId}");
     final response = await service.getProfile(widget.userId);
@@ -35,10 +33,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     });
   }
 
-  // ===== SIMPLE HELPER WIDGETS (DESIGN ONLY) =====
-
-  // Top gradient profile card (avatar + name + email)
-  // Colors fixed to navy -> sky blue (like reference design) + smaller size
   Widget buildProfileHeader() {
     final name = profile?['name'] ?? '';
     final email = profile?['email'] ?? '';
@@ -101,8 +95,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       ),
     );
   }
-
-  // Row style like "Shift Start / Shift End" boxes shown in the design
   Widget infoRow(IconData icon, String title, String value) {
     return Container(
       width: double.infinity,
@@ -156,8 +148,6 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       ),
     );
   }
-
-  // Section title with small blue bar (like "Performance Overview")
   Widget sectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),

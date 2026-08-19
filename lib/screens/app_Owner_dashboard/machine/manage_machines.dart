@@ -57,7 +57,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
     });
   }
 
-  // --- ADD / UPDATE ---
+  //  ADD / UPDATE
   void _showMachineForm(BuildContext context, {Machine? machine}) {
     final idCtrl = TextEditingController(text: machine?.machineName);
     final typeCtrl = TextEditingController(text: machine?.type);
@@ -270,10 +270,10 @@ class _MachinesScreenState extends State<MachinesScreen> {
               ),
             ),
 
-      bottomNavigationBar: CustomBottomNav(
-        currentIndex: 1,
-        factoryId: widget.factoryId,
-      ),
+       bottomNavigationBar: CustomBottomNav(
+          currentIndex: 1,
+          factoryId: widget.factoryId,
+        ),
     );
   }
 

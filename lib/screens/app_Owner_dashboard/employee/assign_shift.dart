@@ -17,8 +17,6 @@ class _AssignShiftsScreenState extends State<AssignShiftsScreen> {
 
   List data = [];
   bool loading = true;
-
-  // ✅ Sirf isi factory ke employees (dropdown ke liye)
   List factories = [];
   List employees = [];
 
@@ -60,13 +58,13 @@ class _AssignShiftsScreenState extends State<AssignShiftsScreen> {
     }
   }
 
-  // ───────────────── ADD / EDIT ─────────────────
+  // ADD 
 
   void showForm({dynamic item}) {
   final startCtrl = TextEditingController(text: item?['shift_starttime'] ?? '');
   final endCtrl   = TextEditingController(text: item?['shift_endtime'] ?? '');
 
-  // ✅ Fix: Map ki jagah sirf id store karo
+  // store id 
   int? selectedFactory = item?['factory_id'];
   int? selectedEmployeeId = item?['user_id'];;
 
@@ -158,7 +156,7 @@ class _AssignShiftsScreenState extends State<AssignShiftsScreen> {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  // ✅ Fix: employees list se user_id dhundo
+                  // find the user id from employee list
                   if (selectedFactory == null) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(content: Text("Please select factory")),
@@ -204,14 +202,10 @@ class _AssignShiftsScreenState extends State<AssignShiftsScreen> {
   );
 }
 
-  // ───────────────── DELETE ─────────────────
-
   Future<void> delete(int id) async {
     await service.deleteEmployee(id);
     load();
   }
-
-  // ───────────────── UI ─────────────────
 
   @override
   Widget build(BuildContext context) {

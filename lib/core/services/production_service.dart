@@ -43,7 +43,7 @@ class ProductionService {
     if (res.statusCode != 200) throw Exception('Action failed');
   }
 
-  // ── Owner: fetch all productions for factory ──────────────
+  //  Owner: fetch all productions for factory
   Future<List<Map<String, dynamic>>> getOwnerProductions(dynamic factoryId) async {
     if (factoryId == null || AuthService.token.isEmpty) {
       throw ProductionAuthException();
@@ -62,7 +62,7 @@ class ProductionService {
     throw Exception('Failed to load productions (${res.statusCode})');
   }
 
-  // ── Owner: approve or reject ──────────────────────────────
+  // Owner: approve or reject
   Future<void> ownerAction(dynamic productionId, String action) async {
     final res = await http.post(
       Uri.parse('$_base/owner/productions/$productionId/action'),
@@ -73,9 +73,9 @@ class ProductionService {
   }
 }
 
-// ── Status constants ──────────────────────────────────────────
+// Status constants 
 class ProductionStatus {
-  static const int pending         = 1; // employee submitted
+  static const int pending         = 1; 
   static const int managerApproved = 2;
   static const int managerRejected = 3;
   static const int ownerApproved   = 4;

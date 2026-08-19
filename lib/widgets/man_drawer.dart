@@ -103,8 +103,6 @@ class _ManagerDrawerState extends State<ManagerDrawer> {
 
                   Get.toNamed(AppRoutes.managersettings);
                 }),
-
-                // ⭐ Notifications with count
                ListTile(
 
                       leading: Badge(

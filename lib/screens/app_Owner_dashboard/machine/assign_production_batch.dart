@@ -20,6 +20,8 @@ class AssignProductionDialog extends StatefulWidget {
 class _AssignProductionDialogState extends State<AssignProductionDialog> {
   final varietyCtrl     = TextEditingController();
   final totalLengthCtrl = TextEditingController();
+  final amountPerMeterCtrl = TextEditingController();
+
   bool loading = false;
 
   @override
@@ -42,6 +44,7 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
       machineId:   widget.machineId,
       varietyType: varietyCtrl.text.trim(),
       totalLength: double.parse(totalLengthCtrl.text.trim()),
+      amountPerMeter:double.parse(amountPerMeterCtrl.text.trim()),
     );
 
     setState(() => loading = false);
@@ -52,6 +55,7 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
       Get.snackbar("Success", "Production assign ho gayi",
           backgroundColor: AppTheme.active, colorText:AppTheme.secondary);
     } else {
+      print(success);
       Get.snackbar("Error", "Kuch galat hua",
           backgroundColor: AppTheme.error, colorText: AppTheme.secondary);
     }
@@ -104,7 +108,20 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
             ),
+            const SizedBox(height: 12),
+
+            // Amount per month
+            TextField(
+              controller: amountPerMeterCtrl,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: "Amount per meter",
+                prefixIcon: const Icon(Icons.straighten),
+                border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              ),
+            ), 
             const SizedBox(height: 24),
+
 
             // Submit Button
             SizedBox(

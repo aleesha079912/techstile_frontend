@@ -5,7 +5,7 @@ import 'auth_service.dart';
 class EmployeeService {
   final String baseUrl = "http://techstile.sandbox.pk/api";
 
-  // 🔹 GET ALL
+  // get all
   Future<List<dynamic>> fetchEmployees() async {
     try {
       final res = await http.get(
@@ -53,7 +53,7 @@ class EmployeeService {
     return [];
   }
 
-  // 🔹 ADD
+  // add
   Future<bool> addEmployee(Map<String, dynamic> data) async {
     try {
       final res = await http.post(
@@ -67,7 +67,7 @@ class EmployeeService {
     }
   }
 
-  // 🔹 UPDATE
+  // update
   Future<bool> updateEmployee(int id, Map<String, dynamic> data) async {
     try {
       final res = await http.put(
@@ -81,7 +81,7 @@ class EmployeeService {
     }
   }
 
-  // 🔹 DELETE
+  // delete
   Future<bool> deleteEmployee(int id) async {
     try {
       final res = await http.delete(
@@ -94,7 +94,7 @@ class EmployeeService {
     }
   }
 
-  // ✅ Fix: sahi route — sirf isi factory ke employees (dropdown ke liye)
+  // only this factory employees shows on dropdown
   Future<List<dynamic>> fetchEmployeesByFactory(int factoryId) async {
     try {
       final response = await http.get(

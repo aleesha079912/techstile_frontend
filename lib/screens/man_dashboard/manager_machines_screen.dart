@@ -27,7 +27,7 @@ class _ManagerMachinesScreenState
 
   List machines = [];
   List filteredMachines = [];
-  String? factoryName; // ✅ yahan store hoga
+  String? factoryName; 
 
   String? error;
 
@@ -47,10 +47,10 @@ class _ManagerMachinesScreenState
     });
 
     try {
-      // ✅ Machines list
+      // Machines list
       final res = await _service.getMachines(widget.factoryId);
 
-      // ✅ Factory name — dashboard API se le aao (already factory info de raha hai)
+      //  Factory name fetch from dashboard Api
       final dashboardData = await _service.getDashboard(widget.factoryId);
 
       setState(() {
@@ -114,8 +114,6 @@ class _ManagerMachinesScreenState
                 fontSize: 17,
               ),
             ),
-
-            // ✅ Fix: ab state se aata hai — Get.arguments se nahi
             Text(
               loading ? 'Loading...' : (factoryName ?? 'Factory'),
               style: TextStyle(

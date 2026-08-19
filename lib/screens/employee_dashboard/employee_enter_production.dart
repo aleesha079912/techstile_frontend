@@ -33,14 +33,14 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
   void initState() {
     super.initState();
 
-    // ✅ auto-fill from previous screen / DB
+    //  auto fill from previous screen 
     final args = Get.arguments;
 
     if (args is Map) {
       varietyController.text = args['varietyType']?.toString() ?? '';
       lengthController.text = args['totalLength']?.toString() ?? '';
 
-      // 🔥 ADD remaining from backend
+      // ADD remaining from backend
       remainingController.text = args['remaining']?.toString() ?? '0';
     }
   }
@@ -83,10 +83,6 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
       final machineId = args is Map
           ? args['machineId']?.toString() ?? widget.machineId
           : widget.machineId;
-
-      // final user = AuthService.user;
-      // final userId = user?['id'];
-
       final result =
           await EmployeeProductionService().submitProductionWithMessage(
         machineId: int.parse(machineId),
@@ -95,7 +91,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
         varietyType: varietyController.text,
         totalLength: double.parse(lengthController.text.isEmpty ? '0' : lengthController.text),
         readyProduction: ready,
-        wasteProduction: double.parse(wasteController.text.isEmpty ? '0' : wasteController.text), // 🔥 FIX
+        wasteProduction: double.parse(wasteController.text.isEmpty ? '0' : wasteController.text), 
       );
 
       if (result['success'] == true) {

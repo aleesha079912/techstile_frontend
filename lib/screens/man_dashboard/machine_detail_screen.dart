@@ -21,7 +21,7 @@ class MachineDetailsScreen extends StatefulWidget {
 }
 
 class _MachineDetailScreenState extends State<MachineDetailsScreen> {
-  // ── Service ───────────────────────────────────────────────────────────────
+  //Service 
   final MachineDetailsService _detailSvc = MachineDetailsService();
   bool _detailLoading = true;
   Map<String, dynamic> _detail = {};
@@ -40,8 +40,6 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
       _detailLoading = false;
     });
   }
-
-  // ── Build ─────────────────────────────────────────────────────────────────
   @override
   Widget build(BuildContext context) {
     final m = widget.machine;
@@ -98,11 +96,9 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // ── Hero ───────────────────────────────────────────
+                    // cards
                     _heroCard(m),
                     const SizedBox(height: 20),
-
-                    // ── Machine Info ───────────────────────────────────
                     const _SectionLabel(text: 'Machine Info'),
                     const SizedBox(height: 12),
                     _infoCard(Icons.tag_rounded, 'Machine ID', m.id),
@@ -114,7 +110,7 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
 
                     const SizedBox(height: 20),
 
-                    // ── Shift-wise Employees ────────────────────────────
+                    // Shift-wise Employees
                     const _SectionLabel(text: 'Shift-wise Production'),
                     const SizedBox(height: 12),
                     if ((_detail['shifts'] as List?)?.isEmpty ?? true)
@@ -142,7 +138,7 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
 
                     const SizedBox(height: 16),
 
-                    // ── Stats row ───────────────────────────────────────
+                    // Stats row
                     Row(
                       children: [
                         Expanded(
@@ -172,7 +168,6 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
                 ),
               ),
             ),
-      // ✅ Fix: factoryId widget.factoryId se aana chahiye, machine.id se nahi
       bottomNavigationBar: ManagerBottomNav(
         currentIndex: 1,
         factoryId: widget.factoryId,
@@ -180,7 +175,7 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
     );
   }
 
-  // ── Hero card ─────────────────────────────────────────────────────────────
+  //Hero card
   Widget _heroCard(Machine m) {
     return Container(
       width: double.infinity,
@@ -258,8 +253,6 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
       ),
     );
   }
-
-  // ── Shift card (one employee's shift assignment on this machine) ───────────
   Widget _shiftCard(Map<String, dynamic> s) {
     final start = s['shift_start']?.toString() ?? '';
     final end = s['shift_end']?.toString() ?? '';
@@ -335,7 +328,7 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
     );
   }
 
-  // ── Info card ─────────────────────────────────────────────────────────────
+  // Info card 
   Widget _infoCard(IconData icon, String title, String value) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -385,7 +378,7 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
     );
   }
 
-  // ── Stat card ─────────────────────────────────────────────────────────────
+  // Stat card
   Widget _statCard(String title, String value) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 14),
@@ -425,7 +418,7 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
   }
 }
 
-// ── Section Label ─────────────────────────────────────────────────────────────
+//  Section Label 
 class _SectionLabel extends StatelessWidget {
   final String text;
   const _SectionLabel({required this.text});

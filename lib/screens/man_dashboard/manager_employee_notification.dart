@@ -157,7 +157,7 @@ class _State extends State<NotificationPage> {
     );
   }
 
-  /// ================= TOP CARD =================
+  ///  TOP CARD 
   Widget _topSummaryCard(int unreadCount) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -193,7 +193,7 @@ class _State extends State<NotificationPage> {
     );
   }
 
-  /// ================= FILTER ROW =================
+  ///  FILTER ROW
   Widget _filterRow() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -224,7 +224,7 @@ class _State extends State<NotificationPage> {
     );
   }
 
-  /// ================= NOTIFICATION CARD =================
+  ///  NOTIFICATION CARD 
   Widget _notificationCard(dynamic n, bool isRead, String type) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -327,7 +327,7 @@ class _State extends State<NotificationPage> {
   }
 }
 
-/// ================= CHIP =================
+/// CHIP 
 class _Chip extends StatelessWidget {
   final String text;
   final bool selected;

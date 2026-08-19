@@ -1,131 +1,71 @@
-enum PaymentStatus { verified, pending, priorityReview, adjustment }
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:techstile_frontend/core/services/auth_service.dart';
 
-enum PaymentAction { approved, onHold, none }
+class PaymentService {
+  final String baseUrl = "http://techstile.sandbox.pk/api/payments";
 
-class PaymentWorker {
-  final String id;
-  final String name;
-  final String role;
-  final double amountDue;
-  final String period;
-  final PaymentStatus status;
-  PaymentAction action;
+  // FETCH ALL BATCH PAYMENTS by factoryId
 
-  PaymentWorker({
-    required this.id,
-    required this.name,
-    required this.role,
-    required this.amountDue,
-    required this.period,
-    required this.status,
-    this.action = PaymentAction.none,
-  });
+  Future<PaymentsData> fetchBatchPayments(int factoryId) async {
+    try {
+      final response = await http.get(
+        Uri.parse("$baseUrl/view-payments/$factoryId"),
+        headers: AuthService.authHeaders,
+      );
 
-  String get formattedAmount =>
-      '\$${amountDue.toStringAsFixed(2).replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+\.)'), (m) => '${m[1]},')}';
-}
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> body = jsonDecode(response.body);
+        final List<dynamic> data = body['data'] ?? [];
 
-class CutoffInfo {
-  final int daysLeft;
-  final String deadline;
-  final double complianceLevel;
+        final batches = data.map((b) => BatchPayment.fromJson(b)).toList();
 
-  const CutoffInfo({
-    required this.daysLeft,
-    required this.deadline,
-    required this.complianceLevel,
-  });
-}
-
-class PaymentsService {
-  PaymentsService._();
-  static final PaymentsService instance = PaymentsService._();
-  factory PaymentsService() => instance;
-
-  // ── State ──────────────────────────────────────────────────────────────────
-
-  List<PaymentWorker> _workers = [];
-  CutoffInfo? cutoffInfo;
-  bool isLoading = false;
-
-  List<PaymentWorker> get workers => List.unmodifiable(_workers);
-
-  // ── Load ───────────────────────────────────────────────────────────────────
-
-  Future<void> load() async {
-    isLoading = true;
-    await Future.delayed(const Duration(milliseconds: 400));
-
-    _workers = [
-      PaymentWorker(
-        id: '1',
-        name: 'Elena Rodriguez',
-        role: 'Master Weaver • Shift A',
-        amountDue: 1240.50,
-        period: 'Oct 01 - Oct 14',
-        status: PaymentStatus.verified,
-      ),
-      PaymentWorker(
-        id: '2',
-        name: 'Marcus Thorne',
-        role: 'Maintenance Lead • All Shifts',
-        amountDue: 2890.00,
-        period: 'Oct 01 - Oct 14',
-        status: PaymentStatus.pending,
-      ),
-      PaymentWorker(
-        id: '3',
-        name: 'Sarah Jenkins',
-        role: 'Quality Control Specialist',
-        amountDue: 1950.25,
-        period: 'Oct 01 - Oct 14',
-        status: PaymentStatus.priorityReview,
-      ),
-      PaymentWorker(
-        id: '4',
-        name: 'David Chen',
-        role: 'Logistics Coordinator',
-        amountDue: 1150.00,
-        period: 'Oct 01 - Oct 14',
-        status: PaymentStatus.verified,
-      ),
-      PaymentWorker(
-        id: '5',
-        name: 'Amara Okafor',
-        role: 'Machine Operator • Shift B',
-        amountDue: 980.75,
-        period: 'Oct 01 - Oct 14',
-        status: PaymentStatus.adjustment,
-      ),
-    ];
-
-    cutoffInfo = const CutoffInfo(
-      daysLeft: 3,
-      deadline: 'Friday, 6:00 PM EST',
-      complianceLevel: 98.2,
-    );
-
-    isLoading = false;
-  }
-
-  // ── Actions ────────────────────────────────────────────────────────────────
-
-  void approve(String id) {
-    final w = _workers.firstWhere((w) => w.id == id);
-    w.action = PaymentAction.approved;
-  }
-
-  void hold(String id) {
-    final w = _workers.firstWhere((w) => w.id == id);
-    w.action = PaymentAction.onHold;
-  }
-
-  void approveAll() {
-    for (final w in _workers) {
-      w.action = PaymentAction.approved;
+        return PaymentsData(
+          batches: batches,
+          totalAmount: batches.fold(0.0, (sum, b) => sum + b.totalAmount),
+          totalLength: batches.fold(0.0, (sum, b) => sum + b.totalLength),
+        );
+      }
+    } catch (e) {
+      debugPrint("Fetch Payments Error: $e");
     }
+    return PaymentsData(batches: []);
+  }
+}
+// Model
+
+class PaymentsData {
+  final List<BatchPayment> batches;
+  final double totalAmount;
+  final double totalLength;
+
+  PaymentsData({
+    required this.batches,
+    this.totalAmount = 0,
+    this.totalLength = 0,
+  });
+}
+
+class BatchPayment {
+  final String batchId;
+  final double totalLength;
+  final double amountPerMeter;
+
+  BatchPayment({
+    required this.batchId,
+    required this.totalLength,
+    required this.amountPerMeter,
+  });
+
+  factory BatchPayment.fromJson(Map<String, dynamic> json) {
+    return BatchPayment(
+      batchId: json['batch_id'].toString(),
+      totalLength: (json['total_length'] as num?)?.toDouble() ?? 0,
+      amountPerMeter: (json['amount_per_meter'] as num?)?.toDouble() ?? 0,
+    );
   }
 
-  int get pendingCount =>
-      _workers.where((w) => w.action == PaymentAction.none).length;
+  /// total_amount
+  double get totalAmount => totalLength * amountPerMeter;
 }

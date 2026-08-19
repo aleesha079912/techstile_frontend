@@ -3,9 +3,7 @@ import 'package:http/http.dart' as http;
 import '../auth_service.dart';
 
 class ManagerSettingService {
-
-  static const String baseUrl =
-      "http://techstile.sandbox.pk/api";
+  static const String baseUrl = "http://techstile.sandbox.pk/api";
 
   Future<bool> updateProfile({
     required String name,

@@ -9,12 +9,12 @@ import 'package:techstile_frontend/screens/app_Owner_dashboard/manage_user.dart'
 import 'package:techstile_frontend/screens/app_Owner_dashboard/owner_profile.dart';
 import 'package:techstile_frontend/screens/man_dashboard/manager_employee_notification.dart';
 import 'package:techstile_frontend/screens/man_dashboard/settings/manager_settings_screen.dart';
-import 'package:techstile_frontend/widgets/owner_drawer12.dart';
+import 'package:techstile_frontend/widgets/owner_drawer.dart';
 
 // import 'package:techstile_frontend/screens/factory_owner_dash/factory_dashboard.dart';
 import 'package:techstile_frontend/core/models/factory_model.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/factorydashboard.dart';
-import '../../widgets/owner_drawer.dart';
+import '../../widgets/factorydrawer.dart';
 
 class OwnerDashboardScreen extends StatefulWidget {
   final int factoryId;
@@ -77,10 +77,8 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
         ),
       )
     : null,
-      backgroundColor: theme.scaffoldBackgroundColor,
-      // CONCEPT: Preserve State (IndexedStack)
-      // `IndexedStack` ka faida yeh hai ke jab aap tabs badalte hain (e.g., Home se Calculator par gaye),
-      // toh purani screen ka data/scroll position khoti nahi hai, balkay background mein save rehti hai.
+      backgroundColor:  AppTheme.background,
+      // Preserve State
       body: IndexedStack(index: _currentIndex, children: _pages),
 
       // Conditional UI Rendering
@@ -90,7 +88,7 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
     );
   }
 
-  // CONCEPT: Modular UI / Widget Refactoring
+  //  Modular UI / Widget Refactoring
   Widget _buildFAB(BuildContext context) {
     final theme = Theme.of(context);
 
@@ -98,8 +96,8 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            theme.colorScheme.primary,
-            theme.colorScheme.primary.withOpacity(0.8),
+             AppTheme.primary,
+             AppTheme.primary.withOpacity(0.8),
           ],
         ),
         borderRadius: BorderRadius.circular(16),
@@ -112,7 +110,7 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.add, color: theme.colorScheme.onPrimary),
+              Icon(Icons.add, color:AppTheme.secondary ),
               const SizedBox(width: 6),
               Text(
                 "Add Factory",
@@ -139,8 +137,8 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
       type: BottomNavigationBarType.fixed,
       backgroundColor: AppTheme.primary,
       
-       selectedItemColor: theme.colorScheme.secondary, 
-       unselectedItemColor: theme.colorScheme.secondary,
+       selectedItemColor: AppTheme.secondary, 
+       unselectedItemColor:  AppTheme.neutral,
       items: const [
         BottomNavigationBarItem
         (icon: Icon(Icons.home_outlined), 
@@ -180,7 +178,7 @@ class _HomeTab extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               child: Obx(
 
-                // when the length of the factory list is changed, this text will auto refresh.
+                // when the length of the factory list is changed this text will auto refresh.
                 () => Text(
                   "${"${controller.factoryList.length} registered"} ${controller.factoryList.length == 1 ? "factory" : "factories"}",
                   style: theme.textTheme.bodyMedium,
@@ -237,17 +235,17 @@ class _HomeTab extends StatelessWidget {
               label: "Factories",
               value: "${controller.factoryList.length}",
               icon: Icons.factory,
-              color: theme.colorScheme.primary,
+              color: AppTheme.primary,
             ),
             const SizedBox(width: 10),
             _StatCard(
               label: "Cities",
-              // Data Manipulation (Mapping & Sets)
-              // `map((f) => f.city).toSet().length` mean  count only unique cities 
+            
+              //  mean  count only unique cities 
               value:
                   "${controller.factoryList.map((f) => f.city).toSet().length}",
               icon: Icons.location_city,
-              color: theme.colorScheme.primary, 
+              color:  AppTheme.primary, 
             ),
           ],
         ),
@@ -264,13 +262,13 @@ class _HomeTab extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-             color: theme.colorScheme.primary.withOpacity(0.08),
+             color:  AppTheme.primary.withOpacity(0.08),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Icon(
               Icons.factory_outlined,
               size: 40,
-              color: theme.colorScheme.primary,
+              color:  AppTheme.primary,
             ),
           ),
           const SizedBox(height: 16),
@@ -366,7 +364,7 @@ class _FactoryCard extends StatelessWidget {
         leading: CircleAvatar(
 
           backgroundColor:
-          theme.colorScheme.primary.withOpacity(0.1),
+           AppTheme.primary.withOpacity(0.1),
 
           child: Text(
 
@@ -375,7 +373,7 @@ class _FactoryCard extends StatelessWidget {
                 : "?",
 
             style: TextStyle(
-              color: theme.colorScheme.primary,
+              color: AppTheme.primary,
             ),
 
           ),
@@ -436,7 +434,7 @@ class _FactoryCard extends StatelessWidget {
 
           ],
 
-        ),
+        ), 
 
       ),
 

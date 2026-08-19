@@ -7,11 +7,9 @@ import '../manager_profile.dart';
 import '../../employee_dashboard/profile.dart';
 
 class ManagerSettingsScreen extends StatefulWidget {
-  /// Role badge shown on the profile card. Defaults to "Manager".
   final String roleLabel;
 
-  /// Where the profile card / "Edit Profile" tile navigates to.
-  /// Defaults to the Manager profile screen.
+  /// Where the profile card 
   final Widget Function()? profilePageBuilder;
 
   const ManagerSettingsScreen({
@@ -44,7 +42,7 @@ class _ManagerSettingsScreenState
         padding: const EdgeInsets.all(16),
         children: [
 
-          // ================= PROFILE CARD =================
+          // PROFILE CARD 
 
           GestureDetector(
             onTap: () {
@@ -142,7 +140,7 @@ class _ManagerSettingsScreenState
 
           const SizedBox(height: 25),
 
-          // ================= ACCOUNT =================
+          // ACCOUNT
 
           _sectionTitle("ACCOUNT"),
 
@@ -164,7 +162,7 @@ class _ManagerSettingsScreenState
 
           const SizedBox(height: 20),
 
-          // ================= PREFERENCES =================
+          //PREFERENCES 
 
           _sectionTitle("PREFERENCES"),
 
@@ -184,7 +182,7 @@ class _ManagerSettingsScreenState
 
           const SizedBox(height: 20),
 
-          // ================= SUPPORT =================
+          // SUPPORT
 
           _sectionTitle("SUPPORT"),
 
@@ -214,7 +212,7 @@ class _ManagerSettingsScreenState
 
           const SizedBox(height: 20),
 
-          // ================= SECURITY =================
+          // SECURITY
 
           _sectionTitle("SECURITY"),
 
