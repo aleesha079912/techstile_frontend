@@ -65,7 +65,7 @@ class _MachineDetailScreenState
         color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(15),
         boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 5, offset: Offset(0, 2)),
+          BoxShadow(color:AppTheme.onsurface, blurRadius: 5, offset: Offset(0, 2)),
         ],
       ),
       child: Row(
@@ -92,7 +92,7 @@ class _MachineDetailScreenState
         color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(15),
         boxShadow: const [
-          BoxShadow(color: Colors.black12, blurRadius: 5, offset: Offset(0, 2)),
+          BoxShadow(color:AppTheme.onsurface, blurRadius: 5, offset: Offset(0, 2)),
         ],
       ),
       child: Column(

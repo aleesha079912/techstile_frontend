@@ -29,33 +29,117 @@ class PaymentService {
     }
   }
 
-  Future<void> addPayment({
-    required int factoryId,
+  Future<Map<String, dynamic>> addPayment({
     required int employeeId,
-    required String varietyType,
-    required double totalLength,
-    String? machineName,
-    required double amountPerMeter,
-    String? selectDays,
-    String? shiftStart,
-    String? shiftEnd,
+    
+    required double amountPaid,
+    required int productionId, 
   }) async {
-  final body = {
-    "factory_id": factoryId,
-    "employee_id": employeeId,
-    "variety_type": varietyType,
-    "total_length": totalLength,
-    "machine_name": machineName,
-    "amount_per_meter": amountPerMeter,
-    "select_days": selectDays,
-    "shift_start": shiftStart,
-    "shift_end": shiftEnd,
-  };
+    try {
+      final response = await http.post(
+        Uri.parse(baseUrl),
+        headers: {
+          ...AuthService.authHeaders,
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          "employee_id": employeeId,
+          "amount_paid": amountPaid,
+          "production_id": productionId, // ✅ NEW
+        }),
+      );
 
-  // apna actual Dio/http POST call yahan lagao, jaise:
-  // final response = await dio.post('/payments/add', data: body);
-  // if (response.statusCode != 200 && response.statusCode != 201) {
-  //   throw Exception('Failed to add payment');
-  // }
-}
-}
+      debugPrint("Add Payment Status: ${response.statusCode}");
+      debugPrint("Add Payment Response: ${response.body}");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      }
+
+      throw Exception(
+        "Failed to save payment. Status: ${response.statusCode}, Body: ${response.body}",
+      );
+    } catch (e) {
+      debugPrint("Add Payment Error: $e");
+      rethrow;
+    }
+  }
+  Future<Map<String, dynamic>> fetchAllPayments(int factoryId) async {
+    try {
+      final response = await http.get(
+        Uri.parse("$baseUrl?factory_id=$factoryId"),
+        headers: AuthService.authHeaders,
+      );
+
+      debugPrint("Fetch All Payments Status: ${response.statusCode}");
+      debugPrint("Fetch All Payments Response: ${response.body}");
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      }
+
+      throw Exception(
+        "Failed to fetch payments. Status: ${response.statusCode}",
+      );
+    } catch (e) {
+      debugPrint("Fetch All Payments Error: $e");
+      rethrow;
+    }
+  }
+   Future<void> deletePayment(int paymentId) async {
+    try {
+      final response = await http.delete(
+        Uri.parse("$baseUrl/$paymentId"),
+        headers: AuthService.authHeaders,
+      );
+
+      debugPrint("Delete Payment Status: ${response.statusCode}");
+      debugPrint("Delete Payment Response: ${response.body}");
+
+      if (response.statusCode != 200 && response.statusCode != 204) {
+        throw Exception(
+          "Failed to delete payment. Status: ${response.statusCode}",
+        );
+      }
+    } catch (e) {
+      debugPrint("Delete Payment Error: $e");
+      rethrow;
+    }
+  }
+  Future<Map<String, dynamic>> updatePayment({
+    required int paymentId,
+    required double amountPaid,
+  }) async {
+    try {
+      final response = await http.put(
+        Uri.parse("$baseUrl/$paymentId"),
+        headers: {
+          ...AuthService.authHeaders,
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          "amount_paid": amountPaid,
+        }),
+      );
+
+      debugPrint("Update Payment Status: ${response.statusCode}");
+      debugPrint("Update Payment Response: ${response.body}");
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      }
+
+      throw Exception(
+        "Failed to update payment. Status: ${response.statusCode}, Body: ${response.body}",
+      );
+    } catch (e) {
+      debugPrint("Update Payment Error: $e");
+      rethrow;
+    }
+  }
+
+
+
+
+
+}  

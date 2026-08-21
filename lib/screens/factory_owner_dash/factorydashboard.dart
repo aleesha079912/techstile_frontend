@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:techstile_frontend/core/services/factory_dashboard_service.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
@@ -6,33 +7,40 @@ import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
 // import 'package:techstile_frontend/screens/factory_owner_dash/owner_production_page.dart'; // ← add this import
 import 'package:get/get.dart';
 import 'package:techstile_frontend/routes/routes.dart';
-
-
+ 
+ 
 class FactoryDashboard extends StatefulWidget {
   final String factoryId;
   const FactoryDashboard({super.key, required this.factoryId});
-
+ 
   @override
   State<FactoryDashboard> createState() => _FactoryDashboardState();
 }
-
+ 
 class _FactoryDashboardState extends State<FactoryDashboard> {
   final _service = FactoryDashboardService();
-
+ 
   bool loading = true;
   Map data = {};
-
+ 
+  // ── Day / Week / Month / Year filter ─────────────────────────────────────
+  static const List<String> periodOptions = ['Day', 'Week', 'Month', 'Year'];
+  String selectedPeriod = 'Week'; // default matches previous "This Week" view
+ 
   int get factoryId => int.parse(widget.factoryId);
-
+ 
   @override
   void initState() {
     super.initState();
     load();
   }
-
+ 
   Future<void> load() async {
     setState(() => loading = true);
     try {
+      // TODO: if your backend supports it, pass the period so the numbers
+      // returned (today_units / weekly_units etc.) reflect the selected
+      // range, e.g. _service.getDashboard(widget.factoryId, period: selectedPeriod)
       final res = await _service.getDashboard(widget.factoryId);
       setState(() {
         data    = res;
@@ -42,7 +50,29 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
       setState(() => loading = false);
     }
   }
-
+ 
+  // Called when the user picks Day/Week/Month/Year from the dropdown.
+  // Refreshes the dashboard's own stat cards for the new period, then takes
+  // the user straight to the Productions history screen filtered for it.
+  Future<void> onPeriodChanged(String period) async {
+    if (period == selectedPeriod) return;
+    setState(() => selectedPeriod = period);
+    await load(); // reload this screen's stats scoped to the new period
+ 
+    print("Opening production history for period = $period");
+ 
+    // TODO: on the ownerProduction (history) screen, read
+    // Get.parameters['period'] and use it to fetch/filter that screen's
+    // history list by day/week/month/year. `arguments` still carries the
+    // factoryId exactly as the "View Productions" button already sends it,
+    // so nothing there needs to change.
+    Get.toNamed(
+      AppRoutes.ownerProduction,
+      arguments: widget.factoryId,
+      parameters: {'period': period.toLowerCase()},
+    );
+  }
+ 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,8 +92,15 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                   children: [
                     _heroCard(),          // ← production button is inside here
                     const SizedBox(height: 20),
-
-                    const _SectionLabel(text: 'This Week'),
+ 
+                    // "This Week" label + Day/Week/Month/Year dropdown filter
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _SectionLabel(text: 'This $selectedPeriod'),
+                        _periodFilterDropdown(),
+                      ],
+                    ),
                     const SizedBox(height: 12),
                     Row(
                       children: [
@@ -77,7 +114,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                         const SizedBox(width: 12),
                         _statCard(
                           icon:  Icons.calendar_month_rounded,
-                          label: 'Weekly',
+                          label: selectedPeriod,
                           value: "${data['weekly_units'] ?? 0}",
                           unit:  'yards',
                           color: AppTheme.surface,
@@ -85,7 +122,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                       ],
                     ),
                     const SizedBox(height: 20),
-
+ 
                     const _SectionLabel(text: 'Floor Assets'),
                     const SizedBox(height: 12),
                     Row(
@@ -108,7 +145,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                       ],
                     ),
                     const SizedBox(height: 24),
-
+ 
                     _SectionLabel(
                       text: 'Varieties (${data['total_varieties'] ?? 0})',
                     ),
@@ -121,13 +158,13 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
       bottomNavigationBar: CustomBottomNav(currentIndex: 0, factoryId: factoryId),
     );
   }
-
+ 
   // ── AppBar ──────────────────────────────────────────────────────────────────
   PreferredSizeWidget _buildAppBar() {
   return AppBar(
     backgroundColor: AppTheme.primary,
     elevation: 0,
-
+ 
     leading: IconButton(
       icon: const Icon(
         Icons.arrow_back,
@@ -141,7 +178,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
         );
       },
     ),
-
+ 
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -164,7 +201,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
     ),
   );
 }
-
+ 
   // ── Hero card — factory info + Productions button ───────────────────────────
   Widget _heroCard() {
     final factory = data['factory'];
@@ -231,17 +268,17 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
               ),
             ],
           ),
-
+ 
           // ── Productions button ───────────────────────────
          const SizedBox(height: 16),
-
+ 
     SizedBox(
       width: double.infinity,
       child: ElevatedButton.icon(
     onPressed: () {
-
+ 
       print("Sending Factory ID = ${widget.factoryId}");
-
+ 
       Get.toNamed(
         AppRoutes.ownerProduction,
         arguments: widget.factoryId,
@@ -270,7 +307,71 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
       ),
     );
   }
-
+ 
+  // ── Period filter dropdown (Day / Week / Month / Year) ──────────────────────
+  // `dark: true` gives a variant that sits nicely on the gradient hero card.
+  Widget _periodFilterDropdown({bool dark = false}) {
+    final Color bg = dark ? AppTheme.secondary.withOpacity(0.14) : AppTheme.secondary;
+    final Color fg = dark ? AppTheme.secondary : AppTheme.primary;
+    final Color border = dark
+        ? AppTheme.secondary.withOpacity(0.35)
+        : AppTheme.primary.withOpacity(0.15);
+ 
+    return PopupMenuButton<String>(
+      initialValue: selectedPeriod,
+      onSelected: onPeriodChanged,
+      offset: const Offset(0, 40),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      color: AppTheme.secondary,
+      itemBuilder: (context) => periodOptions.map((period) {
+        final bool isSelected = period == selectedPeriod;
+        return PopupMenuItem<String>(
+          value: period,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                period,
+                style: TextStyle(
+                  color: AppTheme.primary,
+                  fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
+                  fontSize: 14,
+                ),
+              ),
+              if (isSelected)
+                const Icon(Icons.check_rounded, color: AppTheme.success, size: 18),
+            ],
+          ),
+        );
+      }).toList(),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+        decoration: BoxDecoration(
+          color: bg,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: border, width: 1),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.filter_list_rounded, color: fg, size: 16),
+            const SizedBox(width: 6),
+            Text(
+              selectedPeriod,
+              style: TextStyle(
+                color: fg,
+                fontWeight: FontWeight.w700,
+                fontSize: 13,
+              ),
+            ),
+            const SizedBox(width: 4),
+            Icon(Icons.keyboard_arrow_down_rounded, color: fg, size: 18),
+          ],
+        ),
+      ),
+    );
+  }
+ 
   // ── Stat card ───────────────────────────────────────────────────────────────
   Widget _statCard({
     required IconData icon,
@@ -318,11 +419,11 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
       ),
     );
   }
-
+ 
   // ── Varieties list ──────────────────────────────────────────────────────────
   Widget _varietiesList() {
     final varieties = (data['varieties'] as List?) ?? [];
-
+ 
     if (varieties.isEmpty) {
       return Container(
         width: double.infinity,
@@ -339,7 +440,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
         ),
       );
     }
-
+ 
     return Container(
       decoration: BoxDecoration(
         color: AppTheme.secondary,
@@ -404,12 +505,12 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
     );
   }
 }
-
+ 
 // ── Section label ────────────────────────────────────────────────────────────
 class _SectionLabel extends StatelessWidget {
   final String text;
   const _SectionLabel({required this.text});
-
+ 
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -428,3 +529,4 @@ class _SectionLabel extends StatelessWidget {
     );
   }
 }
+ 

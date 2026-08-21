@@ -19,26 +19,16 @@ class _AddPaymentDialogState extends State<AddPaymentDialog> {
   final PaymentService _paymentService = PaymentService();
 
   final _employeeIdCtrl = TextEditingController();
-  final _varietyCtrl = TextEditingController();
-  final _totalLengthCtrl = TextEditingController();
-  final _machineNameCtrl = TextEditingController();
-  final _amountPerMeterCtrl = TextEditingController();
-  final _selectDaysCtrl = TextEditingController();
-  final _shiftStartCtrl = TextEditingController();
-  final _shiftEndCtrl = TextEditingController();
-
+  final _amountPaidCtrl = TextEditingController();
+  final _productionIdCtrl = TextEditingController();
+  
   bool _isSubmitting = false;
 
   @override
   void dispose() {
     _employeeIdCtrl.dispose();
-    _varietyCtrl.dispose();
-    _totalLengthCtrl.dispose();
-    _machineNameCtrl.dispose();
-    _amountPerMeterCtrl.dispose();
-    _selectDaysCtrl.dispose();
-    _shiftStartCtrl.dispose();
-    _shiftEndCtrl.dispose();
+    _amountPaidCtrl.dispose();
+    _productionIdCtrl.dispose();
     super.dispose();
   }
 
@@ -50,15 +40,12 @@ class _AddPaymentDialogState extends State<AddPaymentDialog> {
     try {
       
       await _paymentService.addPayment(
-        factoryId: widget.factoryId,
-        employeeId: int.parse(_employeeIdCtrl.text),
-        varietyType: _varietyCtrl.text,
-        totalLength: double.parse(_totalLengthCtrl.text),
-        machineName: _machineNameCtrl.text,
-        amountPerMeter: double.parse(_amountPerMeterCtrl.text),
-        selectDays: _selectDaysCtrl.text,
-        shiftStart: _shiftStartCtrl.text,
-        shiftEnd: _shiftEndCtrl.text,
+        
+        employeeId: int.parse(_employeeIdCtrl.text), 
+        // userId: int.parse(_),
+        amountPaid: double.parse(_amountPaidCtrl.text) ,
+        productionId: int.parse(_productionIdCtrl.text),
+       
       );
 
       if (mounted) {
@@ -121,13 +108,9 @@ class _AddPaymentDialogState extends State<AddPaymentDialog> {
                   ),
                   const SizedBox(height: 16),
                   _field('Employee ID', _employeeIdCtrl, type: TextInputType.number),
-                  _field('Variety Type', _varietyCtrl),
-                  _field('Total Length (m)', _totalLengthCtrl, type: TextInputType.number),
-                  _field('Machine Name', _machineNameCtrl, required: false),
-                  _field('Amount / Meter', _amountPerMeterCtrl, type: TextInputType.number),
-                  _field('Select Days', _selectDaysCtrl, required: false),
-                  _field('Shift Start (HH:mm)', _shiftStartCtrl, required: false),
-                  _field('Shift End (HH:mm)', _shiftEndCtrl, required: false),
+                  _field('Amount Paid',_amountPaidCtrl , type: TextInputType.number),
+                  _field(' Production ID', _productionIdCtrl, required: false),
+                 
                   const SizedBox(height: 8),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:techstile_frontend/core/services/auth_service.dart';
 import 'package:techstile_frontend/core/services/payments_service.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
@@ -24,7 +25,7 @@ import 'package:techstile_frontend/widgets/own_payments_pop_up.dart';
 //           "amount": 30000, "select_days": "Friday", "shift_start": "08:00:00",
 //           "shift_end": "20:00:00", "created_at": "..." },
 //         ...
-//       ]
+//       ] 
 //     },
 //     ...
 //   ]
@@ -48,6 +49,12 @@ class EmployeePayment {
     required this.totalLength,
     required this.productions,
   });
+   double get readyProductionTotal =>
+     productions.fold<double>(0, (sum, p) => sum + p.readyProduction);
+
+  double get readyAmount =>
+     productions.fold<double>(0, (sum, p) => sum + (p.readyProduction * p.amountPerMeter));
+  
 
   factory EmployeePayment.fromJson(Map<String, dynamic> json) {
     return EmployeePayment(
@@ -186,11 +193,12 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
   }
 
 
-  void _showAddPaymentDialog(BuildContext context) {
+    void _showAddPaymentDialog(BuildContext context) {
     final formKey = GlobalKey<FormState>();
     final amountToPayCtrl = TextEditingController();
 
     EmployeePayment? selectedEmployee;
+    ProductionRecord? selectedProduction; // ✅ NEW
 
     showModalBottomSheet(
       context: context,
@@ -204,12 +212,17 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       builder: (sheetContext) {
         return StatefulBuilder(
           builder: (context, setSheetState) {
-            // Calculate ready production from production records.
-            final readyProduction = selectedEmployee?.productions.fold<double>(
-                  0,
-                  (sum, production) => sum + production.readyProduction,
-                ) ??
-                0;
+            // ✅ Sirf wahi productions jinka amount_per_meter set hai (0 ya null nahi)
+            final validProductions = selectedEmployee?.productions
+                .where((p) => p.amountPerMeter > 0)
+                    .toList() ??
+                [];
+
+            // ✅ Selected production ka ready amount (ready_production * rate)
+            final selectedProductionAmount = selectedProduction != null
+                ? selectedProduction!.readyProduction *
+                    selectedProduction!.amountPerMeter
+                : 0.0;
 
             return Padding(
               padding: EdgeInsets.only(
@@ -262,15 +275,8 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                         onChanged: (employee) {
                           setSheetState(() {
                             selectedEmployee = employee;
-
-                            // Don't force the user to pay the entire amount.
-                            // Start with the maximum payable amount as a suggestion.
-                            if (employee != null) {
-                              amountToPayCtrl.text =
-                                  employee.totalAmount.toStringAsFixed(0);
-                            } else {
-                              amountToPayCtrl.clear();
-                            }
+                            selectedProduction = null; // ✅ reset production selection
+                            amountToPayCtrl.clear();
                           });
                         },
                         validator: (value) {
@@ -282,9 +288,69 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                       ),
 
                       // ==================================================
-                      // EMPLOYEE INFORMATION
+                      // PRODUCTION SELECT (✅ NEW)
                       // ==================================================
                       if (selectedEmployee != null) ...[
+                        const SizedBox(height: 16),
+
+                        if (validProductions.isEmpty)
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.orange.withOpacity(0.08),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.orange.withOpacity(0.3)),
+                            ),
+                            child: const Text(
+                              'No priced production found for this employee (amount_per_meter is 0/not set).',
+                              style: TextStyle(fontSize: 12, color: Colors.orange),
+                            ),
+                          )
+                        else
+                          DropdownButtonFormField<ProductionRecord>(
+                            value: selectedProduction,
+                            isExpanded: true,
+                            decoration: const InputDecoration(
+                              labelText: 'Select Production',
+                              border: OutlineInputBorder(),
+                              prefixIcon: Icon(Icons.inventory_2_outlined),
+                            ),
+                            items: validProductions.map((p) {
+                              return DropdownMenuItem<ProductionRecord>(
+                                value: p,
+                                child: Text(
+                                  '${p.varietyType} • ${p.batchId} • Rs ${p.amountPerMeter.toStringAsFixed(0)}/m',
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (production) {
+                              setSheetState(() {
+                                selectedProduction = production;
+
+                                if (production != null) {
+                                  final amount = production.readyProduction *
+                                      production.amountPerMeter;
+                                  amountToPayCtrl.text = amount.toStringAsFixed(0);
+                                } else {
+                                  amountToPayCtrl.clear();
+                                }
+                              });
+                            },
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Please select a production';
+                              }
+                              return null;
+                            },
+                          ),
+                      ],
+
+                      // ==================================================
+                      // PRODUCTION INFORMATION (✅ shows only selected production's info)
+                      // ==================================================
+                      if (selectedProduction != null) ...[
                         const SizedBox(height: 20),
 
                         Container(
@@ -304,26 +370,25 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                                 selectedEmployee!.employeeName ??
                                     'Employee #${selectedEmployee!.employeeId}',
                               ),
-
                               const SizedBox(height: 12),
-
                               _paymentInfoRow(
-                                'Total Production',
-                                '${_formatAmount(selectedEmployee!.totalLength)} m',
+                                'Batch',
+                                selectedProduction!.batchId,
                               ),
-
                               const SizedBox(height: 12),
-
                               _paymentInfoRow(
                                 'Ready Production',
-                                '${_formatAmount(readyProduction)} m',
+                                '${_formatAmount(selectedProduction!.readyProduction.toDouble())} m',
                               ),
-
-                              const Divider(height: 24),
-
+                              const SizedBox(height: 12),
                               _paymentInfoRow(
-                                'Total Amount',
-                                'Rs ${_formatAmount(selectedEmployee!.totalAmount)}',
+                                'Rate / meter',
+                                'Rs ${selectedProduction!.amountPerMeter.toStringAsFixed(2)}',
+                              ),
+                              const Divider(height: 24),
+                              _paymentInfoRow(
+                                'Payable Amount (Ready)',
+                                'Rs ${_formatAmount(selectedProductionAmount)}',
                                 isBold: true,
                               ),
                             ],
@@ -352,9 +417,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                               return 'Please enter amount';
                             }
 
-                            final amount = double.tryParse(
-                              value.trim().replaceAll(',', ''),
-                            );
+                            final amount = double.tryParse(value.trim().replaceAll(',', ''));
 
                             if (amount == null) {
                               return 'Please enter a valid amount';
@@ -364,9 +427,8 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                               return 'Amount must be greater than 0';
                             }
 
-                            if (selectedEmployee != null &&
-                                amount > selectedEmployee!.totalAmount) {
-                              return 'Amount cannot exceed Rs ${_formatAmount(selectedEmployee!.totalAmount)}';
+                            if (amount > selectedProductionAmount) {
+                              return 'Amount cannot exceed Rs ${_formatAmount(selectedProductionAmount)}';
                             }
 
                             return null;
@@ -378,16 +440,17 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                         // ==================================================
                         // SAVE
                         // ==================================================
-                        SizedBox(
+                                               SizedBox(
                           width: double.infinity,
                           height: 50,
                           child: ElevatedButton(
-                            onPressed: () {
+                            onPressed: () async {
                               if (!formKey.currentState!.validate()) {
                                 return;
                               }
 
                               final employee = selectedEmployee!;
+                              final production = selectedProduction!;
 
                               final amount = double.parse(
                                 amountToPayCtrl.text
@@ -395,40 +458,49 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                                     .replaceAll(',', ''),
                               );
 
-                              debugPrint(
-                                'Employee ID: ${employee.employeeId}',
+                              debugPrint('Employee ID: ${employee.employeeId}');
+                              debugPrint('Production ID: ${production.productionId}');
+                              debugPrint('Batch: ${production.batchId}');
+                              debugPrint('Amount Paying Now: $amount');
+
+                              // ✅ Loading indicator
+                              showDialog(
+                                context: sheetContext,
+                                barrierDismissible: false,
+                                builder: (_) => const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
                               );
 
-                              debugPrint(
-                                'Employee Name: ${employee.employeeName}',
-                              );
+                              try {
+                                await _paymentService.addPayment(
+                                  employeeId: employee.employeeId,
+                                  // apna actual getter use karo
+                                  amountPaid: amount,
+                                  productionId: production.productionId, // ✅ NEW
+                                );
 
-                              debugPrint(
-                                'Total Production: ${employee.totalLength}',
-                              );
+                                Navigator.pop(sheetContext); // loading band
+                                Navigator.pop(sheetContext); // bottom sheet band
 
-                              debugPrint(
-                                'Ready Production: $readyProduction',
-                              );
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Payment saved successfully'),
+                                    backgroundColor: Colors.green,
+                                  ),
+                                );
 
-                              debugPrint(
-                                'Total Payable: ${employee.totalAmount}',
-                              );
+                                _fetchPayments(); // list refresh
+                              } catch (e) {
+                                Navigator.pop(sheetContext); // loading band
 
-                              debugPrint(
-                                'Amount Paying Now: $amount',
-                              );
-
-                              // TODO:
-                              // Call your payment API here.
-                              //
-                              // Example:
-                              // await _paymentService.createPayment(
-                              //   employeeId: employee.employeeId,
-                              //   amount: amount,
-                              // );
-
-                              Navigator.pop(sheetContext);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Failed to save payment: $e'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppTheme.primary,
@@ -502,6 +574,386 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     );
   }
 
+    Widget _buildViewPaymentsButton(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: AppTheme.softShadow,
+        border: Border.all(color: AppTheme.primary.withOpacity(0.15)),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: () {
+          _showViewPaymentsDialog(context);
+        },
+        child: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.visibility_outlined, color: AppTheme.primary, size: 20),
+              SizedBox(width: 6),
+              Text(
+                "View Payments",
+                style: TextStyle(
+                  color: AppTheme.primary,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 13,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  void _confirmDeletePayment(
+    BuildContext context,
+    BuildContext sheetContext,
+    int paymentId,
+  ) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('Delete Payment'),
+          content: const Text('Are you sure you want to delete this payment record?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(dialogContext); // confirm dialog band
+
+                try {
+                  await _paymentService.deletePayment(paymentId);
+
+                  Navigator.pop(sheetContext); // payment history sheet band
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Payment deleted successfully'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+
+                  _fetchPayments(); // main list refresh
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Failed to delete payment: $e'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
+              child: const Text('Delete', style: TextStyle(color: AppTheme.error)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+    void _showEditPaymentDialog(
+    BuildContext context,
+    BuildContext sheetContext,
+    Map<String, dynamic> payment,
+  ) {
+    final paymentId = int.tryParse(payment['id'].toString()) ?? 0;
+    final currentAmount =
+        double.tryParse(payment['amount_paid'].toString()) ?? 0;
+
+    final editFormKey = GlobalKey<FormState>();
+    final editAmountCtrl =
+        TextEditingController(text: currentAmount.toStringAsFixed(0));
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (editSheetContext) {
+        return Padding(
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 20,
+            bottom: MediaQuery.of(editSheetContext).viewInsets.bottom + 20,
+          ),
+          child: Form(
+            key: editFormKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Edit Payment',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: editAmountCtrl,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  decoration: const InputDecoration(
+                    labelText: 'Amount Paid',
+                    hintText: 'Enter amount',
+                    prefixText: 'Rs. ',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.payments_outlined),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please enter amount';
+                    }
+                    final amount = double.tryParse(value.trim().replaceAll(',', ''));
+                    if (amount == null) {
+                      return 'Please enter a valid amount';
+                    }
+                    if (amount <= 0) {
+                      return 'Amount must be greater than 0';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (!editFormKey.currentState!.validate()) {
+                        return;
+                      }
+
+                      final newAmount = double.parse(
+                        editAmountCtrl.text.trim().replaceAll(',', ''),
+                      );
+
+                      showDialog(
+                        context: editSheetContext,
+                        barrierDismissible: false,
+                        builder: (_) => const Center(child: CircularProgressIndicator()),
+                      );
+
+                      try {
+                        await _paymentService.updatePayment(
+                          paymentId: paymentId,
+                          amountPaid: newAmount,
+                        );
+
+                        Navigator.pop(editSheetContext); // loading band
+                        Navigator.pop(editSheetContext); // edit sheet band
+                        Navigator.pop(sheetContext); // payment history sheet band
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Payment updated successfully'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+
+                        _fetchPayments(); // main list refresh
+                      } catch (e) {
+                        Navigator.pop(editSheetContext); // loading band
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Failed to update payment: $e'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primary,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                    child: const Text(
+                      'Update Payment',
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
+
+  void _showViewPaymentsDialog(BuildContext context) {
+     showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20),
+        ),
+      ),
+      builder: (sheetContext) {
+        return FutureBuilder<Map<String, dynamic>>(
+          future: _paymentService.fetchAllPayments(widget.factoryId), // ✅ service mein add karna hoga
+          builder: (context, snapshot) {
+            return Padding(
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 20,
+                bottom: MediaQuery.of(sheetContext).viewInsets.bottom + 20,
+              ),
+              child: SizedBox(
+                height: MediaQuery.of(sheetContext).size.height * 0.7,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Payment History',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Expanded(
+                      child: Builder(
+                        builder: (_) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(color: AppTheme.primary),
+                            );
+                          }
+
+                          if (snapshot.hasError) {
+                            return Center(
+                              child: Text(
+                                'Failed to load payments: ${snapshot.error}',
+                                style: const TextStyle(color: AppTheme.error),
+                              ),
+                            );
+                          }
+
+                          final List list = snapshot.data?['data'] as List? ?? [];
+
+                          if (list.isEmpty) {
+                            return const Center(
+                              child: Text(
+                                'No payments recorded yet',
+                                style: TextStyle(color: AppTheme.primary),
+                              ),
+                            );
+                          }
+
+                          return ListView.separated(
+                            itemCount: list.length,
+                            separatorBuilder: (_, __) => const Divider(height: 20),
+                            itemBuilder: (context, index) {
+                              final payment = list[index] as Map<String, dynamic>;
+
+                              final employeeName = payment['employee']?['user']?['name'] ??
+                              'Employee #${payment['employee_id']}';
+                              final amountPaid =
+                              double.tryParse(payment['amount_paid'].toString()) ?? 0;
+                              final createdAt = payment['created_at']?.toString() ?? '';
+                              final batchId =
+                              payment['production']?['batch_id']?.toString();
+
+                              final paymentId = int.tryParse(payment['id'].toString()) ?? 0;
+
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                leading: Container(
+                                  padding: const EdgeInsets.all(9),
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.primary.withOpacity(0.08),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: const Icon(Icons.receipt_long_rounded,
+                                      color: AppTheme.primary, size: 18),
+                                ),
+                                title: Text(
+                                  employeeName,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w700, fontSize: 14),
+                                ),
+                                subtitle: Text(
+                                  batchId != null
+                                      ? 'Batch: $batchId  •  $createdAt'
+                                      : createdAt,
+                                  style: TextStyle(
+                                      color: AppTheme.primary.withOpacity(0.55),
+                                      fontSize: 11),
+                                ),
+                                                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      'Rs ${_formatAmount(amountPaid)}',
+                                      style: const TextStyle(
+                                          color: AppTheme.success,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w800),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    InkWell(
+                                      borderRadius: BorderRadius.circular(20),
+                                      onTap: () => _showEditPaymentDialog(
+                                        context,
+                                        sheetContext,
+                                        payment,
+                                      ),
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(6),
+                                        child: Icon(
+                                          Icons.edit_outlined,
+                                          color: AppTheme.primary,
+                                          size: 20,
+                                        ),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      borderRadius: BorderRadius.circular(20),
+                                      onTap: () => _confirmDeletePayment(
+                                        context,
+                                        sheetContext,
+                                        paymentId,
+                                      ),
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(6),
+                                        child: Icon(
+                                          Icons.delete_outline_rounded,
+                                          color: AppTheme.error,
+                                          size: 20,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
   Future<void> _fetchPayments() async {
     setState(() {
       _isLoading = true;
@@ -556,12 +1008,20 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: _buildBody(),
-      floatingActionButton: _buildFPB(context),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          _buildViewPaymentsButton(context), // ✅ NEW
+          const SizedBox(height: 12),
+          _buildFPB(context),
+
+        ],
+      ),
        bottomNavigationBar: CustomBottomNav(    
         currentIndex: 2,
         factoryId: widget.factoryId,
       ),
-
     );
   }
 
