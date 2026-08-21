@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/app_owner_dash.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/employee/assign_shift.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/user/factory_users.dart';
@@ -21,7 +22,7 @@ class FactoryDrawer extends StatelessWidget {
     final colors = Theme.of(context).colorScheme;
 
     return Drawer(
-      backgroundColor: Colors.white,
+      backgroundColor: AppTheme.background,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -32,7 +33,7 @@ class FactoryDrawer extends StatelessWidget {
             child: const Text(
               "Management Panel",
               style: TextStyle(
-                color: Colors.white,
+                color: AppTheme.secondary,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
@@ -98,7 +99,7 @@ class FactoryDrawer extends StatelessWidget {
     VoidCallback onTapAction,
   ) {
     return ListTile(
-      leading: Icon(icon, color: Theme.of(context).colorScheme.primary),
+      leading: Icon(icon, color: AppTheme.primary),
       title: Text(title),
       onTap: () {
         Get.back();

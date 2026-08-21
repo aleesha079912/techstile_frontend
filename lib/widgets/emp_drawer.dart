@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:techstile_frontend/core/utils/theme.dart';
 
 import 'package:techstile_frontend/screens/employee_dashboard/employee_dashboard.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/profile.dart';
@@ -82,7 +83,7 @@ final colors = Theme.of(context).colorScheme;
 
 return Drawer(
 
-backgroundColor: Colors.white,
+backgroundColor:AppTheme.background,
 
 
 child: Column(
@@ -111,7 +112,7 @@ child:Text(
 "Employee Panel",
 
 style:TextStyle(
-color:Colors.white,
+color:AppTheme.secondary,
 fontSize:20,
 fontWeight:FontWeight.bold
 ),

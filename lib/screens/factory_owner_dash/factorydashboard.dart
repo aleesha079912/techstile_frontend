@@ -235,18 +235,18 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
           // ── Productions button ───────────────────────────
          const SizedBox(height: 16),
 
-SizedBox(
-  width: double.infinity,
-  child: ElevatedButton.icon(
- onPressed: () {
+    SizedBox(
+      width: double.infinity,
+      child: ElevatedButton.icon(
+    onPressed: () {
 
-  print("Sending Factory ID = ${widget.factoryId}");
+      print("Sending Factory ID = ${widget.factoryId}");
 
-  Get.toNamed(
-    AppRoutes.ownerProduction,
-    arguments: widget.factoryId,
-  );
-},
+      Get.toNamed(
+        AppRoutes.ownerProduction,
+        arguments: widget.factoryId,
+      );
+    },
     icon: const Icon(Icons.list_alt_rounded),
     label: const Text(
       'View Productions',

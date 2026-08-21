@@ -31,13 +31,13 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
   @override
   void initState() {
     super.initState();
-      print("Arguments = ${Get.arguments}");
-print("Factory from Storage = ${AuthService.factoryId}");
-print("Stored User ID = ${AuthService.userId}");
+    print("Arguments = ${Get.arguments}");
+    print("Factory from Storage = ${AuthService.factoryId}");
+    print("Stored User ID = ${AuthService.userId}");
 
-  load();
-   
-  }
+      load();
+      
+   }
   
 
  Future<void> load() async {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/scan_code.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/employee/attendance.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/app_owner_dash.dart';
@@ -17,9 +18,9 @@ class OwnerDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
+    
     return Drawer(
-      backgroundColor: Colors.white,
+      backgroundColor: AppTheme.background,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -27,14 +28,14 @@ class OwnerDrawer extends StatelessWidget {
           Container(
             height: 90,
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
-            decoration: BoxDecoration(color: colors.primary),
+            decoration: BoxDecoration(color: AppTheme.primary),
             child: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   "Management Panel",
                   style: TextStyle(
-                    color: Colors.white,
+                    color: AppTheme.secondary,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),
@@ -62,7 +63,7 @@ class OwnerDrawer extends StatelessWidget {
                 // ),
                 //sub menu for user management
                       ExpansionTile(
-                        leading: Icon(Icons.security_rounded, color: colors.primary),
+                        leading: Icon(Icons.security_rounded, color:AppTheme.primary),
                         title: const Text(
                           "User Management",
                           style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
@@ -143,7 +144,7 @@ class OwnerDrawer extends StatelessWidget {
     VoidCallback onTapAction,
   ) {
     return ListTile(
-      leading: Icon(icon, color: Theme.of(context).colorScheme.primary),
+      leading: Icon(icon, color: AppTheme.primary),
       title: Text(
         title,
         style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),

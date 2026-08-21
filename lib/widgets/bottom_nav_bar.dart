@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/paymentsScreen.dart';
 import '../screens/factory_owner_dash/factorydashboard.dart';
 import 'package:get/get.dart';
@@ -55,7 +56,7 @@ class CustomBottomNav extends StatelessWidget {
     ];
 
     return Container(
-      color: const Color(0xFF0D1B4B),
+      color:  AppTheme.primary,
       child: SafeArea(
         top: false,
         child: SizedBox(
@@ -64,8 +65,9 @@ class CustomBottomNav extends StatelessWidget {
             children: List.generate(tabs.length, (i) {
               final selected = i == currentIndex;
               final color = selected
-                  ? const Color(0xFF00C8B0)
-                  : const Color(0xFF6A7AA1);
+                  ? AppTheme.secondary
+                  :  AppTheme.neutral;
+
 
               return Expanded(
                 child: InkWell(

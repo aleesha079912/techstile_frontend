@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:techstile_frontend/core/utils/theme.dart';
 
 import '../../core/services/manager_service/man_emp_notification_service.dart';
 import '../routes/routes.dart';
@@ -39,10 +40,10 @@ class _ManagerDrawerState extends State<ManagerDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    final colors = Theme.of(context).colorScheme;
+    
 
     return Drawer(
-      backgroundColor: Colors.white,
+      backgroundColor: AppTheme.secondary,
 
       child: Column(
         children: [
@@ -53,7 +54,7 @@ class _ManagerDrawerState extends State<ManagerDrawer> {
 
             padding: const EdgeInsets.all(20),
 
-            decoration: BoxDecoration(color: colors.primary),
+            decoration: BoxDecoration(color: AppTheme.primary),
 
             child: const Align(
               alignment: Alignment.bottomLeft,
@@ -62,7 +63,7 @@ class _ManagerDrawerState extends State<ManagerDrawer> {
                 "Manager Panel",
 
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppTheme.secondary,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
@@ -114,7 +115,7 @@ class _ManagerDrawerState extends State<ManagerDrawer> {
                         ),
                         child: Icon(
                           Icons.notifications,
-                          color: colors.primary,
+                          color: AppTheme.primary,
                         ),
                       ),
 
