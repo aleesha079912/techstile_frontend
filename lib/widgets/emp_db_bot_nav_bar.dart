@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/history_screen.dart';
+import 'package:techstile_frontend/screens/factory_owner_dash/paymentsScreen.dart';
 // import 'package:techstile_frontend/screens/employee_dashboard/payment_screen.dart';
 
 import '../screens/employee_dashboard/employee_dashboard.dart';
@@ -32,9 +34,12 @@ class EmployeeBottomNav extends StatelessWidget {
         Get.off(() => const HistoryScreen());
         break;
 
-      // case 3:
-      //   Get.off(() => const PaymentScreen());
-      //   break;
+      case 3:
+        final box = GetStorage();
+         final userData=box.read('user');
+         print(userData['factory_id']);
+        Get.off(() => PaymentsScreen(factoryId:userData['factory_id']));
+        break;
     }
   }
 
