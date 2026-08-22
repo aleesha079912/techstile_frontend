@@ -3,7 +3,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  static const String baseUrl = "http://techstile.sandbox.pk/api";
+  static const String baseUrl = "http://localhost:8000/api";
   static final box = GetStorage();
 
   // ── Getters ────────────────────────────────────────────────────────────────
@@ -13,7 +13,7 @@ class AuthService {
   static Map? get user => box.read('user');
   static String get role => box.read('role') ?? '';
 
-  // ✅ Reload-safe factoryId/userId — GetStorage se persist hote hain
+  // Reload-safe factoryId/userId — GetStorage se persist hote hain
   static dynamic get factoryId => box.read('factoryId');
   static dynamic get userId => box.read('userId');
 
@@ -48,7 +48,7 @@ class AuthService {
         box.write('role', userData['role'] ?? '');
         loginemail(email);
 
-        // ✅ Yahin save karo — agar backend response mein factoryId aata hai
+        //  Yahin save karo — agar backend response mein factoryId aata hai
         // Agar 'factory_id' ya 'factoryId' key se aata hai to wahi use karo
         if (userData['factory_id'] != null) {
           box.write('factoryId', userData['factory_id']);

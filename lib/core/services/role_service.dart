@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'auth_service.dart';
 
 class RoleService {
-  final String baseUrl = "http://techstile.sandbox.pk/api/roles";
+  final String baseUrl = "http://localhost:8000/api/roles";
 
   // 1. Fetch Roles
   Future<List<dynamic>> getRoles() async {
@@ -59,7 +59,7 @@ class RoleService {
   //fetch Permissions list
   Future<List<dynamic>> getAllPermissions() async {
     final response = await http.get(
-      Uri.parse('http://techstile.sandbox.pk/api/permissions/all'),
+      Uri.parse('http://localhost:8000/api/permissions/all'),
       headers: AuthService.authHeaders,
     );
     return json.decode(response.body)['data'];
@@ -68,7 +68,7 @@ class RoleService {
   // Fetch Role present permissions
   Future<List<dynamic>> getRolePermissions(int roleId) async {
     final response = await http.get(
-      Uri.parse('http://techstile.sandbox.pk/api/role-permissions/$roleId'),
+      Uri.parse('http://localhost:8000/api/role-permissions/$roleId'),
       headers: AuthService.authHeaders,
     );
     return json.decode(response.body)['data'];
@@ -77,7 +77,7 @@ class RoleService {
   // Permissions update
   Future<bool> syncPermissions(int roleId, List<int> permIds) async {
     final response = await http.post(
-      Uri.parse('http://techstile.sandbox.pk/api/permissions/sync'),
+      Uri.parse('http://localhost:8000/api/permissions/sync'),
       headers: AuthService.authHeaders,
       body: json.encode({"role_id": roleId, "permissions": permIds}),
     );

@@ -11,9 +11,7 @@ class MachineDetailsService extends GetxController {
   Future<void> getMachineDetails(String machineId) async {
     try {
       final response = await http.get(
-        Uri.parse(
-          "http://techstile.sandbox.pk/api/machines/details/$machineId",
-        ),
+        Uri.parse("http://localhost:8000/api/machines/details/$machineId"),
         headers: AuthService.authHeaders,
       );
 

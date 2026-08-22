@@ -3,13 +3,12 @@ import 'package:http/http.dart' as http;
 import 'package:techstile_frontend/core/services/auth_service.dart';
 
 class AssignProductionService {
-  final String baseUrl = "http://techstile.sandbox.pk/api";
+  final String baseUrl = "http://localhost:8000/api";
 
   Future<bool> assign({
     required int machineId,
     required String varietyType,
-    required double totalLength,
-    required double amountPerMeter,
+    required double totalLength, required double amountPerMeter, required selectDays, 
   }) async {
     final response = await http.post(
       Uri.parse("$baseUrl/assign-production"),
@@ -19,6 +18,8 @@ class AssignProductionService {
         'variety_type': varietyType,
         'total_length': totalLength,
         'amount_per_meter': amountPerMeter,
+        'select_days': selectDays,
+
       }),
     );
     print(response.body);

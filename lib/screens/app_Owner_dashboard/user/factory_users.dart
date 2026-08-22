@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:techstile_frontend/core/services/factory_user_services.dart';
-import 'package:techstile_frontend/screens/employee_dashboard/profile.dart';
-import 'package:techstile_frontend/screens/man_dashboard/manager_profile.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/user/employee_profile.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/user/factorymanager_profile.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
 

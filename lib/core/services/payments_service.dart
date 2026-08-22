@@ -4,12 +4,13 @@ import 'package:http/http.dart' as http;
 import 'package:techstile_frontend/core/services/auth_service.dart';
 
 class PaymentService {
-  final String baseUrl = "http://techstile.sandbox.pk/api/payments";
+  final String baseUrl = "http://localhost:8000/api/payments";
 
-  // FETCH ALL BATCH PAYMENTS by factoryId
-
-  Future<PaymentsData> fetchBatchPayments(int factoryId) async {
+  // FETCH ALL BATCH PAYMENTS 
+  Future<PaymentsData> fetchvarietytypePayments(int factoryId) async {
     try {
+      print("TOKEN: ${AuthService.token}");
+print("HEADERS: ${AuthService.authHeaders}");
       final response = await http.get(
         Uri.parse("$baseUrl/view-payments/$factoryId"),
         headers: AuthService.authHeaders,
@@ -19,53 +20,60 @@ class PaymentService {
         final Map<String, dynamic> body = jsonDecode(response.body);
         final List<dynamic> data = body['data'] ?? [];
 
-        final batches = data.map((b) => BatchPayment.fromJson(b)).toList();
+        final varietytype = data.map((b) => varietytypePayment.fromJson(b)).toList();
 
         return PaymentsData(
-          batches: batches,
-          totalAmount: batches.fold(0.0, (sum, b) => sum + b.totalAmount),
-          totalLength: batches.fold(0.0, (sum, b) => sum + b.totalLength),
+          varietytype: varietytype,
+          totalAmount: varietytype.fold(0.0, (sum, b) => sum + b.totalAmount),
+          totalLength: varietytype.fold(0.0, (sum, b) => sum + b.totalLength),
         );
       }
     } catch (e) {
       debugPrint("Fetch Payments Error: $e");
     }
-    return PaymentsData(batches: []);
+    return PaymentsData(varietytype: []);
   }
 }
-// Model
+
+// Models
 
 class PaymentsData {
-  final List<BatchPayment> batches;
+  final List<varietytypePayment> varietytype;
   final double totalAmount;
   final double totalLength;
 
   PaymentsData({
-    required this.batches,
+    required this.varietytype,
     this.totalAmount = 0,
     this.totalLength = 0,
   });
 }
 
-class BatchPayment {
-  final String batchId;
-  final double totalLength;
-  final double amountPerMeter;
+class varietytypePayment {
+  final String varietytype;      // <- backend: variety_type
+  final double totalLength;      // <- backend: total_length
+  final double amountPerMeter;   // <- backend: amount_per_meter
+  final String? selectDays;      // <- backend: select_days
+  final String? employeeName;    // <- backend: employee_name
 
-  BatchPayment({
-    required this.batchId,
+  varietytypePayment({
+    required this.varietytype,
     required this.totalLength,
     required this.amountPerMeter,
+    this.selectDays,
+    this.employeeName,
   });
 
-  factory BatchPayment.fromJson(Map<String, dynamic> json) {
-    return BatchPayment(
-      batchId: json['batch_id'].toString(),
+  factory varietytypePayment.fromJson(Map<String, dynamic> json) {
+    return varietytypePayment(
+      varietytype: json['variety_type'].toString(),
       totalLength: (json['total_length'] as num?)?.toDouble() ?? 0,
       amountPerMeter: (json['amount_per_meter'] as num?)?.toDouble() ?? 0,
+      selectDays: json['select_days']?.toString(),
+      employeeName: json['employee_name']?.toString(),
     );
   }
 
-  /// total_amount
+  /// total_amount = total_length * amount_per_meter (always computed, never fetched)
   double get totalAmount => totalLength * amountPerMeter;
 }
