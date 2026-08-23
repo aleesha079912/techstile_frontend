@@ -435,13 +435,13 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                     ],
                   ),
 
-                  Text(
-                    "ID: ${user['employee_id'] ?? '--'}",
-                    style: const TextStyle(
-                      fontSize: 10.5,
-                      color: AppTheme.neutral,
-                    ),
-                  ),
+                  // Text(
+                  //   "ID: ${user['employee_id'] ?? '--'}",
+                  //   style: const TextStyle(
+                  //     fontSize: 10.5,
+                  //     color: AppTheme.neutral,
+                  //   ),
+                  // ),
 
                   infoRow(
                     Icons.email_outlined,
@@ -453,10 +453,10 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                     phone,
                   ),
 
-                  infoRow(
-                    Icons.access_time_rounded,
-                    "$shiftStart - $shiftEnd",
-                  ),
+                  // infoRow(
+                  //   Icons.access_time_rounded,
+                  //   "$shiftStart - $shiftEnd",
+                  // ),
 
                   const SizedBox(height: 3),
 

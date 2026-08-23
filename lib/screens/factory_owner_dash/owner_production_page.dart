@@ -93,6 +93,7 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage>
           ],
         ),
       ),
+    
       body: loading
           ? const Center(child: CircularProgressIndicator(color: AppTheme.primary))
           : error != null
@@ -107,7 +108,9 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage>
                       _buildList(_approved, showActions: false),
                     ],
                   ),
+                  
                 ),
+                
               //  bottomNavigationBar: CustomBottomNav(currentIndex: 0, factoryId: widget.factoryId),
     );
   }
