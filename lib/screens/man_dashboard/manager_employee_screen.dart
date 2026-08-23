@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:techstile_frontend/widgets/man_drawer.dart';
@@ -21,19 +20,18 @@ class ManagerEmployeesScreen extends StatefulWidget {
       _ManagerEmployeesScreenState();
 }
 
-class _ManagerEmployeesScreenState
-    extends State<ManagerEmployeesScreen> {
+class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
   final _service = ManagerDashboardService();
 
   bool loading = true;
   String? error;
   String? factoryName;
-
+  bool showActiveOnly = false;
+  
   List employees = [];
   List filteredEmployees = [];
 
-  final TextEditingController searchController =
-      TextEditingController();
+  final TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
@@ -52,11 +50,12 @@ class _ManagerEmployeesScreenState
       final dashboardData = await _service.getDashboard(widget.factoryId);
 
       setState(() {
-        employees          = res;
-        filteredEmployees  = res;
-        factoryName        = dashboardData['factory']?['name'];
-        loading            = false;
+        employees = res;
+        factoryName = dashboardData['factory']?['name'];
+        loading = false;
       });
+      
+      applyFilter();
     } catch (e) {
       setState(() {
         error = e.toString();
@@ -65,30 +64,43 @@ class _ManagerEmployeesScreenState
     }
   }
 
-  void searchEmployee(String value) {
+  void applyFilter() {
+    final query = searchController.text.toLowerCase();
+
     setState(() {
       filteredEmployees = employees.where((emp) {
-        final name =
-            emp['user']?['name']
-                    ?.toString()
-                    .toLowerCase() ??
-                '';
-        return name.contains(value.toLowerCase());
+        final user = emp['user'];
+        final name = user?['name']?.toString().toLowerCase() ?? '';
+        final matchesSearch = name.contains(query);
+
+        if (showActiveOnly) {
+          return matchesSearch && (emp['is_active'] == true);
+        } else {
+          return matchesSearch;
+        }
       }).toList();
     });
   }
 
+  void searchEmployee(String value) {
+    applyFilter();
+  }
+
   @override
   Widget build(BuildContext context) {
+    int totalEmployeesCount = employees.length;
+    int activeEmployeesCount =
+        employees.where((e) => e['is_active'] == true).length;
+
     return Scaffold(
       drawer: ManagerDrawer(
-  userId: AuthService.userId,
-  factoryId: AuthService.factoryId,
-),
+        userId: AuthService.userId,
+        factoryId: AuthService.factoryId,
+      ),
       backgroundColor: AppTheme.background,
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
-        iconTheme: IconThemeData(color: AppTheme.secondary),
+        iconTheme: const IconThemeData(color: AppTheme.secondary),
         elevation: 0,
         automaticallyImplyLeading: true,
         title: Column(
@@ -97,7 +109,7 @@ class _ManagerEmployeesScreenState
             const Text(
               'All Employees',
               style: TextStyle(
-                color:  AppTheme.secondary,
+                color: AppTheme.secondary,
                 fontWeight: FontWeight.w800,
                 fontSize: 17,
               ),
@@ -125,31 +137,79 @@ class _ManagerEmployeesScreenState
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(16),
-                          child: TextField(
-                            controller: searchController,
-                            onChanged: searchEmployee,
-                            decoration: InputDecoration(
-                              hintText: "Search Employee",
-                              prefixIcon: const Icon(Icons.search),
-                              filled: true,
-                              fillColor: AppTheme.secondary,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(12),
+                          child: Column(
+                            children: [
+                              // Search Bar
+                              TextField(
+                                controller: searchController,
+                                onChanged: searchEmployee,
+                                decoration: InputDecoration(
+                                  hintText: "Search Employee",
+                                  prefixIcon: const Icon(Icons.search),
+                                  filled: true,
+                                  fillColor: AppTheme.secondary,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                    borderSide: BorderSide.none,
+                                  ),
+                                ),
                               ),
-                            ),
+                              const SizedBox(height: 12),
+
+                              // Interactive Colored Stat Cards Row
+                              Row(
+                                children: [
+                                  statBox(
+                                    "Total Employees",
+                                    "$totalEmployeesCount",
+                                    AppTheme.primary,
+                                    Icons.people_alt_rounded,
+                                    !showActiveOnly,
+                                    () {
+                                      setState(() {
+                                        showActiveOnly = false;
+                                        applyFilter();
+                                      });
+                                    },
+                                  ),
+                                  const SizedBox(width: 12),
+                                  statBox(
+                                    "Active Employees",
+                                    "$activeEmployeesCount",
+                                    AppTheme.success,
+                                    Icons.bolt_rounded,
+                                    showActiveOnly,
+                                    () {
+                                      setState(() {
+                                        showActiveOnly = true;
+                                        applyFilter();
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
                         Expanded(
                           child: RefreshIndicator(
                             color: AppTheme.primary,
                             onRefresh: load,
-                            child: ListView.builder(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
-                              itemCount: filteredEmployees.length,
-                              itemBuilder: (_, i) =>
-                                  _employeeCard(filteredEmployees[i]),
-                            ),
+                            child: filteredEmployees.isEmpty
+                                ? const Center(
+                                    child: Text(
+                                      "No matching employees found",
+                                      style: TextStyle(
+                                          color: AppTheme.textSecondary),
+                                    ),
+                                  )
+                                : ListView.builder(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16),
+                                    itemCount: filteredEmployees.length,
+                                    itemBuilder: (_, i) =>
+                                        _employeeCard(filteredEmployees[i]),
+                                  ),
                           ),
                         ),
                       ],
@@ -158,6 +218,83 @@ class _ManagerEmployeesScreenState
       bottomNavigationBar: ManagerBottomNav(
         currentIndex: 2,
         factoryId: widget.factoryId,
+      ),
+    );
+  }
+
+  // Stat Card Widget (With Active Color Switch)
+  Widget statBox(String label, String value, Color activeThemeColor, IconData icon,
+      bool isSelected, VoidCallback onTap) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: isSelected ? activeThemeColor : AppTheme.secondary,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: isSelected ? activeThemeColor : AppTheme.neutral.withOpacity(0.3),
+              width: 1.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: isSelected
+                    ? activeThemeColor.withOpacity(0.3)
+                    : AppTheme.onsurface.withOpacity(0.05),
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ?  AppTheme.secondary.withOpacity(0.2)
+                      : activeThemeColor.withOpacity(0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  icon,
+                  color: isSelected ?  AppTheme.secondary: activeThemeColor,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      value,
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: isSelected ?  AppTheme.secondary : activeThemeColor,
+                      ),
+                    ),
+                    Text(
+                      label,
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: isSelected
+                            ?  AppTheme.secondary.withOpacity(0.9)
+                            : AppTheme.textSecondary,
+                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -198,7 +335,6 @@ class _ManagerEmployeesScreenState
     );
   }
 
-  // ── Compact info row — chota icon + chota text ──────────────────────────
   Widget _infoRow(IconData icon, String text) {
     return Padding(
       padding: const EdgeInsets.only(top: 4),
@@ -209,7 +345,7 @@ class _ManagerEmployeesScreenState
           Expanded(
             child: Text(
               text,
-              style: const TextStyle(fontSize: 11.5, color:  AppTheme.neutral),
+              style: const TextStyle(fontSize: 11.5, color: AppTheme.neutral),
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -218,12 +354,13 @@ class _ManagerEmployeesScreenState
     );
   }
 
-  // ── ✅ Compact employee card — size kam kiya ──────────────────────────────
   Widget _employeeCard(dynamic e) {
     final user = e['user'];
     final name = user?['name']?.toString() ?? 'Employee';
     final email = user?['email']?.toString() ?? '--';
     final phone = user?['phone_no']?.toString() ?? '--';
+
+    final bool isActive = e['is_active'] == true;
 
     return InkWell(
       borderRadius: AppTheme.cardRadius,
@@ -236,22 +373,28 @@ class _ManagerEmployeesScreenState
         );
       },
       child: Container(
-        margin: const EdgeInsets.only(bottom: 10),       // ✅ kam margin
-        padding: const EdgeInsets.all(12),                // ✅ kam padding
+        margin: const EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color:  AppTheme.secondary,
+          color: isActive ? AppTheme.success.withOpacity(0.08) : AppTheme.secondary,
           borderRadius: AppTheme.cardRadius,
+          border: Border.all(
+            color: isActive ? AppTheme.success.withOpacity(0.4) : Colors.transparent,
+            width: 1.5,
+          ),
           boxShadow: AppTheme.softShadow,
         ),
         child: Row(
           children: [
             CircleAvatar(
-              radius: 19,                                  // ✅ chota avatar (pehle 25)
-              backgroundColor: AppTheme.secondary.withOpacity(.2),
+              radius: 19,
+              backgroundColor: isActive
+                  ? AppTheme.success.withOpacity(0.2)
+                  : AppTheme.neutral.withOpacity(0.2),
               child: Text(
-                name[0].toUpperCase(),
-                style: const TextStyle(
-                  color: AppTheme.primary,
+                name.isNotEmpty ? name[0].toUpperCase() : 'E',
+                style: TextStyle(
+                  color: isActive ? AppTheme.success : AppTheme.primary,
                   fontWeight: FontWeight.bold,
                   fontSize: 13,
                 ),
@@ -262,28 +405,43 @@ class _ManagerEmployeesScreenState
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    name,
-                    style: const TextStyle(
-                      fontSize: 14,                          // ✅ chota (pehle 17)
-                      fontWeight: FontWeight.w700,
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  Text(
-                    "ID: ${e['id']}",
-                    style: const TextStyle(fontSize: 10.5, color:  AppTheme.neutral),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          name,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: isActive ? AppTheme.success : AppTheme.neutral.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Text(
+                          isActive ? "Active" : "Inactive",
+                          style: const TextStyle(
+                            color: AppTheme.secondary,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 4),
                   _infoRow(Icons.email_outlined, email),
                   _infoRow(Icons.phone_outlined, phone),
-                  _infoRow(
-                    Icons.access_time_rounded,
-                    "${e['shift_starttime'] ?? '--'} - ${e['shift_endtime'] ?? '--'}",
-                  ),
                 ],
               ),
             ),
+            const SizedBox(width: 8),
             const Icon(Icons.arrow_forward_ios, size: 13, color: AppTheme.neutral),
           ],
         ),

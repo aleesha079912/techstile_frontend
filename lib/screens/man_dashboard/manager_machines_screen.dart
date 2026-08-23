@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'machine_detail_screen.dart';
 import 'package:techstile_frontend/widgets/man_drawer.dart';
 import 'package:techstile_frontend/core/services/auth_service.dart';
+
 class ManagerMachinesScreen extends StatefulWidget {
   final dynamic factoryId;
 
@@ -19,20 +20,19 @@ class ManagerMachinesScreen extends StatefulWidget {
       _ManagerMachinesScreenState();
 }
 
-class _ManagerMachinesScreenState
-    extends State<ManagerMachinesScreen> {
+class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
   final _service = ManagerDashboardService();
 
   bool loading = true;
 
   List machines = [];
   List filteredMachines = [];
-  String? factoryName; // ✅ yahan store hoga
+  String? factoryName;
 
   String? error;
+  bool showActiveOnly = false;
 
-  final TextEditingController searchController =
-      TextEditingController();
+  final TextEditingController searchController = TextEditingController();
 
   @override
   void initState() {
@@ -47,18 +47,16 @@ class _ManagerMachinesScreenState
     });
 
     try {
-      // ✅ Machines list
       final res = await _service.getMachines(widget.factoryId);
-
-      // ✅ Factory name — dashboard API se le aao (already factory info de raha hai)
       final dashboardData = await _service.getDashboard(widget.factoryId);
 
       setState(() {
-        machines          = res;
-        filteredMachines  = res;
-        factoryName       = dashboardData['factory']?['name'];
-        loading           = false;
+        machines = res;
+        factoryName = dashboardData['factory']?['name'];
+        loading = false;
       });
+
+      applyFilters();
     } catch (e) {
       setState(() {
         error = e.toString();
@@ -67,19 +65,28 @@ class _ManagerMachinesScreenState
     }
   }
 
-  void searchMachines(String value) {
+  void applyFilters() {
+    final query = searchController.text.toLowerCase();
+
     setState(() {
       filteredMachines = machines.where((machine) {
-        final machineName =
-            machine.machineName.toString().toLowerCase();
+        final machineName = machine.machineName.toString().toLowerCase();
+        final machineType = machine.type.toString().toLowerCase();
 
-        final machineType =
-            machine.type.toString().toLowerCase();
+        final matchesSearch =
+            machineName.contains(query) || machineType.contains(query);
 
-        return machineName.contains(value.toLowerCase()) ||
-            machineType.contains(value.toLowerCase());
+        if (showActiveOnly) {
+          return matchesSearch && (machine.isActive == true);
+        } else {
+          return matchesSearch;
+        }
       }).toList();
     });
+  }
+
+  void searchMachines(String value) {
+    applyFilters();
   }
 
   @override
@@ -90,17 +97,18 @@ class _ManagerMachinesScreenState
 
   @override
   Widget build(BuildContext context) {
+    int totalCount = machines.length;
+    int activeCount = machines.where((m) => m.isActive == true).length;
+
     return Scaffold(
-       drawer: ManagerDrawer(
-  userId: AuthService.userId,
-  factoryId: AuthService.factoryId,
-),
+      drawer: ManagerDrawer(
+        userId: AuthService.userId,
+        factoryId: AuthService.factoryId,
+      ),
       backgroundColor: AppTheme.background,
-
-
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
-        iconTheme: IconThemeData(color: AppTheme.secondary),
+        iconTheme: const IconThemeData(color: AppTheme.secondary),
         elevation: 0,
         automaticallyImplyLeading: true,
         title: Column(
@@ -109,24 +117,21 @@ class _ManagerMachinesScreenState
             const Text(
               'All Machines',
               style: TextStyle(
-                color:  AppTheme.secondary,
+                color: AppTheme.secondary,
                 fontWeight: FontWeight.w800,
                 fontSize: 17,
               ),
             ),
-
-            // ✅ Fix: ab state se aata hai — Get.arguments se nahi
             Text(
               loading ? 'Loading...' : (factoryName ?? 'Factory'),
               style: TextStyle(
-                color:  AppTheme.secondary.withOpacity(0.65),
+                color: AppTheme.secondary.withOpacity(0.65),
                 fontSize: 12,
               ),
             ),
           ],
         ),
       ),
-
       body: loading
           ? const Center(
               child: CircularProgressIndicator(
@@ -135,81 +140,87 @@ class _ManagerMachinesScreenState
             )
           : error != null
               ? _errorView()
-              : filteredMachines.isEmpty
-                  ? _emptyView()
-                  : Column(
-                      children: [
-
-                        /// SEARCH BAR
-                        Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: TextField(
-                            controller: searchController,
-                            onChanged: searchMachines,
-                            decoration: InputDecoration(
-                              hintText:
-                                  "Search by machine name or type",
-                              prefixIcon:
-                                  const Icon(Icons.search),
-                              filled: true,
-                              fillColor:  AppTheme.secondary,
-                              border: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.circular(12),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
+              : Column(
+                  children: [
+                    /// SEARCH BAR
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: TextField(
+                        controller: searchController,
+                        onChanged: searchMachines,
+                        decoration: InputDecoration(
+                          hintText: "Search by machine name or type",
+                          prefixIcon: const Icon(Icons.search),
+                          filled: true,
+                          fillColor: AppTheme.secondary,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
                           ),
                         ),
-
-                        /// TOTAL / ACTIVE BOXES
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: _statBox(
-                                  "Total Machines",
-                                  "${machines.length}",
-                                  AppTheme.primary,
-                                  Icons.precision_manufacturing_rounded,
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: _statBox(
-                                  "Active",
-                                  "${machines.where((m) => m.isActive).length}",
-                                  AppTheme.success,
-                                  Icons.bolt_rounded,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-
-                        /// MACHINE LIST
-                        Expanded(
-                          child: RefreshIndicator(
-                            color: AppTheme.primary,
-                            onRefresh: load,
-                            child: ListView.builder(
-                              padding:
-                                  const EdgeInsets.symmetric(
-                                horizontal: 16,
-                              ),
-                              itemCount:
-                                  filteredMachines.length,
-                              itemBuilder: (_, i) =>
-                                  _machineCard(
-                                      filteredMachines[i]),
-                            ),
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
 
+                    /// TOTAL / ACTIVE CLICKABLE BOXES
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: _statBox(
+                              "Total Machines",
+                              "$totalCount",
+                              AppTheme.primary,
+                              Icons.precision_manufacturing_rounded,
+                              !showActiveOnly,
+                              () {
+                                setState(() {
+                                  showActiveOnly = false;
+                                  applyFilters();
+                                });
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: _statBox(
+                              "Active",
+                              "$activeCount",
+                              AppTheme.success,
+                              Icons.bolt_rounded,
+                              showActiveOnly,
+                              () {
+                                setState(() {
+                                  showActiveOnly = true;
+                                  applyFilters();
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    /// MACHINE LIST
+                    Expanded(
+                      child: RefreshIndicator(
+                        color: AppTheme.primary,
+                        onRefresh: load,
+                        child: filteredMachines.isEmpty
+                            ? _emptyView()
+                            : ListView.builder(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                ),
+                                itemCount: filteredMachines.length,
+                                itemBuilder: (_, i) =>
+                                    _machineCard(filteredMachines[i]),
+                              ),
+                      ),
+                    ),
+                  ],
+                ),
       bottomNavigationBar: ManagerBottomNav(
         currentIndex: 1,
         factoryId: widget.factoryId,
@@ -217,44 +228,80 @@ class _ManagerMachinesScreenState
     );
   }
 
-  Widget _statBox(String label, String value, Color color, IconData icon) {
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color:  AppTheme.secondary,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color:  AppTheme.onsurface.withOpacity(0.05),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
+  Widget _statBox(
+    String label,
+    String value,
+    Color activeThemeColor,
+    IconData icon,
+    bool isSelected,
+    VoidCallback onTap,
+  ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: isSelected ? activeThemeColor : AppTheme.secondary,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: isSelected ? activeThemeColor : AppTheme.neutral.withOpacity(0.3),
+            width: 1.5,
           ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: isSelected
+                  ? activeThemeColor.withOpacity(0.3)
+                  : AppTheme.onsurface.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 3),
             ),
-            child: Icon(icon, color: color, size: 18),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(value,
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? AppTheme.secondary.withOpacity(0.2)
+                    : activeThemeColor.withOpacity(0.12),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Icon(
+                icon,
+                color: isSelected ?  AppTheme.secondary : activeThemeColor,
+                size: 18,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    value,
                     style: TextStyle(
-                        color: color, fontSize: 18, fontWeight: FontWeight.w800)),
-                Text(label,
-                    style: const TextStyle(color: AppTheme.textSecondary,fontSize: 11,)),
-              ],
+                      color: isSelected ?  AppTheme.secondary : activeThemeColor,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  Text(
+                    label,
+                    style: TextStyle(
+                      color: isSelected
+                          ?  AppTheme.secondary.withOpacity(0.9)
+                          : AppTheme.textSecondary,
+                      fontSize: 11,
+                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -271,9 +318,7 @@ class _ManagerMachinesScreenState
               size: 48,
               color: AppTheme.error,
             ),
-
             const SizedBox(height: 12),
-
             Text(
               error ?? 'Something went wrong',
               textAlign: TextAlign.center,
@@ -282,9 +327,7 @@ class _ManagerMachinesScreenState
                 fontSize: 13,
               ),
             ),
-
             const SizedBox(height: 16),
-
             ElevatedButton(
               onPressed: load,
               child: const Text('Retry'),
@@ -297,33 +340,35 @@ class _ManagerMachinesScreenState
 
   Widget _emptyView() {
     return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(
-            Icons.precision_manufacturing_outlined,
-            size: 48,
-            color: AppTheme.neutral,
-          ),
-
-          const SizedBox(height: 12),
-
-          const Text(
-            'No machines found',
-            style: TextStyle(
-              color: AppTheme.textSecondary,
-              fontSize: 14,
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: const [
+            Icon(
+              Icons.precision_manufacturing_outlined,
+              size: 48,
+              color: AppTheme.neutral,
             ),
-          ),
-        ],
+            SizedBox(height: 12),
+            Text(
+              'No machines found',
+              style: TextStyle(
+                color: AppTheme.textSecondary,
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _machineCard(dynamic m) {
+    final bool isActive = m.isActive == true;
+
     return InkWell(
       borderRadius: AppTheme.cardRadius,
-
       onTap: () {
         Get.to(
           () => MachineDetailsScreen(
@@ -332,44 +377,44 @@ class _ManagerMachinesScreenState
           ),
         );
       },
-
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(16),
-
         decoration: BoxDecoration(
-          color: AppTheme.secondary,
+          color: isActive
+              ? AppTheme.success.withOpacity(0.08)
+              : AppTheme.secondary,
           borderRadius: AppTheme.cardRadius,
+          border: Border.all(
+            color: isActive
+                ? AppTheme.success.withOpacity(0.4)
+                : Colors.transparent,
+            width: 1.5,
+          ),
           boxShadow: AppTheme.softShadow,
         ),
-
         child: Row(
           children: [
-
             Container(
               width: 48,
               height: 48,
               decoration: BoxDecoration(
-                color:
-                    AppTheme.neutral.withOpacity(0.4),
-                borderRadius:
-                    BorderRadius.circular(12),
+                color: isActive
+                    ? AppTheme.success.withOpacity(0.15)
+                    : AppTheme.neutral.withOpacity(0.4),
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.precision_manufacturing_rounded,
-                color: AppTheme.primary,
+                color: isActive ? AppTheme.success : AppTheme.primary,
                 size: 24,
               ),
             ),
-
             const SizedBox(width: 14),
-
             Expanded(
               child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
                   Text(
                     m.machineName,
                     style: const TextStyle(
@@ -378,9 +423,7 @@ class _ManagerMachinesScreenState
                       fontSize: 15,
                     ),
                   ),
-
                   const SizedBox(height: 4),
-
                   Text(
                     m.type,
                     style: const TextStyle(
@@ -391,30 +434,27 @@ class _ManagerMachinesScreenState
                 ],
               ),
             ),
-
             Container(
               padding: const EdgeInsets.symmetric(
                 horizontal: 10,
                 vertical: 5,
               ),
               decoration: BoxDecoration(
-                color:
-                    AppTheme.success.withOpacity(0.12),
-                borderRadius:
-                    BorderRadius.circular(20),
+                color: isActive
+                    ? AppTheme.success.withOpacity(0.2)
+                    : AppTheme.neutral.withOpacity(0.2),
+                borderRadius: BorderRadius.circular(20),
               ),
               child: Text(
-                m.id.toString(),
-                style: const TextStyle(
-                  color: AppTheme.success,
+                isActive ? "Active" : "Inactive",
+                style: TextStyle(
+                  color: isActive ? AppTheme.success : AppTheme.textSecondary,
                   fontSize: 11,
                   fontWeight: FontWeight.w700,
                 ),
               ),
             ),
-
             const SizedBox(width: 5),
-
             const Icon(
               Icons.arrow_forward_ios,
               size: 14,
