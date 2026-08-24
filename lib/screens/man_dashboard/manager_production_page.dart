@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../../../core/services/production_service.dart';
 import '../../../core/utils/theme.dart';
 import '../../../widgets/man_bottom_navbar.dart';
-// import 'package:techstile_frontend/core/services/auth_service.dart';
 
 class ManagerProductionsPage extends StatefulWidget {
   final dynamic factoryId;
@@ -18,6 +17,9 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
     with SingleTickerProviderStateMixin {
   final _service = ProductionService();
   late TabController _tab;
+  
+  // Search query variable
+  String _searchQuery = '';
 
   bool loading = true;
   String? error;
@@ -45,7 +47,9 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
       setState(() { error = e.toString(); loading = false; });
     }
   }
-  List<Map<String, dynamic>> get _pending  =>
+
+  // Pure list getters (Unchanged)
+  List<Map<String, dynamic>> get _pending =>
       _all.where((p) => (p['status'] as int? ?? 1) == 1).toList();
 
   List<Map<String, dynamic>> get _approved =>
@@ -53,6 +57,24 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
         final s = p['status'] as int? ?? 1;
         return s == 2 || s == 4; 
       }).toList();
+
+  // Active Tab Record Filtering
+  List<Map<String, dynamic>> _applySearch(List<Map<String, dynamic>> list, bool isPending) {
+    if (_searchQuery.trim().isEmpty) return list;
+    final q = _searchQuery.toLowerCase().trim();
+
+    return list.where((p) {
+      final variety = (p['variety_type'] ?? '').toString().toLowerCase();
+      final machine = (p['machineemploye']?['machine_name'] ?? 'Machine #${p['machine_id'] ?? ''}')
+          .toString()
+          .toLowerCase();
+
+      final dateValue = isPending ? p['created_at'] : p['updated_at'];
+      final dateFormatted = _fmtDateTime(dateValue).toLowerCase();
+
+      return variety.contains(q) || machine.contains(q) || dateFormatted.contains(q);
+    }).toList();
+  }
 
   Future<void> _doAction(dynamic id, String action) async {
     try {
@@ -82,18 +104,52 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 17),
         ),
         iconTheme: const IconThemeData(color: Colors.white),
-        bottom: TabBar(
-          controller: _tab,
-          indicatorColor: AppTheme.surface,
-          indicatorWeight: 3,
-          labelColor: Colors.white,
-          unselectedLabelColor: AppTheme.surface,
-          labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
-          unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
-          tabs: [
-            Tab(text: 'Pending (${_pending.length})'),
-            Tab(text: 'Approved (${_approved.length})'),
-          ],
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(110), // Search bar + Tabs ki height
+          child: Column(
+            children: [
+              // 1. Visible Search Input Box
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                child: Container(
+                  height: 42,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: TextField(
+                    onChanged: (val) {
+                      setState(() {
+                        _searchQuery = val;
+                      });
+                    },
+                    style: const TextStyle(color: Colors.black, fontSize: 13),
+                    decoration: InputDecoration(
+                      hintText: 'Search machine, variety or date...',
+                      hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 13),
+                      prefixIcon: const Icon(Icons.search, color: AppTheme.primary, size: 20),
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                    ),
+                  ),
+                ),
+              ),
+              // 2. TabBar
+              TabBar(
+                controller: _tab,
+                indicatorColor: AppTheme.surface,
+                indicatorWeight: 3,
+                labelColor: Colors.white,
+                unselectedLabelColor: AppTheme.surface,
+                labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+                unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
+                tabs: [
+                  Tab(text: 'Pending (${_pending.length})'),
+                  Tab(text: 'Approved (${_approved.length})'),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       body: loading
@@ -106,8 +162,8 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
                   child: TabBarView(
                     controller: _tab,
                     children: [
-                      _buildList(_pending,  showActions: true),
-                      _buildList(_approved, showActions: false),
+                      _buildList(_applySearch(_pending, true), showActions: true),
+                      _buildList(_applySearch(_approved, false), showActions: false),
                     ],
                   ),
                 ),
@@ -124,8 +180,10 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Icon(Icons.inbox_rounded, size: 52, color: AppTheme.neutral),
           const SizedBox(height: 12),
-          const Text('No records found',
-              style: TextStyle(color: AppTheme.primary, fontSize: 14, fontWeight: FontWeight.w600)),
+          Text(
+            _searchQuery.isNotEmpty ? 'No matching records found' : 'No records found',
+            style: const TextStyle(color: AppTheme.primary, fontSize: 14, fontWeight: FontWeight.w600),
+          ),
         ]),
       );
     }
@@ -142,8 +200,8 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
     final isOwnerApproved = status == 4;
     final employeeName = p['employeedetails']?['user']?['name']?.toString()
         ?? 'Employee #${p['employee_id'] ?? '-'}';
-   final machineName = p['machineemploye']?['machine_name']?.toString()
-    ?? 'Machine #${p['machine_id'] ?? '-'}';
+    final machineName = p['machineemploye']?['machine_name']?.toString()
+        ?? 'Machine #${p['machine_id'] ?? '-'}';
     final dateLabel = showActions ? 'Submitted' : 'Approved';
     final dateValue = showActions ? p['created_at'] : p['updated_at'];
 
@@ -185,7 +243,6 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
 
           const SizedBox(height: 14),
 
-          // ── Stats row ─────────────────────────────────────
           Row(children: [
             _infoBox(label: 'Total',   value: '${p['total_length'] ?? 0} yds'),
             const SizedBox(width: 8),
@@ -204,7 +261,6 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
             _infoBox(label: dateLabel, value: _fmtDateTime(dateValue)),
           ]),
 
-          // ── Owner-approved note ───────────────────────────
           if (isOwnerApproved) ...[
             const SizedBox(height: 10),
             Container(
@@ -228,7 +284,6 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
             ),
           ],
 
-          // ── Action buttons ────────────────────────────────
           if (showActions) ...[
             const SizedBox(height: 14),
             Row(children: [
@@ -320,34 +375,34 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
     );
   }
 
- Widget _infoBox({required String label, required String value}) {
-  return Expanded(
-    child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
-      decoration: BoxDecoration(
-        color: AppTheme.background,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: AppTheme.primary.withOpacity(0.06)),
-      ),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Text(label,
-            style: TextStyle(
-                color: AppTheme.primary.withOpacity(0.5),
-                fontSize: 9,
-                fontWeight: FontWeight.w600)),
-        const SizedBox(height: 3),
-        FittedBox(
-          fit: BoxFit.scaleDown,
-          alignment: Alignment.centerLeft,
-          child: Text(value,
-              maxLines: 1,
-              style: const TextStyle(
-                  color: AppTheme.textPrimary, fontSize: 12.5, fontWeight: FontWeight.w700)),
+  Widget _infoBox({required String label, required String value}) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+        decoration: BoxDecoration(
+          color: AppTheme.background,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: AppTheme.primary.withOpacity(0.06)),
         ),
-      ]),
-    ),
-  );
-}
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(label,
+              style: TextStyle(
+                  color: AppTheme.primary.withOpacity(0.5),
+                  fontSize: 9,
+                  fontWeight: FontWeight.w600)),
+          const SizedBox(height: 3),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(value,
+                maxLines: 1,
+                style: const TextStyle(
+                    color: AppTheme.textPrimary, fontSize: 12.5, fontWeight: FontWeight.w700)),
+          ),
+        ]),
+      ),
+    );
+  }
 
   Widget _errorView() => Center(
     child: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -360,7 +415,6 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
     ]),
   );
 
-  //show date and time
   String _fmtDateTime(dynamic raw) {
     if (raw == null) return '-';
     try {

@@ -38,9 +38,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
     load();
   }
 
-  // =========================================================
+
   // LOAD MACHINES
-  // =========================================================
+
 
   void load() async {
     setState(() {
@@ -69,9 +69,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
     });
   }
 
-  // =========================================================
+
   // SEARCH MACHINES
-  // =========================================================
+
 
   void searchMachines(String query) {
     final allMachines = data?.machines ?? [];
@@ -99,9 +99,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
     });
   }
 
-  // =========================================================
+
   // ADD / UPDATE MACHINE
-  // =========================================================
+
 
   void _showMachineForm(
     BuildContext context, {
@@ -178,9 +178,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
                     backgroundColor: AppTheme.primary,
                   ),
                   onPressed: () async {
-                    // ==============================
+                  
                     // ADD MACHINE
-                    // ==============================
+                  
 
                     if (machine == null) {
                       final result =
@@ -199,9 +199,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
                       }
                     }
 
-                    // ==============================
+                  
                     // UPDATE MACHINE
-                    // ==============================
+                  
 
                     else {
                       bool success =
@@ -237,9 +237,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
     );
   }
 
-  // =========================================================
+
   // DELETE MACHINE
-  // =========================================================
+
 
   void _handleDelete(String id) async {
     bool? confirm = await showDialog(
@@ -275,9 +275,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
     }
   }
 
-  // =========================================================
+
   // BUILD SCREEN
-  // =========================================================
+
 
   @override
   Widget build(BuildContext context) {
@@ -315,9 +315,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
                 children: [
                   const SizedBox(height: 16),
 
-                  // =================================================
+             
                   // SEARCH
-                  // =================================================
+              
 
                   TextField(
                     controller: searchCtrl,
@@ -349,16 +349,14 @@ class _MachinesScreenState extends State<MachinesScreen> {
 
                   const SizedBox(height: 16),
 
-                  // =================================================
-                  // TOTAL + ACTIVE CARDS
-                  // =================================================
+             
+                  // TOTAL And ACTIVE CARDS
+             
 
                   Row(
                     children: [
-                      // ==============================
+                    
                       // TOTAL ASSETS
-                      // ==============================
-
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
@@ -386,9 +384,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
 
                       const SizedBox(width: 8),
 
-                      // ==============================
+                    
                       // ACTIVE
-                      // ==============================
+                    
 
                       Expanded(
                         child: GestureDetector(
@@ -418,9 +416,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
 
                   const SizedBox(height: 16),
 
-                  // =================================================
+               
                   // ADD MACHINE BUTTON
-                  // =================================================
+               
 
                   SizedBox(
                     width: double.infinity,
@@ -456,9 +454,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
 
                   const SizedBox(height: 16),
 
-                  // =================================================
+               
                   // MACHINE LIST
-                  // =================================================
+               
 
                   Expanded(
                     child: RefreshIndicator(
@@ -496,9 +494,8 @@ class _MachinesScreenState extends State<MachinesScreen> {
               ),
             ),
 
-      // =========================================================
       // BOTTOM NAVIGATION
-      // =========================================================
+    
 
       bottomNavigationBar:
           CustomBottomNav(
@@ -508,9 +505,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
     );
   }
 
-  // =========================================================
+
   // STAT CARD
-  // =========================================================
+
 
   Widget _statCard(
     String title,
@@ -564,9 +561,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
     );
   }
 
-  // =========================================================
+
   // MACHINE TILE
-  // =========================================================
+
 
   Widget _machineTile(Machine m) {
     // Backend se is_active aa raha hai
@@ -597,10 +594,10 @@ class _MachinesScreenState extends State<MachinesScreen> {
             const EdgeInsets.all(14),
 
         decoration: BoxDecoration(
-          // ==========================================
+       
           // ACTIVE = GREEN
           // INACTIVE = NORMAL
-          // ==========================================
+       
 
           color: isActive
               ? Colors.green.shade100
@@ -620,9 +617,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
 
         child: Row(
           children: [
-            // =================================================
+       
             // MACHINE ICON
-            // =================================================
+       
 
             Container(
               padding:
@@ -645,9 +642,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
 
             const SizedBox(width: 12),
 
-            // =================================================
+       
             // MACHINE NAME + TYPE
-            // =================================================
+       
 
             Expanded(
               child: Column(
@@ -680,9 +677,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
                     ),
                   ),
 
-                  // ==========================================
+               
                   // ACTIVE MESSAGE
-                  // ==========================================
+               
 
                   if (isActive)
                     const Padding(
@@ -709,9 +706,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
               ),
             ),
 
-            // =================================================
+       
             // ACTIVE BADGE
-            // =================================================
+       
 
             if (isActive)
               Container(
@@ -748,9 +745,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
                 ),
               ),
 
-            // =================================================
+       
             // EDIT BUTTON
-            // =================================================
+       
 
             GestureDetector(
               onTap: () =>
@@ -768,9 +765,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
 
             const SizedBox(width: 10),
 
-            // =================================================
+       
             // DELETE BUTTON
-            // =================================================
+       
 
             GestureDetector(
               onTap: () =>
@@ -788,9 +785,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
     );
   }
 
-  // =========================================================
+
   // TEXT FIELD
-  // =========================================================
+
 
   Widget _buildField(
     TextEditingController ctrl,
