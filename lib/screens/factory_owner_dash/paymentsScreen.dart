@@ -1,6 +1,130 @@
 import 'package:flutter/material.dart';
+import 'package:techstile_frontend/core/services/auth_service.dart';
 import 'package:techstile_frontend/core/services/payments_service.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
+import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
+import 'package:techstile_frontend/widgets/own_payments_pop_up.dart';
+
+// ============================================================
+// Models (employee-wise payments API response)
+// ============================================================
+//
+// {
+//   "data": [
+//     {
+//       "employee_id": 15,
+//       "employee_name": "Ali",
+//       "factory_name": "Ansari Textile",
+//       "manager_name": null,
+//       "total_amount": 1810400,
+//       "total_length": 24970,
+//       "productions": [
+//         { "production_id": 137, "batch_id": "BATCH-14-...", "variety_type": "cotton",
+//           "total_length": 300, "ready_production": 0, "waste_production": 0,
+//           "remaining_production": 300, "machine_name": "MC-02", "amount_per_meter": 100,
+//           "amount": 30000, "select_days": "Friday", "shift_start": "08:00:00",
+//           "shift_end": "20:00:00", "created_at": "..." },
+//         ...
+//       ] 
+//     },
+//     ...
+//   ]
+// }
+
+class EmployeePayment {
+  final int employeeId;
+  final String? employeeName;
+  final String? factoryName;
+  final String? managerName;
+  final double totalAmount;
+  final double totalLength;
+  final List<ProductionRecord> productions;
+
+  EmployeePayment({
+    required this.employeeId,
+    required this.employeeName,
+    this.factoryName,
+    this.managerName,
+    required this.totalAmount,
+    required this.totalLength,
+    required this.productions,
+  });
+   double get readyProductionTotal =>
+     productions.fold<double>(0, (sum, p) => sum + p.readyProduction);
+
+  double get readyAmount =>
+     productions.fold<double>(0, (sum, p) => sum + (p.readyProduction * p.amountPerMeter));
+  
+
+  factory EmployeePayment.fromJson(Map<String, dynamic> json) {
+    return EmployeePayment(
+      employeeId: int.tryParse(json['employee_id'].toString()) ?? 0,
+      employeeName: json['employee_name'],
+      factoryName: json['factory_name'],
+      managerName: json['manager_name'],
+      totalAmount: double.tryParse(json['total_amount'].toString()) ?? 0,
+      totalLength: double.tryParse(json['total_length'].toString()) ?? 0,
+      productions: (json['productions'] as List? ?? [])
+          .map((e) => ProductionRecord.fromJson(e))
+          .toList(),
+    );
+  }
+}
+
+class ProductionRecord {
+  final int productionId;
+  final String batchId;
+  final String varietyType;
+  final double totalLength;
+  final int readyProduction;
+  final double wasteProduction;
+  final double remainingProduction;
+  final String? machineName;
+  final double amountPerMeter;
+  final double amount;
+  final String? selectDays;
+  final String? shiftStart;
+  final String? shiftEnd;
+  final String? createdAt;
+
+  ProductionRecord({
+    required this.productionId,
+    required this.batchId,
+    required this.varietyType,
+    required this.totalLength,
+    required this.readyProduction,
+    required this.wasteProduction,
+    required this.remainingProduction,
+    this.machineName,
+    required this.amountPerMeter,
+    required this.amount,
+    this.selectDays,
+    this.shiftStart,
+    this.shiftEnd,
+    this.createdAt,
+  });
+
+  factory ProductionRecord.fromJson(Map<String, dynamic> json) {
+    return ProductionRecord(
+      productionId: int.tryParse(json['production_id'].toString()) ?? 0,
+      batchId: json['batch_id'] ?? '',
+      varietyType: json['variety_type'] ?? '',
+      totalLength: double.tryParse(json['total_length'].toString()) ?? 0,
+      readyProduction: int.tryParse(json['ready_production'].toString()) ?? 0,
+      wasteProduction: double.tryParse(json['waste_production'].toString()) ?? 0,
+      remainingProduction:
+          double.tryParse(json['remaining_production'].toString()) ?? 0,
+      machineName: json['machine_name'],
+      amountPerMeter: double.tryParse(json['amount_per_meter'].toString()) ?? 0,
+      amount: double.tryParse(json['amount'].toString()) ?? 0,
+      selectDays: json['select_days'],
+      shiftStart: json['shift_start'],
+      shiftEnd: json['shift_end'],
+      createdAt: json['created_at'],
+    );
+  }
+}
+
 class PaymentsScreen extends StatefulWidget {
   final int factoryId;
 
@@ -13,10 +137,26 @@ class PaymentsScreen extends StatefulWidget {
   State<PaymentsScreen> createState() => _PaymentsScreenState();
 }
 
+class Employee {
+  final int id;
+  final String name;
+  final double totalProduction;
+  final double readyProduction;
+  final double amountToBePaid;
+
+  Employee({
+    required this.id,
+    required this.name,
+    required this.totalProduction,
+    required this.readyProduction,
+    required this.amountToBePaid,
+  });
+}
+
 class _PaymentsScreenState extends State<PaymentsScreen> {
   final PaymentService _paymentService = PaymentService();
 
-  List<varietytypePayment> _varietytype = [];
+  List<EmployeePayment> _employees = [];
   bool _isLoading = true;
   String? _error;
 
@@ -26,34 +166,405 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     _fetchPayments();
   }
 
-  Widget _buildFPB(BuildContext context) {
-    final theme = Theme.of(context);
+  Widget _paymentInfoRow(
+    String title,
+    String value, {
+    bool isBold = false,
+  }) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            color: Colors.grey.shade700,
+            fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
+          ),
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: isBold ? FontWeight.w800 : FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
 
+
+    void _showAddPaymentDialog(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
+    final amountToPayCtrl = TextEditingController();
+
+    EmployeePayment? selectedEmployee;
+    ProductionRecord? selectedProduction; // ✅ NEW
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20),
+        ),
+      ),
+      builder: (sheetContext) {
+        return StatefulBuilder(
+          builder: (context, setSheetState) {
+            // ✅ Sirf wahi productions jinka amount_per_meter set hai (0 ya null nahi)
+            final validProductions = selectedEmployee?.productions
+                .where((p) => p.amountPerMeter > 0)
+                    .toList() ??
+                [];
+
+            // ✅ Selected production ka ready amount (ready_production * rate)
+            final selectedProductionAmount = selectedProduction != null
+                ? selectedProduction!.readyProduction *
+                    selectedProduction!.amountPerMeter
+                : 0.0;
+
+            return Padding(
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 20,
+                bottom: MediaQuery.of(sheetContext).viewInsets.bottom + 20,
+              ),
+              child: SingleChildScrollView(
+                child: Form(
+                  key: formKey,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Add Payment',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // ==================================================
+                      // EMPLOYEE SELECT
+                      // ==================================================
+                      DropdownButtonFormField<EmployeePayment>(
+                        value: selectedEmployee,
+                        isExpanded: true,
+                        decoration: const InputDecoration(
+                          labelText: 'Select Employee',
+                          border: OutlineInputBorder(),
+                          prefixIcon: Icon(Icons.person_outline),
+                        ),
+                        items: _employees.map((employee) {
+                          final name = employee.employeeName?.trim().isNotEmpty == true
+                              ? employee.employeeName!
+                              : 'Employee #${employee.employeeId}';
+
+                          return DropdownMenuItem<EmployeePayment>(
+                            value: employee,
+                            child: Text(
+                              '$name (${employee.employeeId})',
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (employee) {
+                          setSheetState(() {
+                            selectedEmployee = employee;
+                            selectedProduction = null; // ✅ reset production selection
+                            amountToPayCtrl.clear();
+                          });
+                        },
+                        validator: (value) {
+                          if (value == null) {
+                            return 'Please select an employee';
+                          }
+                          return null;
+                        },
+                      ),
+
+                      // ==================================================
+                      // PRODUCTION SELECT (✅ NEW)
+                      // ==================================================
+                      if (selectedEmployee != null) ...[
+                        const SizedBox(height: 16),
+
+                        if (validProductions.isEmpty)
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(12),
+                            decoration: BoxDecoration(
+                              color: Colors.orange.withOpacity(0.08),
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.orange.withOpacity(0.3)),
+                            ),
+                            child: const Text(
+                              'No priced production found for this employee (amount_per_meter is 0/not set).',
+                              style: TextStyle(fontSize: 12, color: Colors.orange),
+                            ),
+                          )
+                        else
+                          DropdownButtonFormField<ProductionRecord>(
+                            value: selectedProduction,
+                            isExpanded: true,
+                            decoration: const InputDecoration(
+                              labelText: 'Select Production',
+                              border: OutlineInputBorder(),
+                              prefixIcon: Icon(Icons.inventory_2_outlined),
+                            ),
+                            items: validProductions.map((p) {
+                              return DropdownMenuItem<ProductionRecord>(
+                                value: p,
+                                child: Text(
+                                  '${p.varietyType} • ${p.batchId} • Rs ${p.amountPerMeter.toStringAsFixed(0)}/m',
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (production) {
+                              setSheetState(() {
+                                selectedProduction = production;
+
+                                if (production != null) {
+                                  final amount = production.readyProduction *
+                                      production.amountPerMeter;
+                                  amountToPayCtrl.text = amount.toStringAsFixed(0);
+                                } else {
+                                  amountToPayCtrl.clear();
+                                }
+                              });
+                            },
+                            validator: (value) {
+                              if (value == null) {
+                                return 'Please select a production';
+                              }
+                              return null;
+                            },
+                          ),
+                      ],
+
+                      // ==================================================
+                      // PRODUCTION INFORMATION (✅ shows only selected production's info)
+                      // ==================================================
+                      if (selectedProduction != null) ...[
+                        const SizedBox(height: 20),
+
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: AppTheme.background,
+                            borderRadius: BorderRadius.circular(14),
+                            border: Border.all(
+                              color: AppTheme.primary.withOpacity(0.08),
+                            ),
+                          ),
+                          child: Column(
+                            children: [
+                              _paymentInfoRow(
+                                'Employee',
+                                selectedEmployee!.employeeName ??
+                                    'Employee #${selectedEmployee!.employeeId}',
+                              ),
+                              const SizedBox(height: 12),
+                              _paymentInfoRow(
+                                'Batch',
+                                selectedProduction!.batchId,
+                              ),
+                              const SizedBox(height: 12),
+                              _paymentInfoRow(
+                                'Ready Production',
+                                '${_formatAmount(selectedProduction!.readyProduction.toDouble())} m',
+                              ),
+                              const SizedBox(height: 12),
+                              _paymentInfoRow(
+                                'Rate / meter',
+                                'Rs ${selectedProduction!.amountPerMeter.toStringAsFixed(2)}',
+                              ),
+                              const Divider(height: 24),
+                              _paymentInfoRow(
+                                'Payable Amount (Ready)',
+                                'Rs ${_formatAmount(selectedProductionAmount)}',
+                                isBold: true,
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: 18),
+
+                        // ==================================================
+                        // AMOUNT TO PAY
+                        // ==================================================
+                        TextFormField(
+                          controller: amountToPayCtrl,
+                          keyboardType: const TextInputType.numberWithOptions(
+                            decimal: true,
+                          ),
+                          decoration: const InputDecoration(
+                            labelText: 'Amount to Pay',
+                            hintText: 'Enter amount',
+                            prefixText: 'Rs. ',
+                            border: OutlineInputBorder(),
+                            prefixIcon: Icon(Icons.payments_outlined),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Please enter amount';
+                            }
+
+                            final amount = double.tryParse(value.trim().replaceAll(',', ''));
+
+                            if (amount == null) {
+                              return 'Please enter a valid amount';
+                            }
+
+                            if (amount <= 0) {
+                              return 'Amount must be greater than 0';
+                            }
+
+                            if (amount > selectedProductionAmount) {
+                              return 'Amount cannot exceed Rs ${_formatAmount(selectedProductionAmount)}';
+                            }
+
+                            return null;
+                          },
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        // ==================================================
+                        // SAVE
+                        // ==================================================
+                                               SizedBox(
+                          width: double.infinity,
+                          height: 50,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              if (!formKey.currentState!.validate()) {
+                                return;
+                              }
+
+                              final employee = selectedEmployee!;
+                              final production = selectedProduction!;
+
+                              final amount = double.parse(
+                                amountToPayCtrl.text
+                                    .trim()
+                                    .replaceAll(',', ''),
+                              );
+
+                              debugPrint('Employee ID: ${employee.employeeId}');
+                              debugPrint('Production ID: ${production.productionId}');
+                              debugPrint('Batch: ${production.batchId}');
+                              debugPrint('Amount Paying Now: $amount');
+
+                              // ✅ Loading indicator
+                              showDialog(
+                                context: sheetContext,
+                                barrierDismissible: false,
+                                builder: (_) => const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+
+                              try {
+                                await _paymentService.addPayment(
+                                  employeeId: employee.employeeId,
+                                  // apna actual getter use karo
+                                  amountPaid: amount,
+                                  productionId: production.productionId, // ✅ NEW
+                                );
+
+                                Navigator.pop(sheetContext); // loading band
+                                Navigator.pop(sheetContext); // bottom sheet band
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Payment saved successfully'),
+                                    backgroundColor: Colors.green,
+                                  ),
+                                );
+
+                                _fetchPayments(); // list refresh
+                              } catch (e) {
+                                Navigator.pop(sheetContext); // loading band
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Failed to save payment: $e'),
+                                    backgroundColor: Colors.red,
+                                  ),
+                                );
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppTheme.primary,
+                              foregroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: const Text(
+                              'Save Payment',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+  
+  Widget _buildFPB(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-             AppTheme.primary,
-             AppTheme.primary.withOpacity(0.8),
-          ],
-        ),
-        borderRadius: BorderRadius.circular(16),
+        color: AppTheme.primary,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: AppTheme.softShadow,
       ),
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: () => (){},
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+        borderRadius: BorderRadius.circular(14),
+        onTap: () {
+          _showAddPaymentDialog(context);
+        },
+        // onTap: () {
+        //   debugPrint('FAB tapped');
+        //   showDialog(
+        //     context: context,
+        //     builder: (_) => AlertDialog(
+        //       title: Text('Test'),
+        //       content: Text('Dialog works'),
+        //     ),
+        //   );
+        // },
+        child: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.add, color:AppTheme.secondary ),
-              const SizedBox(width: 6),
+              Icon(Icons.add_rounded, color: AppTheme.secondary, size: 20),
+              SizedBox(width: 6),
               Text(
                 "Add Payments",
                 style: TextStyle(
-                  color:AppTheme.secondary,
-                  fontWeight: FontWeight.w600,
+                  color: AppTheme.secondary,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 13,
                 ),
               ),
             ],
@@ -63,6 +574,386 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     );
   }
 
+    Widget _buildViewPaymentsButton(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(14),
+        boxShadow: AppTheme.softShadow,
+        border: Border.all(color: AppTheme.primary.withOpacity(0.15)),
+      ),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(14),
+        onTap: () {
+          _showViewPaymentsDialog(context);
+        },
+        child: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.visibility_outlined, color: AppTheme.primary, size: 20),
+              SizedBox(width: 6),
+              Text(
+                "View Payments",
+                style: TextStyle(
+                  color: AppTheme.primary,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 13,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  void _confirmDeletePayment(
+    BuildContext context,
+    BuildContext sheetContext,
+    int paymentId,
+  ) {
+    showDialog(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: const Text('Delete Payment'),
+          content: const Text('Are you sure you want to delete this payment record?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(dialogContext); // confirm dialog band
+
+                try {
+                  await _paymentService.deletePayment(paymentId);
+
+                  Navigator.pop(sheetContext); // payment history sheet band
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Payment deleted successfully'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+
+                  _fetchPayments(); // main list refresh
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Failed to delete payment: $e'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
+              child: const Text('Delete', style: TextStyle(color: AppTheme.error)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+    void _showEditPaymentDialog(
+    BuildContext context,
+    BuildContext sheetContext,
+    Map<String, dynamic> payment,
+  ) {
+    final paymentId = int.tryParse(payment['id'].toString()) ?? 0;
+    final currentAmount =
+        double.tryParse(payment['amount_paid'].toString()) ?? 0;
+
+    final editFormKey = GlobalKey<FormState>();
+    final editAmountCtrl =
+        TextEditingController(text: currentAmount.toStringAsFixed(0));
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (editSheetContext) {
+        return Padding(
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 20,
+            bottom: MediaQuery.of(editSheetContext).viewInsets.bottom + 20,
+          ),
+          child: Form(
+            key: editFormKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Edit Payment',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+                ),
+                const SizedBox(height: 20),
+                TextFormField(
+                  controller: editAmountCtrl,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  decoration: const InputDecoration(
+                    labelText: 'Amount Paid',
+                    hintText: 'Enter amount',
+                    prefixText: 'Rs. ',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.payments_outlined),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return 'Please enter amount';
+                    }
+                    final amount = double.tryParse(value.trim().replaceAll(',', ''));
+                    if (amount == null) {
+                      return 'Please enter a valid amount';
+                    }
+                    if (amount <= 0) {
+                      return 'Amount must be greater than 0';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (!editFormKey.currentState!.validate()) {
+                        return;
+                      }
+
+                      final newAmount = double.parse(
+                        editAmountCtrl.text.trim().replaceAll(',', ''),
+                      );
+
+                      showDialog(
+                        context: editSheetContext,
+                        barrierDismissible: false,
+                        builder: (_) => const Center(child: CircularProgressIndicator()),
+                      );
+
+                      try {
+                        await _paymentService.updatePayment(
+                          paymentId: paymentId,
+                          amountPaid: newAmount,
+                        );
+
+                        Navigator.pop(editSheetContext); // loading band
+                        Navigator.pop(editSheetContext); // edit sheet band
+                        Navigator.pop(sheetContext); // payment history sheet band
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Payment updated successfully'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+
+                        _fetchPayments(); // main list refresh
+                      } catch (e) {
+                        Navigator.pop(editSheetContext); // loading band
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Failed to update payment: $e'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.primary,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                    child: const Text(
+                      'Update Payment',
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+
+
+  void _showViewPaymentsDialog(BuildContext context) {
+     showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20),
+        ),
+      ),
+      builder: (sheetContext) {
+        return FutureBuilder<Map<String, dynamic>>(
+          future: _paymentService.fetchAllPayments(widget.factoryId), // ✅ service mein add karna hoga
+          builder: (context, snapshot) {
+            return Padding(
+              padding: EdgeInsets.only(
+                left: 20,
+                right: 20,
+                top: 20,
+                bottom: MediaQuery.of(sheetContext).viewInsets.bottom + 20,
+              ),
+              child: SizedBox(
+                height: MediaQuery.of(sheetContext).size.height * 0.7,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Payment History',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Expanded(
+                      child: Builder(
+                        builder: (_) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(color: AppTheme.primary),
+                            );
+                          }
+
+                          if (snapshot.hasError) {
+                            return Center(
+                              child: Text(
+                                'Failed to load payments: ${snapshot.error}',
+                                style: const TextStyle(color: AppTheme.error),
+                              ),
+                            );
+                          }
+
+                          final List list = snapshot.data?['data'] as List? ?? [];
+
+                          if (list.isEmpty) {
+                            return const Center(
+                              child: Text(
+                                'No payments recorded yet',
+                                style: TextStyle(color: AppTheme.primary),
+                              ),
+                            );
+                          }
+
+                          return ListView.separated(
+                            itemCount: list.length,
+                            separatorBuilder: (_, __) => const Divider(height: 20),
+                            itemBuilder: (context, index) {
+                              final payment = list[index] as Map<String, dynamic>;
+
+                              final employeeName = payment['employee']?['user']?['name'] ??
+                              'Employee #${payment['employee_id']}';
+                              final amountPaid =
+                              double.tryParse(payment['amount_paid'].toString()) ?? 0;
+                              final createdAt = payment['created_at']?.toString() ?? '';
+                              final batchId =
+                              payment['production']?['batch_id']?.toString();
+
+                              final paymentId = int.tryParse(payment['id'].toString()) ?? 0;
+
+                              return ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                leading: Container(
+                                  padding: const EdgeInsets.all(9),
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.primary.withOpacity(0.08),
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: const Icon(Icons.receipt_long_rounded,
+                                      color: AppTheme.primary, size: 18),
+                                ),
+                                title: Text(
+                                  employeeName,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w700, fontSize: 14),
+                                ),
+                                subtitle: Text(
+                                  batchId != null
+                                      ? 'Batch: $batchId  •  $createdAt'
+                                      : createdAt,
+                                  style: TextStyle(
+                                      color: AppTheme.primary.withOpacity(0.55),
+                                      fontSize: 11),
+                                ),
+                                                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      'Rs ${_formatAmount(amountPaid)}',
+                                      style: const TextStyle(
+                                          color: AppTheme.success,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w800),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    InkWell(
+                                      borderRadius: BorderRadius.circular(20),
+                                      onTap: () => _showEditPaymentDialog(
+                                        context,
+                                        sheetContext,
+                                        payment,
+                                      ),
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(6),
+                                        child: Icon(
+                                          Icons.edit_outlined,
+                                          color: AppTheme.primary,
+                                          size: 20,
+                                        ),
+                                      ),
+                                    ),
+                                    InkWell(
+                                      borderRadius: BorderRadius.circular(20),
+                                      onTap: () => _confirmDeletePayment(
+                                        context,
+                                        sheetContext,
+                                        paymentId,
+                                      ),
+                                      child: const Padding(
+                                        padding: EdgeInsets.all(6),
+                                        child: Icon(
+                                          Icons.delete_outline_rounded,
+                                          color: AppTheme.error,
+                                          size: 20,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
   Future<void> _fetchPayments() async {
     setState(() {
       _isLoading = true;
@@ -70,10 +961,19 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     });
 
     try {
-      final data = await _paymentService.fetchvarietytypePayments(widget.factoryId);
+      // PaymentService just needs to hit the employee-wise endpoint and
+      // return the decoded JSON body (e.g. Dio's `response.data` or
+      // `jsonDecode(response.body)`), a Map like: { "data": [ {...}, ... ] }.
+      // All parsing into EmployeePayment happens right here, so no separate
+      // model file is required.
+      final raw = await _paymentService.fetchvarietytypePayments(widget.factoryId);
+      final List list = raw['data'] as List? ?? [];
+      final data = list
+          .map((e) => EmployeePayment.fromJson(e as Map<String, dynamic>))
+          .toList();
 
       setState(() {
-        _varietytype = data.varietytype;
+        _employees = data;
         _isLoading = false;
       });
     } catch (e) {
@@ -84,13 +984,12 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     }
   }
 
-  // Everything below is derived automatically from the 3 fields the API
-  // gives us per varietytype (variety_type, total_length, amount_per_meter).
+  // Grand totals across all employees.
   double get _grandTotalAmount =>
-      _varietytype.fold(0, (sum, b) => sum + b.totalAmount);
+      _employees.fold(0, (sum, e) => sum + e.totalAmount);
 
   double get _grandTotalLength =>
-      _varietytype.fold(0, (sum, b) => sum + b.totalLength);
+      _employees.fold(0, (sum, e) => sum + e.totalLength);
 
   double get _overallRatePerMeter =>
       _grandTotalLength == 0 ? 0 : _grandTotalAmount / _grandTotalLength;
@@ -101,41 +1000,42 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       backgroundColor: AppTheme.background,
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
-        foregroundColor: AppTheme.secondary,
         elevation: 0,
         title: const Text(
-          'Variety Payments',
-          style: TextStyle(fontWeight: FontWeight.w600),
+          'Employee Payments',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 17),
         ),
-        centerTitle: false,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: _buildBody(),
-      floatingActionButton: _buildFPB(context),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          _buildViewPaymentsButton(context), // ✅ NEW
+          const SizedBox(height: 12),
+          _buildFPB(context),
+
+        ],
+      ),
+       bottomNavigationBar: CustomBottomNav(    
+        currentIndex: 2,
+        factoryId: widget.factoryId,
+      ),
     );
   }
 
   Widget _buildBody() {
     if (_isLoading) {
-      return const Center(child: CircularProgressIndicator());
+      return const Center(child: CircularProgressIndicator(color: AppTheme.primary));
     }
 
     if (_error != null) {
-      return Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(_error!, style: const TextStyle(color: Colors.red)),
-            const SizedBox(height: 12),
-            ElevatedButton(
-              onPressed: _fetchPayments,
-              child: const Text('Retry'),
-            ),
-          ],
-        ),
-      );
+      return _errorView();
     }
 
     return RefreshIndicator(
+      color: AppTheme.primary,
       onRefresh: _fetchPayments,
       child: ListView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
@@ -145,22 +1045,39 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               color: AppTheme.primary,
-              borderRadius: BorderRadius.circular(18),
+              borderRadius: AppTheme.cardRadius,
+              boxShadow: AppTheme.softShadow,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'Total Payment (All Varieties)',
-                  style: TextStyle(color: AppTheme.neutral, fontSize: 13),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(9),
+                      decoration: BoxDecoration(
+                        color: AppTheme.secondary.withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Icon(Icons.payments_rounded,
+                          color: AppTheme.secondary, size: 18),
+                    ),
+                    const SizedBox(width: 12),
+                    const Expanded(
+                      child: Text(
+                        'Total Payment (All Employees)',
+                        style: TextStyle(color: AppTheme.surface, fontSize: 12, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 12),
                 Text(
                   'Rs ${_formatAmount(_grandTotalAmount)}',
                   style: const TextStyle(
                     color: AppTheme.secondary,
                     fontSize: 28,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
                 const SizedBox(height: 18),
@@ -170,15 +1087,15 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                       label: 'Total Length',
                       value: '${_formatAmount(_grandTotalLength)} m',
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 8),
                     _SummaryStat(
                       label: 'Avg Rate / m',
                       value: 'Rs ${_overallRatePerMeter.toStringAsFixed(1)}',
                     ),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: 8),
                     _SummaryStat(
-                      label: 'Varieties',
-                      value: '${_varietytype.length}',
+                      label: 'Employees',
+                      value: '${_employees.length}',
                     ),
                   ],
                 ),
@@ -188,31 +1105,70 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
 
           const SizedBox(height: 20),
 
-          const Text(
-            'Variety Wise Calculation',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+          Row(
+            children: [
+              const Text(
+                'Employee Wise Calculation',
+                style: TextStyle(
+                    color: AppTheme.textPrimary, fontSize: 15, fontWeight: FontWeight.w700),
+              ),
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: AppTheme.primary.withOpacity(.08),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  '${_employees.length}',
+                  style: const TextStyle(
+                      color: AppTheme.primary, fontSize: 11, fontWeight: FontWeight.w700),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 12),
 
-          if (_varietytype.isEmpty)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 40),
-              child: Center(child: Text('No payment variety found')),
-            )
+          if (_employees.isEmpty)
+            _emptyView()
           else
-            ...List.generate(_varietytype.length, (index) {
-              final varietytype = _varietytype[index];
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: _varietytypePaymentTile(record: varietytype),
-              );
-            }),
+          ...List.generate(_employees.length, (index) {
+            final employee = _employees[index];
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: _EmployeePaymentTile(record: employee),
+            );
+          }),
         ],
       ),
     );
   }
+
+  Widget _emptyView() => Center(
+    child: Column(mainAxisSize: MainAxisSize.min, children: [
+      const SizedBox(height: 28),
+      Icon(Icons.inbox_rounded, size: 52, color: AppTheme.neutral),
+      const SizedBox(height: 12),
+      const Text('No employee payments found',
+          style: TextStyle(color: AppTheme.primary, fontSize: 14, fontWeight: FontWeight.w600)),
+    ]),
+  );
+
+  Widget _errorView() => Center(
+    child: Column(mainAxisSize: MainAxisSize.min, children: [
+      const Icon(Icons.error_outline_rounded, size: 48, color: AppTheme.error),
+      const SizedBox(height: 12),
+      Text(_error ?? 'Something went wrong',
+          style: const TextStyle(color: AppTheme.primary)),
+      const SizedBox(height: 16),
+      ElevatedButton(onPressed: _fetchPayments, child: const Text('Retry')),
+    ]),
+  );
 }
-// Helper
+
+// ============================================================
+// Helpers
+// ============================================================
 
 String _formatAmount(double value) {
   final str = value.toStringAsFixed(0);
@@ -238,128 +1194,300 @@ class _SummaryStat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: const TextStyle(color: AppTheme.neutral, fontSize: 12),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: const TextStyle(
-              color: AppTheme.secondary,
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _varietytypePaymentTile extends StatelessWidget {
- 
-   final varietytypePayment record;
-
-  const _varietytypePaymentTile({required this.record});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppTheme.secondary,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.onsurface.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // ---- Header: varietytype ----
-          Text(
-            'Variety #${record.varietytype}',
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 14,
-            ),
-          ),
-          if (record.employeeName != null && record.employeeName!.isNotEmpty) ...[
-            const SizedBox(height: 2),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 7),
+        decoration: BoxDecoration(
+          color: AppTheme.secondary.withOpacity(0.08),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: AppTheme.secondary.withOpacity(0.10)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             Text(
-              'By ${record.employeeName}',
-              style: const TextStyle(
-                fontSize: 12,
-                color: AppTheme.neutral,
+              label,
+              style: TextStyle(color: AppTheme.surface.withOpacity(0.85), fontSize: 9, fontWeight: FontWeight.w600),
+            ),
+            const SizedBox(height: 2),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                value,
+                maxLines: 1,
+                style: const TextStyle(
+                  color: AppTheme.secondary,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
           ],
-
-          const SizedBox(height: 14),
-          const Divider(height: 1, color: AppTheme.background),
-          const SizedBox(height: 14),
-
-          // Calculation row
-          Row(
-            children: [
-              Expanded(
-                child: _CalcPoint(
-                  label: 'Total Length',
-                  value: '${_formatAmount(record.totalLength)} m',
-                ),
-              ),
-              Expanded(
-                child: _CalcPoint(
-                  label: 'Amount / Meter',
-                  value: 'Rs ${record.amountPerMeter.toStringAsFixed(2)}',
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          _CalcPoint(
-            label: 'Total Amount',
-            value: 'Rs ${_formatAmount(record.totalAmount)}',
-          ),
-        ],
+        ),
       ),
     );
   }
 }
 
-class _CalcPoint extends StatelessWidget {
-  final String label;
-  final String value;
+/// Expandable card for a single employee: header shows name + total earned,
+/// plus factory/manager context, and expands to a list of every production
+/// row that makes up that total.
+class _EmployeePaymentTile extends StatelessWidget {
+  final EmployeePayment record;
 
-  const _CalcPoint({required this.label, required this.value});
+  const _EmployeePaymentTile({required this.record});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(color: AppTheme.neutral, fontSize: 11),
-        ),
-        const SizedBox(height: 3),
-        Text(
-          value,
-          style: const TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w700,
-            color: AppTheme.primary,
+    final displayName = (record.employeeName == null || record.employeeName!.isEmpty)
+        ? 'Employee #${record.employeeId}'
+        : record.employeeName!;
+
+    // Build the subtitle line dynamically so it still looks clean when
+    // factory_name / manager_name are null.
+    final subtitleParts = <String>[
+      '${record.productions.length} production${record.productions.length == 1 ? '' : 's'}',
+      '${_formatAmount(record.totalLength)} m',
+    ];
+    if (record.factoryName != null && record.factoryName!.isNotEmpty) {
+      subtitleParts.add(record.factoryName!);
+    }
+
+    return Container(
+      decoration: BoxDecoration(
+        color: AppTheme.secondary,
+        borderRadius: AppTheme.cardRadius,
+        boxShadow: AppTheme.softShadow,
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Theme(
+        // Kill the default divider ExpansionTile draws.
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          tilePadding: const EdgeInsets.all(16),
+          childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+          leading: Container(
+            padding: const EdgeInsets.all(9),
+            decoration: BoxDecoration(
+              color: AppTheme.primary.withOpacity(0.08),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: const Icon(Icons.person_rounded, color: AppTheme.primary, size: 18),
           ),
+          title: Text(
+            displayName,
+            style: const TextStyle(
+                color: AppTheme.textPrimary, fontWeight: FontWeight.w700, fontSize: 14),
+          ),
+          subtitle: Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  subtitleParts.join(' • '),
+                  style: TextStyle(color: AppTheme.primary.withOpacity(0.55), fontSize: 11),
+                ),
+                if (record.managerName != null && record.managerName!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Text(
+                      'Manager: ${record.managerName}',
+                      style: TextStyle(color: AppTheme.primary.withOpacity(0.45), fontSize: 10.5),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          trailing: Text(
+            'Rs ${_formatAmount(record.totalAmount)}',
+            style: const TextStyle(
+                color: AppTheme.success, fontSize: 13, fontWeight: FontWeight.w800),
+          ),
+          children: [
+            if (record.productions.isEmpty)
+              const Padding(
+                padding: EdgeInsets.only(bottom: 8),
+                child: Text('No production records',
+                    style: TextStyle(color: AppTheme.textPrimary, fontSize: 12)),
+              )
+            else
+              ...record.productions.map((p) => Padding(
+                padding: const EdgeInsets.only(bottom: 10),
+                child: _ProductionRow(record: p),
+              )),
+          ],
         ),
-      ],
+      ),
+    );
+  }
+}
+
+/// A single production entry. Tappable — opens a bottom sheet with the full
+/// detail (machine, remaining production, shift, timestamps, etc).
+class _ProductionRow extends StatelessWidget {
+  final ProductionRecord record;
+
+  const _ProductionRow({required this.record});
+
+  void _showDetail(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppTheme.secondary,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 28),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: AppTheme.primary.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Production #${record.productionId}',
+                style: const TextStyle(
+                    color: AppTheme.textPrimary, fontSize: 16, fontWeight: FontWeight.w800),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                record.batchId.isEmpty ? 'No batch' : record.batchId,
+                style: TextStyle(color: AppTheme.primary.withOpacity(0.55), fontSize: 12),
+              ),
+              const SizedBox(height: 16),
+              _detailRow('Variety', record.varietyType),
+              _detailRow('Machine', record.machineName ?? '—'),
+              _detailRow('Total Length', '${_formatAmount(record.totalLength)} m'),
+              _detailRow('Ready Production', '${record.readyProduction} m'),
+              _detailRow('Waste Production', '${_formatAmount(record.wasteProduction)} m'),
+              _detailRow('Remaining Production', '${_formatAmount(record.remainingProduction)} m'),
+              _detailRow('Rate / meter', 'Rs ${record.amountPerMeter.toStringAsFixed(2)}'),
+              _detailRow('Amount', 'Rs ${_formatAmount(record.amount)}'),
+              if (record.selectDays != null && record.selectDays != 'null')
+                _detailRow('Day', record.selectDays!),
+              if (record.shiftStart != null)
+                _detailRow('Shift', '${record.shiftStart} - ${record.shiftEnd}'),
+              if (record.createdAt != null)
+                _detailRow('Created', record.createdAt!),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _detailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(label,
+                style: TextStyle(color: AppTheme.primary.withOpacity(0.6), fontSize: 12)),
+          ),
+          Text(value,
+              style: const TextStyle(
+                  color: AppTheme.textPrimary, fontSize: 12, fontWeight: FontWeight.w700)),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => _showDetail(context),
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: AppTheme.background,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: AppTheme.primary.withOpacity(0.06)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    '${record.varietyType} • ${record.batchId}',
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        color: AppTheme.textPrimary, fontSize: 12, fontWeight: FontWeight.w700),
+                  ),
+                ),
+                Text(
+                  'Rs ${_formatAmount(record.amount)}',
+                  style: const TextStyle(
+                      color: AppTheme.success, fontSize: 12, fontWeight: FontWeight.w800),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Row(
+              children: [
+                _miniStat('Length', '${_formatAmount(record.totalLength)} m'),
+                const SizedBox(width: 6),
+                _miniStat('Rate/m', 'Rs ${record.amountPerMeter.toStringAsFixed(2)}'),
+                const SizedBox(width: 6),
+                _miniStat('Ready', '${record.readyProduction} m'),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Row(
+              children: [
+                _miniStat('Remaining', '${_formatAmount(record.remainingProduction)} m'),
+                const SizedBox(width: 6),
+                _miniStat('Waste', '${_formatAmount(record.wasteProduction)} m'),
+                const SizedBox(width: 6),
+                _miniStat('Machine', record.machineName ?? '—'),
+              ],
+            ),
+            if (record.selectDays != null && record.selectDays!.isNotEmpty && record.selectDays != 'null') ...[
+              const SizedBox(height: 6),
+              Text(
+                'Days: ${record.selectDays}',
+                style: TextStyle(color: AppTheme.primary.withOpacity(0.5), fontSize: 10),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _miniStat(String label, String value) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label,
+              style: TextStyle(
+                  color: AppTheme.primary.withOpacity(0.5), fontSize: 9, fontWeight: FontWeight.w600)),
+          const SizedBox(height: 2),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(value,
+                maxLines: 1,
+                style: const TextStyle(
+                    color: AppTheme.textPrimary, fontSize: 11, fontWeight: FontWeight.w700)),
+          ),
+        ],
+      ),
     );
   }
 }

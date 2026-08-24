@@ -308,7 +308,7 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
                   label: const Text('Approve'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.success,
-                    foregroundColor: Colors.white,
+                    foregroundColor: AppTheme.secondary,
                     elevation: 0,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     padding: const EdgeInsets.symmetric(vertical: 11),

@@ -21,7 +21,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: ListView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
         children: [
-          _buildProfileCard(),
+          // _buildProfileCard(),
           const SizedBox(height: 20),
           _buildSection(
             title: "Account",

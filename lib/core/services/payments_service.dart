@@ -1,13 +1,12 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:techstile_frontend/core/services/auth_service.dart';
 
 class PaymentService {
   final String baseUrl = "http://localhost:8000/api/payments";
 
-  // FETCH ALL BATCH PAYMENTS 
-  Future<PaymentsData> fetchvarietytypePayments(int factoryId) async {
+  Future<Map<String, dynamic>> fetchvarietytypePayments(int factoryId) async {
     try {
       print("TOKEN: ${AuthService.token}");
 print("HEADERS: ${AuthService.authHeaders}");
@@ -16,64 +15,133 @@ print("HEADERS: ${AuthService.authHeaders}");
         headers: AuthService.authHeaders,
       );
 
+      debugPrint("Payments Status: ${response.statusCode}");
+      debugPrint("Payments Response: ${response.body}");
+
       if (response.statusCode == 200) {
-        final Map<String, dynamic> body = jsonDecode(response.body);
-        final List<dynamic> data = body['data'] ?? [];
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      }
 
-        final varietytype = data.map((b) => varietytypePayment.fromJson(b)).toList();
+      throw Exception(
+        "Failed to fetch payments. Status: ${response.statusCode}",
+      );
+    } catch (e) {
+      debugPrint("Fetch Payments Error: $e");
+      rethrow;
+    }
+  }
 
-        return PaymentsData(
-          varietytype: varietytype,
-          totalAmount: varietytype.fold(0.0, (sum, b) => sum + b.totalAmount),
-          totalLength: varietytype.fold(0.0, (sum, b) => sum + b.totalLength),
+  Future<Map<String, dynamic>> addPayment({
+    required int employeeId,
+    
+    required double amountPaid,
+    required int productionId, 
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse(baseUrl),
+        headers: {
+          ...AuthService.authHeaders,
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          "employee_id": employeeId,
+          "amount_paid": amountPaid,
+          "production_id": productionId, // ✅ NEW
+        }),
+      );
+
+      debugPrint("Add Payment Status: ${response.statusCode}");
+      debugPrint("Add Payment Response: ${response.body}");
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      }
+
+      throw Exception(
+        "Failed to save payment. Status: ${response.statusCode}, Body: ${response.body}",
+      );
+    } catch (e) {
+      debugPrint("Add Payment Error: $e");
+      rethrow;
+    }
+  }
+  Future<Map<String, dynamic>> fetchAllPayments(int factoryId) async {
+    try {
+      final response = await http.get(
+        Uri.parse("$baseUrl?factory_id=$factoryId"),
+        headers: AuthService.authHeaders,
+      );
+
+      debugPrint("Fetch All Payments Status: ${response.statusCode}");
+      debugPrint("Fetch All Payments Response: ${response.body}");
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      }
+
+      throw Exception(
+        "Failed to fetch payments. Status: ${response.statusCode}",
+      );
+    } catch (e) {
+      debugPrint("Fetch All Payments Error: $e");
+      rethrow;
+    }
+  }
+   Future<void> deletePayment(int paymentId) async {
+    try {
+      final response = await http.delete(
+        Uri.parse("$baseUrl/$paymentId"),
+        headers: AuthService.authHeaders,
+      );
+
+      debugPrint("Delete Payment Status: ${response.statusCode}");
+      debugPrint("Delete Payment Response: ${response.body}");
+
+      if (response.statusCode != 200 && response.statusCode != 204) {
+        throw Exception(
+          "Failed to delete payment. Status: ${response.statusCode}",
         );
       }
     } catch (e) {
-      debugPrint("Fetch Payments Error: $e");
+      debugPrint("Delete Payment Error: $e");
+      rethrow;
     }
-    return PaymentsData(varietytype: []);
   }
-}
+  Future<Map<String, dynamic>> updatePayment({
+    required int paymentId,
+    required double amountPaid,
+  }) async {
+    try {
+      final response = await http.put(
+        Uri.parse("$baseUrl/$paymentId"),
+        headers: {
+          ...AuthService.authHeaders,
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          "amount_paid": amountPaid,
+        }),
+      );
 
-// Models
+      debugPrint("Update Payment Status: ${response.statusCode}");
+      debugPrint("Update Payment Response: ${response.body}");
 
-class PaymentsData {
-  final List<varietytypePayment> varietytype;
-  final double totalAmount;
-  final double totalLength;
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      }
 
-  PaymentsData({
-    required this.varietytype,
-    this.totalAmount = 0,
-    this.totalLength = 0,
-  });
-}
-
-class varietytypePayment {
-  final String varietytype;      // <- backend: variety_type
-  final double totalLength;      // <- backend: total_length
-  final double amountPerMeter;   // <- backend: amount_per_meter
-  final String? selectDays;      // <- backend: select_days
-  final String? employeeName;    // <- backend: employee_name
-
-  varietytypePayment({
-    required this.varietytype,
-    required this.totalLength,
-    required this.amountPerMeter,
-    this.selectDays,
-    this.employeeName,
-  });
-
-  factory varietytypePayment.fromJson(Map<String, dynamic> json) {
-    return varietytypePayment(
-      varietytype: json['variety_type'].toString(),
-      totalLength: (json['total_length'] as num?)?.toDouble() ?? 0,
-      amountPerMeter: (json['amount_per_meter'] as num?)?.toDouble() ?? 0,
-      selectDays: json['select_days']?.toString(),
-      employeeName: json['employee_name']?.toString(),
-    );
+      throw Exception(
+        "Failed to update payment. Status: ${response.statusCode}, Body: ${response.body}",
+      );
+    } catch (e) {
+      debugPrint("Update Payment Error: $e");
+      rethrow;
+    }
   }
 
-  /// total_amount = total_length * amount_per_meter (always computed, never fetched)
-  double get totalAmount => totalLength * amountPerMeter;
-}
+
+
+
+
+}  

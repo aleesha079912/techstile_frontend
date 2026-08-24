@@ -14,7 +14,7 @@ class ManagerSettingsScreen extends StatefulWidget {
 
   const ManagerSettingsScreen({
     super.key,
-    this.roleLabel = "Manager",
+    this.roleLabel = "Owner",
     this.profilePageBuilder,
   });
 
@@ -116,8 +116,8 @@ class _ManagerSettingsScreenState
                             borderRadius:
                                 BorderRadius.circular(20),
                           ),
-                          child: const Text(
-                            "Manager",
+                          child:  Text(
+                           user['role'] ?? '' ,
                             style: TextStyle(
                               color: AppTheme.secondary,
                               fontSize: 11,
@@ -169,7 +169,7 @@ class _ManagerSettingsScreenState
           SwitchListTile(
             value: autoBackup,
             activeColor: AppTheme.primary,
-            title: const Text("Auto Backup"),
+            title: const Text("Backup"),
             secondary: const Icon(
               Icons.backup_outlined,
             ),

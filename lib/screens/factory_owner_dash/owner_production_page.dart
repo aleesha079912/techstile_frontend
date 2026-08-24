@@ -226,7 +226,7 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage>
                   label: const Text('Approve'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppTheme.success,
-                    foregroundColor: Colors.white,
+                    foregroundColor: AppTheme.secondary,
                     elevation: 0,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     padding: const EdgeInsets.symmetric(vertical: 10),
@@ -307,7 +307,7 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage>
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 7),
         decoration: BoxDecoration(
-          color: AppTheme.background,
+          color: AppTheme.secondary,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: AppTheme.primary.withOpacity(0.06)),
         ),

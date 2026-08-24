@@ -264,13 +264,13 @@ class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: isSelected
-                    ? Colors.white.withOpacity(0.2)
+                    ? AppTheme.secondary.withOpacity(0.2)
                     : activeThemeColor.withOpacity(0.12),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Icon(
                 icon,
-                color: isSelected ? Colors.white : activeThemeColor,
+                color: isSelected ?  AppTheme.secondary : activeThemeColor,
                 size: 18,
               ),
             ),
@@ -282,7 +282,7 @@ class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
                   Text(
                     value,
                     style: TextStyle(
-                      color: isSelected ? Colors.white : activeThemeColor,
+                      color: isSelected ?  AppTheme.secondary : activeThemeColor,
                       fontSize: 18,
                       fontWeight: FontWeight.w800,
                     ),
@@ -291,7 +291,7 @@ class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
                     label,
                     style: TextStyle(
                       color: isSelected
-                          ? Colors.white.withOpacity(0.9)
+                          ?  AppTheme.secondary.withOpacity(0.9)
                           : AppTheme.textSecondary,
                       fontSize: 11,
                       fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,

@@ -58,7 +58,7 @@ class ManagerBottomNav extends StatelessWidget {
               final selected = i == currentIndex;
               final color = selected
                   ? AppTheme.secondary
-                  : Colors.white.withOpacity(0.5);
+                  : AppTheme.secondary.withOpacity(0.5);
 
               return Expanded(
                 child: InkWell(

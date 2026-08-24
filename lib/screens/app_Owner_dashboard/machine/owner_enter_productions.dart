@@ -65,7 +65,7 @@ class _OwnerEnterProductionScreenState
         "Error",
         "Maximum ${widget.remaining} allowed (ready + waste) — ye remaining dono shifts mila kar hai",
         backgroundColor: AppTheme.error,
-        colorText: Colors.white,
+        colorText: AppTheme.secondary,
       );
       return;
     }
@@ -94,14 +94,14 @@ class _OwnerEnterProductionScreenState
           "Success",
           "Production submitted for approval",
           backgroundColor: AppTheme.success,
-          colorText: Colors.white,
+          colorText: AppTheme.secondary,
         );
       } else {
         Get.snackbar(
           "Error",
           result['message']?.toString() ?? "Production not added",
           backgroundColor: AppTheme.error,
-          colorText: Colors.white,
+          colorText: AppTheme.secondary,
         );
       }
     } catch (e) {
@@ -115,15 +115,15 @@ class _OwnerEnterProductionScreenState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+        Text(label, style: const TextStyle(fontSize: 12, color: AppTheme.neutral)),
         const SizedBox(height: 6),
         Container(
           width: double.infinity,
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
           decoration: BoxDecoration(
-            color: const Color(0xFFF3F4F6),
+            color: AppTheme.secondary,
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: Colors.grey.shade300),
+            border: Border.all(color: AppTheme.neutral),
           ),
           child: Text(value, style: const TextStyle(fontSize: 15)),
         ),
@@ -138,7 +138,7 @@ class _OwnerEnterProductionScreenState
       appBar: AppBar(
         title: const Text("Enter Production"),
         backgroundColor: AppTheme.primary,
-        foregroundColor: Colors.white,
+        foregroundColor: AppTheme.secondary,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -169,7 +169,7 @@ class _OwnerEnterProductionScreenState
 
                 const SizedBox(height: 20),
                 const Text("Employee (Shift)",
-                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+                    style: TextStyle(fontSize: 12, color: AppTheme.neutral)),
                 const SizedBox(height: 6),
                 DropdownButtonFormField<Map<String, dynamic>>(
                   value: _selectedShift,
@@ -188,7 +188,7 @@ class _OwnerEnterProductionScreenState
 
                 const SizedBox(height: 15),
                 const Text("Ready Production",
-                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+                    style: TextStyle(fontSize: 12, color: AppTheme.neutral)),
                 const SizedBox(height: 6),
                 TextField(
                   controller: readyController,
@@ -201,7 +201,7 @@ class _OwnerEnterProductionScreenState
 
                 const SizedBox(height: 15),
                 const Text("Waste Production",
-                    style: TextStyle(fontSize: 12, color: Colors.grey)),
+                    style: TextStyle(fontSize: 12, color: AppTheme.neutral)),
                 const SizedBox(height: 6),
                 TextField(
                   controller: wasteController,
@@ -223,11 +223,11 @@ class _OwnerEnterProductionScreenState
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                     child: loading
-                        ? const CircularProgressIndicator(color: Colors.white)
+                        ? const CircularProgressIndicator(color: AppTheme.secondary)
                         : const Text(
                             "Submit Production",
                             style: TextStyle(
-                                color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+                                color:AppTheme.secondary, fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                   ),
                 ),

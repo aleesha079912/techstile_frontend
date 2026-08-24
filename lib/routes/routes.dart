@@ -5,6 +5,7 @@ import 'package:techstile_frontend/screens/employee_dashboard/machine_detail_scr
 import 'package:techstile_frontend/screens/employee_dashboard/profile.dart';
 import 'package:techstile_frontend/core/services/auth_service.dart';
 import 'package:techstile_frontend/screens/factory_owner_dash/owner_production_page.dart';
+import 'package:techstile_frontend/screens/factory_owner_dash/paymentsScreen.dart';
 import 'package:techstile_frontend/screens/forget_password_screen.dart';
 import 'package:techstile_frontend/screens/man_dashboard/manager_emloyee_detail_screen.dart';
 
@@ -146,7 +147,7 @@ GetPage(
 // MANAGER PAYMENTS
 GetPage(
   name: AppRoutes.managerPayments,
-  page: () => ManagerPaymentsScreen(
+  page: () =>PaymentsScreen(
     factoryId: AuthService.factoryId,
   ),
 ),

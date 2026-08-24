@@ -254,13 +254,13 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? Colors.white.withOpacity(0.2)
+                      ?  AppTheme.secondary.withOpacity(0.2)
                       : activeThemeColor.withOpacity(0.12),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   icon,
-                  color: isSelected ? Colors.white : activeThemeColor,
+                  color: isSelected ?  AppTheme.secondary: activeThemeColor,
                   size: 20,
                 ),
               ),
@@ -275,7 +275,7 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: isSelected ? Colors.white : activeThemeColor,
+                        color: isSelected ?  AppTheme.secondary : activeThemeColor,
                       ),
                     ),
                     Text(
@@ -283,7 +283,7 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
                       style: TextStyle(
                         fontSize: 11,
                         color: isSelected
-                            ? Colors.white.withOpacity(0.9)
+                            ?  AppTheme.secondary.withOpacity(0.9)
                             : AppTheme.textSecondary,
                         fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                       ),
@@ -427,7 +427,7 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
                         child: Text(
                           isActive ? "Active" : "Inactive",
                           style: const TextStyle(
-                            color: Colors.white,
+                            color: AppTheme.secondary,
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
                           ),
