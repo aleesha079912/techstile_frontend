@@ -146,7 +146,7 @@ class _ManagerEmployeeDetailScreenState
         ),
         title: const Text(
           "Employee Detail",
-          style: TextStyle(color:  AppTheme.secondary, fontWeight: FontWeight.w700),
+          style: TextStyle(color:  AppTheme.textSecondary, fontWeight: FontWeight.w700),
         ),
       ),
 

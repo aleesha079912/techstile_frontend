@@ -93,7 +93,7 @@ Get.toNamed(
       backgroundColor: AppTheme.background,
 
       appBar: AppBar(
-        title: const Text("Scan Machine",style:TextStyle(color: AppTheme.secondary) ),
+        title: const Text("Scan Machine",style:TextStyle(color: AppTheme.textSecondary) ),
         backgroundColor: AppTheme.primary,
         iconTheme: IconThemeData(color: AppTheme.secondary),
       ),

@@ -142,7 +142,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
                   },
                   child: Text(
                     machine == null ? "Register Machine" : "Update Machine",
-                    style: const TextStyle(color: AppTheme.secondary),
+                    style: const TextStyle(color: AppTheme.textSecondary),
                   ),
                 ),
               ),
@@ -191,7 +191,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
         title: const Text(
           "All Machines",
           style: TextStyle(
-            color: AppTheme.secondary,
+            color: AppTheme.textSecondary,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -229,7 +229,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
                           data?.totalMachines ?? (data?.machines.length ?? 0), AppTheme.primary),
                       const SizedBox(width: 8),
                       _statCard("Active",
-                          data?.activeMachines ?? 0, Colors.green),
+                          data?.activeMachines ?? 0 ,AppTheme.active,),
                     ],
                   ),
 
@@ -243,10 +243,10 @@ class _MachinesScreenState extends State<MachinesScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 14),
                       ),
                       onPressed: () => _showMachineForm(context),
-                      icon: const Icon(Icons.add, color: Colors.white),
+                      icon: const Icon(Icons.add, color:  AppTheme.secondary),
                       label: const Text(
                         "Add Machine",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color:  AppTheme.textSecondary),
                       ),
                     ),
                   ),
@@ -332,7 +332,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
                   ),
                   Text(
                     m.type,
-                    style: const TextStyle(color: AppTheme.neutral),
+                    style: const TextStyle(color: AppTheme.textneutral),
                   ),
                 ],
               ),

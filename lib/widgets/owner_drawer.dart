@@ -35,7 +35,7 @@ class OwnerDrawer extends StatelessWidget {
                 Text(
                   "Management Panel",
                   style: TextStyle(
-                    color: AppTheme.secondary,
+                    color: AppTheme.textSecondary,
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                   ),

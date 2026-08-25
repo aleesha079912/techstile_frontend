@@ -82,14 +82,14 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
         elevation: 0,
         title: const Text(
           'Manager Productions',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 17),
+          style: TextStyle(color:   AppTheme.textSecondary, fontWeight: FontWeight.w800, fontSize: 17),
         ),
         iconTheme: const IconThemeData(color: Colors.white),
         bottom: TabBar(
           controller: _tab,
           indicatorColor: AppTheme.surface,
           indicatorWeight: 3,
-          labelColor: Colors.white,
+          labelColor:   AppTheme.secondary,
           unselectedLabelColor: AppTheme.surface,
           labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
           unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
@@ -128,7 +128,7 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
           Icon(Icons.inbox_rounded, size: 52, color: AppTheme.neutral),
           const SizedBox(height: 12),
           const Text('No records found',
-              style: TextStyle(color: AppTheme.primary, fontSize: 14, fontWeight: FontWeight.w600)),
+              style: TextStyle(color: AppTheme.textPrimary, fontSize: 14, fontWeight: FontWeight.w600)),
         ]),
       );
     }
@@ -187,7 +187,7 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
               const SizedBox(height: 2),
               Text(
                 'Batch: ${p['batch_id'] ?? '-'}  •  $employeeName',
-                style: TextStyle(color: AppTheme.primary.withOpacity(0.55), fontSize: 11),
+                style: TextStyle(color: AppTheme.textPrimary.withOpacity(0.55), fontSize: 11),
               ),
             ])),
             const SizedBox(width: 8),
@@ -336,7 +336,7 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
     child: Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
       decoration: BoxDecoration(
-        color: AppTheme.background,
+        color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: AppTheme.primary.withOpacity(0.06)),
       ),
@@ -365,7 +365,7 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
       const Icon(Icons.error_outline_rounded, size: 48, color: AppTheme.error),
       const SizedBox(height: 12),
       Text(error ?? 'Something went wrong',
-          style: const TextStyle(color: AppTheme.primary)),
+          style: const TextStyle(color: AppTheme.textPrimary)),
       const SizedBox(height: 16),
       ElevatedButton(onPressed: _load, child: const Text('Retry')),
     ]),

@@ -84,7 +84,7 @@ class _AssignPermissionsScreenState extends State<AssignPermissionsScreen> {
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
         title: const Text("Assign Permissions",
-        style: TextStyle(color: AppTheme.secondary)),
+        style: TextStyle(color:   AppTheme.textSecondary)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           color: AppTheme.secondary,

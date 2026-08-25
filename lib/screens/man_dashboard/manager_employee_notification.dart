@@ -176,12 +176,12 @@ class _State extends State<NotificationPage> {
             children: [
               const Text(
                 "You have",
-                style: TextStyle(color: AppTheme.neutral),
+                style: TextStyle(color: AppTheme.textneutral),
               ),
               Text(
                 "$unreadCount unread notifications",
                 style: const TextStyle(
-                  color: AppTheme.secondary,
+                  color: AppTheme.textSecondary,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),

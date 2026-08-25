@@ -18,6 +18,7 @@ class AppTheme {
 
   static const Color textPrimary   = Color(0xFF122B7A); // Dark Navy
   static const Color textSecondary = Color(0xFFFFFFFF); // Dark Navy (use with opacity)
+  static const Color textneutral = Color(0xFFB0A695);
 
   // ===== Radius =====
 

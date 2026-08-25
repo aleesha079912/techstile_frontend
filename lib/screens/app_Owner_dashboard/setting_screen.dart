@@ -132,7 +132,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       label,
       "Coming soon",
       backgroundColor: AppTheme.primary,
-      colorText: AppTheme.secondary,
+      colorText:   AppTheme.textSecondary,
       snackPosition: SnackPosition.BOTTOM,
       margin: const EdgeInsets.all(16),
       borderRadius: 14,
@@ -173,7 +173,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: Text(
                     "AK",
                     style: TextStyle(
-                      color: AppTheme.secondary,
+                      color:   AppTheme.textSecondary,
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
                     ),
@@ -203,7 +203,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const Text(
                   "Abdul Kareem",
                   style: TextStyle(
-                    color: AppTheme.secondary,
+                    color:  AppTheme.textSecondary,
                     fontSize: 17,
                     fontWeight: FontWeight.w700,
                   ),
@@ -212,7 +212,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const Text(
                   "owner@techstile.pk",
                   style: TextStyle(
-                    color: AppTheme.neutral,
+                    color: AppTheme.textneutral,
                     fontSize: 12,
                   ),
                 ),
@@ -227,7 +227,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   child: const Text(
                     "Factory Owner",
                     style: TextStyle(
-                      color: AppTheme.primary,
+                      color: AppTheme.textPrimary,
                       fontSize: 11,
                       fontWeight: FontWeight.w500,
                     ),
@@ -379,18 +379,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
           "Log Out?",
           style: TextStyle(
             fontWeight: FontWeight.w700,
-            color: Color(0xFF1E293B),
+            color:  AppTheme.textPrimary,
           ),
         ),
         content: const Text(
           "Are you sure you want to log out of your account?",
-          style: TextStyle(color: AppTheme.secondary, fontSize: 13),
+          style: TextStyle(color:   AppTheme.textSecondary, fontSize: 13),
         ),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
             child: const Text("Cancel",
-                style: TextStyle(color: AppTheme.secondary)),
+                style: TextStyle(color: AppTheme.textSecondary)),
           ),
           ElevatedButton(
             onPressed: () {
@@ -399,7 +399,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 "Logged Out",
                 "See you next time!",
                 backgroundColor: AppTheme.primary.withOpacity(0.15),
-                colorText: AppTheme.secondary,
+                colorText: AppTheme.textSecondary,
                 snackPosition: SnackPosition.BOTTOM,
                 margin: const EdgeInsets.all(16),
                 borderRadius: 14,
@@ -463,7 +463,7 @@ class _SettingsTile extends StatelessWidget {
                   style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: Color(0xFF1E293B),
+                    color:  AppTheme.primary,
                   ),
                 ),
               ),

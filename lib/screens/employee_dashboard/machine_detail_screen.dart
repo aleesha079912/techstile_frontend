@@ -75,11 +75,11 @@ class _MachineDetailScreenState
           Expanded(
             child: Text(title,
                 style: const TextStyle(
-                    fontWeight: FontWeight.w600, color: AppTheme.primary)),
+                    fontWeight: FontWeight.w600, color: AppTheme.textPrimary)),
           ),
           Text(value,
               style: const TextStyle(
-                  color: AppTheme.primary, fontWeight: FontWeight.w500)),
+                  color: AppTheme.textPrimary, fontWeight: FontWeight.w500)),
         ],
       ),
     );
@@ -100,13 +100,13 @@ class _MachineDetailScreenState
           Text(title,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                  color: AppTheme.primary,
+                  color: AppTheme.textPrimary,
                   fontWeight: FontWeight.bold,
                   fontSize: 15)),
           const SizedBox(height: 10),
           Text(value,
               style: const TextStyle(
-                  color: AppTheme.primary,
+                  color: AppTheme.textPrimary,
                   fontWeight: FontWeight.bold,
                   fontSize: 20)),
         ],
@@ -123,7 +123,7 @@ class _MachineDetailScreenState
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
         title: const Text("Machine Details",
-            style: TextStyle(color: AppTheme.secondary)),
+            style: TextStyle(color:   AppTheme.textSecondary)),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppTheme.secondary),
           onPressed: () => Get.back(),
@@ -212,7 +212,7 @@ class _MachineDetailScreenState
                                 "Complete",
                                 "The Production is Completed of this Machine",
                                 backgroundColor: AppTheme.surface,
-                                colorText: AppTheme.secondary,
+                                colorText: AppTheme.textSecondary,
                               );
                             },
                       icon: Icon(canAdd ? Icons.add : Icons.lock),
@@ -257,7 +257,7 @@ class _MachineDetailScreenState
                         Get.snackbar(
                         "Success",
                         "Attendance Marked",
-                        backgroundColor: AppTheme.active,
+                        backgroundColor: AppTheme.success,
                         colorText: AppTheme.textSecondary
                         );
                         loadData();

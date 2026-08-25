@@ -72,7 +72,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             const Text(
               "Forgot Password",
               style: TextStyle(
-                color: AppTheme.primary,
+                color: AppTheme.textPrimary,
                 fontSize: 26,
                 fontWeight: FontWeight.bold,
               ),

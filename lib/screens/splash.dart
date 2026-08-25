@@ -37,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     Text(
                       "INDUSTRIAL INTELLIGENCE",
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: AppTheme.primary,
+                        color: AppTheme.textPrimary,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 1.2,
                         fontSize: 12,
@@ -144,7 +144,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         Text(
                           "1,240",
                           style: theme.textTheme.titleLarge?.copyWith(
-                            color: AppTheme.primary,
+                            color: AppTheme.textPrimary,
                             fontWeight: FontWeight.bold,
                           ),
                         ),

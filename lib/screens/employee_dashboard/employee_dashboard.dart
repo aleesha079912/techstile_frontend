@@ -56,7 +56,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: const EmployeeDrawer(),
-      backgroundColor: AppTheme.secondary,
+      backgroundColor: AppTheme.background,
 
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
@@ -67,7 +67,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
         title: const Text(
           "TECHstile",
           style: TextStyle(
-            color: AppTheme.secondary,
+            color: AppTheme.textSecondary,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -95,7 +95,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                     child: Text(
                       "Production Overview",
                       style: TextStyle(
-                        color: AppTheme.primary,
+                        color: AppTheme.textPrimary,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                       ),
@@ -113,7 +113,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                           icon: Icons.today_rounded,
                           label: "Today (Approved)",
                           value: dailyApproved.toStringAsFixed(0),
-                          color: AppTheme.active,
+                          color: AppTheme.success,
                         ),
                       ),
                       const SizedBox(width: 10),
@@ -164,7 +164,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                     child: Text(
                       "My Assigned Machines",
                       style: TextStyle(
-                        color: AppTheme.primary,
+                        color: AppTheme.textPrimary,
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                       ),
@@ -183,7 +183,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                         const SizedBox(height: 10),
                         Text(
                           "No machines assigned yet",
-                          style: TextStyle(color: AppTheme.primary),
+                          style: TextStyle(color: AppTheme.textPrimary),
                         ),
                       ],
                     ),
@@ -263,7 +263,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                               "Progress: ${machine["progress"]}%",
                               style: TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: AppTheme.primary,
+                                color: AppTheme.textPrimary,
                               ),
                             ),
                           ],
@@ -309,10 +309,10 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
           const SizedBox(height: 10),
           Text(value,
               style: TextStyle(
-                  color: AppTheme.primary, fontSize: 20, fontWeight: FontWeight.w800)),
+                  color: AppTheme.textPrimary, fontSize: 20, fontWeight: FontWeight.w800)),
           const SizedBox(height: 2),
           Text(label,
-              style: TextStyle(color: AppTheme.primary, fontSize: 11)),
+              style: TextStyle(color: AppTheme.textPrimary, fontSize: 11)),
         ],
       ),
     );
@@ -327,7 +327,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
-        color: AppTheme.active,
+        color: AppTheme.success,
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(color: AppTheme.primary.withOpacity(0.08), blurRadius: 8),
@@ -340,7 +340,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
           Text(
             label,
             style: TextStyle(
-              color: AppTheme.background,
+              color:   AppTheme.textSecondary,
               fontWeight: FontWeight.w600,
               fontSize: 12,
             ),
@@ -349,7 +349,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
           Text(
             value,
             style: TextStyle(
-              color: AppTheme.background,
+              color:   AppTheme.textSecondary,
               fontWeight: FontWeight.bold,
               fontSize: 16,
             ),

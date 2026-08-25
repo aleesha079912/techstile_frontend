@@ -93,7 +93,7 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
                         "ID: ${widget.machineDbId}",
                         style: TextStyle(
                           fontSize: 13,
-                          color: AppTheme.neutral,
+                          color: AppTheme.textneutral,
                         ),
                       ),
                     ],
@@ -125,7 +125,7 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
                     "Scan to Identify Machine",
                     style: TextStyle(
                       fontSize: 14,
-                      color:AppTheme.neutral,
+                      color:AppTheme.textneutral,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -325,7 +325,7 @@ class _ActionButton extends StatelessWidget {
             Text(
               label,
               style: const TextStyle(
-                color: AppTheme.secondary,
+                color: AppTheme.textSecondary,
                 fontWeight: FontWeight.w600,
                 fontSize: 14,
               ),

@@ -38,7 +38,7 @@ class _ManagerSettingsScreenState
       appBar: AppBar(
         title: const Text("Settings"),
         backgroundColor: AppTheme.primary,
-        foregroundColor:  AppTheme.secondary,
+        foregroundColor:  AppTheme.textSecondary,
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -66,7 +66,7 @@ class _ManagerSettingsScreenState
 
                   CircleAvatar(
                     radius: 28,
-                    backgroundColor:  AppTheme.secondary,
+                    backgroundColor:  AppTheme.background,
                     child: Text(
                       (user['name'] ?? 'M')
                           .toString()
@@ -74,7 +74,7 @@ class _ManagerSettingsScreenState
                           .toUpperCase(),
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: AppTheme.primary,
+                        color: AppTheme.textPrimary,
                         fontSize: 22,
                       ),
                     ),
@@ -90,7 +90,7 @@ class _ManagerSettingsScreenState
                         Text(
                           user['name'] ?? '',
                           style: const TextStyle(
-                            color: AppTheme.secondary,
+                            color: AppTheme.textSecondary,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
@@ -101,7 +101,7 @@ class _ManagerSettingsScreenState
                         Text(
                           user['email'] ?? '',
                           style: const TextStyle(
-                            color:  AppTheme.primary,
+                            color:  AppTheme.textPrimary,
                           ),
                         ),
 
@@ -121,7 +121,7 @@ class _ManagerSettingsScreenState
                           child:  Text(
                            user['role'] ?? '' ,
                             style: TextStyle(
-                              color: AppTheme.secondary,
+                              color: AppTheme.textSecondary,
                               fontSize: 11,
                             ),
                           ),
@@ -231,7 +231,7 @@ class _ManagerSettingsScreenState
             child: Text(
               "TechStile v1.0.0",
               style: TextStyle(
-                color:   AppTheme.primary,
+                color:   AppTheme.textPrimary,
               ),
             ),
           ),
@@ -250,7 +250,7 @@ class _ManagerSettingsScreenState
         text,
         style: const TextStyle(
           fontWeight: FontWeight.bold,
-          color:   AppTheme.primary,
+          color:   AppTheme.textPrimary,
           letterSpacing: 1,
         ),
       ),

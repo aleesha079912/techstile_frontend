@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:techstile_frontend/core/services/machine_assignment_service.dart';
+import 'package:techstile_frontend/core/utils/theme.dart';
 
 class MachineAssignmentPage extends StatefulWidget {
   const MachineAssignmentPage({super.key});
@@ -93,7 +94,7 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Assignment Failed"),
-          backgroundColor: Colors.red,
+          backgroundColor: AppTheme.error,
         ),
       );
     }
@@ -186,7 +187,7 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
                       decoration: BoxDecoration(
                         color: Colors.blue.shade50,
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.blue.shade100),
+                        border: Border.all(color:AppTheme.info),
                       ),
                       child: const Row(
                         children: [

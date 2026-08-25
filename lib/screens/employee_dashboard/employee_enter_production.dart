@@ -70,7 +70,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
         "Error",
         "Maximum $remaining allowed",
         backgroundColor:AppTheme.error,
-        colorText:AppTheme.secondary,
+        colorText:AppTheme.textSecondary,
       );
       return;
     }
@@ -104,15 +104,15 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
         Get.snackbar(
           "Success",
           "Submitted Successfully",
-          backgroundColor: AppTheme.active,
-          colorText:AppTheme.background,
+          backgroundColor: AppTheme.success,
+          colorText:  AppTheme.textSecondary,
         );
       } else {
         Get.snackbar(
           "Error",
           "Production not added",
           backgroundColor:AppTheme.error,
-          colorText:AppTheme.secondary ,
+          colorText:  AppTheme.textSecondary,
         );
       }
     } catch (e) {
@@ -130,7 +130,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
       appBar: AppBar(
         title: const Text("Enter Production"),
         backgroundColor: AppTheme.primary,
-        foregroundColor: AppTheme.background,
+        foregroundColor:   AppTheme.textSecondary,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Get.back(),
@@ -152,7 +152,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
 
                 // ── Variety ──
                 const Text("Variety Type",
-                    style: TextStyle(fontSize: 12, color:  AppTheme.neutral)),
+                    style: TextStyle(fontSize: 12, color:  AppTheme.textneutral)),
                 const SizedBox(height: 6),
                 TextField(
                   controller: varietyController,
@@ -167,7 +167,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
 
                 // ── Total Length ──
                 const Text("Total Length",
-                    style: TextStyle(fontSize: 12, color:  AppTheme.neutral)),
+                    style: TextStyle(fontSize: 12, color:  AppTheme.textneutral)),
                 const SizedBox(height: 6),
                 TextField(
                   controller: lengthController,
@@ -182,7 +182,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
 
                 // ── Remaining (NEW) ──
                 const Text("Remaining",
-                    style: TextStyle(fontSize: 12, color:  AppTheme.neutral)),
+                    style: TextStyle(fontSize: 12, color:  AppTheme.textneutral)),
                 const SizedBox(height: 6),
                 TextField(
                   controller: remainingController,
@@ -197,7 +197,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
 
                 // ── Ready ──
                 const Text("Ready Production",
-                    style: TextStyle(fontSize: 12, color:  AppTheme.neutral )),
+                    style: TextStyle(fontSize: 12, color:  AppTheme.textneutral )),
                 const SizedBox(height: 6),
                 TextField(
                   controller: readyController,
@@ -212,7 +212,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
 
                 // ── Waste (NEW) ──
                 const Text("Waste Production",
-                    style: TextStyle(fontSize: 12, color: AppTheme.neutral)),
+                    style: TextStyle(fontSize: 12, color: AppTheme.textneutral)),
                 const SizedBox(height: 6),
                 TextField(
                   controller: wasteController,
@@ -242,7 +242,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
                         : const Text(
                             "Submit Production",
                             style: TextStyle(
-                              color: AppTheme.secondary,
+                              color:   AppTheme.textSecondary,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),

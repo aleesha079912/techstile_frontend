@@ -69,7 +69,7 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
         children: [
           CircleAvatar(
             radius: 32,
-            backgroundColor: AppTheme.secondary.withOpacity(0.25),
+            backgroundColor: AppTheme.background.withOpacity(0.25),
             child: Text(
               firstLetter,
               style: const TextStyle(
@@ -93,7 +93,7 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
             email,
             style: TextStyle(
               fontSize: 12,
-              color:  AppTheme.secondary.withOpacity(0.85),
+              color:  AppTheme.textSecondary.withOpacity(0.85),
             ),
           ),
         ],
@@ -226,12 +226,12 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:  AppTheme.background, // light grey page background
+      backgroundColor:  AppTheme.background, 
       drawer: ManagerDrawer(
         userId: AuthService.userId,
         factoryId: AuthService.factoryId,
       ),
-      appBar: AppBar(title: const Text("Manager Profile",style: TextStyle(color: AppTheme.secondary),),backgroundColor: AppTheme.primary,iconTheme: IconThemeData(color: AppTheme.secondary),),
+      appBar: AppBar(title: const Text("Manager Profile",style: TextStyle(color: AppTheme.textSecondary),),backgroundColor: AppTheme.primary,iconTheme: IconThemeData(color: AppTheme.secondary),),
       body: loading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(

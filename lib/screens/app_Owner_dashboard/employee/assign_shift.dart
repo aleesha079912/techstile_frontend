@@ -229,7 +229,7 @@ class _AssignShiftsScreenState extends State<AssignShiftsScreen> {
         title: const Text(
           "TECHSTILE",
           style: TextStyle(
-            color: AppTheme.secondary,
+            color: AppTheme.textSecondary,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -249,7 +249,7 @@ class _AssignShiftsScreenState extends State<AssignShiftsScreen> {
                          item['user']?['name'] ?? "Employee ${item['id']}",
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: AppTheme.primary,
+                            color: AppTheme.textPrimary,
                           ),
                         ),
                         subtitle: Text(

@@ -109,7 +109,7 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
             const Text(
               'All Employees',
               style: TextStyle(
-                color: AppTheme.secondary,
+                color: AppTheme.textSecondary,
                 fontWeight: FontWeight.w800,
                 fontSize: 17,
               ),
@@ -117,7 +117,7 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
             Text(
               loading ? 'Loading...' : (factoryName ?? 'Factory'),
               style: TextStyle(
-                color: AppTheme.secondary.withOpacity(0.65),
+                color: AppTheme.textSecondary.withOpacity(0.65),
                 fontSize: 12,
               ),
             ),
@@ -176,7 +176,7 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
                                   statBox(
                                     "Active Employees",
                                     "$activeEmployeesCount",
-                                    AppTheme.success,
+                                    AppTheme.active,
                                     Icons.bolt_rounded,
                                     showActiveOnly,
                                     () {
@@ -345,7 +345,7 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
           Expanded(
             child: Text(
               text,
-              style: const TextStyle(fontSize: 11.5, color: AppTheme.neutral),
+              style: const TextStyle(fontSize: 11.5, color: AppTheme.textneutral),
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -376,10 +376,10 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isActive ? AppTheme.success.withOpacity(0.08) : AppTheme.secondary,
+          color: isActive ? AppTheme.active.withOpacity(0.08) : AppTheme.secondary,
           borderRadius: AppTheme.cardRadius,
           border: Border.all(
-            color: isActive ? AppTheme.success.withOpacity(0.4) : Colors.transparent,
+            color: isActive ? AppTheme.active.withOpacity(0.4) : Colors.transparent,
             width: 1.5,
           ),
           boxShadow: AppTheme.softShadow,
@@ -389,12 +389,12 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
             CircleAvatar(
               radius: 19,
               backgroundColor: isActive
-                  ? AppTheme.success.withOpacity(0.2)
+                  ? AppTheme.active.withOpacity(0.2)
                   : AppTheme.neutral.withOpacity(0.2),
               child: Text(
                 name.isNotEmpty ? name[0].toUpperCase() : 'E',
                 style: TextStyle(
-                  color: isActive ? AppTheme.success : AppTheme.primary,
+                  color: isActive ? AppTheme.active : AppTheme.primary,
                   fontWeight: FontWeight.bold,
                   fontSize: 13,
                 ),
@@ -421,13 +421,13 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(
-                          color: isActive ? AppTheme.success : AppTheme.neutral.withOpacity(0.5),
+                          color: isActive ? AppTheme.active : AppTheme.neutral.withOpacity(0.5),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
                           isActive ? "Active" : "Inactive",
                           style: const TextStyle(
-                            color: AppTheme.secondary,
+                            color: AppTheme.textSecondary,
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
                           ),

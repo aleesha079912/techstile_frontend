@@ -62,7 +62,7 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
         title: Text(
           m.machineName,
           style: const TextStyle(
-            color:  AppTheme.secondary,
+            color:  AppTheme.textSecondary,
             fontWeight: FontWeight.w700,
             fontSize: 18,
           ),
@@ -72,13 +72,13 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
             margin: const EdgeInsets.only(right: 16),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color:  AppTheme.success.withOpacity(0.18),
+              color:  AppTheme.active.withOpacity(0.18),
               borderRadius: BorderRadius.circular(20),
             ),
             child: const Text(
               'Active',
               style: TextStyle(
-                color:  AppTheme.success,
+                color:  AppTheme.active,
                 fontWeight: FontWeight.w700,
                 fontSize: 12,
               ),
@@ -132,7 +132,7 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
                             const SizedBox(height: 8),
                             Text('No employee assigned to this machine yet',
                                 style: TextStyle(
-                                    color:  AppTheme.neutral, fontSize: 13)),
+                                    color:  AppTheme.textneutral, fontSize: 13)),
                           ],
                         ),
                       )
@@ -223,7 +223,7 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
                 Text(
                   m.machineName,
                   style: const TextStyle(
-                    color: AppTheme.secondary,
+                    color: AppTheme.textSecondary,
                     fontWeight: FontWeight.w800,
                     fontSize: 20,
                   ),
@@ -232,19 +232,19 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
                 Text(
                   m.type,
                   style: TextStyle(
-                    color:  AppTheme.secondary.withOpacity(0.65),
+                    color:  AppTheme.textSecondary.withOpacity(0.65),
                     fontSize: 13,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    const Icon(Icons.circle, color:  AppTheme.success, size: 8),
+                    const Icon(Icons.circle, color:  AppTheme.active, size: 8),
                     const SizedBox(width: 5),
                     Text(
                       'Running',
                       style: TextStyle(
-                        color:  AppTheme.secondary.withOpacity(0.8),
+                        color:  AppTheme.textSecondary.withOpacity(0.8),
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),
@@ -303,12 +303,12 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
                       ? s['employee_name'].toString()
                       : 'Employee #${s['employee_id'] ?? '-'}',
                   style: const TextStyle(
-                      color: AppTheme.primary, fontWeight: FontWeight.w700, fontSize: 14),
+                      color: AppTheme.textPrimary, fontWeight: FontWeight.w700, fontSize: 14),
                 ),
               ),
               Text(
                 '$start - $end',
-                style: TextStyle(color:  AppTheme.primary.withOpacity(0.55), fontSize: 11),
+                style: TextStyle(color:  AppTheme.textPrimary.withOpacity(0.55), fontSize: 11),
               ),
             ],
           ),
@@ -366,7 +366,7 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
             child: Text(
               title,
               style: TextStyle(
-                color:  AppTheme.primary.withOpacity(0.6),
+                color:  AppTheme.textPrimary.withOpacity(0.6),
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
               ),
@@ -375,7 +375,7 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
           Text(
             value,
             style: const TextStyle(
-              color:  AppTheme.primary,
+              color:  AppTheme.textPrimary,
               fontSize: 14,
               fontWeight: FontWeight.w700,
             ),
@@ -405,7 +405,7 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
           Text(
             title,
             style: TextStyle(
-              color: AppTheme.secondary.withOpacity(0.7),
+              color: AppTheme.textSecondary.withOpacity(0.7),
               fontSize: 11,
               fontWeight: FontWeight.w500,
             ),
@@ -414,7 +414,7 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
           Text(
             value,
             style: const TextStyle(
-              color:  AppTheme.success,
+              color:  AppTheme.active,
               fontSize: 18,
               fontWeight: FontWeight.w800,
             ),
@@ -446,7 +446,7 @@ class _SectionLabel extends StatelessWidget {
         Text(
           text,
           style: const TextStyle(
-            color: AppTheme.primary,
+            color: AppTheme.textPrimary,
             fontWeight: FontWeight.w700,
             fontSize: 16,
           ),

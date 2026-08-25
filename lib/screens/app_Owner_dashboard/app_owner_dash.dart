@@ -70,7 +70,7 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
         title: Text(
           "Owner Dashboard",
           style: TextStyle(
-            color: AppTheme.secondary,
+            color:  AppTheme.textSecondary,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -91,7 +91,7 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
 
   // CONCEPT: Modular UI / Widget Refactoring
   Widget _buildFAB(BuildContext context) {
-    final theme = Theme.of(context);
+   
 
     return Container(
       decoration: BoxDecoration(
@@ -116,7 +116,7 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
               Text(
                 "Add Factory",
                 style: TextStyle(
-                  color:AppTheme.secondary,
+                  color:  AppTheme.textSecondary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -128,7 +128,7 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
   }
 
   Widget _buildBottomNav(BuildContext context) {
-    final theme = Theme.of(context);
+    
 
     return BottomNavigationBar(
       currentIndex: _currentIndex,
@@ -226,7 +226,7 @@ class _HomeTab extends StatelessWidget {
   }
 
   Widget _buildStatsRow(BuildContext context, FactoryController controller) {
-    final theme = Theme.of(context);
+    
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Obx(
@@ -374,7 +374,7 @@ class _FactoryCard extends StatelessWidget {
                 : "?",
 
             style: TextStyle(
-              color: AppTheme.primary,
+              color: AppTheme.textPrimary,
             ),
 
           ),

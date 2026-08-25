@@ -185,7 +185,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
         const Text(
           'TechStile',
           style: TextStyle(
-            color: AppTheme.secondary,
+            color:   AppTheme.textSecondary,
             fontWeight: FontWeight.bold,
             fontSize: 17,
           ),
@@ -193,7 +193,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
         Text(
           data['factory']?['name'] ?? 'Loading...',
           style: TextStyle(
-            color: AppTheme.secondary.withOpacity(0.7),
+            color: AppTheme.textSecondary.withOpacity(0.7),
             fontSize: 12,
           ),
         ),
@@ -245,7 +245,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                     Text(
                       factory?['name'] ?? 'Factory',
                       style: const TextStyle(
-                          color: AppTheme.secondary, fontWeight: FontWeight.w800, fontSize: 18),
+                          color:   AppTheme.textSecondary, fontWeight: FontWeight.w800, fontSize: 18),
                     ),
                     const SizedBox(height: 4),
                     Row(
@@ -257,7 +257,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                           child: Text(
                             '${factory?['address'] ?? ''}, ${factory?['city'] ?? ''}',
                             style: TextStyle(
-                                color: AppTheme.secondary.withOpacity(0.65), fontSize: 12),
+                                color:   AppTheme.textSecondary.withOpacity(0.65), fontSize: 12),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -333,7 +333,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
               Text(
                 period,
                 style: TextStyle(
-                  color: AppTheme.primary,
+                  color: AppTheme.textPrimary,
                   fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
                   fontSize: 14,
                 ),
@@ -407,11 +407,11 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
             const SizedBox(height: 12),
             Text(value,
                 style: const TextStyle(
-                    color:AppTheme.primary, fontSize: 24, fontWeight: FontWeight.w800)),
+                    color:AppTheme.textPrimary, fontSize: 24, fontWeight: FontWeight.w800)),
             const SizedBox(height: 2),
             Text('$label · $unit',
                 style: TextStyle(
-                    color:AppTheme.primary.withOpacity(0.5),
+                    color:AppTheme.textPrimary.withOpacity(0.5),
                     fontSize: 11,
                     fontWeight: FontWeight.w500)),
           ],
@@ -435,7 +435,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
             Icon(Icons.inventory_2_outlined, size: 40, color: AppTheme.neutral),
             const SizedBox(height: 10),
             Text('No varieties produced yet',
-                style: TextStyle(color: AppTheme.neutral, fontSize: 13)),
+                style: TextStyle(color: AppTheme.textneutral, fontSize: 13)),
           ],
         ),
       );
@@ -477,7 +477,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                       child: Text(
                         item['variety_type']?.toString() ?? '',
                         style: const TextStyle(
-                            color: AppTheme.primary,
+                            color: AppTheme.textPrimary,
                             fontSize: 14,
                             fontWeight: FontWeight.w600),
                       ),
@@ -524,7 +524,7 @@ class _SectionLabel extends StatelessWidget {
         const SizedBox(width: 8),
         Text(text,
             style: const TextStyle(
-                color:AppTheme.primary, fontWeight: FontWeight.w700, fontSize: 15)),
+                color:AppTheme.textPrimary, fontWeight: FontWeight.w700, fontSize: 15)),
       ],
     );
   }

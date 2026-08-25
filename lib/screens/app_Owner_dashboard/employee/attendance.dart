@@ -105,7 +105,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                       "Employee: ${item['employee_id']}",
                       style: const TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: AppTheme.primary),
+                          color: AppTheme.textPrimary),
                     ),
                     subtitle: Text(
                         "Type: ${item['type']} \nTime: ${item['timestamp']}"),

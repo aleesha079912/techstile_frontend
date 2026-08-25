@@ -33,7 +33,7 @@ class FactoryDrawer extends StatelessWidget {
             child: const Text(
               "Management Panel",
               style: TextStyle(
-                color: AppTheme.secondary,
+                color: AppTheme.textSecondary,
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
