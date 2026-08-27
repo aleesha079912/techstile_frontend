@@ -931,6 +931,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                                 ),
                                 title: Text(
                                   employeeName,
+                                  overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
                                       fontWeight: FontWeight.w700, fontSize: 14),
                                 ),
@@ -938,19 +939,25 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                                   batchId != null
                                       ? 'Batch: $batchId  •  $createdAt'
                                       : createdAt,
+                                  overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                       color: AppTheme.primary.withOpacity(0.55),
                                       fontSize: 11),
                                 ),
-                                                                trailing: Row(
+                                trailing: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    Text(
-                                      'Rs ${_formatAmount(amountPaid)}',
-                                      style: const TextStyle(
-                                          color: AppTheme.success,
-                                          fontSize: 13,
-                                          fontWeight: FontWeight.w800),
+                                    Flexible(
+                                      child: FittedBox(
+                                        fit: BoxFit.scaleDown,
+                                        child: Text(
+                                          'Rs ${_formatAmount(amountPaid)}',
+                                          style: const TextStyle(
+                                              color: AppTheme.success,
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.w800),
+                                        ),
+                                      ),
                                     ),
                                     const SizedBox(width: 4),
                                     InkWell(
@@ -1286,6 +1293,16 @@ class _SummaryStat extends StatelessWidget {
 /// Expandable card for a single employee: header shows name + total earned,
 /// plus factory/manager context, and expands to a list of every machine
 /// that contributed to that total.
+///
+/// FIX: previously this had BOTH a boxed Earned/Paid/Remaining row inside
+/// `subtitle` AND a duplicate unwrapped three-line `trailing` column. The
+/// `trailing` slot of a ListTile/ExpansionTile is laid out at its intrinsic
+/// width (it is NOT wrapped in an Expanded like `subtitle` is), so three
+/// long unbounded strings like "Remaining: Rs 1,810,400" forced the row
+/// wider than the screen on smaller devices -> RenderFlex overflow
+/// (the black/yellow striped error). The duplicate trailing column has been
+/// removed and long text in title/subtitle is now clamped with
+/// `overflow: TextOverflow.ellipsis` so the tile can never overflow again.
 class _EmployeePaymentTile extends StatelessWidget {
   final EmployeePayment record;
   Widget _employeeAmountStat(
@@ -1377,105 +1394,80 @@ class _EmployeePaymentTile extends StatelessWidget {
           ),
           title: Text(
             displayName,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: const TextStyle(
                 color: AppTheme.textPrimary, fontWeight: FontWeight.w700, fontSize: 14),
           ),
-subtitle: Padding(
-  padding: const EdgeInsets.only(top: 6),
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        subtitleParts.join(' • '),
-        style: TextStyle(
-          color: AppTheme.primary.withOpacity(0.55),
-          fontSize: 11,
-        ),
-      ),
+          subtitle: Padding(
+            padding: const EdgeInsets.only(top: 6),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  subtitleParts.join(' • '),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: AppTheme.primary.withOpacity(0.55),
+                    fontSize: 11,
+                  ),
+                ),
 
-      const SizedBox(height: 8),
+                const SizedBox(height: 8),
 
-      Row(
-        children: [
-          Expanded(
-            child: _employeeAmountStat(
-              'Earned',
-              record.totalEarned,
-              AppTheme.primary,
+                Row(
+                  children: [
+                    Expanded(
+                      child: _employeeAmountStat(
+                        'Earned',
+                        record.totalEarned,
+                        AppTheme.primary,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: _employeeAmountStat(
+                        'Paid',
+                        record.totalPaid,
+                        AppTheme.success,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: _employeeAmountStat(
+                        'Remaining',
+                        record.remainingAmount,
+                        record.remainingAmount > 0
+                            ? AppTheme.error
+                            : AppTheme.success,
+                      ),
+                    ),
+                  ],
+                ),
+
+                if (record.managerName != null &&
+                    record.managerName!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      'Manager: ${record.managerName}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: AppTheme.primary.withOpacity(0.45),
+                        fontSize: 10.5,
+                      ),
+                    ),
+                  ),
+              ],
             ),
           ),
-          const SizedBox(width: 6),
-          Expanded(
-            child: _employeeAmountStat(
-              'Paid',
-              record.totalPaid,
-              AppTheme.success,
-            ),
-          ),
-          const SizedBox(width: 6),
-          Expanded(
-            child: _employeeAmountStat(
-              'Remaining',
-              record.remainingAmount,
-              record.remainingAmount > 0
-                  ? AppTheme.error
-                  : AppTheme.success,
-            ),
-          ),
-        ],
-      ),
-
-      if (record.managerName != null &&
-          record.managerName!.isNotEmpty)
-        Padding(
-          padding: const EdgeInsets.only(top: 4),
-          child: Text(
-            'Manager: ${record.managerName}',
-            style: TextStyle(
-              color: AppTheme.primary.withOpacity(0.45),
-              fontSize: 10.5,
-            ),
-          ),
-        ),
-    ],
-  ),
-),
-
-          trailing: Column(
-  mainAxisAlignment: MainAxisAlignment.center,
-  crossAxisAlignment: CrossAxisAlignment.end,
-  children: [
-    Text(
-      'Earned: Rs ${_formatAmount(record.totalEarned)}',
-      style: const TextStyle(
-        color: AppTheme.primary,
-        fontSize: 11,
-        fontWeight: FontWeight.w700,
-      ),
-    ),
-    const SizedBox(height: 3),
-    Text(
-      'Paid: Rs ${_formatAmount(record.totalPaid)}',
-      style: const TextStyle(
-        color: AppTheme.success,
-        fontSize: 11,
-        fontWeight: FontWeight.w700,
-      ),
-    ),
-    const SizedBox(height: 3),
-    Text(
-      'Remaining: Rs ${_formatAmount(record.remainingAmount)}',
-      style: TextStyle(
-        color: record.remainingAmount > 0
-            ? AppTheme.error
-            : AppTheme.success,
-        fontSize: 11,
-        fontWeight: FontWeight.w800,
-      ),
-    ),
-  ],
-),
-
+          // Duplicate Earned/Paid/Remaining trailing column removed — it was
+          // unbounded and caused the overflow. The stat boxes in `subtitle`
+          // already surface this info without needing to expand the tile.
+          // If you want a compact indicator here, keep it width-bounded, e.g.:
+          // trailing: const Icon(Icons.expand_more_rounded, color: AppTheme.primary),
           children: [
             if (record.machines.isEmpty)
               const Padding(
@@ -1518,6 +1510,8 @@ class _MachineGroupTile extends StatelessWidget {
           childrenPadding: const EdgeInsets.fromLTRB(12, 0, 12, 12),
           title: Text(
             machine.machineName,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: const TextStyle(
                 color: AppTheme.textPrimary, fontSize: 13, fontWeight: FontWeight.w700),
           ),
@@ -1525,13 +1519,23 @@ class _MachineGroupTile extends StatelessWidget {
             padding: const EdgeInsets.only(top: 4),
             child: Text(
               '${machine.productionCount} production${machine.productionCount == 1 ? '' : 's'} • ${_formatAmount(machine.totalLength)} m',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: TextStyle(color: AppTheme.primary.withOpacity(0.55), fontSize: 11),
             ),
           ),
-          trailing: Text(
-            'Rs ${_formatAmount(machine.totalAmount)}',
-            style: const TextStyle(
-                color: AppTheme.success, fontSize: 12, fontWeight: FontWeight.w800),
+          trailing: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 90),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerRight,
+              child: Text(
+                'Rs ${_formatAmount(machine.totalAmount)}',
+                maxLines: 1,
+                style: const TextStyle(
+                    color: AppTheme.success, fontSize: 12, fontWeight: FontWeight.w800),
+              ),
+            ),
           ),
           children: [
             Row(
@@ -1654,9 +1658,13 @@ class _ProductionRow extends StatelessWidget {
             child: Text(label,
                 style: TextStyle(color: AppTheme.primary.withOpacity(0.6), fontSize: 12)),
           ),
-          Text(value,
-              style: const TextStyle(
-                  color: AppTheme.textPrimary, fontSize: 12, fontWeight: FontWeight.w700)),
+          Flexible(
+            child: Text(value,
+                textAlign: TextAlign.right,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                    color: AppTheme.textPrimary, fontSize: 12, fontWeight: FontWeight.w700)),
+          ),
         ],
       ),
     );
@@ -1687,10 +1695,15 @@ class _ProductionRow extends StatelessWidget {
                         color: AppTheme.textPrimary, fontSize: 12, fontWeight: FontWeight.w700),
                   ),
                 ),
-                Text(
-                  'Rs ${_formatAmount(record.amount)}',
-                  style: const TextStyle(
-                      color: AppTheme.success, fontSize: 12, fontWeight: FontWeight.w800),
+                Flexible(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      'Rs ${_formatAmount(record.amount)}',
+                      style: const TextStyle(
+                          color: AppTheme.success, fontSize: 12, fontWeight: FontWeight.w800),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -1718,6 +1731,7 @@ class _ProductionRow extends StatelessWidget {
               const SizedBox(height: 6),
               Text(
                 'Days: ${record.selectDays}',
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(color: AppTheme.primary.withOpacity(0.5), fontSize: 10),
               ),
             ],
