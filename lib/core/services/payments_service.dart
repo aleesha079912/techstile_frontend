@@ -33,7 +33,7 @@ class PaymentService {
     required int employeeId,
     
     required double amountPaid,
-    required int productionId, 
+    // required int productionId, 
   }) async {
     try {
       final response = await http.post(
@@ -45,7 +45,7 @@ class PaymentService {
         body: jsonEncode({
           "employee_id": employeeId,
           "amount_paid": amountPaid,
-          "production_id": productionId, // ✅ NEW
+          // "production_id": productionId, // ✅ NEW
         }),
       );
 
@@ -86,7 +86,29 @@ class PaymentService {
       rethrow;
     }
   }
-   Future<void> deletePayment(int paymentId) async {
+   
+  Future<Map<String, dynamic>> getEarnedAmount(int employeeId) async {
+    try {
+      final response = await http.get(
+        Uri.parse("http://localhost:8000/api/employees/$employeeId/earned-amount"),
+        headers: AuthService.authHeaders,
+      );
+
+      debugPrint("Earned Amount Status: ${response.statusCode}");
+      debugPrint("Earned Amount Response: ${response.body}");
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body) as Map<String, dynamic>;
+      }
+
+      throw Exception("Failed to fetch earned amount. Status: ${response.statusCode}");
+    } catch (e) {
+      debugPrint("Get Earned Amount Error: $e");
+      rethrow;
+    }
+  }
+
+  Future<void> deletePayment(int paymentId) async {
     try {
       final response = await http.delete(
         Uri.parse("$baseUrl/$paymentId"),
