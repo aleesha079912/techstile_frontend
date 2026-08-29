@@ -396,9 +396,12 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                       Expanded(
                         child: Text(
                           name,
-                          style: const TextStyle(
+                          style:  TextStyle(
                             fontWeight: FontWeight.w700,
                             fontSize: 14,
+                             color: isActive
+                          ? AppTheme.success
+                          : AppTheme.primary,
                           ),
                         ),
                       ),
@@ -443,9 +446,11 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
 
                   Text(
                     role,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 11,
-                      color: AppTheme.primary,
+                      color: isActive
+                          ? AppTheme.success
+                          : AppTheme.primary,
                       fontWeight: FontWeight.w600,
                     ),
                   ),

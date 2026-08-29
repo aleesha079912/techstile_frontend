@@ -68,11 +68,11 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
       Get.back();
       widget.onSuccess();
       Get.snackbar("Success", "Production assign ho gayi",
-          backgroundColor: AppTheme.active, colorText:AppTheme.secondary);
+          backgroundColor: AppTheme.active, colorText:AppTheme.textSecondary);
     } else {
       print(success);
       Get.snackbar("Error", "Kuch galat hua",
-          backgroundColor: AppTheme.error, colorText: AppTheme.secondary);
+          backgroundColor: AppTheme.error, colorText: AppTheme.textSecondary);
     }
   }
 
@@ -99,7 +99,7 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
 
             const Text("Assign Production",
               style: TextStyle(fontSize: 18,
-                  fontWeight: FontWeight.bold, color: AppTheme.primary)),
+                  fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
             const SizedBox(height: 20),
 
             // Variety Type
@@ -184,7 +184,7 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
                 child: loading
                     ? const CircularProgressIndicator(color: AppTheme.secondary)
                     : const Text("Assign Production",
-                        style: TextStyle(color:AppTheme.secondary, fontSize: 16)),
+                        style: TextStyle(color:AppTheme.textSecondary, fontSize: 16)),
               ),
             ),
             const SizedBox(height: 24),

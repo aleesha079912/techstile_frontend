@@ -82,7 +82,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
   title: const Text(
     "TechStile",
     style: TextStyle(
-      color: AppTheme.secondary,
+      color:   AppTheme.textSecondary,
       fontWeight: FontWeight.bold,
     ),
   ),
@@ -395,11 +395,11 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                 ),
                 Text(
                   user.email,
-                  style: const TextStyle(fontSize: 12, color: AppTheme.neutral),
+                  style: const TextStyle(fontSize: 12, color: AppTheme.textneutral),
                 ),
                 Text(
                   user.role,
-                  style: const TextStyle(color: AppTheme.primary),
+                  style: const TextStyle(color: AppTheme.textPrimary),
                 ),
               ],
             ),

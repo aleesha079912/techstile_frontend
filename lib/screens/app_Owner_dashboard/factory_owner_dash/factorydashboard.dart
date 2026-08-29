@@ -42,7 +42,9 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
         loading = false;
       });
     } catch (_) {
-      setState(() => loading = false);
+      if (mounted) {
+        setState(() => loading = false);
+      }
     }
   }
 
@@ -221,7 +223,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                     Text(
                       factory?['name'] ?? 'Factory',
                       style: const TextStyle(
-                          color: AppTheme.secondary, fontWeight: FontWeight.w800, fontSize: 18),
+                          color:   AppTheme.textSecondary, fontWeight: FontWeight.w800, fontSize: 18),
                     ),
                     const SizedBox(height: 4),
                     Row(
@@ -233,7 +235,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                           child: Text(
                             '${factory?['address'] ?? ''}, ${factory?['city'] ?? ''}',
                             style: TextStyle(
-                                color: AppTheme.secondary.withOpacity(0.65), fontSize: 12),
+                                color:   AppTheme.textSecondary.withOpacity(0.65), fontSize: 12),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -305,7 +307,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
               Text(
                 period,
                 style: TextStyle(
-                  color: AppTheme.primary,
+                  color: AppTheme.textPrimary,
                   fontWeight: isSelected ? FontWeight.w800 : FontWeight.w500,
                   fontSize: 14,
                 ),
@@ -407,7 +409,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
             Icon(Icons.inventory_2_outlined, size: 40, color: AppTheme.neutral),
             const SizedBox(height: 10),
             Text('No varieties produced yet',
-                style: TextStyle(color: AppTheme.neutral, fontSize: 13)),
+                style: TextStyle(color: AppTheme.textneutral, fontSize: 13)),
           ],
         ),
       );
@@ -449,7 +451,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                       child: Text(
                         item['variety_type']?.toString() ?? '',
                         style: const TextStyle(
-                            color: AppTheme.primary,
+                            color: AppTheme.textPrimary,
                             fontSize: 14,
                             fontWeight: FontWeight.w600),
                       ),

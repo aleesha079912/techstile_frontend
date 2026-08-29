@@ -43,7 +43,7 @@ class _ManagerDrawerState extends State<ManagerDrawer> {
     
 
     return Drawer(
-      backgroundColor: AppTheme.secondary,
+      backgroundColor: AppTheme.background,
 
       child: Column(
         children: [
@@ -63,7 +63,7 @@ class _ManagerDrawerState extends State<ManagerDrawer> {
                 "Manager Panel",
 
                 style: TextStyle(
-                  color: AppTheme.secondary,
+                  color: AppTheme.textSecondary,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),

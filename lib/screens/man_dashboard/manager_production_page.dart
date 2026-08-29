@@ -101,55 +101,21 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
         elevation: 0,
         title: const Text(
           'Manager Productions',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 17),
+          style: TextStyle(color:   AppTheme.textSecondary, fontWeight: FontWeight.w800, fontSize: 17),
         ),
         iconTheme: const IconThemeData(color: Colors.white),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(110), // Search bar + Tabs ki height
-          child: Column(
-            children: [
-              // // 1. Visible Search Input Box
-              // Padding(
-              //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-              //   child: Container(
-              //     height: 42,
-              //     decoration: BoxDecoration(
-              //       color: Colors.white,
-              //       borderRadius: BorderRadius.circular(10),
-              //     ),
-              //     child: TextField(
-              //       onChanged: (val) {
-              //         setState(() {
-              //           _searchQuery = val;
-              //         });
-              //       },
-              //       style: const TextStyle(color: Colors.black, fontSize: 13),
-              //       decoration: InputDecoration(
-              //         hintText: 'Search machine, variety or date...',
-              //         hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 13),
-              //         prefixIcon: const Icon(Icons.search, color: AppTheme.primary, size: 20),
-              //         border: InputBorder.none,
-              //         contentPadding: const EdgeInsets.symmetric(vertical: 10),
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              // 2. TabBar
-              TabBar(
-                controller: _tab,
-                indicatorColor: AppTheme.surface,
-                indicatorWeight: 3,
-                labelColor: Colors.white,
-                unselectedLabelColor: AppTheme.surface,
-                labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
-                unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
-                tabs: [
-                  Tab(text: 'Pending (${_pending.length})'),
-                  Tab(text: 'Approved (${_approved.length})'),
-                ],
-              ),
-            ],
-          ),
+        bottom: TabBar(
+          controller: _tab,
+          indicatorColor: AppTheme.surface,
+          indicatorWeight: 3,
+          labelColor:   AppTheme.secondary,
+          unselectedLabelColor: AppTheme.surface,
+          labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+          unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
+          tabs: [
+            Tab(text: 'Pending (${_pending.length})'),
+            Tab(text: 'Approved (${_approved.length})'),
+          ],
         ),
       ),
       body: loading
@@ -180,10 +146,8 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
         child: Column(mainAxisSize: MainAxisSize.min, children: [
           Icon(Icons.inbox_rounded, size: 52, color: AppTheme.neutral),
           const SizedBox(height: 12),
-          Text(
-            _searchQuery.isNotEmpty ? 'No matching records found' : 'No records found',
-            style: const TextStyle(color: AppTheme.primary, fontSize: 14, fontWeight: FontWeight.w600),
-          ),
+          const Text('No records found',
+              style: TextStyle(color: AppTheme.textPrimary, fontSize: 14, fontWeight: FontWeight.w600)),
         ]),
       );
     }
@@ -234,7 +198,7 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
               const SizedBox(height: 2),
               Text(
                 'Batch: ${p['batch_id'] ?? '-'}  •  $employeeName',
-                style: TextStyle(color: AppTheme.primary.withOpacity(0.55), fontSize: 11),
+                style: TextStyle(color: AppTheme.textPrimary.withOpacity(0.55), fontSize: 11),
               ),
             ])),
             const SizedBox(width: 8),
@@ -375,41 +339,41 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
     );
   }
 
-  Widget _infoBox({required String label, required String value}) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
-        decoration: BoxDecoration(
-          color: AppTheme.background,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: AppTheme.primary.withOpacity(0.06)),
-        ),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(label,
-              style: TextStyle(
-                  color: AppTheme.primary.withOpacity(0.5),
-                  fontSize: 9,
-                  fontWeight: FontWeight.w600)),
-          const SizedBox(height: 3),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            alignment: Alignment.centerLeft,
-            child: Text(value,
-                maxLines: 1,
-                style: const TextStyle(
-                    color: AppTheme.textPrimary, fontSize: 12.5, fontWeight: FontWeight.w700)),
-          ),
-        ]),
+ Widget _infoBox({required String label, required String value}) {
+  return Expanded(
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppTheme.secondary,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: AppTheme.primary.withOpacity(0.06)),
       ),
-    );
-  }
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(label,
+            style: TextStyle(
+                color: AppTheme.primary.withOpacity(0.5),
+                fontSize: 9,
+                fontWeight: FontWeight.w600)),
+        const SizedBox(height: 3),
+        FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: Alignment.centerLeft,
+          child: Text(value,
+              maxLines: 1,
+              style: const TextStyle(
+                  color: AppTheme.textPrimary, fontSize: 12.5, fontWeight: FontWeight.w700)),
+        ),
+      ]),
+    ),
+  );
+}
 
   Widget _errorView() => Center(
     child: Column(mainAxisSize: MainAxisSize.min, children: [
       const Icon(Icons.error_outline_rounded, size: 48, color: AppTheme.error),
       const SizedBox(height: 12),
       Text(error ?? 'Something went wrong',
-          style: const TextStyle(color: AppTheme.primary)),
+          style: const TextStyle(color: AppTheme.textPrimary)),
       const SizedBox(height: 16),
       ElevatedButton(onPressed: _load, child: const Text('Retry')),
     ]),

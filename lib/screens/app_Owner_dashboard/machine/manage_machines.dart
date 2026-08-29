@@ -289,7 +289,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
         title: const Text(
           "All Machines",
           style: TextStyle(
-            color: AppTheme.secondary,
+            color: AppTheme.textSecondary,
             fontSize: 20,
             fontWeight: FontWeight.bold,
           ),
@@ -603,7 +603,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
 
           border: Border.all(
             color: isActive
-                ? Colors.green
+                ?  AppTheme.success
                 : Colors.transparent,
 
             width: 1.5,
@@ -622,7 +622,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
 
               decoration: BoxDecoration(
                 color: isActive
-                    ? Colors.green
+                    ?AppTheme.success.withOpacity(0.16)
                     : AppTheme.primary,
 
                 shape: BoxShape.circle,
@@ -630,7 +630,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
 
               child: const Icon(
                 Icons.precision_manufacturing,
-                color: Colors.white,
+                 color: AppTheme.success,
                 size: 20,
               ),
             ),
@@ -657,7 +657,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
                       fontSize: 16,
 
                       color: isActive
-                          ? Colors.green.shade800
+                          ? AppTheme.success
                           : AppTheme.primary,
                     ),
                   ),
@@ -682,27 +682,10 @@ class _MachinesScreenState extends State<MachinesScreen> {
                           EdgeInsets.only(
                         top: 4,
                       ),
-
-                      child: Text(
-                        "Active • Scanned in last 24 hours",
-
-                        style: TextStyle(
-                          color:
-                              Colors.green,
-
-                          fontSize: 11,
-
-                          fontWeight:
-                              FontWeight.bold,
-                        ),
-                      ),
                     ),
                 ],
               ),
             ),
-
-       
-            // ACTIVE BADGE
        
 
             if (isActive)
@@ -720,7 +703,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
 
                 decoration:
                     BoxDecoration(
-                  color: Colors.green,
+                   color: AppTheme.success,
 
                   borderRadius:
                       BorderRadius.circular(

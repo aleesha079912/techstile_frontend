@@ -77,7 +77,7 @@ class _HistoryScreenState extends State<HistoryScreen>
         title: const Text(
           'Production History',
           style: TextStyle(
-            color: AppTheme.secondary,
+            color:   AppTheme.textSecondary,
             fontWeight: FontWeight.w700,
             fontSize: 18,
           ),
@@ -117,7 +117,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                     child: TabBar(
                       controller: _tabController,
                       indicator: BoxDecoration(
-                        color: AppTheme.active,
+                        color: AppTheme.success,
                         borderRadius: BorderRadius.circular(30),
                       ),
                       indicatorSize: TabBarIndicatorSize.tab,
@@ -167,7 +167,7 @@ class _HistoryScreenState extends State<HistoryScreen>
             Text(
               label,
               style: TextStyle(
-                color: AppTheme.secondary.withOpacity(0.7),
+                color: AppTheme.textSecondary.withOpacity(0.7),
                 fontSize: 11,
                 fontWeight: FontWeight.w500,
                 letterSpacing: 0.8,
@@ -203,7 +203,7 @@ class _HistoryScreenState extends State<HistoryScreen>
             const SizedBox(height: 12),
             Text(
               isApproved ? 'No completed records' : 'No pending records',
-              style: TextStyle(color: AppTheme.neutral, fontSize: 15),
+              style: TextStyle(color: AppTheme.textneutral, fontSize: 15),
             ),
           ],
         ),
@@ -223,7 +223,7 @@ class _HistoryScreenState extends State<HistoryScreen>
 
   // Production card
   Widget _productionCard(dynamic item, {required bool isApproved}) {
-    final accent = isApproved ? AppTheme.active : AppTheme.surface;
+    final accent = isApproved ? AppTheme.success : AppTheme.surface;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -268,7 +268,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                     style: const TextStyle(
                       fontWeight: FontWeight.w700,
                       fontSize: 15,
-                      color:AppTheme.primary,
+                      color:AppTheme.textPrimary,
                     ),
                   ),
                 ),
@@ -322,7 +322,7 @@ class _HistoryScreenState extends State<HistoryScreen>
             style: const TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 13,
-              color: AppTheme.primary,
+              color: AppTheme.textPrimary,
             ),
           ),
           Expanded(
@@ -330,7 +330,7 @@ class _HistoryScreenState extends State<HistoryScreen>
               value?.toString() ?? '—',
               style: TextStyle(
                 fontSize: 13,
-                color:AppTheme.primary.withOpacity(0.7),
+                color:AppTheme.textPrimary.withOpacity(0.7),
               ),
             ),
           ),

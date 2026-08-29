@@ -117,7 +117,7 @@ class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
             const Text(
               'All Machines',
               style: TextStyle(
-                color: AppTheme.secondary,
+                color: AppTheme.textSecondary,
                 fontWeight: FontWeight.w800,
                 fontSize: 17,
               ),
@@ -125,7 +125,7 @@ class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
             Text(
               loading ? 'Loading...' : (factoryName ?? 'Factory'),
               style: TextStyle(
-                color: AppTheme.secondary.withOpacity(0.65),
+                color: AppTheme.textSecondary.withOpacity(0.65),
                 fontSize: 12,
               ),
             ),
@@ -170,7 +170,7 @@ class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
                             child: _statBox(
                               "Total Machines",
                               "$totalCount",
-                              AppTheme.primary,
+                              AppTheme.textPrimary,
                               Icons.precision_manufacturing_rounded,
                               !showActiveOnly,
                               () {
@@ -186,7 +186,7 @@ class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
                             child: _statBox(
                               "Active",
                               "$activeCount",
-                              AppTheme.success,
+                              AppTheme.active,
                               Icons.bolt_rounded,
                               showActiveOnly,
                               () {
@@ -282,7 +282,7 @@ class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
                   Text(
                     value,
                     style: TextStyle(
-                      color: isSelected ?  AppTheme.secondary : activeThemeColor,
+                      color: isSelected ?  AppTheme.textSecondary : activeThemeColor,
                       fontSize: 18,
                       fontWeight: FontWeight.w800,
                     ),
@@ -382,12 +382,12 @@ class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: isActive
-              ? AppTheme.success.withOpacity(0.08)
+              ? AppTheme.active.withOpacity(0.08)
               : AppTheme.secondary,
           borderRadius: AppTheme.cardRadius,
           border: Border.all(
             color: isActive
-                ? AppTheme.success.withOpacity(0.4)
+                ? AppTheme.active.withOpacity(0.4)
                 : Colors.transparent,
             width: 1.5,
           ),
@@ -400,13 +400,13 @@ class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
               height: 48,
               decoration: BoxDecoration(
                 color: isActive
-                    ? AppTheme.success.withOpacity(0.15)
+                    ? AppTheme.active.withOpacity(0.15)
                     : AppTheme.neutral.withOpacity(0.4),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
                 Icons.precision_manufacturing_rounded,
-                color: isActive ? AppTheme.success : AppTheme.primary,
+                color: isActive ? AppTheme.active: AppTheme.primary,
                 size: 24,
               ),
             ),
@@ -441,7 +441,7 @@ class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
               ),
               decoration: BoxDecoration(
                 color: isActive
-                    ? AppTheme.success.withOpacity(0.2)
+                    ? AppTheme.active.withOpacity(0.2)
                     : AppTheme.neutral.withOpacity(0.2),
                 borderRadius: BorderRadius.circular(20),
               ),

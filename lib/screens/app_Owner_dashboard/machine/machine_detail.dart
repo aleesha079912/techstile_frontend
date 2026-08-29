@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/owner_enter_productions.dart';
 
 import 'package:techstile_frontend/core/utils/theme.dart';
@@ -117,6 +118,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
       backgroundColor: AppTheme.secondary,
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
+       
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
@@ -204,16 +206,17 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 24),
                         decoration: BoxDecoration(
                           color: AppTheme.secondary,
+                         
                           borderRadius: BorderRadius.circular(14),
                         ),
                         child: Column(
                           children: [
                             Icon(Icons.inventory_2_outlined,
-                                size: 32, color: Colors.grey.shade300),
+                                size: 32, color:AppTheme.neutral),
                             const SizedBox(height: 8),
                             Text('No production batch assigned yet',
                                 style: TextStyle(
-                                    color: Colors.grey.shade400, fontSize: 13)),
+                                    color: AppTheme.textneutral, fontSize: 13)),
                           ],
                         ),
                       )
@@ -253,16 +256,17 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 28),
                         decoration: BoxDecoration(
                           color: AppTheme.secondary,
+                         
                           borderRadius: BorderRadius.circular(14),
                         ),
                         child: Column(
                           children: [
                             Icon(Icons.person_off_outlined,
-                                size: 34, color: Colors.grey.shade300),
+                                size: 34, color: AppTheme.neutral),
                             const SizedBox(height: 8),
                             Text('No employee assigned to this machine yet',
                                 style: TextStyle(
-                                    color: Colors.grey.shade400, fontSize: 13)),
+                                    color: AppTheme.textneutral, fontSize: 13)),
                           ],
                         ),
                       )
@@ -294,6 +298,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
         boxShadow: [
           BoxShadow(
             color: AppTheme.primary.withOpacity(0.3),
+          
             blurRadius: 16,
             offset: const Offset(0, 6),
           ),
@@ -306,6 +311,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
             height: 60,
             decoration: BoxDecoration(
               color: AppTheme.secondary.withOpacity(0.12),
+              
               borderRadius: BorderRadius.circular(16),
             ),
             child: const Icon(
@@ -354,10 +360,11 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppTheme.secondary,
+     
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: AppTheme.onsurface.withOpacity(0.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -418,10 +425,11 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
         color: AppTheme.secondary,
+      
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: AppTheme.onsurface.withOpacity(0.04),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -433,6 +441,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: AppTheme.primary.withOpacity(0.07),
+             
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(icon, color:  AppTheme.primary, size: 18),
@@ -467,10 +476,12 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
       padding: const EdgeInsets.symmetric(vertical: 14),
       decoration: BoxDecoration(
         color: AppTheme.primary,
+       
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
             color: AppTheme.primary.withOpacity(0.25),
+           
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),

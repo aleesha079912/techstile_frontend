@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
 import '../../../core/services/employee_service.dart';
 import '../../../core/utils/theme.dart';
 
@@ -243,7 +242,7 @@ class _AssignShiftsScreenState extends State<AssignShiftsScreen> {
                          item['user']?['name'] ?? "Employee ${item['id']}",
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: AppTheme.primary,
+                            color: AppTheme.textPrimary,
                           ),
                         ),
                         subtitle: Text(

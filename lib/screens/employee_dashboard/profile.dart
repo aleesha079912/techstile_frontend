@@ -94,13 +94,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ),
           CircleAvatar(
             radius: 32,
-            backgroundColor: AppTheme.secondary.withOpacity(0.25),
+            backgroundColor: AppTheme.background.withOpacity(0.25),
             child: Text(
               firstLetter,
               style: const TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.bold,
-                color: AppTheme.secondary,
+                color: AppTheme.textSecondary,
               ),
             ),
           ),
@@ -111,7 +111,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               fontSize: 19,
               fontWeight: FontWeight.bold,
               letterSpacing: 0.2,
-              color:AppTheme.secondary,
+              color:AppTheme.textSecondary,
             ),
           ),
           const SizedBox(height: 3),
@@ -119,7 +119,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             email,
             style: TextStyle(
               fontSize: 12,
-              color: AppTheme.secondary.withOpacity(0.85),
+              color: AppTheme.textSecondary.withOpacity(0.85),
             ),
           ),
         ],
@@ -345,7 +345,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background, // light grey page background
+      backgroundColor: AppTheme.background, 
       appBar: AppBar(title: const Text("User Profile")),
       body: loading
           ? const Center(child: CircularProgressIndicator())

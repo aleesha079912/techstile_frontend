@@ -70,7 +70,7 @@ class _RoleManagementScreenState extends State<RoleManagementScreen> {
                 "Manage system roles (Owner only)",
                 style: TextStyle(
                   fontSize: 14,
-                  color:  AppTheme.neutral,
+                  color:  AppTheme.textneutral,
                 ),
               ),
             ),
@@ -221,7 +221,7 @@ class _RoleManagementScreenState extends State<RoleManagementScreen> {
                                 "Created: ${roles[index]['created_at']}",
                                 style: const TextStyle(
                                   fontSize: 12,
-                                  color:  AppTheme.neutral,
+                                  color:  AppTheme.textneutral,
                                 ),
                               ),
                             ],

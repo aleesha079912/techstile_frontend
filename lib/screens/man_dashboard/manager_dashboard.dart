@@ -172,11 +172,11 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
         children: [
           const Text('Manager Dashboard',
               style: TextStyle(
-                  color: AppTheme.secondary, fontWeight: FontWeight.w800, fontSize: 17)),
+                  color: AppTheme.textSecondary, fontWeight: FontWeight.w800, fontSize: 17)),
           Text(
             loading ? 'Loading...' : (factory?['name'] ?? 'Factory'),
             style: TextStyle(
-                color:  AppTheme.secondary.withOpacity(0.65), fontSize: 12),
+                color:  AppTheme.textSecondary.withOpacity(0.65), fontSize: 12),
           ),
         ],
       ),
@@ -194,7 +194,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
             const SizedBox(height: 12),
             Text(error ?? 'Something went wrong',
                 textAlign: TextAlign.center,
-                style: const TextStyle(color: AppTheme.secondary, fontSize: 13)),
+                style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13)),
             const SizedBox(height: 16),
             ElevatedButton(onPressed: load, child: const Text('Retry')),
           ],
@@ -234,7 +234,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
               children: [
                 Text(factory?['name'] ?? 'Factory',
                     style: const TextStyle(
-                        color:  AppTheme.secondary, fontWeight: FontWeight.w800, fontSize: 18)),
+                        color:  AppTheme.textSecondary, fontWeight: FontWeight.w800, fontSize: 18)),
                 const SizedBox(height: 4),
                 Row(
                   children: [
@@ -245,7 +245,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
                       child: Text(
                         '${factory?['address'] ?? ''}, ${factory?['city'] ?? ''}',
                         style: TextStyle(
-                            color:  AppTheme.secondary.withOpacity(0.65), fontSize: 12),
+                            color:  AppTheme.textSecondary.withOpacity(0.65), fontSize: 12),
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),

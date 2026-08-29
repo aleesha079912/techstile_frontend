@@ -68,16 +68,16 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
               child: Text(
                 firstLetter,
                 style: const TextStyle(
-                    fontSize: 28, fontWeight: FontWeight.bold, color:  AppTheme.secondary),
+                    fontSize: 28, fontWeight: FontWeight.bold, color:    AppTheme.textSecondary),
               ),
             ),
           ),
           const SizedBox(height: 12),
           Text(name,
               style: const TextStyle(
-                  fontSize: 20, fontWeight: FontWeight.bold, color:  AppTheme.secondary)),
+                  fontSize: 20, fontWeight: FontWeight.bold, color:    AppTheme.textSecondary)),
           const SizedBox(height: 3),
-          Text(email, style: TextStyle(fontSize: 12, color:  AppTheme.secondary.withOpacity(0.85))),
+          Text(email, style: TextStyle(fontSize: 12, color:    AppTheme.textSecondary.withOpacity(0.85))),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -87,7 +87,7 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
             ),
             child: const Text(
               "Owner",
-              style: TextStyle(color:  AppTheme.secondary, fontSize: 11, fontWeight: FontWeight.w700),
+              style: TextStyle(color:    AppTheme.textSecondary, fontSize: 11, fontWeight: FontWeight.w700),
             ),
           ),
         ],
@@ -192,8 +192,8 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
           },
         ),
         title: const Text(
-          "Profile",
-          style: TextStyle(color: AppTheme.secondary),
+          "Owner Profile",
+          style: TextStyle(color:   AppTheme.textSecondary),
         ),
       ),
       body: loading

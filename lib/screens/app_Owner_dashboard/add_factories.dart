@@ -63,7 +63,7 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
           existing != null ? "Factory updated!" : "Factory added!",
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: AppTheme.success.withOpacity(0.8),
-          colorText: AppTheme.secondary,
+          colorText:   AppTheme.textSecondary,
         );
       }
     } catch (e) {
@@ -145,11 +145,11 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
                   children: [
                     Text(
                       isEdit ? "Edit Factory" : "Add Factory",
-                      style: const TextStyle(color: AppTheme.secondary, fontSize: 18, fontWeight: FontWeight.w600),
+                      style: const TextStyle(color:   AppTheme.textSecondary, fontSize: 18, fontWeight: FontWeight.w600),
                     ),
                     Text(
                       isEdit ? "Update existing unit details" : "Register a new production unit",
-                      style: TextStyle(color:AppTheme.secondary.withOpacity(0.6), fontSize: 11),
+                      style: TextStyle(color:  AppTheme.textSecondary.withOpacity(0.6), fontSize: 11),
                     ),
                   ],
                 ),
@@ -187,12 +187,12 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
               children: [
                 Text(
                   isEdit ? "Update Factory Info" : "New Factory Registration",
-                  style: const TextStyle(color: AppTheme.primary, fontSize: 14, fontWeight: FontWeight.w600),
+                  style: const TextStyle(color:   AppTheme.textPrimary, fontSize: 14, fontWeight: FontWeight.w600),
                 ),
                 const SizedBox(height: 3),
                 Text(
                   isEdit ? "Modify details and save changes to server" : "Fill in the details to add a factory to your network",
-                  style: const TextStyle(color: AppTheme.secondary, fontSize: 11.5, height: 1.4),
+                  style: const TextStyle(color:   AppTheme.textSecondary, fontSize: 11.5, height: 1.4),
                 ),
               ],
             ),
@@ -204,7 +204,7 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
 
   Widget _buildSectionLabel(String label) => Text(
     label.toUpperCase(),
-    style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppTheme.primary, letterSpacing: 0.9),
+    style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppTheme.textPrimary, letterSpacing: 0.9),
   );
 
   Widget _buildField({required TextEditingController controller, required String label, required String hint, required IconData icon, String? Function(String?)? validator}) {
@@ -221,7 +221,7 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
         decoration: InputDecoration(
           labelText: label,
           hintText: hint,
-          labelStyle: const TextStyle( color: AppTheme.primary, fontSize: 12, fontWeight: FontWeight.w600),
+          labelStyle: const TextStyle( color: AppTheme.textPrimary, fontSize: 12, fontWeight: FontWeight.w600),
           prefixIcon: Container(
             margin: const EdgeInsets.all(10),
             width: 34, height: 34,
@@ -259,9 +259,9 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
                 ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: AppTheme.secondary, strokeWidth: 2))
                 : const Column(
                     children: [
-                      Text("Save Factory", style: TextStyle(color:AppTheme.secondary, fontSize: 15, fontWeight: FontWeight.w600)),
+                      Text("Save Factory", style: TextStyle(color:  AppTheme.textSecondary, fontSize: 15, fontWeight: FontWeight.w600)),
                       SizedBox(height: 2),
-                      Text("All fields are required", style: TextStyle(color:AppTheme.neutral, fontSize: 10.5)),
+                      Text("All fields are required", style: TextStyle(color:AppTheme.textneutral, fontSize: 10.5)),
                     ],
                   ),
             ),

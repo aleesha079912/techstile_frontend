@@ -164,7 +164,7 @@ class _LoginScreenState extends State<LoginScreen> {
       prefixIcon: Icon(icon, color: AppTheme.secondary),
       suffixIcon: suffixIcon,
       filled: true,
-      fillColor: AppTheme.background,
+      fillColor: AppTheme.secondary,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
         borderSide: BorderSide.none,
@@ -192,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     const Text(
                       "TECHstile",
                       style: TextStyle(
-                        color: AppTheme.primary,
+                        color: AppTheme.textPrimary,
                         fontWeight: FontWeight.bold),
                     ),
                   ],
@@ -203,7 +203,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const Text(
                   "Access",
                   style: TextStyle(
-                    color: AppTheme.primary,
+                    color: AppTheme.textPrimary,
                     fontSize: 28, fontWeight: FontWeight.bold),
                 ),
 
@@ -274,7 +274,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Text(
                       "Forgot Password?",
                       style: TextStyle(
-                        color: AppTheme.primary,
+                        color: AppTheme.textPrimary,
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),
@@ -302,7 +302,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Text(
                             "System Help Contact Supervisor",
                             style: TextStyle(
-                                color: AppTheme.secondary),
+                                color: AppTheme.textSecondary),
                           ),
                         ),
                         const Icon(Icons.arrow_forward_ios,

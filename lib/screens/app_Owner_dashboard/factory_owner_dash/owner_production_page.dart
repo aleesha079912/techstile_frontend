@@ -77,13 +77,13 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage>
         backgroundColor: AppTheme.primary,
         elevation: 0,
         title: const Text('Owner Productions',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 17)),
-        iconTheme: const IconThemeData(color: Colors.white),
+            style: TextStyle(color:   AppTheme.textSecondary, fontWeight: FontWeight.w800, fontSize: 17)),
+        iconTheme: const IconThemeData(color:   AppTheme.secondary),
         bottom: TabBar(
           controller: _tab,
           indicatorColor: AppTheme.surface,
           indicatorWeight: 3,
-          labelColor: Colors.white,
+          labelColor:   AppTheme.secondary,
           unselectedLabelColor: AppTheme.surface,
           labelStyle: const TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
           unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 13),
@@ -122,7 +122,7 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage>
           Icon(Icons.inbox_rounded, size: 52, color: AppTheme.neutral),
           const SizedBox(height: 12),
           const Text('No records found',
-              style: TextStyle(color: AppTheme.primary, fontSize: 14, fontWeight: FontWeight.w600)),
+              style: TextStyle(color: AppTheme.textPrimary, fontSize: 14, fontWeight: FontWeight.w600)),
         ]),
       );
     }
@@ -172,7 +172,7 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage>
               ),
               Text(
                 'Batch: ${p['batch_id'] ?? '-'}  •  $employeeName',
-                style: TextStyle(color: AppTheme.primary.withOpacity(0.55), fontSize: 11),
+                style: TextStyle(color: AppTheme.textPrimary.withOpacity(0.55), fontSize: 11),
               ),
             ])),
             _statusChip(status),
@@ -314,7 +314,7 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage>
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(label,
               style: TextStyle(
-                  color: AppTheme.primary.withOpacity(0.5),
+                  color: AppTheme.textPrimary.withOpacity(0.5),
                   fontSize: 9,
                   fontWeight: FontWeight.w600)),
           const SizedBox(height: 2),
@@ -336,7 +336,7 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage>
       const Icon(Icons.error_outline_rounded, size: 48, color: AppTheme.error),
       const SizedBox(height: 12),
       Text(error ?? 'Something went wrong',
-          style: const TextStyle(color: AppTheme.primary)),
+          style: const TextStyle(color: AppTheme.textPrimary)),
       const SizedBox(height: 16),
       ElevatedButton(onPressed: _load, child: const Text('Retry')),
     ]),

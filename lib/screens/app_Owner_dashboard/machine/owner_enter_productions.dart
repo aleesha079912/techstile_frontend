@@ -65,7 +65,7 @@ class _OwnerEnterProductionScreenState
         "Error",
         "Maximum ${widget.remaining} allowed (ready + waste) — ye remaining dono shifts mila kar hai",
         backgroundColor: AppTheme.error,
-        colorText: AppTheme.secondary,
+        colorText:  AppTheme.textSecondary,
       );
       return;
     }
@@ -94,14 +94,14 @@ class _OwnerEnterProductionScreenState
           "Success",
           "Production submitted for approval",
           backgroundColor: AppTheme.success,
-          colorText: AppTheme.secondary,
+          colorText:   AppTheme.textSecondary,
         );
       } else {
         Get.snackbar(
           "Error",
           result['message']?.toString() ?? "Production not added",
           backgroundColor: AppTheme.error,
-          colorText: AppTheme.secondary,
+          colorText:   AppTheme.textSecondary,
         );
       }
     } catch (e) {
@@ -115,7 +115,7 @@ class _OwnerEnterProductionScreenState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontSize: 12, color: AppTheme.neutral)),
+        Text(label, style: const TextStyle(fontSize: 12, color:   AppTheme.textneutral)),
         const SizedBox(height: 6),
         Container(
           width: double.infinity,
@@ -169,7 +169,7 @@ class _OwnerEnterProductionScreenState
 
                 const SizedBox(height: 20),
                 const Text("Employee (Shift)",
-                    style: TextStyle(fontSize: 12, color: AppTheme.neutral)),
+                    style: TextStyle(fontSize: 12, color: AppTheme.textneutral)),
                 const SizedBox(height: 6),
                 DropdownButtonFormField<Map<String, dynamic>>(
                   value: _selectedShift,
@@ -188,7 +188,7 @@ class _OwnerEnterProductionScreenState
 
                 const SizedBox(height: 15),
                 const Text("Ready Production",
-                    style: TextStyle(fontSize: 12, color: AppTheme.neutral)),
+                    style: TextStyle(fontSize: 12, color: AppTheme.textneutral)),
                 const SizedBox(height: 6),
                 TextField(
                   controller: readyController,
@@ -201,7 +201,7 @@ class _OwnerEnterProductionScreenState
 
                 const SizedBox(height: 15),
                 const Text("Waste Production",
-                    style: TextStyle(fontSize: 12, color: AppTheme.neutral)),
+                    style: TextStyle(fontSize: 12, color: AppTheme.textneutral)),
                 const SizedBox(height: 6),
                 TextField(
                   controller: wasteController,
@@ -227,7 +227,7 @@ class _OwnerEnterProductionScreenState
                         : const Text(
                             "Submit Production",
                             style: TextStyle(
-                                color:AppTheme.secondary, fontSize: 16, fontWeight: FontWeight.bold),
+                                color:  AppTheme.textSecondary, fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                   ),
                 ),

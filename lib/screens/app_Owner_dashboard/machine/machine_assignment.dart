@@ -94,7 +94,7 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Assignment Failed"),
-          backgroundColor: Colors.red,
+          backgroundColor: AppTheme.error,
         ),
       );
     }
@@ -193,7 +193,7 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
                       decoration: BoxDecoration(
                         color: Colors.blue.shade50,
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.blue.shade100),
+                        border: Border.all(color:AppTheme.info),
                       ),
                       child: const Row(
                         children: [

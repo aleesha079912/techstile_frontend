@@ -5,9 +5,10 @@ import 'auth_service.dart';
 class FactoryDashboardService {
   final String baseUrl = "http://localhost:8000/api/factories";
 
-  Future<Map<String, dynamic>> getDashboard(String factoryId) async {
+  Future<Map<String, dynamic>> getDashboard(String factoryId, {String? period}) async {
+    final query = (period != null && period.isNotEmpty) ? "?period=${Uri.encodeComponent(period)}" : "";
     final response = await http.get(
-      Uri.parse("$baseUrl/dashboard/$factoryId"),
+      Uri.parse("$baseUrl/dashboard/$factoryId$query"),
       headers: AuthService.authHeaders,
     );
 
