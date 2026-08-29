@@ -35,42 +35,34 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
     load();
   }
  
-  Future<void> load() async {
-    setState(() => loading = true);
+  Future<void> load({bool showSpinner = true}) async {
+    if (showSpinner) {
+      setState(() => loading = true);
+    }
     try {
-      // TODO: if your backend supports it, pass the period so the numbers
-      // returned (today_units / weekly_units etc.) reflect the selected
-      // range, e.g. _service.getDashboard(widget.factoryId, period: selectedPeriod)
-      final res = await _service.getDashboard(widget.factoryId);
-      setState(() {
-        data    = res;
-        loading = false;
-      });
+      final res = await _service.getDashboard(
+        widget.factoryId,
+        period: selectedPeriod.toLowerCase(),
+      );
+      if (mounted) {
+        setState(() {
+          data    = res;
+          loading = false;
+        });
+      }
     } catch (_) {
-      setState(() => loading = false);
+      if (mounted) {
+        setState(() => loading = false);
+      }
     }
   }
  
   // Called when the user picks Day/Week/Month/Year from the dropdown.
-  // Refreshes the dashboard's own stat cards for the new period, then takes
-  // the user straight to the Productions history screen filtered for it.
+  // Refreshes the dashboard's own stat cards and varieties list in place for the new period.
   Future<void> onPeriodChanged(String period) async {
     if (period == selectedPeriod) return;
     setState(() => selectedPeriod = period);
-    await load(); // reload this screen's stats scoped to the new period
- 
-    print("Opening production history for period = $period");
- 
-    // TODO: on the ownerProduction (history) screen, read
-    // Get.parameters['period'] and use it to fetch/filter that screen's
-    // history list by day/week/month/year. `arguments` still carries the
-    // factoryId exactly as the "View Productions" button already sends it,
-    // so nothing there needs to change.
-    Get.toNamed(
-      AppRoutes.ownerProduction,
-      arguments: widget.factoryId,
-      parameters: {'period': period.toLowerCase()},
-    );
+    await load();
   }
  
   @override
@@ -93,7 +85,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                     _heroCard(),          // ← production button is inside here
                     const SizedBox(height: 20),
  
-                    // "This Week" label + Day/Week/Month/Year dropdown filter
+                    // "This <selectedPeriod>" label + Day/Week/Month/Year dropdown filter
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -115,7 +107,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                         _statCard(
                           icon:  Icons.calendar_month_rounded,
                           label: selectedPeriod,
-                          value: "${data['weekly_units'] ?? 0}",
+                          value: "${data['period_units'] ?? data['weekly_units'] ?? 0}",
                           unit:  'yards',
                           color: AppTheme.surface,
                         ),
@@ -282,6 +274,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
       Get.toNamed(
         AppRoutes.ownerProduction,
         arguments: widget.factoryId,
+        parameters: {'period': selectedPeriod.toLowerCase()},
       );
     },
     icon: const Icon(Icons.list_alt_rounded),

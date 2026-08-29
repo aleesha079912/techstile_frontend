@@ -44,6 +44,7 @@ class EmployeePayment {
   final String? employeeName;
   final String? factoryName;
   final String? managerName;
+  final double totalExpected;
   final double totalAmount;
   final double totalLength;
   final List<MachineGroup> machines;
@@ -51,12 +52,12 @@ class EmployeePayment {
   final double totalPaid;
   final double remainingAmount;
 
-
   EmployeePayment({
     required this.employeeId,
     required this.employeeName,
     this.factoryName,
     this.managerName,
+    required this.totalExpected,
     required this.totalAmount,
     required this.totalLength,
     required this.machines,
@@ -64,7 +65,6 @@ class EmployeePayment {
     required this.totalPaid,
     required this.remainingAmount,
   });
-
 
   double get readyProductionTotal => machines
       .expand((m) => m.productions)
@@ -75,33 +75,35 @@ class EmployeePayment {
       .fold<double>(0, (sum, p) => sum + (p.readyProduction * p.amountPerMeter));
 
   factory EmployeePayment.fromJson(Map<String, dynamic> json) {
-  return EmployeePayment(
-    employeeId: int.tryParse(json['employee_id'].toString()) ?? 0,
-    employeeName: json['employee_name'],
-    factoryName: json['factory_name'],
-    managerName: json['manager_name'],
+    return EmployeePayment(
+      employeeId: int.tryParse(json['employee_id'].toString()) ?? 0,
+      employeeName: json['employee_name'],
+      factoryName: json['factory_name'],
+      managerName: json['manager_name'],
 
-    totalAmount:
-        double.tryParse(json['total_amount'].toString()) ?? 0,
+      totalExpected:
+          double.tryParse(json['total_expected'].toString()) ?? 0,
 
-    totalEarned:
-        double.tryParse(json['total_earned'].toString()) ?? 0,
+      totalAmount:
+          double.tryParse(json['total_amount'].toString()) ?? 0,
 
-    totalPaid:
-        double.tryParse(json['total_paid'].toString()) ?? 0,
+      totalEarned:
+          double.tryParse(json['total_earned'].toString()) ?? 0,
 
-    remainingAmount:
-        double.tryParse(json['remaining_amount'].toString()) ?? 0,
+      totalPaid:
+          double.tryParse(json['total_paid'].toString()) ?? 0,
 
-    totalLength:
-        double.tryParse(json['total_length'].toString()) ?? 0,
+      remainingAmount:
+          double.tryParse(json['remaining_amount'].toString()) ?? 0,
 
-    machines: (json['machines'] as List? ?? [])
-        .map((e) => MachineGroup.fromJson(e))
-        .toList(),
-  );
-}
+      totalLength:
+          double.tryParse(json['total_length'].toString()) ?? 0,
 
+      machines: (json['machines'] as List? ?? [])
+          .map((e) => MachineGroup.fromJson(e))
+          .toList(),
+    );
+  }
 }
 
 class MachineGroup {
@@ -112,6 +114,8 @@ class MachineGroup {
   final double readyProduction;
   final double wasteProduction;
   final double remainingProduction;
+  final double expectedAmount;
+  final double earnedAmount;
   final double totalAmount;
   final List<ProductionRecord> productions;
 
@@ -123,11 +127,18 @@ class MachineGroup {
     required this.readyProduction,
     required this.wasteProduction,
     required this.remainingProduction,
+    required this.expectedAmount,
+    required this.earnedAmount,
     required this.totalAmount,
     required this.productions,
   });
 
   factory MachineGroup.fromJson(Map<String, dynamic> json) {
+    final exp = double.tryParse(json['expected_amount'].toString()) ?? 0;
+    final earn = double.tryParse(json['earned_amount'].toString()) ??
+        double.tryParse(json['total_amount'].toString()) ??
+        0;
+
     return MachineGroup(
       machineId: json['machine_id'] != null
           ? int.tryParse(json['machine_id'].toString())
@@ -139,7 +150,9 @@ class MachineGroup {
       wasteProduction: double.tryParse(json['waste_production'].toString()) ?? 0,
       remainingProduction:
           double.tryParse(json['remaining_production'].toString()) ?? 0,
-      totalAmount: double.tryParse(json['total_amount'].toString()) ?? 0,
+      expectedAmount: exp,
+      earnedAmount: earn,
+      totalAmount: earn,
       productions: (json['productions'] as List? ?? [])
           .map((e) => ProductionRecord.fromJson(e))
           .toList(),
@@ -151,12 +164,15 @@ class ProductionRecord {
   final int productionId;
   final String batchId;
   final String varietyType;
+  final int status;
   final double totalLength;
   final int readyProduction;
   final double wasteProduction;
   final double remainingProduction;
   final String? machineName;
   final double amountPerMeter;
+  final double expectedAmount;
+  final double earnedAmount;
   final double amount;
   final String? selectDays;
   final String? shiftStart;
@@ -167,12 +183,15 @@ class ProductionRecord {
     required this.productionId,
     required this.batchId,
     required this.varietyType,
+    required this.status,
     required this.totalLength,
     required this.readyProduction,
     required this.wasteProduction,
     required this.remainingProduction,
     this.machineName,
     required this.amountPerMeter,
+    required this.expectedAmount,
+    required this.earnedAmount,
     required this.amount,
     this.selectDays,
     this.shiftStart,
@@ -181,18 +200,28 @@ class ProductionRecord {
   });
 
   factory ProductionRecord.fromJson(Map<String, dynamic> json) {
+    final tLen = double.tryParse(json['total_length'].toString()) ?? 0;
+    final rate = double.tryParse(json['amount_per_meter'].toString()) ?? 0;
+    final exp = double.tryParse(json['expected_amount'].toString()) ?? (tLen * rate);
+    final earn = double.tryParse(json['earned_amount'].toString()) ??
+        double.tryParse(json['amount'].toString()) ??
+        0;
+
     return ProductionRecord(
       productionId: int.tryParse(json['production_id'].toString()) ?? 0,
       batchId: json['batch_id'] ?? '',
       varietyType: json['variety_type'] ?? '',
-      totalLength: double.tryParse(json['total_length'].toString()) ?? 0,
+      status: int.tryParse(json['status'].toString()) ?? 1,
+      totalLength: tLen,
       readyProduction: int.tryParse(json['ready_production'].toString()) ?? 0,
       wasteProduction: double.tryParse(json['waste_production'].toString()) ?? 0,
       remainingProduction:
           double.tryParse(json['remaining_production'].toString()) ?? 0,
       machineName: json['machine_name'],
-      amountPerMeter: double.tryParse(json['amount_per_meter'].toString()) ?? 0,
-      amount: double.tryParse(json['amount'].toString()) ?? 0,
+      amountPerMeter: rate,
+      expectedAmount: exp,
+      earnedAmount: earn,
+      amount: earn,
       selectDays: json['select_days'],
       shiftStart: json['shift_start'],
       shiftEnd: json['shift_end'],
@@ -1518,26 +1547,58 @@ class _MachineGroupTile extends StatelessWidget {
           subtitle: Padding(
             padding: const EdgeInsets.only(top: 4),
             child: Text(
-              '${machine.productionCount} production${machine.productionCount == 1 ? '' : 's'} • ${_formatAmount(machine.totalLength)} m',
+              '${machine.productionCount} batch${machine.productionCount == 1 ? '' : 'es'} • ${_formatAmount(machine.totalLength)} m',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(color: AppTheme.primary.withOpacity(0.55), fontSize: 11),
             ),
           ),
           trailing: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 90),
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: Alignment.centerRight,
-              child: Text(
-                'Rs ${_formatAmount(machine.totalAmount)}',
-                maxLines: 1,
-                style: const TextStyle(
-                    color: AppTheme.success, fontSize: 12, fontWeight: FontWeight.w800),
-              ),
+            constraints: const BoxConstraints(maxWidth: 110),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  'Earned',
+                  style: TextStyle(
+                    color: AppTheme.primary.withOpacity(0.5),
+                    fontSize: 9,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    'Rs ${_formatAmount(machine.earnedAmount)}',
+                    maxLines: 1,
+                    style: const TextStyle(
+                        color: AppTheme.success, fontSize: 12, fontWeight: FontWeight.w800),
+                  ),
+                ),
+              ],
             ),
           ),
           children: [
+            // Row 1: Expected vs Earned Amount
+            Row(
+              children: [
+                _machineStatBox(
+                  'Expected Amount',
+                  'Rs ${_formatAmount(machine.expectedAmount)}',
+                  AppTheme.primary,
+                ),
+                const SizedBox(width: 6),
+                _machineStatBox(
+                  'Earned Amount',
+                  'Rs ${_formatAmount(machine.earnedAmount)}',
+                  AppTheme.success,
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            // Row 2: Ready, Waste, Remaining meters
             Row(
               children: [
                 _machineMiniStat('Ready', '${_formatAmount(machine.readyProduction)} m'),
@@ -1556,6 +1617,46 @@ class _MachineGroupTile extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 8),
                 child: _ProductionRow(record: p),
               )),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _machineStatBox(String label, String value, Color color) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.06),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color.withOpacity(0.12)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                color: color.withOpacity(0.7),
+                fontSize: 9,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 2),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                value,
+                maxLines: 1,
+                style: TextStyle(
+                  color: color,
+                  fontSize: 11.5,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -1592,6 +1693,33 @@ class _ProductionRow extends StatelessWidget {
 
   const _ProductionRow({required this.record});
 
+  String get _statusLabel {
+    switch (record.status) {
+      case 4:
+        return 'Approved';
+      case 5:
+        return 'Rejected';
+      case 2:
+        return 'Mgr Approved';
+      case 3:
+        return 'Mgr Rejected';
+      default:
+        return 'Pending';
+    }
+  }
+
+  Color get _statusColor {
+    switch (record.status) {
+      case 4:
+        return AppTheme.success;
+      case 5:
+      case 3:
+        return AppTheme.error;
+      default:
+        return const Color(0xFFF59E0B);
+    }
+  }
+
   void _showDetail(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -1617,10 +1745,30 @@ class _ProductionRow extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              Text(
-                'Production #${record.productionId}',
-                style: const TextStyle(
-                    color: AppTheme.textPrimary, fontSize: 16, fontWeight: FontWeight.w800),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Production #${record.productionId}',
+                    style: const TextStyle(
+                        color: AppTheme.textPrimary, fontSize: 16, fontWeight: FontWeight.w800),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: _statusColor.withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      _statusLabel,
+                      style: TextStyle(
+                        color: _statusColor,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 4),
               Text(
@@ -1635,7 +1783,8 @@ class _ProductionRow extends StatelessWidget {
               _detailRow('Waste Production', '${_formatAmount(record.wasteProduction)} m'),
               _detailRow('Remaining Production', '${_formatAmount(record.remainingProduction)} m'),
               _detailRow('Rate / meter', 'Rs ${record.amountPerMeter.toStringAsFixed(2)}'),
-              _detailRow('Amount', 'Rs ${_formatAmount(record.amount)}'),
+              _detailRow('Expected Amount', 'Rs ${_formatAmount(record.expectedAmount)}'),
+              _detailRow('Earned Amount', 'Rs ${_formatAmount(record.earnedAmount)}'),
               if (record.selectDays != null && record.selectDays != 'null')
                 _detailRow('Day', record.selectDays!),
               if (record.shiftStart != null)
@@ -1695,13 +1844,31 @@ class _ProductionRow extends StatelessWidget {
                         color: AppTheme.textPrimary, fontSize: 12, fontWeight: FontWeight.w700),
                   ),
                 ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: _statusColor.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    _statusLabel,
+                    style: TextStyle(
+                      color: _statusColor,
+                      fontSize: 9.5,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 6),
                 Flexible(
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     child: Text(
-                      'Rs ${_formatAmount(record.amount)}',
-                      style: const TextStyle(
-                          color: AppTheme.success, fontSize: 12, fontWeight: FontWeight.w800),
+                      'Rs ${_formatAmount(record.earnedAmount)}',
+                      style: TextStyle(
+                          color: record.status == 4 ? AppTheme.success : AppTheme.primary,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w800),
                     ),
                   ),
                 ),
@@ -1720,11 +1887,11 @@ class _ProductionRow extends StatelessWidget {
             const SizedBox(height: 6),
             Row(
               children: [
-                _miniStat('Remaining', '${_formatAmount(record.remainingProduction)} m'),
+                _miniStat('Expected', 'Rs ${_formatAmount(record.expectedAmount)}'),
                 const SizedBox(width: 6),
                 _miniStat('Waste', '${_formatAmount(record.wasteProduction)} m'),
                 const SizedBox(width: 6),
-                _miniStat('Machine', record.machineName ?? '—'),
+                _miniStat('Remaining', '${_formatAmount(record.remainingProduction)} m'),
               ],
             ),
             if (record.selectDays != null && record.selectDays!.isNotEmpty && record.selectDays != 'null') ...[
