@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import '../../../core/services/auth_service.dart';
 import '../../../core/utils/theme.dart';
 import '../manager_profile.dart';
-import '../../employee_dashboard/profile.dart';
 
 class ManagerSettingsScreen extends StatefulWidget {
   final String roleLabel;
@@ -128,11 +127,7 @@ class _ManagerSettingsScreenState
                     ),
                   ),
 
-                  const Icon(
-                    Icons.arrow_forward_ios,
-                    color:  AppTheme.secondary,
-                    size: 16,
-                  ),
+                
                 ],
               ),
             ),
@@ -272,8 +267,8 @@ class _ManagerSettingsScreenState
             color: textColor,
           ),
         ),
-        trailing:
-            const Icon(Icons.arrow_forward_ios, size: 16),
+        // trailing:
+            // const Icon(Icons.arrow_forward_ios, size: 16),
         onTap: onTap,
       ),
     );
@@ -318,9 +313,11 @@ class _ManagerSettingsScreenState
       title: "Logout",
       middleText:
           "Are you sure you want to logout?",
-      textCancel: "Cancel",
-      textConfirm: "Logout",
+      textCancel: "No",
+      textConfirm: "Yes",
       confirmTextColor:  AppTheme.secondary,
+      cancelTextColor: AppTheme.primary,
+      buttonColor: AppTheme.primary,
       onConfirm: () {
         AuthService.logout();
 

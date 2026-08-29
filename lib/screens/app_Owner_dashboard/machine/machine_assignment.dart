@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:techstile_frontend/core/services/machine_assignment_service.dart';
+import 'package:techstile_frontend/core/utils/theme.dart';
 
 class MachineAssignmentPage extends StatefulWidget {
   const MachineAssignmentPage({super.key});
@@ -103,9 +104,15 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Machine Assignment"),
+        backgroundColor: AppTheme.primary,
+        title: const Text("Machine Assignment",
+        style: TextStyle(
+          color: AppTheme.secondary
+        ),
+        ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back,
+          color: AppTheme.secondary,),
           onPressed: () {
             Navigator.of(context).pop();
           },

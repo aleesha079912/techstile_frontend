@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/history_screen.dart';
-import 'package:techstile_frontend/screens/factory_owner_dash/paymentsScreen.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/factory_owner_dash/paymentsScreen.dart';
 // import 'package:techstile_frontend/screens/employee_dashboard/payment_screen.dart';
 
 import '../screens/employee_dashboard/employee_dashboard.dart';

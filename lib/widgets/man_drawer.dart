@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
 
-import '../../core/services/manager_service/man_emp_notification_service.dart';
+import '../core/services/notification_service.dart';
 import '../routes/routes.dart';
 import '../../core/services/auth_service.dart';
 

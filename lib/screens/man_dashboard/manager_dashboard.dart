@@ -128,16 +128,16 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
                           children: [
                             _statCard(
                               icon:  Icons.precision_manufacturing_rounded,
-                              label: 'Machines',
+                              label: 'Total Machines',
                               value: "${data['machines_count'] ?? 0}",
-                              unit:  'active',
+                              // unit:  'active',
                             ),
                             const SizedBox(width: 12),
                             _statCard(
                               icon:  Icons.groups_rounded,
-                              label: 'Employees',
+                              label: 'Total Employees',
                               value: "${data['employees_count'] ?? 0}",
-                              unit:  'on duty',
+                              // unit:  'on duty',
                             ),
                           ],
                         ),
@@ -294,7 +294,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
     required IconData icon,
     required String label,
     required String value,
-    required String unit,
+    String? unit,
   }) {
     return Expanded(
       child: Container(
@@ -320,7 +320,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
                 style: const TextStyle(
                     color: AppTheme.textPrimary, fontSize: 24, fontWeight: FontWeight.w800)),
             const SizedBox(height: 2),
-            Text('$label · $unit',
+            Text('$label${unit != null ? ' ($unit)' : ''}',
                 style: const TextStyle(
                     color: AppTheme.textPrimary, fontSize: 11, fontWeight: FontWeight.w500)),
           ],

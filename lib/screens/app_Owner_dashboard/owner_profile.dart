@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:techstile_frontend/core/services/owner_profile_service.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
-import 'package:techstile_frontend/widgets/owner_drawer.dart';
+
 
 class OwnerProfileScreen extends StatefulWidget {
   final int userId;
@@ -192,7 +192,7 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
           },
         ),
         title: const Text(
-          "Owner Profile",
+          "Profile",
           style: TextStyle(color: AppTheme.secondary),
         ),
       ),

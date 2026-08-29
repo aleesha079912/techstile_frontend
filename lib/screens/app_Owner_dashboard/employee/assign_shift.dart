@@ -214,17 +214,17 @@ class _AssignShiftsScreenState extends State<AssignShiftsScreen> {
         backgroundColor: AppTheme.primary,
         leading: IconButton(
           icon: const Icon(
-            Icons.arrow_back_ios_new,
+            Icons.arrow_back,
             color: AppTheme.secondary,
             size: 18,
           ),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          "TECHSTILE",
+          "Assign Shift",
           style: TextStyle(
             color: AppTheme.secondary,
-            fontWeight: FontWeight.bold,
+            // fontWeight: FontWeight.bold,
           ),
         ),
       ),

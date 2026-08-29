@@ -8,7 +8,7 @@ import 'package:techstile_frontend/screens/employee_dashboard/scan_qr_code.dart'
 import 'package:techstile_frontend/screens/employee_dashboard/history_screen.dart';
 
 import 'package:techstile_frontend/core/services/auth_service.dart';
-import 'package:techstile_frontend/core/services/manager_service/man_emp_notification_service.dart';
+import 'package:techstile_frontend/core/services/notification_service.dart';
 
 import 'package:techstile_frontend/routes/routes.dart';
 

@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:techstile_frontend/screens/app_Owner_dashboard/assign_paermission.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/assign_permission.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/employee/assign_shift.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/machine_assignment.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/role_management.dart';
 import '../../../../core/services/manage_users_service.dart';
 import '../../../../core/utils/theme.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/user/register_user_rolebased.dart';
-
+import 'package:techstile_frontend/screens/app_Owner_dashboard/app_owner_dash.dart';
+import 'package:get/get.dart';
 class ManageUsersScreen extends StatefulWidget {
-  const ManageUsersScreen({super.key});
+  final String factoryId;
+  const ManageUsersScreen({super.key, this.factoryId = '0'});
 
   @override
   State<ManageUsersScreen> createState() => _ManageUsersScreenState();
@@ -20,7 +22,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
 
   String selectedFilter = "All";
   final searchCtrl = TextEditingController();
-  
+  int get factoryId => int.parse(widget.factoryId);
 
   @override
   void initState() {
@@ -76,16 +78,9 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
 
       appBar: AppBar(
   backgroundColor: AppTheme.primary,
-  leading: IconButton(
-    icon: const Icon(
-      Icons.arrow_back_ios_new,
-      color: AppTheme.secondary,
-      size: 18,
-    ),
-    onPressed: () => Navigator.pop(context),
-  ),
+
   title: const Text(
-    "TECHSTILE",
+    "TechStile",
     style: TextStyle(
       color: AppTheme.secondary,
       fontWeight: FontWeight.bold,

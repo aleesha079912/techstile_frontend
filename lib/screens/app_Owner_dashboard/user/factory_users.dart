@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:techstile_frontend/core/services/factory_user_services.dart';
-import 'package:techstile_frontend/screens/app_Owner_dashboard/user/employee_profile.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/employee/employee_profile.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/user/factorymanager_profile.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
@@ -32,9 +32,6 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
   int activeUsers = 0;
 
   final TextEditingController searchCtrl = TextEditingController();
-
-  // false = Total Users
-  // true  = Active Users
   bool showActiveOnly = false;
 
   @override
@@ -171,17 +168,19 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
               Text(
                 value,
                 style: TextStyle(
+                  color: AppTheme.primary,
                   fontSize: 14,
                   fontWeight: FontWeight.bold,
-                  color: color,
+                  // color: color,
                 ),
               ),
               const SizedBox(height: 2),
               Text(
                 title,
                 style: const TextStyle(
+                  color: AppTheme.primary,
                   fontSize: 10,
-                  color: AppTheme.neutral,
+                  // color: AppTheme.neutral,
                 ),
               ),
             ],
@@ -274,12 +273,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
 
     final bool isEmployee =
         role.toLowerCase() == "employee";
-
-    /*
-     * IMPORTANT:
-     * Backend ab is_active true karega jab employee
-     * machine scan karega.
-     */
+// perform action is active true when employee scan machine
     final bool isActive =
         user['is_active'] == true;
 
@@ -316,11 +310,11 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
         padding: const EdgeInsets.all(12),
 
         decoration: BoxDecoration(
-          /*
-           * ACTIVE EMPLOYEE = FULL CARD GREEN
-           *
-           * Normal employee = normal card
-           */
+          
+           // ACTIVE EMPLOYEE = FULL CARD GREEN
+           
+           // Normal employee = normal card
+           
           color: isActive
               ? AppTheme.success.withOpacity(0.16)
               : AppTheme.secondary,
@@ -367,9 +361,9 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                   ),
                 ),
 
-                /*
-                 * Green dot for active employee
-                 */
+                
+                 // Green dot for active employee
+                 
                 if (isActive)
                   Positioned(
                     right: 0,
@@ -409,9 +403,9 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                         ),
                       ),
 
-                      /*
-                       * ACTIVE label
-                       */
+                      
+                       // ACTIVE label
+                       
                       if (isActive)
                         Container(
                           padding: const EdgeInsets.symmetric(
@@ -435,14 +429,6 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                     ],
                   ),
 
-                  // Text(
-                  //   "ID: ${user['employee_id'] ?? '--'}",
-                  //   style: const TextStyle(
-                  //     fontSize: 10.5,
-                  //     color: AppTheme.neutral,
-                  //   ),
-                  // ),
-
                   infoRow(
                     Icons.email_outlined,
                     email,
@@ -452,11 +438,6 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                     Icons.phone_outlined,
                     phone,
                   ),
-
-                  // infoRow(
-                  //   Icons.access_time_rounded,
-                  //   "$shiftStart - $shiftEnd",
-                  // ),
 
                   const SizedBox(height: 3),
 
@@ -533,14 +514,13 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
       backgroundColor: AppTheme.background,
 
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: AppTheme.primary,
-
-        iconTheme: const IconThemeData(
-          color: AppTheme.secondary,
-        ),
+elevation: 0,
+        
 
         title: const Text(
-          "TECHSTILE",
+          "All Employees",
           style: TextStyle(
             color: AppTheme.secondary,
           ),
@@ -567,7 +547,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                     onChanged: search,
 
                     decoration: InputDecoration(
-                      hintText: "Search users...",
+                      hintText: "Search Employees...",
                       prefixIcon:
                           const Icon(Icons.search),
 
@@ -604,8 +584,9 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
 
                       statBox(
                         "Active Users",
+                      
                         "$activeUsers",
-                        AppTheme.success,
+                        AppTheme.primary,
 
                         showActiveOnly,
 

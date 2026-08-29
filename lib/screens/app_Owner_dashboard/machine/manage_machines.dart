@@ -283,14 +283,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+         automaticallyImplyLeading: false,
         backgroundColor: AppTheme.primary,
         elevation: 0,
-        centerTitle: true,
-
-        iconTheme: const IconThemeData(
-          color: AppTheme.secondary,
-        ),
-
         title: const Text(
           "All Machines",
           style: TextStyle(
@@ -371,7 +366,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
                           },
 
                           child: _statCard(
-                            "Total Assets",
+                            "Total Machines",
                             data?.totalMachines ??
                                 (data?.machines.length ??
                                     0),
