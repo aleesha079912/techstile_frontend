@@ -448,7 +448,7 @@ class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
               child: Text(
                 isActive ? "Active" : "Inactive",
                 style: TextStyle(
-                  color: isActive ? AppTheme.success : AppTheme.textSecondary,
+                  color: isActive ? AppTheme.success : AppTheme.primary,
                   fontSize: 11,
                   fontWeight: FontWeight.w700,
                 ),
