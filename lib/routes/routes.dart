@@ -49,6 +49,7 @@ import 'package:techstile_frontend/screens/man_dashboard/settings/help_faq.dart'
 import 'package:techstile_frontend/screens/man_dashboard/settings/manager_settings_screen.dart';
 import 'package:techstile_frontend/screens/man_dashboard/settings/about_app.dart';
 import 'package:techstile_frontend/screens/man_dashboard/manager_employee_notification.dart';
+import 'package:techstile_frontend/screens/change_password_screen.dart';
 import 'package:techstile_frontend/widgets/man_drawer.dart';
 import 'package:techstile_frontend/widgets/emp_drawer.dart';
 class AppRoutes {
@@ -214,10 +215,14 @@ GetPage(
   },
 ),
 
-//MANAGER SIDE SETTINGS
+//SETTINGS ROUTES
 GetPage(
   name: '/edit-profile',
   page: () => const EditProfileScreen(),
+),
+GetPage(
+  name: AppRoutes.chnagePassword,
+  page: () => const ChangePasswordScreen(),
 ),
 GetPage(
   name: AppRoutes.managersettings,
@@ -327,12 +332,17 @@ GetPage(
 
     final userId = args is Map
         ? args['userId']
+        : (args is int ? args : null);
+
+    final factoryId = args is Map
+        ? args['factoryId']
         : null;
 
-    print("User ID = $userId");
+    print("User ID = $userId, Factory ID = $factoryId");
 
     return UserProfileScreen(
       userId: userId ?? 0,
+      factoryId: factoryId,
     );
   },
 ),

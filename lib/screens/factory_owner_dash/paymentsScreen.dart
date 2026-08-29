@@ -232,10 +232,12 @@ class ProductionRecord {
 
 class PaymentsScreen extends StatefulWidget {
   final int factoryId;
+  final int? initialEmployeeId;
 
   const PaymentsScreen({
     super.key,
     required this.factoryId,
+    this.initialEmployeeId,
   });
 
   @override
@@ -1055,6 +1057,14 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       final data = list
           .map((e) => EmployeePayment.fromJson(e as Map<String, dynamic>))
           .toList();
+
+      if (widget.initialEmployeeId != null) {
+        data.sort((a, b) {
+          if (a.employeeId == widget.initialEmployeeId) return -1;
+          if (b.employeeId == widget.initialEmployeeId) return 1;
+          return 0;
+        });
+      }
 
       setState(() {
         _employees = data;

@@ -6,7 +6,14 @@ import 'package:techstile_frontend/widgets/emp_db_bot_nav_bar.dart';
 import 'package:techstile_frontend/widgets/emp_drawer.dart';
 
 class HistoryScreen extends StatefulWidget {
-  const HistoryScreen({super.key});
+  final int? userId;
+  final String? userName;
+
+  const HistoryScreen({
+    super.key,
+    this.userId,
+    this.userName,
+  });
 
   @override
   State<HistoryScreen> createState() => _HistoryScreenState();
@@ -41,17 +48,17 @@ class _HistoryScreenState extends State<HistoryScreen>
 
  Future<void> loadHistory() async {
   try {
-    final user = AuthService.user;
-    if (user == null) return;
+    final targetId = widget.userId ?? AuthService.user?['id'];
+    if (targetId == null) return;
 
-    final data = await service.getHistory(user['id']);
+    final data = await service.getHistory(int.tryParse(targetId.toString()) ?? 0);
 
     setState(() {
       pending = data['pending'] ?? [];
       completed = data['completed'] ?? [];
-      daily = double.parse(data['daily'].toString());
-      weekly = double.parse(data['weekly'].toString());
-      monthly = double.parse(data['monthly'].toString());
+      daily = double.tryParse(data['daily']?.toString() ?? '0') ?? 0;
+      weekly = double.tryParse(data['weekly']?.toString() ?? '0') ?? 0;
+      monthly = double.tryParse(data['monthly']?.toString() ?? '0') ?? 0;
       loading = false;
     });
   } catch (e) {
@@ -62,23 +69,32 @@ class _HistoryScreenState extends State<HistoryScreen>
 
   @override
   Widget build(BuildContext context) {
+    final bool isEmbedded = widget.userId != null;
+
     return Scaffold(
       backgroundColor:AppTheme.background,
-      drawer: const EmployeeDrawer(),
+      drawer: isEmbedded ? null : const EmployeeDrawer(),
 
       // ── AppBar ──────────────────────────────────────────────────────────
       appBar: AppBar(
         backgroundColor:AppTheme.primary,
         elevation: 0,
-        leading: Builder(
-          builder: (ctx) => IconButton(
-            icon: const Icon(Icons.menu_rounded, color: AppTheme.secondary),
-            onPressed: () => Scaffold.of(ctx).openDrawer(),
-          ),
-        ),
-        title: const Text(
-          'Production History',
-          style: TextStyle(
+        leading: isEmbedded
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back, color: AppTheme.secondary),
+                onPressed: () => Navigator.pop(context),
+              )
+            : Builder(
+                builder: (ctx) => IconButton(
+                  icon: const Icon(Icons.menu_rounded, color: AppTheme.secondary),
+                  onPressed: () => Scaffold.of(ctx).openDrawer(),
+                ),
+              ),
+        title: Text(
+          widget.userName != null && widget.userName!.isNotEmpty
+              ? "${widget.userName}'s History"
+              : 'Production History',
+          style: const TextStyle(
             color:   AppTheme.textSecondary,
             fontWeight: FontWeight.w700,
             fontSize: 18,

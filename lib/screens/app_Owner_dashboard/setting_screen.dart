@@ -30,13 +30,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 icon: Icons.person_rounded,
                 iconColor: AppTheme.primary,
                 label: "Edit Profile",
-                onTap: () => _showSnack("Edit Profile"),
+                onTap: () => Get.toNamed('/edit-profile'),
               ),
               _SettingsTile(
                 icon: Icons.lock_rounded,
                 iconColor: AppTheme.primary,
                 label: "Change Password",
-                onTap: () => _showSnack("Change Password"),
+                onTap: () => Get.toNamed('/change-password'),
               ),
               _SettingsTile(
                 icon: Icons.verified_user_rounded,

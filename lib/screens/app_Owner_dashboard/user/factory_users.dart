@@ -185,6 +185,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
             Get.to(
               () => UserProfileScreen(
                 userId: user['id'],
+                factoryId: widget.factoryId,
               ),
             );
           },
