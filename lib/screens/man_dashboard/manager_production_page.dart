@@ -108,32 +108,32 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
           preferredSize: const Size.fromHeight(110), // Search bar + Tabs ki height
           child: Column(
             children: [
-              // 1. Visible Search Input Box
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-                child: Container(
-                  height: 42,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: TextField(
-                    onChanged: (val) {
-                      setState(() {
-                        _searchQuery = val;
-                      });
-                    },
-                    style: const TextStyle(color: Colors.black, fontSize: 13),
-                    decoration: InputDecoration(
-                      hintText: 'Search machine, variety or date...',
-                      hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 13),
-                      prefixIcon: const Icon(Icons.search, color: AppTheme.primary, size: 20),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 10),
-                    ),
-                  ),
-                ),
-              ),
+              // // 1. Visible Search Input Box
+              // Padding(
+              //   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+              //   child: Container(
+              //     height: 42,
+              //     decoration: BoxDecoration(
+              //       color: Colors.white,
+              //       borderRadius: BorderRadius.circular(10),
+              //     ),
+              //     child: TextField(
+              //       onChanged: (val) {
+              //         setState(() {
+              //           _searchQuery = val;
+              //         });
+              //       },
+              //       style: const TextStyle(color: Colors.black, fontSize: 13),
+              //       decoration: InputDecoration(
+              //         hintText: 'Search machine, variety or date...',
+              //         hintStyle: TextStyle(color: Colors.grey.shade500, fontSize: 13),
+              //         prefixIcon: const Icon(Icons.search, color: AppTheme.primary, size: 20),
+              //         border: InputBorder.none,
+              //         contentPadding: const EdgeInsets.symmetric(vertical: 10),
+              //       ),
+              //     ),
+              //   ),
+              // ),
               // 2. TabBar
               TabBar(
                 controller: _tab,
