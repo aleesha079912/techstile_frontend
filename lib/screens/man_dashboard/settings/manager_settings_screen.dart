@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import '../../../core/services/auth_service.dart';
 import '../../../core/utils/theme.dart';
 import '../manager_profile.dart';
-import '../../employee_dashboard/profile.dart';
 
 class ManagerSettingsScreen extends StatefulWidget {
   /// Role badge shown on the profile card. Defaults to "Manager".
@@ -16,7 +15,7 @@ class ManagerSettingsScreen extends StatefulWidget {
 
   const ManagerSettingsScreen({
     super.key,
-    this.roleLabel = "Owner",
+    this.roleLabel = "Manager",
     this.profilePageBuilder,
   });
 
@@ -118,9 +117,13 @@ class _ManagerSettingsScreenState
                             borderRadius:
                                 BorderRadius.circular(20),
                           ),
-                          child:  Text(
-                           user['role'] ?? '' ,
-                            style: TextStyle(
+                          child: Text(
+                            widget.roleLabel.isNotEmpty
+                                ? widget.roleLabel
+                                : (AuthService.role.isNotEmpty
+                                    ? AuthService.role.capitalizeFirst!
+                                    : 'Manager'),
+                            style: const TextStyle(
                               color: AppTheme.textSecondary,
                               fontSize: 11,
                             ),

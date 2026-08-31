@@ -157,19 +157,19 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
     backgroundColor: AppTheme.primary,
     elevation: 0,
  
-    leading: IconButton(
-      icon: const Icon(
-        Icons.arrow_back,
-        color: AppTheme.secondary,
-      ),
-      onPressed: () {
-        Get.off(
-          () => OwnerDashboardScreen(
-            factoryId: factoryId,
-          ),
-        );
-      },
-    ),
+    // leading: IconButton(
+    //   // icon: const Icon(
+    //   //   Icons.arrow_back,
+    //   //   color: AppTheme.secondary,
+    //   // ),
+    //   onPressed: () {
+    //     Get.off(
+    //       () => OwnerDashboardScreen(
+    //         factoryId: factoryId,
+    //       ),
+    //     );
+    //   },
+    // ),
  
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,

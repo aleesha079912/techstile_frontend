@@ -76,14 +76,14 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
 
       appBar: AppBar(
   backgroundColor: AppTheme.primary,
-  leading: IconButton(
-    icon: const Icon(
-      Icons.arrow_back_ios_new,
-      color: AppTheme.secondary,
-      size: 18,
-    ),
-    onPressed: () => Navigator.pop(context),
-  ),
+  // leading: IconButton(
+  //   icon: const Icon(
+  //     Icons.arrow_back_ios_new,
+  //     color: AppTheme.secondary,
+  //     size: 18,
+  //   ),
+  //   onPressed: () => Navigator.pop(context),
+  // ),
   title: const Text(
     "TECHSTILE",
     style: TextStyle(

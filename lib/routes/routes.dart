@@ -148,7 +148,7 @@ GetPage(
 // MANAGER PAYMENTS
 GetPage(
   name: AppRoutes.managerPayments,
-  page: () =>PaymentsScreen(
+  page: () => ManagerPaymentsScreen(
     factoryId: AuthService.factoryId,
   ),
 ),
@@ -200,19 +200,6 @@ GetPage(
   page: () => ManagerScanQRScreen(
     factoryId: AuthService.factoryId,
   ),
-),
-GetPage(
-  name: AppRoutes.MachineDetails,
-  page: () {
-
-    final data = Get.arguments as Map;
-
-    return MachineDetailsScreen(
-      machine: data['machine'],
-      factoryId: data['factoryId'],
-    );
-
-  },
 ),
 
 //SETTINGS ROUTES
@@ -274,14 +261,18 @@ GetPage(
       page: () => const SettingsScreen(),
       transition: Transition.rightToLeftWithFade,
     ),
-    GetPage(name: machines, page: () => const MachinesScreen(factoryId: 0)),
-  
-
+    GetPage(
+      name: scanMachine,
+      page: () => const ScanQRCodeScreen(factoryId: 0),
+    ),
     GetPage(
       name: machines,
       page: () => const MachinesScreen(factoryId: 0),
     ),
-
+    GetPage(
+      name: payments,
+      page: () => PaymentsScreen(factoryId: AuthService.factoryId ?? 0),
+    ),
     GetPage(name: manageusers, page: () => const ManageUsersScreen()),
 
     GetPage(
