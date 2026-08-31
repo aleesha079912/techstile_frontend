@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:techstile_frontend/core/services/factory_dashboard_service.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/app_owner_dash.dart';
@@ -7,6 +8,8 @@ import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
 // import 'package:techstile_frontend/screens/factory_owner_dash/owner_production_page.dart'; // ← add this import
 import 'package:get/get.dart';
 import 'package:techstile_frontend/routes/routes.dart';
+import 'package:techstile_frontend/widgets/man_drawer.dart';
+import 'package:techstile_frontend/widgets/owner_drawer.dart';
  
  
 class FactoryDashboard extends StatefulWidget {
@@ -70,6 +73,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: _buildAppBar(),
+      drawer: _buildDrawer(),
       body: loading
           ? const Center(
               child: CircularProgressIndicator(color: AppTheme.primary, strokeWidth: 2.5))
@@ -152,32 +156,33 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
   }
  
   // ── AppBar ──────────────────────────────────────────────────────────────────
-  PreferredSizeWidget _buildAppBar() {
+PreferredSizeWidget _buildAppBar() {
+  final box = GetStorage();
+  final String role = box.read('role') ?? ''; // adjust key/casing to match your storage
+
   return AppBar(
     backgroundColor: AppTheme.primary,
     elevation: 0,
- 
-    // leading: IconButton(
-    //   // icon: const Icon(
-    //   //   Icons.arrow_back,
-    //   //   color: AppTheme.secondary,
-    //   // ),
-    //   onPressed: () {
-    //     Get.off(
-    //       () => OwnerDashboardScreen(
-    //         factoryId: factoryId,
-    //       ),
-    //     );
-    //   },
-    // ),
- 
+
+    leading: Builder(
+      builder: (context) => IconButton(
+        icon: const Icon(
+          Icons.menu,
+          color: AppTheme.textSecondary,
+        ),
+        onPressed: () {
+          Scaffold.of(context).openDrawer();
+        },
+      ),
+    ),
+
     title: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
           'TechStile',
           style: TextStyle(
-            color:   AppTheme.textSecondary,
+            color: AppTheme.textSecondary,
             fontWeight: FontWeight.bold,
             fontSize: 17,
           ),
@@ -192,6 +197,13 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
       ],
     ),
   );
+}
+
+// ── Drawer (put this in the same class) ──────────────────────────────────────
+Widget _buildDrawer() {
+  final box = GetStorage();
+  final String role = box.read('role') ?? '';
+  return role == 'owner' ? const OwnerDrawer() : const ManagerDrawer();
 }
  
   // ── Hero card — factory info + Productions button ───────────────────────────
