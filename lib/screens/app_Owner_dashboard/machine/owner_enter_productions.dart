@@ -5,24 +5,18 @@ import '../../../core/utils/theme.dart';
 import '../../../core/services/employee_service/employee_production_service.dart';
 
 /// Owner-side production entry.
-/// Owner khud production "karta" nahi — is liye yahan employee select
-/// karna zaroori hai taake pata rahe ye production kis employee/shift ki hai.
-///
-/// ✅ Variety/Total Length/Remaining ab SHARED (machine ke current batch) hain —
-/// dono shift-employees ke liye same. Sirf "Ready Production" har employee ki
-/// apni hoti hai.
 class OwnerEnterProductionScreen extends StatefulWidget {
   final int machineId;
   final int factoryId;
 
-  /// Shared batch info (machine-wide), MachineController::details se.
+  /// Shared batch info 
   final String? batchId;
   final String varietyType;
   final double totalLength;
   final double remaining;
 
   /// Employees currently assigned to this machine's shifts.
-  /// Each item: {employee_id, user_id, employee_name, shift_start, shift_end}
+
   final List<Map<String, dynamic>> shifts;
 
   const OwnerEnterProductionScreen({
@@ -156,7 +150,7 @@ class _OwnerEnterProductionScreenState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ── Shared batch info (read-only, machine-wide) ──
+                //Shared batch info 
                 _readonlyField("Variety Type", widget.varietyType),
                 const SizedBox(height: 15),
                 Row(

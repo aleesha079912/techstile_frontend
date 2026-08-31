@@ -8,6 +8,8 @@ class PaymentService {
 
   Future<Map<String, dynamic>> fetchvarietytypePayments(int factoryId) async {
     try {
+      print("TOKEN: ${AuthService.token}");
+print("HEADERS: ${AuthService.authHeaders}");
       final response = await http.get(
         Uri.parse("$baseUrl/view-payments/$factoryId"),
         headers: AuthService.authHeaders,

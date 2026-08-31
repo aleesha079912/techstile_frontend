@@ -19,7 +19,6 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
   @override
   void initState() {
     super.initState();
-    // EDIT MODE: Agar edit karne aaye hain toh purana data load karein
     final existing = Get.arguments;
     if (existing != null) {
       _nameController.text = existing.name;
@@ -51,7 +50,6 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
     bool success = false;
     try {
       if (existing != null) {
-        // Edit mode: Laravel ka ID use karein
         success = await controller.updateFactory(existing.id, factoryData);
       } else {
         // Add mode

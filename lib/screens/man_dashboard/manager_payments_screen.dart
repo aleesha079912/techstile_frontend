@@ -31,10 +31,10 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
       error   = null;
     });
     try {
-      // ✅ Payments list
+      //  Payments list
       final res = await _service.getPayments(widget.factoryId);
 
-      // ✅ Factory name — dashboard API se
+      //  Factory name fetch from dashboard API 
       final dashboardData = await _service.getDashboard(widget.factoryId);
 
       setState(() {
@@ -64,7 +64,6 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
           children: [
             const Text('Payments',
                 style: TextStyle(color:AppTheme.secondary, fontWeight: FontWeight.w700, fontSize: 17)),
-            // ✅ Fix: state se aata hai — Get.arguments se nahi
             Text(
               loading ? 'Loading...' : (factoryName ?? 'Factory'),
               style: TextStyle(

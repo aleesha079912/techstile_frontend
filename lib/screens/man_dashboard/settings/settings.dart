@@ -6,11 +6,9 @@ import '../../../core/utils/theme.dart';
 import '../manager_profile.dart';
 
 class ManagerSettingsScreen extends StatefulWidget {
-  /// Role badge shown on the profile card. Defaults to "Manager".
   final String roleLabel;
 
-  /// Where the profile card / "Edit Profile" tile navigates to.
-  /// Defaults to the Manager profile screen.
+  /// Where the profile card 
   final Widget Function()? profilePageBuilder;
 
   const ManagerSettingsScreen({
@@ -43,7 +41,7 @@ class _ManagerSettingsScreenState
         padding: const EdgeInsets.all(16),
         children: [
 
-          // ================= PROFILE CARD =================
+          // PROFILE CARD 
 
           GestureDetector(
             onTap: () {
@@ -133,11 +131,7 @@ class _ManagerSettingsScreenState
                     ),
                   ),
 
-                  const Icon(
-                    Icons.arrow_forward_ios,
-                    color:  AppTheme.secondary,
-                    size: 16,
-                  ),
+                
                 ],
               ),
             ),
@@ -145,7 +139,7 @@ class _ManagerSettingsScreenState
 
           const SizedBox(height: 25),
 
-          // ================= ACCOUNT =================
+          // ACCOUNT
 
           _sectionTitle("ACCOUNT"),
 
@@ -167,7 +161,7 @@ class _ManagerSettingsScreenState
 
           const SizedBox(height: 20),
 
-          // ================= PREFERENCES =================
+          //PREFERENCES 
 
           _sectionTitle("PREFERENCES"),
 
@@ -187,7 +181,7 @@ class _ManagerSettingsScreenState
 
           const SizedBox(height: 20),
 
-          // ================= SUPPORT =================
+          // SUPPORT
 
           _sectionTitle("SUPPORT"),
 
@@ -217,7 +211,7 @@ class _ManagerSettingsScreenState
 
           const SizedBox(height: 20),
 
-          // ================= SECURITY =================
+          // SECURITY
 
           _sectionTitle("SECURITY"),
 
@@ -277,8 +271,8 @@ class _ManagerSettingsScreenState
             color: textColor,
           ),
         ),
-        trailing:
-            const Icon(Icons.arrow_forward_ios, size: 16),
+        // trailing:
+            // const Icon(Icons.arrow_forward_ios, size: 16),
         onTap: onTap,
       ),
     );
@@ -323,9 +317,11 @@ class _ManagerSettingsScreenState
       title: "Logout",
       middleText:
           "Are you sure you want to logout?",
-      textCancel: "Cancel",
-      textConfirm: "Logout",
+      textCancel: "No",
+      textConfirm: "Yes",
       confirmTextColor:  AppTheme.secondary,
+      cancelTextColor: AppTheme.primary,
+      buttonColor: AppTheme.primary,
       onConfirm: () {
         AuthService.logout();
 

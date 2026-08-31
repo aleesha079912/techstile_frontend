@@ -9,7 +9,7 @@ import 'package:cross_file/cross_file.dart';
 
 class GenerateQrService {
 
-  /// RepaintBoundary widget ko PNG bytes mein convert karta hai
+  /// RepaintBoundary widget into PNG bytes 
   static Future<Uint8List?> captureQrAsImage(GlobalKey qrKey) async {
     try {
       final boundary =
@@ -25,8 +25,8 @@ class GenerateQrService {
     }
   }
 
-  /// QR image ko device storage mein save karta hai
-  /// [machineDbId] = primary key from DB (e.g. "3")
+  /// Save QR image into device storage 
+  /// [machineDbId] = primary key from DB
   static Future<String?> downloadQr(GlobalKey qrKey, String machineDbId) async {
     try {
       final bytes = await captureQrAsImage(qrKey);
@@ -45,7 +45,7 @@ class GenerateQrService {
     }
   }
 
-  /// QR share/print karta hai via system share sheet
+  /// QR share/print 
   /// [machineDbId] = primary key from DB (e.g. "3")
   static Future<void> printQr(GlobalKey qrKey, String machineDbId) async {
     try {

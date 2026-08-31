@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
-import 'package:techstile_frontend/screens/factory_owner_dash/paymentsScreen.dart';
-import '../screens/factory_owner_dash/factorydashboard.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/factory_owner_dash/paymentsScreen.dart';
+import '../screens/app_Owner_dashboard/factory_owner_dash/factorydashboard.dart';
 import 'package:get/get.dart';
 
 
@@ -13,7 +13,7 @@ import '../screens/app_Owner_dashboard/user/factory_users.dart';
 
 class CustomBottomNav extends StatelessWidget {
   final int currentIndex;
-  final int factoryId; // ✅ ADD THIS
+  final int factoryId; 
 
   const CustomBottomNav({
     super.key,
@@ -26,17 +26,14 @@ class CustomBottomNav extends StatelessWidget {
 
   switch (index) {
     case 0:
-      // FactoryDashboard expects a String for factoryId, convert here
       Get.offAll(() => FactoryDashboard(factoryId: factoryId.toString()));
       break;
 
     case 1:
-      // MachinesScreen expects an int factoryId
       Get.to(() => MachinesScreen(factoryId: factoryId));
       break;
 
     case 2:
-      // Navigate to PaymentsScreen (constructor call)
       Get.to(() => PaymentsScreen(factoryId: factoryId));
       break;
 

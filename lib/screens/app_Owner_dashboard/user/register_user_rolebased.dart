@@ -105,7 +105,19 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.user == null ? "Register New User" : "Edit User")),
+      appBar: AppBar(
+        backgroundColor: AppTheme.primary,
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: Text(widget.user == null ? "Register New User" : "Edit User",
+        style: TextStyle(
+          color: AppTheme.secondary
+        ),
+
+        )
+        
+        ),
+        
+        
       body: _isLoading 
         ? const Center(child: CircularProgressIndicator())
         : SingleChildScrollView(
@@ -143,6 +155,7 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
                     validator: (value) =>
                         value == null ? "Select Role" : null,
                   ),
+                   const SizedBox(height: 20),
                   _buildField(detailsCtrl, "Notes", Icons.description, maxLines: 3),
                   const SizedBox(height: 20),
                   SizedBox(

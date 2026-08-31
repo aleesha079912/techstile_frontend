@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:techstile_frontend/core/services/role_service.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
-import 'package:techstile_frontend/widgets/owner_drawer.dart';
+
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
 
 class RoleManagementScreen extends StatefulWidget {
@@ -30,16 +30,23 @@ class _RoleManagementScreenState extends State<RoleManagementScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const OwnerDrawer(),
+      // drawer: const OwnerDrawer(),
       backgroundColor:  AppTheme.background,
 
       appBar: AppBar(
-  title: const Text("Role Management"),
-  centerTitle: true,
+        backgroundColor: AppTheme.primary,
+  title: const Text("Role Management",
+  style: TextStyle(
+    color: AppTheme.secondary
+  ),
+  ),
+ 
   elevation: 0,
 
   leading: IconButton(
-    icon: const Icon(Icons.arrow_back),
+    icon: const Icon(Icons.arrow_back,
+    color: AppTheme.secondary,
+    ),
     onPressed: () {
       Navigator.pop(context);
     },
@@ -246,7 +253,7 @@ class _RoleManagementScreenState extends State<RoleManagementScreen> {
     );
   }
 
-  // ---------------- EDIT DIALOG ----------------
+  // EDIT DIALOG 
   _showEditDialog(dynamic role) {
     TextEditingController editController =
         TextEditingController(text: role['name']);
@@ -285,7 +292,7 @@ class _RoleManagementScreenState extends State<RoleManagementScreen> {
     );
   }
 
-  // ---------------- DELETE ----------------
+  // DELETE 
   _confirmDelete(int id) {
     showDialog(
       context: context,

@@ -1,13 +1,15 @@
 import 'package:get/get.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/setting_screen.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/employee_enter_production.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/history_screen.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/machine_detail_screen.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/profile.dart';
 import 'package:techstile_frontend/core/services/auth_service.dart';
-import 'package:techstile_frontend/screens/factory_owner_dash/owner_production_page.dart';
-import 'package:techstile_frontend/screens/factory_owner_dash/paymentsScreen.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/factory_owner_dash/owner_production_page.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/factory_owner_dash/paymentsScreen.dart';
 import 'package:techstile_frontend/screens/forget_password_screen.dart';
 import 'package:techstile_frontend/screens/man_dashboard/manager_emloyee_detail_screen.dart';
+import 'package:techstile_frontend/screens/man_dashboard/notification.dart';
 
 
 
@@ -22,9 +24,6 @@ import 'package:techstile_frontend/screens/signup.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/app_owner_dash.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/add_factories.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/manage_user.dart';
-
-import 'package:techstile_frontend/screens/app_Owner_dashboard/setting_screen.dart';
-
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/manage_machines.dart';
 // import 'package:techstile_frontend/screens/factory_owner_dash/payments.dart';
 // import '../screens/factory_owner_dash/factory_dashboard.dart';
@@ -46,9 +45,8 @@ import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/generate_
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/scan_code.dart';
 import 'package:techstile_frontend/screens/man_dashboard/settings/editprofile.dart';
 import 'package:techstile_frontend/screens/man_dashboard/settings/help_faq.dart';
-import 'package:techstile_frontend/screens/man_dashboard/settings/manager_settings_screen.dart';
+import 'package:techstile_frontend/screens/man_dashboard/settings/settings.dart';
 import 'package:techstile_frontend/screens/man_dashboard/settings/about_app.dart';
-import 'package:techstile_frontend/screens/man_dashboard/manager_employee_notification.dart';
 import 'package:techstile_frontend/screens/change_password_screen.dart';
 import 'package:techstile_frontend/widgets/man_drawer.dart';
 import 'package:techstile_frontend/widgets/emp_drawer.dart';
@@ -120,7 +118,7 @@ static const employeeNotifications = "/employee-notifications";
       transition: Transition.fadeIn,
     ),
 
-    // ── MANAGER DASHBOARD (Tab 1) ───────────────────────────────────────────
+    //  MANAGER DASHBOARD 
 // MANAGER DASHBOARD
 GetPage(
   name: AppRoutes.managerDashboard,
@@ -305,7 +303,6 @@ GetPage(
       name: AppRoutes.enterProduction,
       page: () {
         final args = Get.arguments;
-        // ✅ Map se machineId nikalo
         final machineId = args is Map
             ? args['machineId']?.toString() ?? ''
             : args?.toString() ?? '';
@@ -345,8 +342,5 @@ GetPage(
 ),
     GetPage(name: AppRoutes.history, page: () => const HistoryScreen()),
   ];
-
-  
-
 }
 

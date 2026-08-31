@@ -1102,12 +1102,13 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       backgroundColor: AppTheme.background,
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
+        automaticallyImplyLeading: false,
         elevation: 0,
         title: const Text(
           'Employee Payments',
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 17),
         ),
-        iconTheme: const IconThemeData(color: Colors.white),
+      
       ),
       body: _buildBody(),
       floatingActionButton: _canManagePayments
@@ -1173,7 +1174,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                     const Expanded(
                       child: Text(
                         'Total Payment (All Employees)',
-                        style: TextStyle(color: AppTheme.surface, fontSize: 12, fontWeight: FontWeight.w600),
+                        style: TextStyle(color: AppTheme.secondary, fontSize: 12, fontWeight: FontWeight.w600),
                       ),
                     ),
                   ],
@@ -1290,10 +1291,7 @@ String _formatAmount(double value) {
   }
   return buffer.toString().split('').reversed.join('');
 }
-
-// ============================================================
-// Small presentational widgets
-// ============================================================
+// Small presentational widget
 
 class _SummaryStat extends StatelessWidget {
   final String label;
@@ -1316,7 +1314,7 @@ class _SummaryStat extends StatelessWidget {
           children: [
             Text(
               label,
-              style: TextStyle(color: AppTheme.surface.withOpacity(0.85), fontSize: 9, fontWeight: FontWeight.w600),
+              style: TextStyle(color: AppTheme.secondary, fontSize: 9, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 2),
             FittedBox(

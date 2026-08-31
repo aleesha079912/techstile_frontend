@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import '../../../core/services/production_service.dart';
 import '../../../core/utils/theme.dart';
 import '../../../widgets/man_bottom_navbar.dart';
-import 'package:techstile_frontend/core/services/auth_service.dart';
 
 class ManagerProductionsPage extends StatefulWidget {
   final dynamic factoryId;
@@ -18,6 +17,9 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
     with SingleTickerProviderStateMixin {
   final _service = ProductionService();
   late TabController _tab;
+  
+  // Search query variable
+  String _searchQuery = '';
 
   bool loading = true;
   String? error;
@@ -46,16 +48,33 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
     }
   }
 
-  // status 1 = pending (employee submitted)
-  // status 4 = owner approved before manager → show in approved too
-  List<Map<String, dynamic>> get _pending  =>
+  // Pure list getters (Unchanged)
+  List<Map<String, dynamic>> get _pending =>
       _all.where((p) => (p['status'] as int? ?? 1) == 1).toList();
 
   List<Map<String, dynamic>> get _approved =>
       _all.where((p) {
         final s = p['status'] as int? ?? 1;
-        return s == 2 || s == 4; // manager approved OR owner approved
+        return s == 2 || s == 4; 
       }).toList();
+
+  // Active Tab Record Filtering
+  List<Map<String, dynamic>> _applySearch(List<Map<String, dynamic>> list, bool isPending) {
+    if (_searchQuery.trim().isEmpty) return list;
+    final q = _searchQuery.toLowerCase().trim();
+
+    return list.where((p) {
+      final variety = (p['variety_type'] ?? '').toString().toLowerCase();
+      final machine = (p['machineemploye']?['machine_name'] ?? 'Machine #${p['machine_id'] ?? ''}')
+          .toString()
+          .toLowerCase();
+
+      final dateValue = isPending ? p['created_at'] : p['updated_at'];
+      final dateFormatted = _fmtDateTime(dateValue).toLowerCase();
+
+      return variety.contains(q) || machine.contains(q) || dateFormatted.contains(q);
+    }).toList();
+  }
 
   Future<void> _doAction(dynamic id, String action) async {
     try {
@@ -109,8 +128,8 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
                   child: TabBarView(
                     controller: _tab,
                     children: [
-                      _buildList(_pending,  showActions: true),
-                      _buildList(_approved, showActions: false),
+                      _buildList(_applySearch(_pending, true), showActions: true),
+                      _buildList(_applySearch(_approved, false), showActions: false),
                     ],
                   ),
                 ),
@@ -143,16 +162,10 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
   Widget _card(Map<String, dynamic> p, {required bool showActions}) {
     final status         = p['status'] as int? ?? 1;
     final isOwnerApproved = status == 4;
-
-    // ✅ employee ka naam (fallback: Employee #id)
     final employeeName = p['employeedetails']?['user']?['name']?.toString()
         ?? 'Employee #${p['employee_id'] ?? '-'}';
-
-    // ✅ machine ka naam (fallback: Machine #id)
-   final machineName = p['machineemploye']?['machine_name']?.toString()
-    ?? 'Machine #${p['machine_id'] ?? '-'}';
-
-    // ✅ pending mein "Submitted" (created_at), approved mein "Approved" (updated_at)
+    final machineName = p['machineemploye']?['machine_name']?.toString()
+        ?? 'Machine #${p['machine_id'] ?? '-'}';
     final dateLabel = showActions ? 'Submitted' : 'Approved';
     final dateValue = showActions ? p['created_at'] : p['updated_at'];
 
@@ -166,8 +179,6 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-
-          // ── Top row: variety + employee + status chip ──────
           Row(children: [
             Container(
               padding: const EdgeInsets.all(10),
@@ -196,7 +207,6 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
 
           const SizedBox(height: 14),
 
-          // ── Stats row ─────────────────────────────────────
           Row(children: [
             _infoBox(label: 'Total',   value: '${p['total_length'] ?? 0} yds'),
             const SizedBox(width: 8),
@@ -215,7 +225,6 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
             _infoBox(label: dateLabel, value: _fmtDateTime(dateValue)),
           ]),
 
-          // ── Owner-approved note ───────────────────────────
           if (isOwnerApproved) ...[
             const SizedBox(height: 10),
             Container(
@@ -239,7 +248,6 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
             ),
           ],
 
-          // ── Action buttons ────────────────────────────────
           if (showActions) ...[
             const SizedBox(height: 14),
             Row(children: [
@@ -371,7 +379,6 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage>
     ]),
   );
 
-  // ✅ date + time dono show karta hai
   String _fmtDateTime(dynamic raw) {
     if (raw == null) return '-';
     try {

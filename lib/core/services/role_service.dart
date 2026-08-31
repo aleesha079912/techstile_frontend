@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'auth_service.dart';
 
 class RoleService {
-  final String baseUrl = "http://localhost:8000/api/roles"; // Emulator ke liye localhost IP
+  final String baseUrl = "http://localhost:8000/api/roles";
 
   // 1. Fetch Roles
   Future<List<dynamic>> getRoles() async {
@@ -37,7 +37,7 @@ class RoleService {
     };
   }
 
-  // Role delete karne ke liye
+  // delete role
   Future<bool> deleteRole(int id) async {
     final response = await http.delete(
       Uri.parse('$baseUrl/delete/$id'),
@@ -46,36 +46,41 @@ class RoleService {
     return response.statusCode == 200;
   }
 
-// Role update karne ke liye
-Future<bool> updateRole(int id, String newName) async {
-  final response = await http.put(
-    Uri.parse('$baseUrl/update/$id'),
-   headers: AuthService.authHeaders,
-    body: json.encode({"name": newName}),
-  );
-  return response.statusCode == 200;
-}
-// Permissions list fetch karna
-Future<List<dynamic>> getAllPermissions() async {
-  final response = await http.get(Uri.parse('http://localhost:8000/api/permissions/all'),
-  headers: AuthService.authHeaders,);
-  return json.decode(response.body)['data'];
-}
+  // Role update
+  Future<bool> updateRole(int id, String newName) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/update/$id'),
+      headers: AuthService.authHeaders,
+      body: json.encode({"name": newName}),
+    );
+    return response.statusCode == 200;
+  }
 
-// Role ki maujooda permissions lana
-Future<List<dynamic>> getRolePermissions(int roleId) async {
-  final response = await http.get(Uri.parse('http://localhost:8000/api/role-permissions/$roleId'),
-  headers: AuthService.authHeaders,);
-  return json.decode(response.body)['data'];
-}
+  //fetch Permissions list
+  Future<List<dynamic>> getAllPermissions() async {
+    final response = await http.get(
+      Uri.parse('http://localhost:8000/api/permissions/all'),
+      headers: AuthService.authHeaders,
+    );
+    return json.decode(response.body)['data'];
+  }
 
-// Permissions update karna
-Future<bool> syncPermissions(int roleId, List<int> permIds) async {
-  final response = await http.post(
-    Uri.parse('http://localhost:8000/api/permissions/sync'),
-  headers: AuthService.authHeaders,
-    body: json.encode({"role_id": roleId, "permissions": permIds}),
-  );
-  return response.statusCode == 200;
-}
+  // Fetch Role present permissions
+  Future<List<dynamic>> getRolePermissions(int roleId) async {
+    final response = await http.get(
+      Uri.parse('http://localhost:8000/api/role-permissions/$roleId'),
+      headers: AuthService.authHeaders,
+    );
+    return json.decode(response.body)['data'];
+  }
+
+  // Permissions update
+  Future<bool> syncPermissions(int roleId, List<int> permIds) async {
+    final response = await http.post(
+      Uri.parse('http://localhost:8000/api/permissions/sync'),
+      headers: AuthService.authHeaders,
+      body: json.encode({"role_id": roleId, "permissions": permIds}),
+    );
+    return response.statusCode == 200;
+  }
 }

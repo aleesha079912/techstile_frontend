@@ -107,7 +107,7 @@ class _HistoryScreenState extends State<HistoryScreen>
               child: CircularProgressIndicator(color: AppTheme.primary, strokeWidth: 2.5))
           : Column(
               children: [
-                // ── Summary strip ──────────────────────────────────────────
+                //Summary strip 
                 Container(
                   color: AppTheme.primary,
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
@@ -122,7 +122,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                   ),
                 ),
 
-                // ── Tab bar — outside appBar, below summary ────────────────
+                //  Tab bar, outside appBar, below summary
                 Container(
                   color:AppTheme.primary,
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -153,7 +153,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                   ),
                 ),
 
-                // ── Tab views ─────────────────────────────────────────────
+                //  Tab views 
                 Expanded(
                   child: TabBarView(
                     controller: _tabController,
@@ -170,7 +170,7 @@ class _HistoryScreenState extends State<HistoryScreen>
     );
   }
 
-  // ── Summary chip ──────────────────────────────────────────────────────────
+  // Summary chip 
   Widget _summaryChip(String label, double value) {
     return Expanded(
       child: Container(
@@ -206,7 +206,7 @@ class _HistoryScreenState extends State<HistoryScreen>
     );
   }
 
-  // ── List builder ──────────────────────────────────────────────────────────
+  // List builder
   Widget _buildList(List data, {required bool isApproved}) {
     if (data.isEmpty) {
       return Center(
@@ -239,7 +239,7 @@ class _HistoryScreenState extends State<HistoryScreen>
     );
   }
 
-  // ── Production card ───────────────────────────────────────────────────────
+  // Production card
   Widget _productionCard(dynamic item, {required bool isApproved}) {
     final accent = isApproved ? AppTheme.success : AppTheme.surface;
 
@@ -327,7 +327,7 @@ class _HistoryScreenState extends State<HistoryScreen>
     );
   }
 
-  // ── Info row ──────────────────────────────────────────────────────────────
+  // Info row 
   Widget _infoRow(IconData icon, String title, dynamic value) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:techstile_frontend/widgets/owner_drawer.dart';
-import '../../core/services/view_assignment_service.dart';
+import '../../../core/services/view_assignment_service.dart';
 
 class ViewAssignments extends StatefulWidget {
   final dynamic factoryId;
@@ -32,7 +31,7 @@ class _ViewAssignmentsState extends State<ViewAssignments> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const OwnerDrawer(), // ✅ PASS FACTORY ID HERE
+      // drawer: const OwnerDrawer(), // ✅ PASS FACTORY ID HERE
       appBar: AppBar(title: const Text("View Assignments")),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
@@ -48,20 +47,20 @@ columns: const [
   DataColumn(label: Text("Variety")),
 ],
 
-// Rows Section (data.map) map loop to convert each item in data list to a DataRow
+// Rows Section 
 rows: data.map((item) {
   return DataRow(cells: [
     // 1. Factory Name
     DataCell(Text(item['factory'] != null ? item['factory']['name'].toString() : "N/A")),
 
-    // 2. User Name (Employee ke linked User table se)
+    // User Name 
     DataCell(Text(
       (item['employee'] != null && item['employee']['user'] != null)
           ? item['employee']['user']['name'].toString()
           : "N/A",
     )),
 
-    // 3. Employee Name (Formatted as "Emp-<employee_id>")
+    //  Employee Name 
     DataCell(Text("Emp-${item['employee_id']}")),
 
     // 4. Machine ID / Type

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:techstile_frontend/core/services/factory_dashboard_service.dart';
@@ -9,65 +8,64 @@ import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
 import 'package:get/get.dart';
 import 'package:techstile_frontend/routes/routes.dart';
 import 'package:techstile_frontend/widgets/man_drawer.dart';
-import 'package:techstile_frontend/widgets/owner_drawer.dart';
  
  
 class FactoryDashboard extends StatefulWidget {
   final String factoryId;
   const FactoryDashboard({super.key, required this.factoryId});
- 
+
   @override
   State<FactoryDashboard> createState() => _FactoryDashboardState();
 }
- 
+
 class _FactoryDashboardState extends State<FactoryDashboard> {
   final _service = FactoryDashboardService();
- 
+
   bool loading = true;
   Map data = {};
- 
+
   // ── Day / Week / Month / Year filter ─────────────────────────────────────
   static const List<String> periodOptions = ['Day', 'Week', 'Month', 'Year'];
   String selectedPeriod = 'Week'; // default matches previous "This Week" view
- 
+
   int get factoryId => int.parse(widget.factoryId);
- 
+
   @override
   void initState() {
     super.initState();
     load();
   }
- 
-  Future<void> load({bool showSpinner = true}) async {
-    if (showSpinner) {
-      setState(() => loading = true);
-    }
+
+  Future<void> load() async {
+    setState(() => loading = true);
     try {
-      final res = await _service.getDashboard(
-        widget.factoryId,
-        period: selectedPeriod.toLowerCase(),
-      );
-      if (mounted) {
-        setState(() {
-          data    = res;
-          loading = false;
-        });
-      }
+      final res = await _service.getDashboard(widget.factoryId);
+      setState(() {
+        data = res;
+        loading = false;
+      });
     } catch (_) {
       if (mounted) {
         setState(() => loading = false);
       }
     }
   }
- 
+
   // Called when the user picks Day/Week/Month/Year from the dropdown.
-  // Refreshes the dashboard's own stat cards and varieties list in place for the new period.
   Future<void> onPeriodChanged(String period) async {
     if (period == selectedPeriod) return;
     setState(() => selectedPeriod = period);
-    await load();
+    await load(); 
+
+    print("Opening production history for period = $period");
+
+    Get.toNamed(
+      AppRoutes.ownerProduction,
+      arguments: widget.factoryId,
+      parameters: {'period': period.toLowerCase()},
+    );
   }
- 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -86,10 +84,10 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _heroCard(),          // ← production button is inside here
+                    _heroCard(),          //  production button is inside here
                     const SizedBox(height: 20),
- 
-                    // "This <selectedPeriod>" label + Day/Week/Month/Year dropdown filter
+
+                    // "This Week" label + Day/Week/Month/Year dropdown filter
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -101,47 +99,47 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                     Row(
                       children: [
                         _statCard(
-                          icon:  Icons.today_rounded,
+                          icon: Icons.today_rounded,
                           label: 'Today',
                           value: "${data['today_units'] ?? 0}",
-                          unit:  'yards',
-                          color:AppTheme.success,
+                          unit: 'yards',
+                          color: AppTheme.success,
                         ),
                         const SizedBox(width: 12),
                         _statCard(
-                          icon:  Icons.calendar_month_rounded,
+                          icon: Icons.calendar_month_rounded,
                           label: selectedPeriod,
-                          value: "${data['period_units'] ?? data['weekly_units'] ?? 0}",
-                          unit:  'yards',
-                          color: AppTheme.surface,
+                          value: "${data['weekly_units'] ?? 0}",
+                          unit: 'yards',
+                          color: AppTheme.primary, 
                         ),
                       ],
                     ),
                     const SizedBox(height: 20),
- 
+
                     const _SectionLabel(text: 'Floor Assets'),
                     const SizedBox(height: 12),
                     Row(
                       children: [
                         _statCard(
-                          icon:  Icons.precision_manufacturing_rounded,
-                          label: 'Machines',
+                          icon: Icons.precision_manufacturing_rounded,
+                          label: 'Total Machines',
                           value: "${data['machines_count'] ?? 0}",
-                          unit:  'active',
-                          color:AppTheme.primary,
+                          // unit: 'Total Machimes',
+                          color: AppTheme.primary,
                         ),
                         const SizedBox(width: 12),
                         _statCard(
-                          icon:  Icons.groups_rounded,
-                          label: 'Employees',
+                          icon: Icons.groups_rounded,
+                          label: 'Total Employees',
                           value: "${data['employees_count'] ?? 0}",
-                          unit:  'on duty',
+                          // unit: 'Total Employees',
                           color: const Color(0xFF7B61FF),
                         ),
                       ],
                     ),
                     const SizedBox(height: 24),
- 
+
                     _SectionLabel(
                       text: 'Varieties (${data['total_varieties'] ?? 0})',
                     ),
@@ -154,7 +152,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
       bottomNavigationBar: CustomBottomNav(currentIndex: 0, factoryId: factoryId),
     );
   }
- 
+
   // ── AppBar ──────────────────────────────────────────────────────────────────
 PreferredSizeWidget _buildAppBar() {
   final box = GetStorage();
@@ -203,7 +201,8 @@ PreferredSizeWidget _buildAppBar() {
 Widget _buildDrawer() {
   final box = GetStorage();
   final String role = box.read('role') ?? '';
-  return role == 'owner' ? const OwnerDrawer() : const ManagerDrawer();
+  // return role == 'owner' ? const OwnerDrawer() : const ManagerDrawer();
+  return ManagerDrawer();
 }
  
   // ── Hero card — factory info + Productions button ───────────────────────────
@@ -213,23 +212,13 @@ Widget _buildDrawer() {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppTheme.primary, AppTheme.secondary],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: AppTheme.primary, 
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-              color: AppTheme.primary.withOpacity(0.3),
-              blurRadius: 16,
-              offset: const Offset(0, 6)),
-        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ── Factory info row (same as before) ───────────
+          // Factory info row 
           Row(
             children: [
               Container(
@@ -239,7 +228,7 @@ Widget _buildDrawer() {
                   color: AppTheme.secondary.withOpacity(0.12),
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: const Icon(Icons.factory_rounded, color:AppTheme.success, size: 28),
+                child: const Icon(Icons.factory_rounded, color: AppTheme.success, size: 28),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -272,56 +261,51 @@ Widget _buildDrawer() {
               ),
             ],
           ),
- 
+
           // ── Productions button ───────────────────────────
-         const SizedBox(height: 16),
- 
-    SizedBox(
-      width: double.infinity,
-      child: ElevatedButton.icon(
-    onPressed: () {
- 
-      print("Sending Factory ID = ${widget.factoryId}");
- 
-      Get.toNamed(
-        AppRoutes.ownerProduction,
-        arguments: widget.factoryId,
-        parameters: {'period': selectedPeriod.toLowerCase()},
-      );
-    },
-    icon: const Icon(Icons.list_alt_rounded),
-    label: const Text(
-      'View Productions',
-      style: TextStyle(
-        fontWeight: FontWeight.w700,
-        fontSize: 14,
-      ),
-    ),
-    style: ElevatedButton.styleFrom(
-      backgroundColor: AppTheme.success,
-      foregroundColor: AppTheme.primary,
-      elevation: 0,
-      padding: const EdgeInsets.symmetric(vertical: 13),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-    ),
-  ),
-),
+          const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () {
+                print("Sending Factory ID = ${widget.factoryId}");
+                Get.toNamed(
+                  AppRoutes.ownerProduction,
+                  arguments: widget.factoryId,
+                );
+              },
+              icon: const Icon(Icons.list_alt_rounded),
+              label: const Text(
+                'View Productions',
+                style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 14,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppTheme.success,
+                foregroundColor: AppTheme.primary,
+                elevation: 0,
+                padding: const EdgeInsets.symmetric(vertical: 13),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
- 
+
   // ── Period filter dropdown (Day / Week / Month / Year) ──────────────────────
-  // `dark: true` gives a variant that sits nicely on the gradient hero card.
   Widget _periodFilterDropdown({bool dark = false}) {
     final Color bg = dark ? AppTheme.secondary.withOpacity(0.14) : AppTheme.secondary;
     final Color fg = dark ? AppTheme.secondary : AppTheme.primary;
     final Color border = dark
         ? AppTheme.secondary.withOpacity(0.35)
         : AppTheme.primary.withOpacity(0.15);
- 
+
     return PopupMenuButton<String>(
       initialValue: selectedPeriod,
       onSelected: onPeriodChanged,
@@ -376,13 +360,13 @@ Widget _buildDrawer() {
       ),
     );
   }
- 
+
   // ── Stat card ───────────────────────────────────────────────────────────────
   Widget _statCard({
     required IconData icon,
     required String label,
     required String value,
-    required String unit,
+    String? unit,
     required Color color,
   }) {
     return Expanded(
@@ -412,11 +396,11 @@ Widget _buildDrawer() {
             const SizedBox(height: 12),
             Text(value,
                 style: const TextStyle(
-                    color:AppTheme.textPrimary, fontSize: 24, fontWeight: FontWeight.w800)),
+                    color: AppTheme.primary, fontSize: 24, fontWeight: FontWeight.w800)),
             const SizedBox(height: 2),
-            Text('$label · $unit',
+            Text('$label${unit != null ? ' ($unit)' : ''}',
                 style: TextStyle(
-                    color:AppTheme.textPrimary.withOpacity(0.5),
+                    color: AppTheme.primary.withOpacity(0.5),
                     fontSize: 11,
                     fontWeight: FontWeight.w500)),
           ],
@@ -424,17 +408,17 @@ Widget _buildDrawer() {
       ),
     );
   }
- 
+
   // ── Varieties list ──────────────────────────────────────────────────────────
   Widget _varietiesList() {
     final varieties = (data['varieties'] as List?) ?? [];
- 
+
     if (varieties.isEmpty) {
       return Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 32),
         decoration: BoxDecoration(
-            color:AppTheme.secondary, borderRadius: BorderRadius.circular(16)),
+            color: AppTheme.secondary, borderRadius: BorderRadius.circular(16)),
         child: Column(
           children: [
             Icon(Icons.inventory_2_outlined, size: 40, color: AppTheme.neutral),
@@ -445,7 +429,7 @@ Widget _buildDrawer() {
         ),
       );
     }
- 
+
     return Container(
       decoration: BoxDecoration(
         color: AppTheme.secondary,
@@ -471,11 +455,11 @@ Widget _buildDrawer() {
                       width: 32,
                       height: 32,
                       decoration: BoxDecoration(
-                        color:AppTheme.success.withOpacity(0.12),
+                        color: AppTheme.success.withOpacity(0.12),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: const Icon(Icons.texture_rounded,
-                          color:AppTheme.success, size: 16),
+                          color: AppTheme.success, size: 16),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -510,12 +494,12 @@ Widget _buildDrawer() {
     );
   }
 }
- 
+
 // ── Section label ────────────────────────────────────────────────────────────
 class _SectionLabel extends StatelessWidget {
   final String text;
   const _SectionLabel({required this.text});
- 
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -529,9 +513,8 @@ class _SectionLabel extends StatelessWidget {
         const SizedBox(width: 8),
         Text(text,
             style: const TextStyle(
-                color:AppTheme.textPrimary, fontWeight: FontWeight.w700, fontSize: 15)),
+                color: AppTheme.primary, fontWeight: FontWeight.w700, fontSize: 15)),
       ],
     );
   }
 }
- 

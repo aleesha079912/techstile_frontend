@@ -52,7 +52,7 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
     });
   }
 
-  // ✅ NEW: filter employees by factory shift
+  //  filter employees by factory shift
   Future<void> _loadEmployeesByFactory(int factoryId) async {
     final data = await _service.getEmployeesByFactory(factoryId);
 
@@ -104,9 +104,15 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Machine Assignment"),
+        backgroundColor: AppTheme.primary,
+        title: const Text("Machine Assignment",
+        style: TextStyle(
+          color: AppTheme.secondary
+        ),
+        ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back,
+          color: AppTheme.secondary,),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -131,7 +137,7 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
 
                         _loadMachines(v!);
 
-                        // ✅ NEW: load filtered employees
+                        //  load filtered employees
                         _loadEmployeesByFactory(v);
                       },
                     ),
@@ -143,7 +149,7 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
                       (v) => setState(() => selManager = v),
                     ),
 
-                    // 🔥 UPDATED ONLY DISPLAY TEXT
+                    // UPDATED ONLY DISPLAY TEXT
                     _buildDrop(
                       "Select Employee",
                       employees,
@@ -234,7 +240,7 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
           ),
         ),
 
-        // 🔥 UPDATED: show name + shift start time
+        // show name and shift start time
         items: items.map((e) {
           return DropdownMenuItem<int>(
             value: e['id'],

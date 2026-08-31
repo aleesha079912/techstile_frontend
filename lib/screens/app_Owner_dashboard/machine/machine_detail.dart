@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/owner_enter_productions.dart';
-import 'package:techstile_frontend/widgets/owner_drawer.dart';
+
+import 'package:techstile_frontend/core/utils/theme.dart';
+
 import '../../../../core/services/machines_service.dart';
 import '../../../../core/services/machine_details_service.dart';
 import 'assign_production_batch.dart';
 import 'generate_qrcode.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
+//Colours
 
 
 class MachineDetailScreen extends StatefulWidget {
@@ -27,7 +30,7 @@ class MachineDetailScreen extends StatefulWidget {
 }
 
 class _MachineDetailScreenState extends State<MachineDetailScreen> {
-  // ── Service ───────────────────────────────────────────────────────────────
+  //Service 
   final MachineDetailsService _detailSvc = MachineDetailsService();
   bool _detailLoading = true;
   Map<String, dynamic> _detail = {};
@@ -47,12 +50,12 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
     });
   }
 
-  // ── Actions ───────────────────────────────────────────────────────────────
+  // Actions
   void _openAssignProduction() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: AppTheme.background,
+      backgroundColor: AppTheme.secondary,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
@@ -81,14 +84,14 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
     if (shifts.isEmpty) {
       Get.snackbar(
         "No Employees",
-        "Is machine par abhi koi employee assign nahi hai",
+        "Machine is not assign to any employee",
       );
       return;
     }
     if (_detail['batch_id'] == null) {
       Get.snackbar(
         "No Batch",
-        "Pehle \"Assign Production\" se batch assign karein",
+        "First \"Assign Production\" to assign batch",
       );
       return;
     }
@@ -105,20 +108,21 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
     )?.then((_) => _loadDetail());
   }
 
-  // ── Build ─────────────────────────────────────────────────────────────────
+  // Build
   @override
   Widget build(BuildContext context) {
     final m = widget.machine;
 
     return Scaffold(
-      drawer: const OwnerDrawer(),
-      backgroundColor: AppTheme.background,
+      // drawer: const OwnerDrawer(),
+      backgroundColor: AppTheme.secondary,
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
+       
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
-            Icons.arrow_back_ios_new_rounded,
+            Icons.arrow_back,
             color: AppTheme.secondary,
             size: 20,
           ),
@@ -127,47 +131,30 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
         title: Text(
           m.machineName,
           style: const TextStyle(
-            color: AppTheme.textSecondary,
+           color: AppTheme.secondary,
             fontWeight: FontWeight.w700,
             fontSize: 18,
           ),
         ),
-        actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 16),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(
-              color:AppTheme.active.withOpacity(0.18),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: const Text(
-              'Active',
-              style: TextStyle(
-                color: AppTheme.active,
-                fontWeight: FontWeight.w700,
-                fontSize: 12,
-              ),
-            ),
-          ),
-        ],
+       
       ),
 
       body: _detailLoading
           ? const Center(child: CircularProgressIndicator(color: AppTheme.primary))
           : RefreshIndicator(
               onRefresh: _loadDetail,
-              color: AppTheme.primary,
+              color: AppTheme.textPrimary,
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // ── Hero ───────────────────────────────────────────
+                    //  Hero
                     _heroCard(m),
                     const SizedBox(height: 20),
 
-                    // ── Quick Actions ──────────────────────────────────
+                    //Quick Actions 
                     const _SectionLabel(text: 'Quick Actions'),
                     const SizedBox(height: 12),
                     Row(
@@ -176,7 +163,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                           child: _ActionCard(
                             icon: Icons.add_task_rounded,
                             label: 'Assign\nProduction',
-                            color: AppTheme.primary,
+                            color: AppTheme.textPrimary,
                             onTap: _openAssignProduction,
                           ),
                         ),
@@ -194,7 +181,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                           child: _ActionCard(
                             icon: Icons.edit_note_rounded,
                             label: 'Enter\nProduction',
-                            color: AppTheme.success,
+                            color: AppTheme.info,
                             onTap: _openEnterProduction,
                           ),
                         ),
@@ -202,7 +189,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                     ),
                     const SizedBox(height: 20),
 
-                    // ── Machine Info ───────────────────────────────────
+                    //Machine Info
                     const _SectionLabel(text: 'Machine Info'),
                     const SizedBox(height: 12),
                     _infoCard(Icons.tag_rounded, 'Machine ID', m.id),
@@ -211,10 +198,6 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                       'Machine Type',
                       m.type,
                     ),
-                    // _infoCard(Icons.access_time_rounded, 'Last Update', m.time),
-                    // const SizedBox(height: 20),
-
-                    // ── Current Batch (SHARED — machine ka, kisi ek employee ka nahi) ──
                     const _SectionLabel(text: 'Current Batch'),
                     const SizedBox(height: 12),
                     if (_detail['batch_id'] == null)
@@ -223,6 +206,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 24),
                         decoration: BoxDecoration(
                           color: AppTheme.secondary,
+                         
                           borderRadius: BorderRadius.circular(14),
                         ),
                         child: Column(
@@ -263,7 +247,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                     ],
                     const SizedBox(height: 20),
 
-                    // ── Shift-wise Employees ────────────────────────────
+                    //Shift wise Employees 
                     const _SectionLabel(text: 'Shift-wise Production'),
                     const SizedBox(height: 12),
                     if ((_detail['shifts'] as List?)?.isEmpty ?? true)
@@ -272,6 +256,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                         padding: const EdgeInsets.symmetric(vertical: 28),
                         decoration: BoxDecoration(
                           color: AppTheme.secondary,
+                         
                           borderRadius: BorderRadius.circular(14),
                         ),
                         child: Column(
@@ -290,34 +275,6 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                           .map((s) => _shiftCard(s)),
                     const SizedBox(height: 20),
 
-                    // const SizedBox(height: 16),
-
-                    // Stats row
-                    // Row(
-                    //   children: [
-                    //     Expanded(
-                    //       child: _statCard(
-                    //         'Daily',
-                    //         _detail['daily_production']?.toString() ?? '0',
-                    //       ),
-                    //     ),
-                    //     const SizedBox(width: 10),
-                    //     Expanded(
-                    //       child: _statCard(
-                    //         'Weekly',
-                    //         _detail['weekly_production']?.toString() ?? '0',
-                    //       ),
-                    //     ),
-                    //     const SizedBox(width: 10),
-                    //     Expanded(
-                    //       child: _statCard(
-                    //         'Yearly',
-                    //         _detail['yearly_production']?.toString() ?? '0',
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                    // const SizedBox(height: 20),
                   ],
                 ),
               ),
@@ -326,14 +283,14 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
     );
   }
 
-  // ── Hero card ─────────────────────────────────────────────────────────────
+  // Hero card 
   Widget _heroCard(Machine m) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [AppTheme.primary,AppTheme.info],
+          colors: [AppTheme.textPrimary, Color(0xFF1A3570)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -341,6 +298,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
         boxShadow: [
           BoxShadow(
             color: AppTheme.primary.withOpacity(0.3),
+          
             blurRadius: 16,
             offset: const Offset(0, 6),
           ),
@@ -353,11 +311,12 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
             height: 60,
             decoration: BoxDecoration(
               color: AppTheme.secondary.withOpacity(0.12),
+              
               borderRadius: BorderRadius.circular(16),
             ),
             child: const Icon(
               Icons.precision_manufacturing_rounded,
-              color: AppTheme.success,
+              color: AppTheme.info,
               size: 32,
             ),
           ),
@@ -369,7 +328,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                 Text(
                   m.machineName,
                   style: const TextStyle(
-                    color: AppTheme.textSecondary,
+                    color: AppTheme.secondary,
                     fontWeight: FontWeight.w800,
                     fontSize: 20,
                   ),
@@ -378,25 +337,12 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                 Text(
                   m.type,
                   style: TextStyle(
-                    color: AppTheme.textSecondary.withOpacity(0.65),
+                    color: AppTheme.secondary.withOpacity(0.65),
                     fontSize: 13,
                   ),
                 ),
                 const SizedBox(height: 8),
-                Row(
-                  children: [
-                    const Icon(Icons.circle, color: AppTheme.success, size: 8),
-                    const SizedBox(width: 5),
-                    Text(
-                      'Running',
-                      style: TextStyle(
-                        color: AppTheme.textSecondary.withOpacity(0.8),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
+                
               ],
             ),
           ),
@@ -404,8 +350,6 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
       ),
     );
   }
-
-  // ── Shift card (one employee's shift assignment on this machine) ───────────
   Widget _shiftCard(Map<String, dynamic> s) {
     final start = s['shift_start']?.toString() ?? '';
     final end = s['shift_end']?.toString() ?? '';
@@ -416,6 +360,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppTheme.secondary,
+     
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -433,12 +378,12 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: (isDayShift ? AppTheme.surface : AppTheme.primary).withOpacity(0.12),
+                  color: (isDayShift ? Colors.orange : AppTheme.primary).withOpacity(0.12),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
                   isDayShift ? Icons.wb_sunny_rounded : Icons.nightlight_round,
-                  color: isDayShift ? AppTheme.surface: AppTheme.primary,
+                  color: isDayShift ? Colors.orange : AppTheme.primary,
                   size: 16,
                 ),
               ),
@@ -449,12 +394,12 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                       ? s['employee_name'].toString()
                       : 'Employee #${s['employee_id'] ?? '-'}',
                   style: const TextStyle(
-                      color: AppTheme.textPrimary, fontWeight: FontWeight.w700, fontSize: 14),
+                      color: AppTheme.primary, fontWeight: FontWeight.w700, fontSize: 14),
                 ),
               ),
               Text(
                 '$start - $end',
-                style: TextStyle(color: AppTheme.textPrimary.withOpacity(0.55), fontSize: 11),
+                style: TextStyle(color: AppTheme.primary.withOpacity(0.55), fontSize: 11),
               ),
             ],
           ),
@@ -473,13 +418,14 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
     );
   }
 
-  // ── Info card ─────────────────────────────────────────────────────────────
+  // Info card 
   Widget _infoCard(IconData icon, String title, String value) {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
         color: AppTheme.secondary,
+      
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
@@ -495,16 +441,17 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
               color: AppTheme.primary.withOpacity(0.07),
+             
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(icon, color: AppTheme.primary, size: 18),
+            child: Icon(icon, color:  AppTheme.primary, size: 18),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               title,
               style: TextStyle(
-                color: AppTheme.textPrimary.withOpacity(0.6),
+                color: AppTheme.primary.withOpacity(0.6),
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
               ),
@@ -513,7 +460,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
           Text(
             value,
             style: const TextStyle(
-              color: AppTheme.textPrimary,
+              color: AppTheme.primary,
               fontSize: 14,
               fontWeight: FontWeight.w700,
             ),
@@ -523,16 +470,18 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
     );
   }
 
-  // ── Stat card ─────────────────────────────────────────────────────────────
+  // Stat card 
   Widget _statCard(String title, String value) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 14),
       decoration: BoxDecoration(
         color: AppTheme.primary,
+       
         borderRadius: BorderRadius.circular(14),
         boxShadow: [
           BoxShadow(
             color: AppTheme.primary.withOpacity(0.25),
+           
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -543,7 +492,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
           Text(
             title,
             style: TextStyle(
-              color: AppTheme.textSecondary.withOpacity(0.7),
+              color: AppTheme.secondary.withOpacity(0.7),
               fontSize: 11,
               fontWeight: FontWeight.w500,
             ),
@@ -552,7 +501,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
           Text(
             value,
             style: const TextStyle(
-              color: AppTheme.success,
+              color:  AppTheme.neutral,
               fontSize: 18,
               fontWeight: FontWeight.w800,
             ),
@@ -563,7 +512,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
   }
 }
 
-// ── Action Card ───────────────────────────────────────────────────────────────
+//Action Card
 class _ActionCard extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -597,13 +546,13 @@ class _ActionCard extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color:AppTheme.secondary, size: 28),
+            Icon(icon, color: AppTheme.secondary, size: 28),
             const SizedBox(height: 8),
             Text(
               label,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                color: AppTheme.textSecondary,
+                color:  AppTheme.secondary,
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
                 height: 1.3,
@@ -616,7 +565,7 @@ class _ActionCard extends StatelessWidget {
   }
 }
 
-// ── Section Label ─────────────────────────────────────────────────────────────
+//Section Label 
 class _SectionLabel extends StatelessWidget {
   final String text;
   const _SectionLabel({required this.text});
@@ -629,7 +578,7 @@ class _SectionLabel extends StatelessWidget {
           width: 4,
           height: 18,
           decoration: BoxDecoration(
-            color: AppTheme.success,
+            color:  AppTheme.neutral,
             borderRadius: BorderRadius.circular(2),
           ),
         ),
@@ -637,7 +586,7 @@ class _SectionLabel extends StatelessWidget {
         Text(
           text,
           style: const TextStyle(
-            color: AppTheme.textPrimary,
+            color: AppTheme.primary,
             fontWeight: FontWeight.w700,
             fontSize: 16,
           ),

@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../../core/services/manager_service/man_emp_notification_service.dart';
+import '../../core/services/notification_service.dart';
 import '../../core/services/auth_service.dart';
 import '../../../core/utils/theme.dart';
 
 class NotificationPage extends StatefulWidget {
-  final Widget drawer;
+  
+  final Widget? drawer;
   final String title;
 
   const NotificationPage({
     super.key,
-    required this.drawer,
+    this.drawer,
     this.title = "Notifications",
   });
 
@@ -137,14 +138,17 @@ class _State extends State<NotificationPage> {
       appBar: AppBar(
         title: Text(widget.title),
         elevation: 0,
-        backgroundColor:  AppTheme.primary,
+        backgroundColor: AppTheme.primary,
         foregroundColor: AppTheme.secondary,
-        leading: Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: () => Scaffold.of(context).openDrawer(),
-          ),
-        ),
+   
+        leading: widget.drawer != null
+            ? Builder(
+                builder: (context) => IconButton(
+                  icon: const Icon(Icons.menu),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                ),
+              )
+            : null,
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
@@ -205,7 +209,7 @@ class _State extends State<NotificationPage> {
     );
   }
 
-  /// ================= TOP CARD =================
+  /// TOP CARD 
   Widget _topSummaryCard(int unreadCount) {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -241,7 +245,7 @@ class _State extends State<NotificationPage> {
     );
   }
 
-  /// ================= FILTER ROW =================
+  /// FILTER ROW
   Widget _filterRow() {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -272,7 +276,7 @@ class _State extends State<NotificationPage> {
     );
   }
 
-  /// ================= NOTIFICATION CARD =================
+  /// NOTIFICATION CARD 
   Widget _notificationCard(dynamic n, bool isRead, String type) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -280,7 +284,7 @@ class _State extends State<NotificationPage> {
       decoration: BoxDecoration(
         color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color:  AppTheme.neutral),
+        border: Border.all(color: AppTheme.neutral),
         boxShadow: [
           BoxShadow(
             color: AppTheme.onsurface.withOpacity(0.03),
@@ -342,7 +346,7 @@ class _State extends State<NotificationPage> {
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color:  AppTheme.neutral,
+                        color: AppTheme.neutral,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Column(
@@ -371,7 +375,7 @@ class _State extends State<NotificationPage> {
                 child: Icon(
                   Icons.circle,
                   size: 10,
-                  color:  AppTheme.info,
+                  color: AppTheme.info,
                 ),
               ),
           ],
@@ -381,7 +385,7 @@ class _State extends State<NotificationPage> {
   }
 }
 
-/// ================= CHIP =================
+/// CHIP 
 class _Chip extends StatelessWidget {
   final String text;
   final bool selected;
@@ -402,16 +406,16 @@ class _Chip extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
           color: selected
-              ?  AppTheme.primary
-              :  AppTheme.neutral,
+              ? AppTheme.primary
+              : AppTheme.neutral,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
           text,
           style: TextStyle(
             color: selected
-                ?  AppTheme.secondary
-                :  AppTheme.onsurface,
+                ? AppTheme.secondary
+                : AppTheme.onsurface,
           ),
         ),
       ),

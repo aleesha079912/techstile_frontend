@@ -72,7 +72,7 @@ class ManageUsersService {
     ...AuthService.authHeaders,
   };
 
-  // ───────────────────────── USERS ─────────────────────────
+  //USERS
 
   Future<List<UserData>> fetchUsers() async {
     try {
@@ -143,7 +143,7 @@ class ManageUsersService {
     }
   }
 
-  // ───────────────────────── ROLES ─────────────────────────
+  //  ROLES
 
   Future<List<String>> fetchRoles() async {
     try {
@@ -177,7 +177,7 @@ class ManageUsersService {
     }
   }
 
-  // ───────────────────────── FACTORIES ─────────────────────────
+  //FACTORIES
 
   Future<List<dynamic>> getFactories() async {
     try {
@@ -202,7 +202,7 @@ class ManageUsersService {
     }
   }
 
-  // ───────────────────────── MACHINES ─────────────────────────
+  //  MACHINES
 
   Future<List<dynamic>> getFactoryMachines(int factoryId) async {
     try {
@@ -227,7 +227,7 @@ class ManageUsersService {
     }
   }
 
-  // ───────────────────────── ASSIGN MACHINES ─────────────────────────
+  //ASSIGN MACHINES
 
   Future<bool> assignMachines({
     required int userId,

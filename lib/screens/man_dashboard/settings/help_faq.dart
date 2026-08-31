@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:techstile_frontend/core/utils/theme.dart';
 
 class HelpFaqScreen extends StatelessWidget {
   const HelpFaqScreen({super.key});
@@ -7,7 +8,13 @@ class HelpFaqScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Help & FAQ"),
+        backgroundColor: AppTheme.primary,
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: const Text("Help & FAQ",
+        style: TextStyle(
+          color: AppTheme.secondary
+        ),
+        ),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -35,7 +42,7 @@ class HelpFaqScreen extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.all(15),
                 child: Text(
-                  "Open Employee Management and assign machine.",
+                  "Open Assign machine and assign machine.",
                 ),
               ),
             ],
