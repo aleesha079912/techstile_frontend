@@ -3,6 +3,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:techstile_frontend/core/services/generate_qr_service.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
+import 'package:techstile_frontend/widgets/owner_drawer.dart';
 
 class GenerateQrCodeScreen extends StatefulWidget {
   final String machineDbId;   // primary id from DB 
@@ -28,7 +29,7 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // drawer: const OwnerDrawer(),
+      drawer: const OwnerDrawer(),
       backgroundColor: AppTheme.background,
       appBar: AppBar(
         backgroundColor:AppTheme.background,

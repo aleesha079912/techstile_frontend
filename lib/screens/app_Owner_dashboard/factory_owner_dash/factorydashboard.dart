@@ -8,6 +8,7 @@ import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
 import 'package:get/get.dart';
 import 'package:techstile_frontend/routes/routes.dart';
 import 'package:techstile_frontend/widgets/man_drawer.dart';
+import 'package:techstile_frontend/widgets/owner_drawer.dart';
  
  
 class FactoryDashboard extends StatefulWidget {
@@ -200,9 +201,8 @@ PreferredSizeWidget _buildAppBar() {
 // ── Drawer (put this in the same class) ──────────────────────────────────────
 Widget _buildDrawer() {
   final box = GetStorage();
-  final String role = box.read('role') ?? '';
-  // return role == 'owner' ? const OwnerDrawer() : const ManagerDrawer();
-  return ManagerDrawer();
+  final String role = (box.read('role') ?? '').toString().toLowerCase().trim();
+  return role == 'owner' ? const OwnerDrawer() : const ManagerDrawer();
 }
  
   // ── Hero card — factory info + Productions button ───────────────────────────

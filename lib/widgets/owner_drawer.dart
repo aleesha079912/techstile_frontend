@@ -1,0 +1,142 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:techstile_frontend/core/utils/theme.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/scan_code.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/employee/attendance.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/app_owner_dash.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/machine_assignment.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/role_management.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/assign_permission.dart';
+import 'package:techstile_frontend/routes/routes.dart';
+
+class OwnerDrawer extends StatelessWidget {
+  const OwnerDrawer({
+    super.key,
+  });
+
+  int get factoryId => 0; // Placeholder, replace with actual factory ID retrieval logic
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      backgroundColor: AppTheme.background,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // HEADER
+          Container(
+            height: 90,
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 25),
+            decoration: BoxDecoration(color: AppTheme.primary),
+            child: const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Management Panel",
+                  style: TextStyle(
+                    color: AppTheme.textSecondary,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // LIST ITEMS
+          Expanded(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: [
+                _item(
+                  context,
+                  Icons.dashboard_rounded,
+                  "Home",
+                  () => Get.to(() => const OwnerDashboardScreen(factoryId: 0)),
+                ),
+                // sub menu for user management
+                ExpansionTile(
+                  leading: Icon(Icons.security_rounded, color: AppTheme.primary),
+                  title: const Text(
+                    "User Management",
+                    style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                  ),
+                  childrenPadding: const EdgeInsets.only(left: 20), // Sub-menu offset
+                  children: [
+                    _item(
+                      context,
+                      Icons.admin_panel_settings_outlined,
+                      "Manage Roles",
+                      () => Get.to(() => RoleManagementScreen()),
+                    ),
+                    _item(
+                      context,
+                      Icons.vpn_key_outlined,
+                      "Assign Permissions",
+                      () => Get.to(() => const AssignPermissionsScreen()),
+                    ),
+                  ],
+                ),
+                _item(
+                  context,
+                  Icons.factory_outlined,
+                  "Machine Assignment",
+                  () => Get.to(() => const MachineAssignmentPage()),
+                ),
+                _item(
+                  context,
+                  Icons.qr_code_scanner,
+                  "Scan Machine",
+                  () {
+                    Get.back();
+                    Get.toNamed(
+                      AppRoutes.scanMachine,
+                    );
+                  },
+                ),
+                _item(
+                  context,
+                  Icons.access_time_rounded,
+                  "Manage Attendance",
+                  () => Get.to(() => const AttendanceScreen()),
+                ),
+                _item(
+                  context,
+                  Icons.qr_code_scanner,
+                  "Scan QR Code",
+                  () => Get.to(() => ScanQRCodeScreen(factoryId: factoryId)),
+                ),
+                const Divider(),
+                _item(
+                  context,
+                  Icons.logout_rounded,
+                  "Logout",
+                  () => Get.toNamed("/login"),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _item(
+    BuildContext context,
+    IconData icon,
+    String title,
+    VoidCallback onTapAction,
+  ) {
+    return ListTile(
+      leading: Icon(icon, color: AppTheme.primary),
+      title: Text(
+        title,
+        style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+      ),
+      onTap: () {
+        Get.back(); // close Drawer
+        onTapAction();
+      },
+    );
+  }
+}

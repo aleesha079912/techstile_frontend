@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/services/attendance_service.dart';
 import '../../../core/utils/theme.dart';
+import '../../../widgets/owner_drawer.dart';
 
 import '../../../../../widgets/bottom_nav_bar.dart';
 class AttendanceScreen extends StatefulWidget {
@@ -84,7 +85,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       
+      drawer: const OwnerDrawer(),
       appBar: AppBar(title: const Text("Attendance")),
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppTheme.primary,

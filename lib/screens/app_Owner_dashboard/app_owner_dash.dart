@@ -9,6 +9,7 @@ import 'package:techstile_frontend/screens/app_Owner_dashboard/manage_user.dart'
 import 'package:techstile_frontend/screens/app_Owner_dashboard/owner_profile.dart';
 import 'package:techstile_frontend/screens/man_dashboard/notification.dart';
 import 'package:techstile_frontend/screens/man_dashboard/settings/settings.dart';
+import 'package:techstile_frontend/widgets/owner_drawer.dart';
 
 import 'package:techstile_frontend/core/models/factory_model.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/factory_owner_dash/factorydashboard.dart';
@@ -26,12 +27,13 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
   // Variable that tracks current active tab index (0, 1, 2, 3)
   int _currentIndex = 0;
 
-  // Navigation Target List (drawer parameter remove kar diya gaya hai)
+  // Navigation Target List
   final List<Widget> _pages = [
     const _HomeTab(),
     const ManageUsersScreen(),
     NotificationPage(
-      title: "Notifications",
+      drawer: const OwnerDrawer(),
+      title: "Owner Notifications",
     ),
     ManagerSettingsScreen(
       roleLabel: "Owner",
@@ -47,13 +49,22 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
+      drawer: _currentIndex == 0 ? const OwnerDrawer() : null,
       appBar: _currentIndex == 0
           ? AppBar(
               backgroundColor: AppTheme.primary,
               elevation: theme.appBarTheme.elevation,
-              // Drawer menu icon button ko remove kar ke title ko cleanly set kar diya hai
+              leading: Builder(
+                builder: (context) => IconButton(
+                  icon: Icon(
+                    Icons.menu,
+                    color: AppTheme.secondary,
+                  ),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                ),
+              ),
               title: Text(
-                "Dashboard",
+                "Owner Dashboard",
                 style: TextStyle(
                   color: AppTheme.secondary,
                   fontWeight: FontWeight.bold,
