@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:techstile_frontend/core/services/manager_service/manager_profile_service.dart';
+import 'package:techstile_frontend/routes/routes.dart';
 import 'package:techstile_frontend/widgets/man_drawer.dart';
 import 'package:techstile_frontend/core/services/auth_service.dart';
 import '../../../core/utils/theme.dart';
@@ -25,8 +27,8 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
     load();
   }
 
-  //LOGIC 
   Future<void> load() async {
+    setState(() => loading = true);
     final res = await service.getProfile(widget.userId);
 
     setState(() {
@@ -35,65 +37,96 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
     });
   }
 
-  //SIMPLE HELPER WIDGETS
-
-  // Top gradient profile card 
-  Widget buildProfileHeader() {
-    final name = profile?['name'] ?? '';
-    final email = profile?['email'] ?? '';
-    final firstLetter = name.isNotEmpty ? name[0].toUpperCase() : '?';
+  // ================= 1. HERO PROFILE CARD =================
+  Widget _buildHeroHeader() {
+    final name = profile?['name']?.toString() ?? 'Plant Manager';
+    final email = profile?['email']?.toString() ?? '—';
+    final firstLetter = name.trim().isNotEmpty ? name.trim()[0].toUpperCase() : 'M';
 
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.fromLTRB(15, 15, 15, 12),
-      padding: const EdgeInsets.symmetric(vertical: 22),
+      margin: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(24),
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-             AppTheme.primary,
-             AppTheme.info,
-          ],
+          colors: [AppTheme.primary, AppTheme.info],
         ),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.primary.withOpacity(0.35),
-            blurRadius: 10,
-            offset: const Offset(0, 5),
+            color: AppTheme.primary.withOpacity(0.3),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
       child: Column(
         children: [
-          CircleAvatar(
-            radius: 32,
-            backgroundColor: AppTheme.background.withOpacity(0.25),
-            child: Text(
-              firstLetter,
-              style: const TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.bold,
-                color:  AppTheme.secondary,
+          // Avatar with ring border
+          Container(
+            padding: const EdgeInsets.all(3.5),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white.withOpacity(0.7), width: 2),
+            ),
+            child: CircleAvatar(
+              radius: 36,
+              backgroundColor: Colors.white.withOpacity(0.2),
+              child: Text(
+                firstLetter,
+                style: const TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.w800,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 12),
           Text(
             name,
+            textAlign: TextAlign.center,
             style: const TextStyle(
-              fontSize: 19,
-              fontWeight: FontWeight.bold,
-              color:  AppTheme.secondary,
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+              color: Colors.white,
+              letterSpacing: 0.2,
             ),
           ),
           const SizedBox(height: 3),
           Text(
             email,
+            textAlign: TextAlign.center,
             style: TextStyle(
-              fontSize: 12,
-              color:  AppTheme.textSecondary.withOpacity(0.85),
+              fontSize: 12.5,
+              color: Colors.white.withOpacity(0.85),
+            ),
+          ),
+          const SizedBox(height: 10),
+          // Badge chip
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.18),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: Colors.white.withOpacity(0.3)),
+            ),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.shield_outlined, color: Color(0xFF64B5F6), size: 14),
+                SizedBox(width: 5),
+                Text(
+                  "Plant Manager",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 11.5,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -101,10 +134,93 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
     );
   }
 
-  // Section title with small blue bar 
-  Widget sectionTitle(String title) {
+  // ================= 2. QUICK ACTION BUTTONS =================
+  Widget _buildQuickActions() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
+      child: Row(
+        children: [
+          Expanded(
+            child: _actionButton(
+              icon: Icons.precision_manufacturing_outlined,
+              label: "Machines",
+              onTap: () => Get.toNamed(AppRoutes.managerMachines),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: _actionButton(
+              icon: Icons.people_outline_rounded,
+              label: "Employees",
+              onTap: () => Get.toNamed(AppRoutes.managerEmployees),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: _actionButton(
+              icon: Icons.assignment_outlined,
+              label: "Productions",
+              onTap: () => Get.toNamed(AppRoutes.managerProduction),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _actionButton({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return Material(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(16),
+      elevation: 1,
+      shadowColor: AppTheme.primary.withOpacity(0.08),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: AppTheme.primary.withOpacity(0.08)),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppTheme.primary.withOpacity(0.08),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, color: AppTheme.primary, size: 20),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 11.5,
+                  fontWeight: FontWeight.w700,
+                  color: AppTheme.textPrimary,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ================= 3. SECTION TITLE =================
+  Widget _sectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 14, 20, 10),
       child: Row(
         children: [
           Container(
@@ -119,9 +235,9 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
           Text(
             title,
             style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color:  AppTheme.onsurface,
+              fontSize: 15.5,
+              fontWeight: FontWeight.w800,
+              color: AppTheme.textPrimary,
             ),
           ),
         ],
@@ -129,91 +245,180 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
     );
   }
 
-  // Colorful stat card for performance overview grid
-  Widget statCard(IconData icon, String title, String value, Color color) {
+  // ================= 4. OVERVIEW STATS (2x2 GRID) =================
+  Widget _buildOverviewStats() {
+    final factoryName = profile?['factory_name']?.toString() ?? 'Assigned Factory';
+    final totalEmployees = "${profile?['total_employees'] ?? 0}";
+    final totalMachines = "${profile?['total_machines'] ?? 0}";
+    final totalProduction = "${profile?['total_production'] ?? 0} m";
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: GridView.count(
+        crossAxisCount: 2,
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        childAspectRatio: 1.35,
+        children: [
+          _statCard(
+            Icons.factory_rounded,
+            "Plant / Factory",
+            factoryName,
+            AppTheme.primary,
+          ),
+          _statCard(
+            Icons.groups_rounded,
+            "Total Employees",
+            totalEmployees,
+            AppTheme.info,
+          ),
+          _statCard(
+            Icons.precision_manufacturing_rounded,
+            "Active Machines",
+            totalMachines,
+            AppTheme.surface,
+          ),
+          _statCard(
+            Icons.check_circle_rounded,
+            "Ready Output",
+            totalProduction,
+            AppTheme.success,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _statCard(IconData icon, String title, String value, Color color) {
     return Container(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: AppTheme.secondary,
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color:  AppTheme.secondary.withOpacity(0.05),
-            blurRadius: 6,
+            color: color.withOpacity(0.06),
+            blurRadius: 8,
             offset: const Offset(0, 3),
           ),
         ],
+        border: Border.all(color: color.withOpacity(0.12)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.15),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, color: color, size: 22),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color:  AppTheme.onsurface,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 12,
-              color:  AppTheme.onsurface,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Basic info row 
-  Widget infoRow(IconData icon, String label, String value) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      decoration: BoxDecoration(
-        color:  AppTheme.secondary,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color:  AppTheme.onsurface.withOpacity(0.04),
-            blurRadius: 6,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color:  AppTheme.primary.withOpacity(0.08),
-              borderRadius: BorderRadius.circular(10),
+              color: color.withOpacity(0.12),
+              shape: BoxShape.circle,
             ),
-            child: Icon(icon, color:  AppTheme.primary, size: 18),
+            child: Icon(icon, color: color, size: 20),
+          ),
+          const SizedBox(height: 8),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              value,
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w800,
+                color: color,
+              ),
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontSize: 11.5,
+              fontWeight: FontWeight.w600,
+              color: AppTheme.onsurface.withOpacity(0.7),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ================= 5. PERSONAL & PLANT INFO =================
+  Widget _buildDetailsCard() {
+    final factoryName = profile?['factory_name']?.toString() ?? '';
+    final phone = profile?['phone_no']?.toString() ?? '';
+    final cnic = profile?['cnic']?.toString() ?? '';
+    final address = profile?['address']?.toString() ?? '';
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.primary.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+        border: Border.all(color: AppTheme.primary.withOpacity(0.06)),
+      ),
+      child: Column(
+        children: [
+          _infoRow(Icons.factory_outlined, "Assigned Plant / Factory", factoryName),
+          const Divider(height: 14, thickness: 0.6),
+          _infoRow(Icons.phone_outlined, "Phone Number", phone),
+          const Divider(height: 14, thickness: 0.6),
+          _infoRow(Icons.badge_outlined, "CNIC Number", cnic),
+          const Divider(height: 14, thickness: 0.6),
+          _infoRow(Icons.location_on_outlined, "Residential Address", address),
+          const Divider(height: 14, thickness: 0.6),
+          _infoRow(Icons.verified_outlined, "Managerial Role", "Floor Supervisor & Operations Manager"),
+        ],
+      ),
+    );
+  }
+
+  Widget _infoRow(IconData icon, String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(7),
+            decoration: BoxDecoration(
+              color: AppTheme.primary.withOpacity(0.07),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(icon, color: AppTheme.primary, size: 16),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label,
-                    style: const TextStyle(fontSize: 11, color:  AppTheme.onsurface)),
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: AppTheme.onsurface.withOpacity(0.6),
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const SizedBox(height: 1),
                 Text(
                   value.isNotEmpty ? value : '—',
                   style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.w600, color: AppTheme.onsurface),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                    color: AppTheme.textPrimary,
+                  ),
                 ),
               ],
             ),
@@ -223,69 +428,67 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
     );
   }
 
+  // ================= MAIN BUILD =================
   @override
   Widget build(BuildContext context) {
+    final bool canPop = Navigator.canPop(context);
+
     return Scaffold(
-      backgroundColor:  AppTheme.background, 
-      drawer: ManagerDrawer(
-        userId: AuthService.userId,
-        factoryId: AuthService.factoryId,
+      backgroundColor: AppTheme.background,
+      drawer: canPop
+          ? null
+          : ManagerDrawer(
+              userId: AuthService.userId,
+              factoryId: AuthService.factoryId,
+            ),
+      appBar: AppBar(
+        backgroundColor: AppTheme.primary,
+        elevation: 0,
+        leading: canPop
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back, color: AppTheme.secondary),
+                onPressed: () => Navigator.pop(context),
+              )
+            : Builder(
+                builder: (ctx) => IconButton(
+                  icon: const Icon(Icons.menu_rounded, color: AppTheme.secondary),
+                  onPressed: () => Scaffold.of(ctx).openDrawer(),
+                ),
+              ),
+        title: const Text(
+          "Manager Profile",
+          style: TextStyle(
+            color: AppTheme.textSecondary,
+            fontSize: 17,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh_rounded, color: AppTheme.secondary),
+            onPressed: load,
+          ),
+        ],
       ),
-      appBar: AppBar(title: const Text("Manager Profile",style: TextStyle(color: AppTheme.textSecondary),),backgroundColor: AppTheme.primary,iconTheme: IconThemeData(color: AppTheme.secondary),),
       body: loading
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Top gradient header
-                  buildProfileHeader(),
-
-                  // Basic information section
-                  sectionTitle("Basic Information"),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: Column(
-                      children: [
-                        infoRow(Icons.factory_outlined, "Factory",
-                            profile?['factory_name']?.toString() ?? ''),
-                        infoRow(Icons.phone_outlined, "Phone",
-                            profile?['phone_no']?.toString() ?? ''),
-                        infoRow(Icons.location_on_outlined, "Address",
-                            profile?['address']?.toString() ?? ''),
-                      ],
-                    ),
-                  ),
-
-                  // Performance overview section
-                  sectionTitle("Performance Overview"),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 15),
-                    child: GridView.count(
-                      crossAxisCount: 2,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      crossAxisSpacing: 12,
-                      mainAxisSpacing: 12,
-                      childAspectRatio: 1.3,
-                      children: [
-                        statCard(
-                          Icons.groups,
-                          "Total Employees",
-                          "${profile?['total_employees'] ?? 0}",
-                           AppTheme.info,
-                        ),
-                        statCard(
-                          Icons.analytics,
-                          "Total Production",
-                          "${profile?['total_production'] ?? 0}",
-                           AppTheme.surface,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                ],
+          ? const Center(child: CircularProgressIndicator(color: AppTheme.primary))
+          : RefreshIndicator(
+              color: AppTheme.primary,
+              onRefresh: load,
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildHeroHeader(),
+                    _buildQuickActions(),
+                    _sectionTitle("Plant Overview"),
+                    _buildOverviewStats(),
+                    _sectionTitle("Account & Plant Info"),
+                    _buildDetailsCard(),
+                    const SizedBox(height: 28),
+                  ],
+                ),
               ),
             ),
     );

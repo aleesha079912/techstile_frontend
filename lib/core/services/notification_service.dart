@@ -1,31 +1,63 @@
-import 'package:get/get.dart';
-import 'package:dio/dio.dart';
+import 'dart:convert';
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+import './auth_service.dart';
 
-class NotificationService extends GetConnect {
-  final Dio dio = Dio();
-  @override
-  String? baseUrl = "http://localhost:8000/api";
+class NotificationService {
+  static const String baseUrl = "http://localhost:8000/api";
 
-  Future<List> getNotifications(userId) async {
-    final res = await get("/notifications/$userId");
+  Future<List> getNotifications(dynamic userId) async {
+    if (userId == null) return [];
+    try {
+      final url = Uri.parse("$baseUrl/notifications/$userId");
+      final res = await http.get(url, headers: AuthService.authHeaders);
 
-    print("STATUS => ${res.statusCode}");
-    print("BODY => ${res.body}");
+      debugPrint("NOTIFICATION STATUS => ${res.statusCode}");
+      debugPrint("NOTIFICATION BODY => ${res.body}");
 
-    if (res.body == null || res.body is! List) {
+      if (res.statusCode == 200) {
+        final decoded = jsonDecode(res.body);
+        if (decoded is List) {
+          return decoded;
+        } else if (decoded is Map && decoded['notifications'] is List) {
+          return List.from(decoded['notifications']);
+        } else if (decoded is Map && decoded['data'] is List) {
+          return List.from(decoded['data']);
+        }
+      }
+      return [];
+    } catch (e) {
+      debugPrint("getNotifications error: $e");
       return [];
     }
-
-    return List.from(res.body);
   }
 
-  Future<void> read(id) async {
-    await post("/notifications/read/$id", {});
+  Future<void> read(dynamic id) async {
+    if (id == null) return;
+    try {
+      final url = Uri.parse("$baseUrl/notifications/read/$id");
+      await http.post(url, headers: AuthService.authHeaders);
+    } catch (e) {
+      debugPrint("read notification error: $e");
+    }
   }
 
-  Future<int> getUnreadCount(int userId) async {
-    final response = await dio.get("$baseUrl/notifications/unread/$userId");
-
-    return response.data['count'];
+  Future<int> getUnreadCount(dynamic userId) async {
+    if (userId == null) return 0;
+    try {
+      final url = Uri.parse("$baseUrl/notifications/unread/$userId");
+      final res = await http.get(url, headers: AuthService.authHeaders);
+      if (res.statusCode == 200) {
+        final decoded = jsonDecode(res.body);
+        if (decoded is Map && decoded['count'] != null) {
+          return int.tryParse(decoded['count'].toString()) ?? 0;
+        }
+      }
+      return 0;
+    } catch (e) {
+      debugPrint("getUnreadCount error: $e");
+      return 0;
+    }
   }
 }
+

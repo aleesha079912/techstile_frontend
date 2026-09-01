@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:techstile_frontend/core/services/auth_service.dart';
 import 'package:techstile_frontend/core/services/payments_service.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
+import 'package:techstile_frontend/widgets/emp_db_bot_nav_bar.dart';
 import 'package:techstile_frontend/widgets/own_payments_pop_up.dart';
 
 
@@ -232,10 +234,12 @@ class ProductionRecord {
 
 class PaymentsScreen extends StatefulWidget {
   final int factoryId;
+  final int? initialEmployeeId;
 
   const PaymentsScreen({
     super.key,
     required this.factoryId,
+    this.initialEmployeeId,
   });
 
   @override
@@ -1052,6 +1056,14 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
           .map((e) => EmployeePayment.fromJson(e as Map<String, dynamic>))
           .toList();
 
+      if (widget.initialEmployeeId != null) {
+        data.sort((a, b) {
+          if (a.employeeId == widget.initialEmployeeId) return -1;
+          if (b.employeeId == widget.initialEmployeeId) return 1;
+          return 0;
+        });
+      }
+
       setState(() {
         _employees = data;
         _isLoading = false;
@@ -1076,7 +1088,12 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       _grandTotalLength == 0 ? 0 : _grandTotalAmount / _grandTotalLength;
 
   @override
+
   Widget build(BuildContext context) {
+    final box = GetStorage();
+    final userData = box.read('user');
+    final String role = (box.read('role') ?? '').toString().toLowerCase().trim();
+
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
@@ -1102,10 +1119,13 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       )
       : null,
 
-       bottomNavigationBar: CustomBottomNav(    
-        currentIndex: 2,
-        factoryId: widget.factoryId,
-      ),
+           bottomNavigationBar: role == 'employee'
+        ? const EmployeeBottomNav(currentIndex: 3)
+        : CustomBottomNav(
+            currentIndex: 2,
+            factoryId: widget.factoryId,
+          ),
+
     );
   }
 

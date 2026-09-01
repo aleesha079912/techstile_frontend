@@ -13,7 +13,7 @@ class ManagerSettingsScreen extends StatefulWidget {
 
   const ManagerSettingsScreen({
     super.key,
-    this.roleLabel = "Owner",
+    this.roleLabel = "Manager",
     this.profilePageBuilder,
   });
 
@@ -115,9 +115,13 @@ class _ManagerSettingsScreenState
                             borderRadius:
                                 BorderRadius.circular(20),
                           ),
-                          child:  Text(
-                           user['role'] ?? '' ,
-                            style: TextStyle(
+                          child: Text(
+                            widget.roleLabel.isNotEmpty
+                                ? widget.roleLabel
+                                : (AuthService.role.isNotEmpty
+                                    ? AuthService.role.capitalizeFirst!
+                                    : 'Manager'),
+                            style: const TextStyle(
                               color: AppTheme.textSecondary,
                               fontSize: 11,
                             ),

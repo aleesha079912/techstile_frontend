@@ -25,19 +25,37 @@ class ManagerSettingService {
     return response.statusCode == 200;
   }
 
-  Future<bool> changePassword({
+  Future<Map<String, dynamic>> changePassword({
     required String currentPassword,
     required String newPassword,
   }) async {
-    final response = await http.post(
-      Uri.parse("$baseUrl/manager/change-password"),
-      headers: AuthService.authHeaders,
-      body: jsonEncode({
-        "current_password": currentPassword,
-        "new_password": newPassword,
-      }),
-    );
+    try {
+      final response = await http.post(
+        Uri.parse("$baseUrl/change-password"),
+        headers: AuthService.authHeaders,
+        body: jsonEncode({
+          "current_password": currentPassword,
+          "new_password": newPassword,
+        }),
+      );
 
-    return response.statusCode == 200;
+      final data = jsonDecode(response.body);
+      if (response.statusCode == 200) {
+        return {
+          'success': true,
+          'message': data['message'] ?? 'Password changed successfully',
+        };
+      } else {
+        return {
+          'success': false,
+          'message': data['message'] ?? 'Failed to change password',
+        };
+      }
+    } catch (e) {
+      return {
+        'success': false,
+        'message': e.toString(),
+      };
+    }
   }
 }

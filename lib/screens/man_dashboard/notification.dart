@@ -37,14 +37,37 @@ class _State extends State<NotificationPage> {
   }
 
   Future<void> load() async {
-    final id = AuthService.userId;
-    final result = await service.getNotifications(id);
+    try {
+      final id = AuthService.userId;
+      if (id == null) {
+        if (mounted) {
+          setState(() {
+            data = [];
+            filteredData = [];
+            loading = false;
+          });
+        }
+        return;
+      }
+      final result = await service.getNotifications(id);
 
-    setState(() {
-      data = result;
-      filteredData = result;
-      loading = false;
-    });
+      if (mounted) {
+        setState(() {
+          data = result;
+          filteredData = result;
+          loading = false;
+        });
+      }
+    } catch (e) {
+      debugPrint("Notification load error: $e");
+      if (mounted) {
+        setState(() {
+          data = [];
+          filteredData = [];
+          loading = false;
+        });
+      }
+    }
   }
 
   void applyFilter(String filter) {
@@ -55,7 +78,7 @@ class _State extends State<NotificationPage> {
         filteredData = data;
       } else if (filter == "Unread") {
         filteredData = data
-            .where((e) => e['is_read'].toString() != "true")
+            .where((e) => e['is_read'].toString() != "true" && e['is_read'] != true && e['is_read'] != 1)
             .toList();
       } else {
         filteredData = data;
@@ -105,7 +128,7 @@ class _State extends State<NotificationPage> {
   @override
   Widget build(BuildContext context) {
     int unreadCount =
-        data.where((e) => e['is_read'].toString() != "true").length;
+        data.where((e) => e['is_read'].toString() != "true" && e['is_read'] != true && e['is_read'] != 1).length;
 
     return Scaffold(
       backgroundColor: AppTheme.background,
@@ -147,14 +170,39 @@ class _State extends State<NotificationPage> {
                   _filterRow(),
                   const SizedBox(height: 16),
 
-                  /// NOTIFICATIONS
-                  ...filteredData.map((n) {
-                    final isRead =
-                        n['is_read'].toString() == "true";
-                    final type = n['type'];
+                  if (filteredData.isEmpty)
+                    Container(
+                      padding: const EdgeInsets.symmetric(vertical: 40),
+                      alignment: Alignment.center,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.notifications_off_outlined,
+                            size: 48,
+                            color: AppTheme.primary.withOpacity(0.4),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            "No notifications found",
+                            style: TextStyle(
+                              color: AppTheme.textPrimary.withOpacity(0.6),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  else
+                    /// NOTIFICATIONS
+                    ...filteredData.map((n) {
+                      final isRead =
+                          n['is_read'].toString() == "true" || n['is_read'] == true || n['is_read'] == 1;
+                      final type = n['type']?.toString() ?? '';
 
-                    return _notificationCard(n, isRead, type);
-                  }).toList(),
+                      return _notificationCard(n, isRead, type);
+                    }).toList(),
                 ],
               ),
             ),
@@ -263,8 +311,10 @@ class _State extends State<NotificationPage> {
               ),
               child: Icon(
                 type == "approved"
-                    ? Icons.check
-                    : Icons.warning,
+                    ? Icons.check_circle_outline
+                    : (type == "rejected"
+                        ? Icons.cancel_outlined
+                        : Icons.notifications_active_outlined),
                 color: type == "approved"
                     ? AppTheme.success
                     : AppTheme.surface,

@@ -296,15 +296,15 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
       borderRadius: BorderRadius.circular(12),
 
       onTap: !isEmployee || user['id'] == null
-          ? null
-          : () {
-              Get.to(
-                () => UserProfileScreen(
-                  userId: user['id'],
-                ),
-              );
-            },
-
+        ? null
+        : () {
+            Get.to(
+              () => UserProfileScreen(
+                userId: user['id'],
+                // factoryId: widget.factoryId,
+              ),
+            );
+          },
       child: Container(
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.all(12),

@@ -46,6 +46,8 @@ import 'package:techstile_frontend/screens/man_dashboard/settings/help_faq.dart'
 import 'package:techstile_frontend/screens/man_dashboard/settings/settings.dart';
 import 'package:techstile_frontend/screens/man_dashboard/settings/about_app.dart';
 import 'package:techstile_frontend/screens/man_dashboard/notification.dart';
+// import 'package:techstile_frontend/screens/man_dashboard/notification.dart';
+import 'package:techstile_frontend/screens/change_password_screen.dart';
 import 'package:techstile_frontend/widgets/man_drawer.dart';
 import 'package:techstile_frontend/widgets/emp_drawer.dart';
 class AppRoutes {
@@ -144,7 +146,7 @@ GetPage(
 // MANAGER PAYMENTS
 GetPage(
   name: AppRoutes.managerPayments,
-  page: () =>PaymentsScreen(
+  page: () => ManagerPaymentsScreen(
     factoryId: AuthService.factoryId,
   ),
 ),
@@ -197,24 +199,15 @@ GetPage(
     factoryId: AuthService.factoryId,
   ),
 ),
-GetPage(
-  name: AppRoutes.MachineDetails,
-  page: () {
 
-    final data = Get.arguments as Map;
-
-    return MachineDetailsScreen(
-      machine: data['machine'],
-      factoryId: data['factoryId'],
-    );
-
-  },
-),
-
-//MANAGER SIDE SETTINGS
+//SETTINGS ROUTES
 GetPage(
   name: '/edit-profile',
   page: () => const EditProfileScreen(),
+),
+GetPage(
+  name: AppRoutes.chnagePassword,
+  page: () => const ChangePasswordScreen(),
 ),
 GetPage(
   name: AppRoutes.managersettings,
@@ -269,6 +262,15 @@ GetPage(
     GetPage(name: machines, page: () => const MachinesScreen(factoryId: 0)),
   
 
+    // GetPage(
+    //   name: settings,
+    //   page: () => const SettingsScreen(),
+    //   transition: Transition.rightToLeftWithFade,
+    // ),
+    GetPage(
+      name: scanMachine,
+      page: () => const ScanQRCodeScreen(factoryId: 0),
+    ),
     GetPage(
       name: machines,
       page: () => const MachinesScreen(factoryId: 0),
@@ -278,6 +280,11 @@ GetPage(
     final String factoryId = Get.arguments ?? '0';
     return ManageUsersScreen(factoryId: factoryId);
   },),
+    GetPage(
+      name: payments,
+      page: () => PaymentsScreen(factoryId: AuthService.factoryId ?? 0),
+    ),
+    GetPage(name: manageusers, page: () => const ManageUsersScreen()),
 
     GetPage(
       name: generateQRCode,
@@ -326,12 +333,17 @@ GetPage(
 
     final userId = args is Map
         ? args['userId']
+        : (args is int ? args : null);
+
+    final factoryId = args is Map
+        ? args['factoryId']
         : null;
 
-    print("User ID = $userId");
+    print("User ID = $userId, Factory ID = $factoryId");
 
     return UserProfileScreen(
       userId: userId ?? 0,
+      factoryId: factoryId,
     );
   },
 ),

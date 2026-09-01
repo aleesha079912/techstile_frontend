@@ -47,12 +47,11 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
       "city": _cityController.text.trim(),
     };
 
-    bool success = false;
     try {
+      bool success = false;
       if (existing != null) {
         success = await controller.updateFactory(existing.id, factoryData);
       } else {
-        // Add mode
         success = await controller.addFactory(factoryData);
       }
 
@@ -63,7 +62,7 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
           existing != null ? "Factory updated!" : "Factory added!",
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: AppTheme.success.withOpacity(0.8),
-          colorText:   AppTheme.textSecondary,
+          colorText: AppTheme.textSecondary,
         );
       }
     } catch (e) {
@@ -76,7 +75,7 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
     final existing = Get.arguments;
     
     return Scaffold(
-     backgroundColor: AppTheme.background,
+      backgroundColor: AppTheme.background,
       appBar: _buildAppBar(existing != null),
       body: SafeArea(
         child: Form(
@@ -121,42 +120,34 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
   }
 
   PreferredSizeWidget _buildAppBar(bool isEdit) {
-    return PreferredSize(
-      preferredSize: const Size.fromHeight(72),
-      child: Container(
-        decoration: const BoxDecoration(
-          color: AppTheme.primary,
-          borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
-        ),
-        child: SafeArea(
-          bottom: false,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(8, 4, 16, 14),
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: () => Get.back(),
-                  icon: const Icon(Icons.arrow_back_ios_new_rounded, color: AppTheme.secondary, size: 18),
-                ),
-                const SizedBox(width: 4),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      isEdit ? "Edit Factory" : "Add Factory",
-                      style: const TextStyle(color:   AppTheme.textSecondary, fontSize: 18, fontWeight: FontWeight.w600),
-                    ),
-                    Text(
-                      isEdit ? "Update existing unit details" : "Register a new production unit",
-                      style: TextStyle(color:  AppTheme.textSecondary.withOpacity(0.6), fontSize: 11),
-                    ),
-                  ],
-                ),
-              ],
+    return AppBar(
+      backgroundColor: AppTheme.primary,
+      elevation: 0,
+      centerTitle: false,
+      leading: IconButton(
+        onPressed: () => Get.back(),
+        icon: const Icon(Icons.arrow_back, color: AppTheme.secondary, size: 20),
+      ),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            isEdit ? "Edit Factory" : "Add Factory",
+            style: const TextStyle(
+              color: AppTheme.textSecondary,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
             ),
           ),
-        ),
+          Text(
+            isEdit ? "Update existing unit details" : "Register a new production unit",
+            style: TextStyle(
+              color: AppTheme.textSecondary.withOpacity(0.7),
+              fontSize: 11,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -166,19 +157,29 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
       decoration: BoxDecoration(
         color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [BoxShadow(color: AppTheme.primary.withOpacity(0.08), blurRadius: 16, offset: const Offset(0, 4))],
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.primary.withOpacity(0.08),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       padding: const EdgeInsets.all(16),
       child: Row(
         children: [
           Container(
-            width: 52, height: 52,
+            width: 52,
+            height: 52,
             decoration: BoxDecoration(
-              gradient: const LinearGradient(colors: [AppTheme.primary,
-                     AppTheme.background,]),
+              color: AppTheme.primary.withOpacity(0.12),
               borderRadius: BorderRadius.circular(14),
             ),
-            child: Icon(isEdit ? Icons.edit_note_rounded : Icons.factory_rounded, color:AppTheme.secondary, size: 26),
+            child: Icon(
+              isEdit ? Icons.edit_note_rounded : Icons.factory_rounded,
+              color: AppTheme.primary,
+              size: 26,
+            ),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -187,12 +188,22 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
               children: [
                 Text(
                   isEdit ? "Update Factory Info" : "New Factory Registration",
-                  style: const TextStyle(color:   AppTheme.textPrimary, fontSize: 14, fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                    color: AppTheme.textPrimary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const SizedBox(height: 3),
                 Text(
-                  isEdit ? "Modify details and save changes to server" : "Fill in the details to add a factory to your network",
-                  style: const TextStyle(color:   AppTheme.textSecondary, fontSize: 11.5, height: 1.4),
+                  isEdit
+                      ? "Modify details and save changes to server"
+                      : "Fill in the details to add a factory to your network",
+                  style: const TextStyle(
+                    color: AppTheme.textSecondary,
+                    fontSize: 11.5,
+                    height: 1.4,
+                  ),
                 ),
               ],
             ),
@@ -203,16 +214,31 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
   }
 
   Widget _buildSectionLabel(String label) => Text(
-    label.toUpperCase(),
-    style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppTheme.textPrimary, letterSpacing: 0.9),
-  );
+        label.toUpperCase(),
+        style: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w700,
+            color: AppTheme.textPrimary,
+            letterSpacing: 0.9),
+      );
 
-  Widget _buildField({required TextEditingController controller, required String label, required String hint, required IconData icon, String? Function(String?)? validator}) {
+  Widget _buildField({
+    required TextEditingController controller,
+    required String label,
+    required String hint,
+    required IconData icon,
+    String? Function(String?)? validator,
+  }) {
     return Container(
       decoration: BoxDecoration(
         color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: AppTheme.primary.withOpacity(0.05), blurRadius: 8, offset: const Offset(0, 2))],
+        boxShadow: [
+          BoxShadow(
+              color: AppTheme.primary.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 2))
+        ],
       ),
       child: TextFormField(
         controller: controller,
@@ -221,18 +247,30 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
         decoration: InputDecoration(
           labelText: label,
           hintText: hint,
-          labelStyle: const TextStyle( color: AppTheme.textPrimary, fontSize: 12, fontWeight: FontWeight.w600),
+          labelStyle: const TextStyle(
+              color: AppTheme.textPrimary,
+              fontSize: 12,
+              fontWeight: FontWeight.w600),
           prefixIcon: Container(
             margin: const EdgeInsets.all(10),
-            width: 34, height: 34,
-            decoration: BoxDecoration( color: AppTheme.secondary, borderRadius: BorderRadius.circular(9)),
+            width: 34,
+            height: 34,
+            decoration: BoxDecoration(
+                color: AppTheme.secondary,
+                borderRadius: BorderRadius.circular(9)),
             child: Icon(icon, color: AppTheme.primary, size: 17),
           ),
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
-          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: const BorderSide( color: AppTheme.primary, width: 1.5)),
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide.none),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide:
+                  const BorderSide(color: AppTheme.primary, width: 1.5)),
           filled: true,
           fillColor: AppTheme.secondary,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
         ),
       ),
     );
@@ -240,34 +278,51 @@ class _AddFactoryScreenState extends State<AddFactoryScreen> {
 
   Widget _buildSaveButton() {
     final controller = Get.find<FactoryController>();
-    
+
     return Obx(() => Container(
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(colors: [ AppTheme.primary,
-                        AppTheme.background,]),
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [BoxShadow(color: AppTheme.primary.withOpacity(0.35), blurRadius: 16, offset: const Offset(0, 6))],
-      ),
-      child: Material(
-        color: AppTheme.primary,
-        child: InkWell(
-          onTap: controller.isLoading.value ? null : _submit,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            child: Center(
-              child: controller.isLoading.value 
-                ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: AppTheme.secondary, strokeWidth: 2))
-                : const Column(
-                    children: [
-                      Text("Save Factory", style: TextStyle(color:  AppTheme.textSecondary, fontSize: 15, fontWeight: FontWeight.w600)),
-                      SizedBox(height: 2),
-                      Text("All fields are required", style: TextStyle(color:AppTheme.textneutral, fontSize: 10.5)),
-                    ],
-                  ),
+          decoration: BoxDecoration(
+            color: AppTheme.primary,
+            borderRadius: BorderRadius.circular(18),
+            boxShadow: [
+              BoxShadow(
+                  color: AppTheme.primary.withOpacity(0.35),
+                  blurRadius: 16,
+                  offset: const Offset(0, 6))
+            ],
+          ),
+          child: Material(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(18),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(18),
+              onTap: controller.isLoading.value ? null : _submit,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Center(
+                  child: controller.isLoading.value
+                      ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                              color: AppTheme.secondary, strokeWidth: 2))
+                      : const Column(
+                          children: [
+                            Text("Save Factory",
+                                style: TextStyle(
+                                    color: AppTheme.textSecondary,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w600)),
+                            SizedBox(height: 2),
+                            Text("All fields are required",
+                                style: TextStyle(
+                                    color: AppTheme.textneutral,
+                                    fontSize: 10.5)),
+                          ],
+                        ),
+                ),
+              ),
             ),
           ),
-        ),
-      ),
-    ));
+        ));
   }
 }
