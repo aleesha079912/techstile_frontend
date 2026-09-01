@@ -4,7 +4,7 @@ import '/../core/utils/theme.dart';
 
 class UserProfileScreen extends StatefulWidget {
   final int userId;
-  const UserProfileScreen({super.key, required this.userId});
+  const UserProfileScreen({super.key, required this.userId, required int factoryId});
 
   @override
   State<UserProfileScreen> createState() => _UserProfileScreenState();

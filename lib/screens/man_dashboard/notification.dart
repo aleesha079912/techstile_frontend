@@ -305,8 +305,10 @@ class _State extends State<NotificationPage> {
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: type == "approved"
-                    ? AppTheme.success
-                    : AppTheme.surface,
+                    ? AppTheme.success.withOpacity(0.15)
+                    : (type == "rejected"
+                        ? AppTheme.error.withOpacity(0.15)
+                        : AppTheme.primary.withOpacity(0.1)),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -317,7 +319,9 @@ class _State extends State<NotificationPage> {
                         : Icons.notifications_active_outlined),
                 color: type == "approved"
                     ? AppTheme.success
-                    : AppTheme.surface,
+                    : (type == "rejected"
+                        ? AppTheme.error
+                        : AppTheme.primary),
               ),
             ),
 

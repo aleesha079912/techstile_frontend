@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:techstile_frontend/screens/app_Owner_dashboard/setting_screen.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/employee_enter_production.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/history_screen.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/machine_detail_screen.dart';
@@ -8,6 +9,7 @@ import 'package:techstile_frontend/screens/app_Owner_dashboard/factory_owner_das
 import 'package:techstile_frontend/screens/app_Owner_dashboard/factory_owner_dash/paymentsScreen.dart';
 import 'package:techstile_frontend/screens/forget_password_screen.dart';
 import 'package:techstile_frontend/screens/man_dashboard/manager_emloyee_detail_screen.dart';
+import 'package:techstile_frontend/screens/man_dashboard/notification.dart';
 
 
 
@@ -45,8 +47,6 @@ import 'package:techstile_frontend/screens/man_dashboard/settings/editprofile.da
 import 'package:techstile_frontend/screens/man_dashboard/settings/help_faq.dart';
 import 'package:techstile_frontend/screens/man_dashboard/settings/settings.dart';
 import 'package:techstile_frontend/screens/man_dashboard/settings/about_app.dart';
-import 'package:techstile_frontend/screens/man_dashboard/notification.dart';
-// import 'package:techstile_frontend/screens/man_dashboard/notification.dart';
 import 'package:techstile_frontend/screens/change_password_screen.dart';
 import 'package:techstile_frontend/widgets/man_drawer.dart';
 import 'package:techstile_frontend/widgets/emp_drawer.dart';
@@ -254,19 +254,11 @@ GetPage(
       transition: Transition.rightToLeftWithFade,
     ),
 
-    // GetPage(
-    //   name: settings,
-    //   page: () => const SettingsScreen(),
-    //   transition: Transition.rightToLeftWithFade,
-    // ),
-    GetPage(name: machines, page: () => const MachinesScreen(factoryId: 0)),
-  
-
-    // GetPage(
-    //   name: settings,
-    //   page: () => const SettingsScreen(),
-    //   transition: Transition.rightToLeftWithFade,
-    // ),
+    GetPage(
+      name: settings,
+      page: () => const SettingsScreen(),
+      transition: Transition.rightToLeftWithFade,
+    ),
     GetPage(
       name: scanMachine,
       page: () => const ScanQRCodeScreen(factoryId: 0),
@@ -275,11 +267,6 @@ GetPage(
       name: machines,
       page: () => const MachinesScreen(factoryId: 0),
     ),
-
-    GetPage(name: manageusers,page: () {
-    final String factoryId = Get.arguments ?? '0';
-    return ManageUsersScreen(factoryId: factoryId);
-  },),
     GetPage(
       name: payments,
       page: () => PaymentsScreen(factoryId: AuthService.factoryId ?? 0),

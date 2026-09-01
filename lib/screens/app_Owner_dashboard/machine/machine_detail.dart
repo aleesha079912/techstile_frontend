@@ -10,6 +10,7 @@ import '../../../../core/services/machine_details_service.dart';
 import 'assign_production_batch.dart';
 import 'generate_qrcode.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
+import 'package:techstile_frontend/widgets/owner_drawer.dart';
 //Colours
 
 
@@ -114,7 +115,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
     final m = widget.machine;
 
     return Scaffold(
-      // drawer: const OwnerDrawer(),
+      drawer: const OwnerDrawer(),
       backgroundColor: AppTheme.secondary,
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
