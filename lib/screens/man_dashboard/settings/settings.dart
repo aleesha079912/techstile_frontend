@@ -318,6 +318,7 @@ class _ManagerSettingsScreenState
       confirmTextColor:  AppTheme.secondary,
       cancelTextColor: AppTheme.primary,
       buttonColor: AppTheme.primary,
+    
       onConfirm: () {
         AuthService.logout();
 

@@ -622,7 +622,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
 
               decoration: BoxDecoration(
                 color: isActive
-                    ?AppTheme.success.withOpacity(0.16)
+                    ?AppTheme.success
                     : AppTheme.primary,
 
                 shape: BoxShape.circle,
@@ -630,7 +630,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
 
               child: const Icon(
                 Icons.precision_manufacturing,
-                 color: AppTheme.success,
+                 color: AppTheme.secondary,
                 size: 20,
               ),
             ),
