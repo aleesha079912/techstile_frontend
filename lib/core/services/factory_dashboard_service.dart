@@ -18,4 +18,23 @@ class FactoryDashboardService {
 
     throw Exception("Could not load factory dashboard");
   }
+
+  // 0 = Sunday ... 6 = Saturday
+  Future<Map<String, dynamic>> updateWeekStartDay(
+      String factoryId, int weekStartDay) async {
+    final response = await http.put(
+      Uri.parse("$baseUrl/week-start-day/$factoryId"),
+      headers: {
+        ...AuthService.authHeaders,
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'week_start_day': weekStartDay}),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    }
+
+    throw Exception("Could not update week start day");
+  }
 }
