@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/services/employee_service/profile_service.dart';
 import '../../core/utils/theme.dart';
-import '../app_Owner_dashboard/factory_owner_dash/paymentsScreen.dart';
+import '../app_Owner_dashboard/employee/employee_payment_history_screen.dart';
 import '../employee_dashboard/history_screen.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/factory_owner_dash/paymentsScreen.dart';
 
@@ -57,13 +57,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     final factoryId = int.tryParse(rawFactoryId?.toString() ?? '') ?? 0;
     final employeeId = int.tryParse(profile?['employee_id']?.toString() ?? '');
 
-    if (factoryId > 0) {
+    if (factoryId > 0 && employeeId != null) {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => PaymentsScreen(
+          builder: (_) => EmployeePaymentHistoryScreen(
+            employeeId: employeeId,
             factoryId: factoryId,
-            initialEmployeeId: employeeId,
+            employeeName: profile?['name'],
           ),
         ),
       );
@@ -532,4 +533,3 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 }
- 

@@ -21,8 +21,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
       child: ListView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 80),
         children: [
-          // _buildProfileCard(),
-          const SizedBox(height: 20),
+          _buildHeader(),
+          const SizedBox(height: 22),
           _buildSection(
             title: "Account",
             items: [
@@ -111,19 +111,71 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 16),
           _buildLogoutButton(),
-          const SizedBox(height: 12),
-          const Center(
+          const SizedBox(height: 16),
+          Center(
             child: Text(
               "TechStile v1.0.0",
               style: TextStyle(
                 fontSize: 11,
-                color: AppTheme.secondary,
-                fontWeight: FontWeight.w400,
+                color: AppTheme.textPrimary.withOpacity(0.35),
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Row(
+      children: [
+        Container(
+          width: 46,
+          height: 46,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [AppTheme.primary, AppTheme.primary.withOpacity(0.75)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(14),
+            boxShadow: [
+              BoxShadow(
+                color: AppTheme.primary.withOpacity(0.25),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: const Icon(Icons.settings_rounded, color: AppTheme.secondary, size: 22),
+        ),
+        const SizedBox(width: 14),
+        const Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Settings",
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                  color: AppTheme.textPrimary,
+                ),
+              ),
+              SizedBox(height: 2),
+              Text(
+                "Manage your account & preferences",
+                style: TextStyle(
+                  fontSize: 12,
+                  color: AppTheme.textneutral,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -264,23 +316,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
           padding: const EdgeInsets.only(left: 4, bottom: 8),
           child: Text(
             title.toUpperCase(),
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w700,
-              color: AppTheme.secondary,
+              color: AppTheme.textPrimary.withOpacity(0.45),
               letterSpacing: 0.9,
             ),
           ),
         ),
         Container(
           decoration: BoxDecoration(
-            color: AppTheme.primary.withOpacity(0.15),
+            color: AppTheme.secondary,
             borderRadius: BorderRadius.circular(18),
             boxShadow: [
               BoxShadow(
-                color: AppTheme.secondary.withOpacity(0.06),
-                blurRadius: 12,
-                offset: const Offset(0, 3),
+                color: AppTheme.primary.withOpacity(0.06),
+                blurRadius: 14,
+                offset: const Offset(0, 4),
               ),
             ],
           ),
@@ -295,7 +347,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       height: 1,
                       indent: 56,
                       endIndent: 16,
-                      color:  AppTheme.secondary,
+                      color: AppTheme.primary.withOpacity(0.08),
                     ),
                 ],
               );
@@ -448,29 +500,29 @@ class _SettingsTile extends StatelessWidget {
           child: Row(
             children: [
               Container(
-                width: 34,
-                height: 34,
+                width: 38,
+                height: 38,
                 decoration: BoxDecoration(
-                  color: iconColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(9),
+                  color: iconColor.withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(11),
                 ),
-                child: Icon(icon, color: iconColor, size: 17),
+                child: Icon(icon, color: iconColor, size: 18),
               ),
-              const SizedBox(width: 12),
+              const SizedBox(width: 14),
               Expanded(
                 child: Text(
                   label,
                   style: const TextStyle(
                     fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color:  AppTheme.primary,
+                    fontWeight: FontWeight.w600,
+                    color:  AppTheme.textPrimary,
                   ),
                 ),
               ),
               trailing ??
                   Icon(
                     Icons.chevron_right_rounded,
-                    color: AppTheme.secondary.withOpacity(0.4),
+                    color: AppTheme.primary.withOpacity(0.30),
                     size: 20,
                   ),
             ],

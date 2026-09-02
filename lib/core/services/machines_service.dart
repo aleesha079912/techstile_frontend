@@ -44,6 +44,8 @@ class MachinesData {
   int get running => machines.length;
   int get maintenance => 0;
   int get offline => 0;
+
+  Object? get factoryName => null;
 }
 
 class MachinesService {

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:techstile_frontend/core/services/owner_profile_service.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
-import 'package:techstile_frontend/routes/routes.dart';
 
 class OwnerProfileScreen extends StatefulWidget {
   final int userId;
@@ -60,24 +59,52 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
       child: Column(
         children: [
           // Avatar with ring border
-          Container(
-            padding: const EdgeInsets.all(3.5),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white.withOpacity(0.7), width: 2),
-            ),
-            child: CircleAvatar(
-              radius: 36,
-              backgroundColor: Colors.white.withOpacity(0.2),
-              child: Text(
-                firstLetter,
-                style: const TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w800,
-                  color: Colors.white,
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(3.5),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white.withOpacity(0.7), width: 2),
+                ),
+                child: CircleAvatar(
+                  radius: 36,
+                  backgroundColor: Colors.white.withOpacity(0.2),
+                  backgroundImage: (profile?['pic'] != null && profile!['pic'].toString().isNotEmpty)
+                      ? NetworkImage(profile!['pic'].toString())
+                      : null,
+                  child: (profile?['pic'] == null || profile!['pic'].toString().isEmpty)
+                      ? Text(
+                          firstLetter,
+                          style: const TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                          ),
+                        )
+                      : null,
                 ),
               ),
-            ),
+              Positioned(
+                bottom: -2,
+                right: -2,
+                child: GestureDetector(
+                  onTap: () {
+                    Get.snackbar("Profile Photo", "Photo upload coming soon");
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(6),
+                    decoration: BoxDecoration(
+                      color: AppTheme.surface,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 2),
+                    ),
+                    child: const Icon(Icons.camera_alt_rounded, color: Colors.white, size: 14),
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 12),
           Text(
@@ -139,7 +166,7 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
             child: _actionButton(
               icon: Icons.factory_outlined,
               label: "Factories",
-              onTap: () => Get.toNamed(AppRoutes.ownerDashboard),
+              value: "${profile?['total_factories'] ?? 0}",
             ),
           ),
           const SizedBox(width: 10),
@@ -147,7 +174,7 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
             child: _actionButton(
               icon: Icons.people_outline_rounded,
               label: "Manage Users",
-              onTap: () => Get.toNamed(AppRoutes.manageusers),
+              value: "${(profile?['total_managers'] ?? 0) + (profile?['total_employees'] ?? 0)}",
             ),
           ),
           const SizedBox(width: 10),
@@ -155,7 +182,7 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
             child: _actionButton(
               icon: Icons.payments_outlined,
               label: "Payments",
-              onTap: () => Get.toNamed(AppRoutes.payments),
+              value: "",
             ),
           ),
         ],
@@ -166,48 +193,57 @@ class _OwnerProfileScreenState extends State<OwnerProfileScreen> {
   Widget _actionButton({
     required IconData icon,
     required String label,
-    required VoidCallback onTap,
+    required String value,
   }) {
-    return Material(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(16),
-      elevation: 1,
-      shadowColor: AppTheme.primary.withOpacity(0.08),
-      child: InkWell(
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppTheme.primary.withOpacity(0.08)),
+        border: Border.all(color: AppTheme.primary.withOpacity(0.08)),
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.primary.withOpacity(0.08),
+            blurRadius: 6,
+            offset: const Offset(0, 3),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: AppTheme.primary.withOpacity(0.08),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(icon, color: AppTheme.primary, size: 20),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                label,
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 11.5,
-                  fontWeight: FontWeight.w700,
-                  color: AppTheme.textPrimary,
-                ),
-              ),
-            ],
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: AppTheme.primary.withOpacity(0.08),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(icon, color: AppTheme.primary, size: 20),
           ),
-        ),
+          if (value.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Text(
+              value,
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w800,
+                color: AppTheme.textPrimary,
+              ),
+            ),
+          ],
+          const SizedBox(height: 4),
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 11.5,
+              fontWeight: FontWeight.w700,
+              color: AppTheme.textPrimary,
+            ),
+          ),
+        ],
       ),
     );
   }

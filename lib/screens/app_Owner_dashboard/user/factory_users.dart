@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:techstile_frontend/core/services/factory_user_services.dart';
-import 'package:techstile_frontend/screens/app_Owner_dashboard/employee/employee_profile.dart';
+import 'package:techstile_frontend/screens/employee_dashboard/profile.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/user/factorymanager_profile.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
@@ -319,7 +319,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
               ? AppTheme.success.withOpacity(0.16)
               : AppTheme.secondary,
 
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
 
           border: Border.all(
             color: isActive
@@ -330,8 +330,9 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
 
           boxShadow: [
             BoxShadow(
-              color: AppTheme.onsurface.withOpacity(.05),
-              blurRadius: 8,
+              color: AppTheme.onsurface.withOpacity(.06),
+              blurRadius: 10,
+              offset: const Offset(0, 3),
             ),
           ],
         ),
@@ -442,16 +443,36 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                     phone,
                   ),
 
-                  const SizedBox(height: 3),
+                  const SizedBox(height: 5),
 
-                  Text(
-                    role,
-                    style:  TextStyle(
-                      fontSize: 11,
-                      color: isActive
-                          ? AppTheme.success
-                          : AppTheme.primary,
-                      fontWeight: FontWeight.w600,
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8, vertical: 3),
+                    decoration: BoxDecoration(
+                      color: (isActive ? AppTheme.success : AppTheme.primary)
+                          .withOpacity(0.10),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          isEmployee
+                              ? Icons.engineering_outlined
+                              : Icons.badge_outlined,
+                          size: 11,
+                          color: isActive ? AppTheme.success : AppTheme.primary,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          role,
+                          style: TextStyle(
+                            fontSize: 10.5,
+                            color: isActive ? AppTheme.success : AppTheme.primary,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
