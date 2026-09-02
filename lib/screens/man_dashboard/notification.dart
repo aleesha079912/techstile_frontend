@@ -352,9 +352,7 @@ class _State extends State<NotificationPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "Machine ID: ${n['production']?['machine_id'] ?? '-'}",
-                          ),
+                         
                           Text(
                             "Machine Name: ${n['production']?['machineemploye']?['machine_name'] ?? '-'}",
                           ),

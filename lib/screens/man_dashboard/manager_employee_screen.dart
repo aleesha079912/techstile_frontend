@@ -99,8 +99,8 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
       ),
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        backgroundColor: AppTheme.primary,
-        iconTheme: const IconThemeData(color: AppTheme.secondary),
+        backgroundColor: AppTheme.secondary,
+        iconTheme: const IconThemeData(color: AppTheme.primary),
         elevation: 0,
         automaticallyImplyLeading: true,
         title: Column(
@@ -109,7 +109,7 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
             const Text(
               'All Employees',
               style: TextStyle(
-                color: AppTheme.textSecondary,
+                color: AppTheme.primary,
                 fontWeight: FontWeight.w800,
                 fontSize: 17,
               ),
@@ -117,7 +117,7 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
             Text(
               loading ? 'Loading...' : (factoryName ?? 'Factory'),
               style: TextStyle(
-                color: AppTheme.textSecondary.withOpacity(0.65),
+                color: AppTheme.textPrimary.withOpacity(0.65),
                 fontSize: 12,
               ),
             ),

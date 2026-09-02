@@ -6,13 +6,37 @@ import 'package:techstile_frontend/core/services/machines_service.dart';
 class ManagerDashboardService {
   final String baseUrl = "http://localhost:8000/api/manager";
 
-  Future<Map<String, dynamic>> getDashboard(dynamic factoryId) async {
+  Future<Map<String, dynamic>> getDashboard(dynamic factoryId, {String? period}) async {
+    final query = (period != null && period.isNotEmpty)
+        ? "?period=${Uri.encodeComponent(period)}"
+        : "";
     final response = await http.get(
-      Uri.parse("$baseUrl/dashboard/$factoryId"),
+      Uri.parse("$baseUrl/dashboard/$factoryId$query"),
       headers: AuthService.authHeaders,
     );
 
-    return jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    }
+    throw Exception("Could not load manager dashboard");
+  }
+
+  // 0 = Sunday ... 6 = Saturday
+  Future<Map<String, dynamic>> updateWeekStartDay(
+      dynamic factoryId, int weekStartDay) async {
+    final response = await http.put(
+      Uri.parse("$baseUrl/week-start-day/$factoryId"),
+      headers: {
+        ...AuthService.authHeaders,
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode({'week_start_day': weekStartDay}),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    }
+    throw Exception("Could not update week start day");
   }
 
   Future<List<Machine>> getMachines(dynamic factoryId) async {
