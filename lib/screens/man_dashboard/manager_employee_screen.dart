@@ -27,7 +27,7 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
   String? error;
   String? factoryName;
   bool showActiveOnly = false;
-  
+
   List employees = [];
   List filteredEmployees = [];
 
@@ -54,7 +54,7 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
         factoryName = dashboardData['factory']?['name'];
         loading = false;
       });
-      
+
       applyFilter();
     } catch (e) {
       setState(() {
@@ -124,7 +124,6 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
           ],
         ),
       ),
-
       body: loading
           ? const Center(
               child: CircularProgressIndicator(color: AppTheme.primary),
@@ -214,7 +213,6 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
                         ),
                       ],
                     ),
-
       bottomNavigationBar: ManagerBottomNav(
         currentIndex: 2,
         factoryId: widget.factoryId,
@@ -223,8 +221,8 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
   }
 
   // Stat Card Widget (With Active Color Switch)
-  Widget statBox(String label, String value, Color activeThemeColor, IconData icon,
-      bool isSelected, VoidCallback onTap) {
+  Widget statBox(String label, String value, Color activeThemeColor,
+      IconData icon, bool isSelected, VoidCallback onTap) {
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
@@ -235,7 +233,9 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
             color: isSelected ? activeThemeColor : AppTheme.secondary,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: isSelected ? activeThemeColor : AppTheme.neutral.withOpacity(0.3),
+              color: isSelected
+                  ? activeThemeColor
+                  : AppTheme.neutral.withOpacity(0.3),
               width: 1.5,
             ),
             boxShadow: [
@@ -254,13 +254,15 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ?  AppTheme.secondary.withOpacity(0.2)
+                      ? AppTheme.secondary.withOpacity(0.2)
                       : activeThemeColor.withOpacity(0.12),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   icon,
-                  color: isSelected ?  AppTheme.secondary: activeThemeColor,
+                  color: isSelected
+                      ? AppTheme.secondary
+                      : activeThemeColor,
                   size: 20,
                 ),
               ),
@@ -275,7 +277,9 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: isSelected ?  AppTheme.secondary : activeThemeColor,
+                        color: isSelected
+                            ? AppTheme.secondary
+                            : activeThemeColor,
                       ),
                     ),
                     Text(
@@ -283,9 +287,10 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
                       style: TextStyle(
                         fontSize: 11,
                         color: isSelected
-                            ?  AppTheme.secondary.withOpacity(0.9)
+                            ? AppTheme.secondary.withOpacity(0.9)
                             : AppTheme.textSecondary,
-                        fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                        fontWeight:
+                            isSelected ? FontWeight.w600 : FontWeight.normal,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -326,7 +331,8 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.people_outline_rounded, size: 48, color: AppTheme.neutral),
+          Icon(Icons.people_outline_rounded,
+              size: 48, color: AppTheme.neutral),
           SizedBox(height: 12),
           Text('No employees assigned',
               style: TextStyle(color: AppTheme.textSecondary, fontSize: 14)),
@@ -335,17 +341,24 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
     );
   }
 
-  Widget _infoRow(IconData icon, String text) {
+  Widget _infoRow(IconData icon, String text, bool isActive) {
     return Padding(
       padding: const EdgeInsets.only(top: 4),
       child: Row(
         children: [
-          Icon(icon, size: 13, color: AppTheme.primary),
+          Icon(
+            icon,
+            size: 13,
+            color: isActive ? AppTheme.active : AppTheme.primary,
+          ),
           const SizedBox(width: 6),
           Expanded(
             child: Text(
               text,
-              style: const TextStyle(fontSize: 11.5, color: AppTheme.textneutral),
+              style: TextStyle(
+                fontSize: 11.5,
+                color: AppTheme.textneutral,
+              ),
               overflow: TextOverflow.ellipsis,
             ),
           ),
@@ -376,10 +389,14 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
         margin: const EdgeInsets.only(bottom: 10),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isActive ? AppTheme.active.withOpacity(0.08) : AppTheme.secondary,
+          color: isActive
+              ? AppTheme.active.withOpacity(0.08)
+              : AppTheme.secondary,
           borderRadius: AppTheme.cardRadius,
           border: Border.all(
-            color: isActive ? AppTheme.active.withOpacity(0.4) : Colors.transparent,
+            color: isActive
+                ? AppTheme.active.withOpacity(0.4)
+                : Colors.transparent,
             width: 1.5,
           ),
           boxShadow: AppTheme.softShadow,
@@ -388,13 +405,12 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
           children: [
             CircleAvatar(
               radius: 19,
-              backgroundColor: isActive
-                  ? AppTheme.active.withOpacity(0.2)
-                  : AppTheme.neutral.withOpacity(0.2),
+              backgroundColor:
+                  isActive ? AppTheme.active : AppTheme.primary,
               child: Text(
                 name.isNotEmpty ? name[0].toUpperCase() : 'E',
-                style: TextStyle(
-                  color: isActive ? AppTheme.active : AppTheme.primary,
+                style: const TextStyle(
+                  color: AppTheme.secondary,
                   fontWeight: FontWeight.bold,
                   fontSize: 13,
                 ),
@@ -410,9 +426,12 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
                       Expanded(
                         child: Text(
                           name,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w700,
+                            color: isActive
+                                ? AppTheme.active
+                                : AppTheme.primary,
                           ),
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -421,13 +440,17 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 8, vertical: 2),
                         decoration: BoxDecoration(
-                          color: isActive ? AppTheme.active : AppTheme.neutral.withOpacity(0.5),
+                          color: isActive
+                              ? AppTheme.active
+                              : AppTheme.neutral.withOpacity(0.5),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(
                           isActive ? "Active" : "Inactive",
-                          style: const TextStyle(
-                            color: AppTheme.textSecondary,
+                          style:  TextStyle(
+                            color: isActive
+                              ? AppTheme.secondary
+                              : AppTheme.primary,
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
                           ),
@@ -436,13 +459,17 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
                     ],
                   ),
                   const SizedBox(height: 4),
-                  _infoRow(Icons.email_outlined, email),
-                  _infoRow(Icons.phone_outlined, phone),
+                  _infoRow(Icons.email_outlined, email, isActive),
+                  _infoRow(Icons.phone_outlined, phone, isActive),
                 ],
               ),
             ),
             const SizedBox(width: 8),
-            const Icon(Icons.arrow_forward_ios, size: 13, color: AppTheme.neutral),
+            Icon(
+              Icons.arrow_forward_ios,
+              size: 13,
+              color: isActive ? AppTheme.active : AppTheme.neutral,
+            ),
           ],
         ),
       ),

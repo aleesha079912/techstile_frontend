@@ -346,7 +346,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
 
                   backgroundColor: isActive
                       ? AppTheme.success
-                      : AppTheme.primary.withOpacity(.15),
+                      : AppTheme.primary,
 
                   child: Text(
                     name.isNotEmpty
@@ -356,7 +356,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                     style: TextStyle(
                       color: isActive
                           ? AppTheme.secondary
-                          : AppTheme.primary,
+                          : AppTheme.secondary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

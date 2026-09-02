@@ -5,6 +5,7 @@ import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
 import 'package:get/get.dart';
 import 'package:techstile_frontend/routes/routes.dart';
 
+
 class FactoryDashboard extends StatefulWidget {
   final String factoryId;
 
