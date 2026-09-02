@@ -21,19 +21,7 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
   final varietyCtrl     = TextEditingController();
   final totalLengthCtrl = TextEditingController();
   final amountPerMeterCtrl = TextEditingController();
-  String? selectDays;
-  
-   // state variable - class ke top pe declare karein
-
-  final List<String> weekDays = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday",
-  ];
+  final alertThresholdCtrl = TextEditingController();
 
   bool loading = false;
 
@@ -41,6 +29,8 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
   void dispose() {
     varietyCtrl.dispose();
     totalLengthCtrl.dispose();
+    amountPerMeterCtrl.dispose();
+    alertThresholdCtrl.dispose();
     super.dispose();
   }
 
@@ -58,8 +48,9 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
       varietyType: varietyCtrl.text.trim(),
       totalLength: double.parse(totalLengthCtrl.text.trim()),
       amountPerMeter:double.parse(amountPerMeterCtrl.text.trim()),
-      selectDays:selectDays
-    
+      alertThreshold: alertThresholdCtrl.text.trim().isEmpty
+          ? null
+          : double.tryParse(alertThresholdCtrl.text.trim()),
     );
 
     setState(() => loading = false);
@@ -136,37 +127,27 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
               ),
             ), 
             const SizedBox(height: 12),
-           
-           // Select days
-            DropdownButtonFormField<String>(
-              value: selectDays,
+
+            // Alert threshold — owner gets notified once remaining length drops to this
+            TextField(
+              controller: alertThresholdCtrl,
+              keyboardType: TextInputType.number,
               decoration: InputDecoration(
-                labelText: "Select day",
-                prefixIcon: const Icon(Icons.calendar_today_outlined),
+                labelText: "Alert when remaining reaches (meters)",
+                hintText: "e.g. 100",
+                prefixIcon: const Icon(Icons.notifications_active_outlined),
                 border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
               ),
-              items: weekDays.map((day) {
-                return DropdownMenuItem<String>(
-                  value: day,
-                  child: Text(day),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  selectDays = value;
-                });
-              },
-              validator: (value) =>
-                value == null ? "Please select a day" : null,
             ),
-                      
-           
-           
-           
-           
-           
-           
-           
+            const SizedBox(height: 4),
+            Padding(
+              padding: const EdgeInsets.only(left: 4),
+              child: Text(
+                "Optional — leave blank if you don't want an alert for this batch",
+                style: TextStyle(fontSize: 11, color: AppTheme.textPrimary.withOpacity(0.5)),
+              ),
+            ),
+
             const SizedBox(height: 24),
 
 

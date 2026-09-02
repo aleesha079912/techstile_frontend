@@ -107,8 +107,8 @@ class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
       ),
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        backgroundColor: AppTheme.primary,
-        iconTheme: const IconThemeData(color: AppTheme.secondary),
+        backgroundColor: AppTheme.secondary,
+        iconTheme: const IconThemeData(color: AppTheme.primary),
         elevation: 0,
         automaticallyImplyLeading: true,
         title: Column(
@@ -117,7 +117,7 @@ class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
             const Text(
               'All Machines',
               style: TextStyle(
-                color: AppTheme.textSecondary,
+                color: AppTheme.primary,
                 fontWeight: FontWeight.w800,
                 fontSize: 17,
               ),
@@ -125,7 +125,7 @@ class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
             Text(
               loading ? 'Loading...' : (factoryName ?? 'Factory'),
               style: TextStyle(
-                color: AppTheme.textSecondary.withOpacity(0.65),
+                color: AppTheme.textPrimary.withOpacity(0.65),
                 fontSize: 12,
               ),
             ),
@@ -255,6 +255,7 @@ class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
                   : AppTheme.onsurface.withOpacity(0.05),
               blurRadius: 8,
               offset: const Offset(0, 3),
+              
             ),
           ],
         ),
@@ -266,7 +267,7 @@ class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
                 color: isSelected
                     ? AppTheme.secondary.withOpacity(0.2)
                     : activeThemeColor.withOpacity(0.12),
-                borderRadius: BorderRadius.circular(10),
+                shape: BoxShape.circle,
               ),
               child: Icon(
                 icon,
@@ -396,17 +397,17 @@ class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
         child: Row(
           children: [
             Container(
-              width: 48,
-              height: 48,
+              width: 40,
+              height: 40,
               decoration: BoxDecoration(
                 color: isActive
-                    ? AppTheme.active.withOpacity(0.15)
-                    : AppTheme.neutral.withOpacity(0.4),
-                borderRadius: BorderRadius.circular(12),
+                    ? AppTheme.active
+                    : AppTheme.primary,
+                   shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.precision_manufacturing_rounded,
-                color: isActive ? AppTheme.active: AppTheme.primary,
+                color: AppTheme.secondary,
                 size: 24,
               ),
             ),

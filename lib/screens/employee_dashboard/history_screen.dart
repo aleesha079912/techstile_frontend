@@ -206,7 +206,7 @@ class _HistoryScreenState extends State<HistoryScreen>
               ],
             ),
 
-      bottomNavigationBar: const EmployeeBottomNav(currentIndex: 2),
+      bottomNavigationBar: isEmbedded ? null : const EmployeeBottomNav(currentIndex: 2),
     );
   }
 

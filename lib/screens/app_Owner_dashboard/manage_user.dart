@@ -6,8 +6,6 @@ import 'package:techstile_frontend/screens/app_Owner_dashboard/role_management.d
 import '../../../../core/services/manage_users_service.dart';
 import '../../../../core/utils/theme.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/user/register_user_rolebased.dart';
-import 'package:techstile_frontend/screens/app_Owner_dashboard/app_owner_dash.dart';
-import 'package:get/get.dart';
 class ManageUsersScreen extends StatefulWidget {
   final String factoryId;
   const ManageUsersScreen({super.key, this.factoryId = '0'});
@@ -76,25 +74,6 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
     return Scaffold(
       backgroundColor: AppTheme.background,
 
-      appBar: AppBar(
-  backgroundColor: AppTheme.primary,
-  // leading: IconButton(
-  //   icon: const Icon(
-  //     Icons.arrow_back_ios_new,
-  //     color: AppTheme.secondary,
-  //     size: 18,
-  //   ),
-  //   onPressed: () => Navigator.pop(context),
-  // ),
-  title: const Text(
-    "TechStile",
-    style: TextStyle(
-      color:   AppTheme.textSecondary,
-      fontWeight: FontWeight.bold,
-    ),
-  ),
-),
-
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppTheme.primary,
         onPressed: () {
@@ -107,17 +86,18 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
             if (value == true) _refresh();
           });
         },
-        child: const Icon(Icons.person_add, color: AppTheme.secondary),
+        child: const Icon(
+          Icons.person_add,
+          color: AppTheme.secondary,
+        ),
       ),
 
-      /// ✅ FIX: SafeArea ADDED
       body: SafeArea(
         child: Column(
           children: [
             Container(
               width: double.infinity,
-              margin: EdgeInsets.zero,
-              padding: const EdgeInsets.fromLTRB(18, 0, 18, 18),
+              padding: const EdgeInsets.fromLTRB(18, 15, 18, 18),
               decoration: const BoxDecoration(
                 color: AppTheme.secondary,
                 borderRadius: BorderRadius.only(
@@ -125,19 +105,24 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                   bottomRight: Radius.circular(25),
                 ),
               ),
+
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+
+                  // USERS TITLE
                   const Text(
                     "Users",
                     style: TextStyle(
-                      fontSize: 28,
+                      fontSize: 26,
                       fontWeight: FontWeight.bold,
                       color: AppTheme.primary,
                     ),
                   ),
 
-                  /// SEARCH
+                  const SizedBox(height: 12),
+
+                  // SEARCH BAR
                   SizedBox(
                     height: 42,
                     child: TextField(
@@ -146,7 +131,10 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                       style: const TextStyle(fontSize: 13),
                       decoration: InputDecoration(
                         hintText: "Search user...",
-                        prefixIcon: const Icon(Icons.search, size: 18),
+                        prefixIcon: const Icon(
+                          Icons.search,
+                          size: 18,
+                        ),
                         filled: true,
                         fillColor: AppTheme.secondary,
                         border: OutlineInputBorder(
@@ -158,7 +146,8 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                   ),
 
                   const SizedBox(height: 12),
-                  
+
+                  // ACTION BUTTONS
                   Column(
                     children: [
                       Row(
@@ -168,12 +157,10 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                               "Assign Shift",
                               Icons.schedule,
                               () {
-                                // provide fallback ids (0) to avoid undefined identifiers
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => AssignShiftsScreen(
-                                    ),
+                                    builder: (_) => AssignShiftsScreen(),
                                   ),
                                 );
                               },
@@ -188,7 +175,8 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => const MachineAssignmentPage(),
+                                    builder: (_) =>
+                                        const MachineAssignmentPage(),
                                   ),
                                 );
                               },
@@ -209,7 +197,8 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => RoleManagementScreen(),
+                                    builder: (_) =>
+                                        RoleManagementScreen(),
                                   ),
                                 );
                               },
@@ -224,7 +213,8 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => const AssignPermissionsScreen(),
+                                    builder: (_) =>
+                                        const AssignPermissionsScreen(),
                                   ),
                                 );
                               },
@@ -237,7 +227,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
 
                   const SizedBox(height: 10),
 
-                  /// FILTERS
+                  // FILTERS
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -253,7 +243,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
               ),
             ),
 
-            /// LIST
+            // USERS LIST
             Expanded(
               child: FutureBuilder<List<UserData>>(
                 future: _usersFuture,
@@ -261,13 +251,15 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                   if (snapshot.connectionState ==
                       ConnectionState.waiting) {
                     return const Center(
-                        child: CircularProgressIndicator());
+                      child: CircularProgressIndicator(),
+                    );
                   }
 
                   if (!snapshot.hasData ||
                       snapshot.data!.isEmpty) {
                     return const Center(
-                        child: Text("No Users Found"));
+                      child: Text("No Users Found"),
+                    );
                   }
 
                   final users = _applyFilters(snapshot.data!);
@@ -283,7 +275,10 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                         () async {
                           bool success =
                               await _service.deleteUser(user.id!);
-                          if (success) _refresh();
+
+                          if (success) {
+                            _refresh();
+                          }
                         },
                         () {
                           Navigator.push(
@@ -293,7 +288,9 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                                   RegisterUserRoleBased(user: user),
                             ),
                           ).then((value) {
-                            if (value == true) _refresh();
+                            if (value == true) {
+                              _refresh();
+                            }
                           });
                         },
                       );

@@ -7,9 +7,9 @@ import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
 import 'package:techstile_frontend/widgets/emp_db_bot_nav_bar.dart';
 import 'package:techstile_frontend/widgets/own_payments_pop_up.dart';
 
-// ============================================================
+
 // Models (employee-wise payments API response)
-// ============================================================
+
 //
 // {
 //   "data": [
@@ -384,9 +384,9 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
 
                       const SizedBox(height: 20),
 
-                      // ==================================================
+                    
                       // EMPLOYEE SELECT
-                      // ==================================================
+                     
                       DropdownButtonFormField<EmployeePayment>(
                         value: selectedEmployee,
                         isExpanded: true,
@@ -427,9 +427,8 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                         },
                       ),
 
-                      // ==================================================
-                      // EARNED SUMMARY (✅ replaces production select)
-                      // ==================================================
+                      // EARNED SUMMARY ( replaces production select)
+                     
                       if (selectedEmployee != null) ...[
                         const SizedBox(height: 20),
 
@@ -492,9 +491,9 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
 
                           const SizedBox(height: 18),
 
-                          // ==================================================
+                          
                           // AMOUNT TO PAY
-                          // ==================================================
+                          
                           TextFormField(
                             controller: amountToPayCtrl,
                             keyboardType: const TextInputType.numberWithOptions(
@@ -533,9 +532,9 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
 
                           const SizedBox(height: 20),
 
-                          // ==================================================
+                          
                           // SAVE
-                          // ==================================================
+                          
                           SizedBox(
                             width: double.infinity,
                             height: 50,
@@ -554,7 +553,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                                 debugPrint('Employee ID: ${employee.employeeId}');
                                 debugPrint('Amount Paying Now: $amount');
 
-                                // ✅ Loading indicator
+                                //  Loading indicator
                                 showDialog(
                                   context: sheetContext,
                                   barrierDismissible: false,
@@ -884,7 +883,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       ),
       builder: (sheetContext) {
         return FutureBuilder<Map<String, dynamic>>(
-          future: _paymentService.fetchAllPayments(widget.factoryId), // ✅ service mein add karna hoga
+          future: _paymentService.fetchAllPayments(widget.factoryId), 
           builder: (context, snapshot) {
             return Padding(
               padding: EdgeInsets.only(
@@ -1050,10 +1049,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
 
     try {
       // PaymentService just needs to hit the employee-wise endpoint and
-      // return the decoded JSON body (e.g. Dio's `response.data` or
-      // `jsonDecode(response.body)`), a Map like: { "data": [ {...}, ... ] }.
-      // All parsing into EmployeePayment happens right here, so no separate
-      // model file is required.
+      
       final raw = await _paymentService.fetchvarietytypePayments(widget.factoryId);
       final List list = raw['data'] as List? ?? [];
       final data = list
@@ -1274,9 +1270,9 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
   );
 }
 
-// ============================================================
+
 // Helpers
-// ============================================================
+
 
 String _formatAmount(double value) {
   final str = value.toStringAsFixed(0);
@@ -1337,19 +1333,8 @@ class _SummaryStat extends StatelessWidget {
   }
 }
 
-/// Expandable card for a single employee: header shows name + total earned,
-/// plus factory/manager context, and expands to a list of every machine
-/// that contributed to that total.
-///
-/// FIX: previously this had BOTH a boxed Earned/Paid/Remaining row inside
-/// `subtitle` AND a duplicate unwrapped three-line `trailing` column. The
-/// `trailing` slot of a ListTile/ExpansionTile is laid out at its intrinsic
-/// width (it is NOT wrapped in an Expanded like `subtitle` is), so three
-/// long unbounded strings like "Remaining: Rs 1,810,400" forced the row
-/// wider than the screen on smaller devices -> RenderFlex overflow
-/// (the black/yellow striped error). The duplicate trailing column has been
-/// removed and long text in title/subtitle is now clamped with
-/// `overflow: TextOverflow.ellipsis` so the tile can never overflow again.
+/// Expandable card for a single employee
+
 class _EmployeePaymentTile extends StatelessWidget {
   final EmployeePayment record;
   Widget _employeeAmountStat(
@@ -1510,11 +1495,7 @@ class _EmployeePaymentTile extends StatelessWidget {
               ],
             ),
           ),
-          // Duplicate Earned/Paid/Remaining trailing column removed — it was
-          // unbounded and caused the overflow. The stat boxes in `subtitle`
-          // already surface this info without needing to expand the tile.
-          // If you want a compact indicator here, keep it width-bounded, e.g.:
-          // trailing: const Icon(Icons.expand_more_rounded, color: AppTheme.primary),
+        
           children: [
             if (record.machines.isEmpty)
               const Padding(
@@ -1534,7 +1515,7 @@ class _EmployeePaymentTile extends StatelessWidget {
   }
 } 
 
-/// One machine's aggregated totals for this employee. Expands to show
+
 /// the individual production rows that make up the total.
 class _MachineGroupTile extends StatelessWidget {
   final MachineGroup machine;
@@ -1599,7 +1580,7 @@ class _MachineGroupTile extends StatelessWidget {
             ),
           ),
           children: [
-            // Row 1: Expected vs Earned Amount
+            //  Expected vs Earned Amount
             Row(
               children: [
                 _machineStatBox(
@@ -1704,8 +1685,7 @@ class _MachineGroupTile extends StatelessWidget {
   }
 }
 
-/// A single production entry. Tappable — opens a bottom sheet with the full
-/// detail (machine, remaining production, shift, timestamps, etc).
+/// A single production entry
 class _ProductionRow extends StatelessWidget {
   final ProductionRecord record;
 

@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import 'auth_service.dart';
+
+import './auth_service.dart';
 
 class NotificationService {
   static const String baseUrl = "http://localhost:8000/api";

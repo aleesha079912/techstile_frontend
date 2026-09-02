@@ -162,20 +162,33 @@ class _SplashScreenState extends State<SplashScreen> {
 
                       // =====================================================
                       // FACTORY IMAGE
-                      // =====================================================
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
+                      // =================================================
+                     Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                      ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppTheme.primary.withOpacity(0.18),
+                              blurRadius: 24,
+                              offset: const Offset(0, 12),
+                            ),
+                          ],
                         ),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(18),
                           child: Image.asset(
-                            "assets/images/logo.png",
-                            height: 120,
-                            fit: BoxFit.contain,
+                            "assets/images/machines.jpg",
+                            height: 150,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ),
+                    ),
 
                       SizedBox(
                         height: constraints.maxHeight < 600
@@ -238,6 +251,61 @@ class _SplashScreenState extends State<SplashScreen> {
                         height: constraints.maxHeight < 600
                             ? 18
                             : 25,
+                      ),
+
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 20,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Column(
+                              children: [
+                                Text(
+                                  "1,240",
+                                  style: theme.textTheme.titleLarge?.copyWith(
+                                    color: AppTheme.primary,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  "Active Looms",
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: AppTheme.textPrimary.withOpacity(0.6),
+                                    fontSize: 11,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Container(
+                              height: 32,
+                              width: 1,
+                              margin: const EdgeInsets.symmetric(horizontal: 28),
+                              color: AppTheme.primary.withOpacity(0.15),
+                            ),
+                            Column(
+                              children: [
+                                Text(
+                                  "98.4%",
+                                  style: theme.textTheme.titleLarge?.copyWith(
+                                    color: AppTheme.primary,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  "Efficiency",
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: AppTheme.textPrimary.withOpacity(0.6),
+                                    fontSize: 11,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
 
                       SizedBox(

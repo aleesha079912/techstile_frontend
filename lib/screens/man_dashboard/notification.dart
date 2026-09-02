@@ -5,7 +5,6 @@ import '../../core/services/auth_service.dart';
 import '../../../core/utils/theme.dart';
 
 class NotificationPage extends StatefulWidget {
-  
   final Widget? drawer;
   final String title;
 
@@ -28,7 +27,7 @@ class _State extends State<NotificationPage> {
   bool loading = true;
 
   String selectedFilter = "All";
-  TextEditingController searchController = TextEditingController();
+  String searchQuery = "";
 
   @override
   void initState() {
@@ -54,9 +53,9 @@ class _State extends State<NotificationPage> {
       if (mounted) {
         setState(() {
           data = result;
-          filteredData = result;
           loading = false;
         });
+        applyFilters();
       }
     } catch (e) {
       debugPrint("Notification load error: $e");
@@ -70,77 +69,79 @@ class _State extends State<NotificationPage> {
     }
   }
 
-  void applyFilter(String filter) {
-    setState(() {
-      selectedFilter = filter;
-
-      if (filter == "All") {
-        filteredData = data;
-      } else if (filter == "Unread") {
-        filteredData = data
-            .where((e) => e['is_read'].toString() != "true" && e['is_read'] != true && e['is_read'] != 1)
-            .toList();
-      } else {
-        filteredData = data;
-      }
-    });
+  bool _isUnread(dynamic n) {
+    return n['is_read'].toString() != "true" && n['is_read'] != true && n['is_read'] != 1;
   }
 
-  void search(String value) {
+  DateTime? _parseDate(dynamic n) {
+    final raw = n['created_at'];
+    if (raw == null) return null;
+    return DateTime.tryParse(raw.toString());
+  }
+
+  void applyFilters() {
+    final now = DateTime.now();
+    final startOfToday = DateTime(now.year, now.month, now.day);
+    final startOfWeek = startOfToday.subtract(Duration(days: now.weekday - 1));
+
     setState(() {
       filteredData = data.where((n) {
         final title = (n['title'] ?? '').toString().toLowerCase();
-        final id = n['id'].toString();
+        final message = (n['message'] ?? '').toString().toLowerCase();
+        final matchesQuery = searchQuery.isEmpty ||
+            title.contains(searchQuery.toLowerCase()) ||
+            message.contains(searchQuery.toLowerCase());
 
-        return title.contains(value.toLowerCase()) || id.contains(value);
+        if (!matchesQuery) return false;
+
+        if (selectedFilter == "Unread") {
+          return _isUnread(n);
+        }
+
+        if (selectedFilter == "Today") {
+          final date = _parseDate(n);
+          return date != null && !date.isBefore(startOfToday);
+        }
+
+        if (selectedFilter == "This Week") {
+          final date = _parseDate(n);
+          return date != null && !date.isBefore(startOfWeek);
+        }
+
+        return true;
       }).toList();
     });
   }
 
-  void showSearchDialog() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text("Search"),
-          content: TextField(
-            controller: searchController,
-            decoration: const InputDecoration(
-              hintText: "Search by name or ID",
-            ),
-            onChanged: search,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                searchController.clear();
-                setState(() => filteredData = data);
-                Navigator.pop(context);
-              },
-              child: const Text("Clear"),
-            )
-          ],
-        );
-      },
-    );
+  void selectFilter(String filter) {
+    selectedFilter = filter;
+    applyFilters();
+  }
+
+  String _timeAgo(dynamic n) {
+    final date = _parseDate(n);
+    if (date == null) return '';
+    final diff = DateTime.now().difference(date);
+
+    if (diff.inMinutes < 1) return 'just now';
+    if (diff.inMinutes < 60) return '${diff.inMinutes}m ago';
+    if (diff.inHours < 24) return '${diff.inHours}h ago';
+    if (diff.inDays < 7) return '${diff.inDays}d ago';
+    return '${date.day}/${date.month}/${date.year}';
   }
 
   @override
   Widget build(BuildContext context) {
-    int unreadCount =
-        data.where((e) => e['is_read'].toString() != "true" && e['is_read'] != true && e['is_read'] != 1).length;
+    final unreadCount = data.where(_isUnread).length;
 
     return Scaffold(
       backgroundColor: AppTheme.background,
       drawer: widget.drawer,
-
-      /// APP BAR
       appBar: AppBar(
         title: Text(widget.title),
         elevation: 0,
         backgroundColor: AppTheme.primary,
         foregroundColor: AppTheme.secondary,
-   
         leading: widget.drawer != null
             ? Builder(
                 builder: (context) => IconButton(
@@ -149,15 +150,7 @@ class _State extends State<NotificationPage> {
                 ),
               )
             : null,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: showSearchDialog,
-          ),
-        ],
       ),
-
-      /// BODY
       body: loading
           ? const Center(child: CircularProgressIndicator())
           : RefreshIndicator(
@@ -166,27 +159,35 @@ class _State extends State<NotificationPage> {
                 padding: const EdgeInsets.all(16),
                 children: [
                   _topSummaryCard(unreadCount),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 18),
+                  _searchBar(),
+                  const SizedBox(height: 14),
                   _filterRow(),
                   const SizedBox(height: 16),
-
                   if (filteredData.isEmpty)
                     Container(
-                      padding: const EdgeInsets.symmetric(vertical: 40),
+                      padding: const EdgeInsets.symmetric(vertical: 60),
                       alignment: Alignment.center,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            Icons.notifications_off_outlined,
-                            size: 48,
-                            color: AppTheme.primary.withOpacity(0.4),
+                          Container(
+                            padding: const EdgeInsets.all(18),
+                            decoration: BoxDecoration(
+                              color: AppTheme.primary.withOpacity(0.06),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.notifications_off_outlined,
+                              size: 40,
+                              color: AppTheme.primary.withOpacity(0.4),
+                            ),
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 14),
                           Text(
                             "No notifications found",
                             style: TextStyle(
-                              color: AppTheme.textPrimary.withOpacity(0.6),
+                              color: AppTheme.textPrimary.withOpacity(0.55),
                               fontSize: 14,
                               fontWeight: FontWeight.w500,
                             ),
@@ -195,105 +196,144 @@ class _State extends State<NotificationPage> {
                       ),
                     )
                   else
-                    /// NOTIFICATIONS
                     ...filteredData.map((n) {
-                      final isRead =
-                          n['is_read'].toString() == "true" || n['is_read'] == true || n['is_read'] == 1;
+                      final isRead = !_isUnread(n);
                       final type = n['type']?.toString() ?? '';
-
                       return _notificationCard(n, isRead, type);
-                    }).toList(),
+                    }),
                 ],
               ),
             ),
     );
   }
 
-  /// TOP CARD 
   Widget _topSummaryCard(int unreadCount) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppTheme.primary, AppTheme.info],
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AppTheme.primary, AppTheme.primary.withOpacity(0.75)],
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.primary.withOpacity(0.25),
+            blurRadius: 16,
+            offset: const Offset(0, 8),
+          ),
+        ],
       ),
       child: Row(
         children: [
-          const Icon(Icons.notifications, color: AppTheme.secondary, size: 40),
-          const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "You have",
-                style: TextStyle(color: AppTheme.textneutral),
-              ),
-              Text(
-                "$unreadCount unread notifications",
-                style: const TextStyle(
-                  color: AppTheme.textSecondary,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.15),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.notifications_rounded, color: Colors.white, size: 28),
+          ),
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  unreadCount == 0 ? "You're all caught up" : "You have",
+                  style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 12.5),
                 ),
-              ),
-            ],
-          )
+                const SizedBox(height: 2),
+                Text(
+                  unreadCount == 0 ? "No new notifications" : "$unreadCount unread notifications",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 17,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
   }
 
-  /// FILTER ROW
+  Widget _searchBar() {
+    return TextField(
+      onChanged: (v) {
+        searchQuery = v;
+        applyFilters();
+      },
+      decoration: InputDecoration(
+        hintText: "Search notifications",
+        prefixIcon: const Icon(Icons.search),
+        filled: true,
+        fillColor: Colors.white,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide(color: AppTheme.neutral.withOpacity(0.4)),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide(color: AppTheme.neutral.withOpacity(0.4)),
+        ),
+      ),
+    );
+  }
+
   Widget _filterRow() {
+    final options = ["All", "Unread", "Today", "This Week"];
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Row(
-        children: [
-          _Chip(
-            text: "All",
-            selected: selectedFilter == "All",
-            onTap: () => applyFilter("All"),
-          ),
-          _Chip(
-            text: "Unread",
-            selected: selectedFilter == "Unread",
-            onTap: () => applyFilter("Unread"),
-          ),
-          _Chip(
-            text: "Today",
-            selected: selectedFilter == "Today",
-            onTap: () => applyFilter("Today"),
-          ),
-          _Chip(
-            text: "This Week",
-            selected: selectedFilter == "This Week",
-            onTap: () => applyFilter("This Week"),
-          ),
-        ],
+        children: options.map((option) {
+          return _Chip(
+            text: option,
+            selected: selectedFilter == option,
+            onTap: () => selectFilter(option),
+          );
+        }).toList(),
       ),
     );
   }
 
-  /// NOTIFICATION CARD 
   Widget _notificationCard(dynamic n, bool isRead, String type) {
+    final isApproved = type == "approved";
+    final isRejected = type == "rejected";
+
+    final accentColor = isApproved
+        ? AppTheme.success
+        : (isRejected ? AppTheme.error : AppTheme.primary);
+
+    final icon = isApproved
+        ? Icons.check_circle_outline
+        : (isRejected ? Icons.cancel_outlined : Icons.notifications_active_outlined);
+
+    final production = n['production'];
+    final machineName = production?['machineemploye']?['machine_name'];
+    final readyProduction = production?['ready_production'];
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppTheme.secondary,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppTheme.neutral),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: isRead ? null : Border.all(color: accentColor.withOpacity(0.25)),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.onsurface.withOpacity(0.03),
+            color: Colors.black.withOpacity(0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
-          )
+          ),
         ],
       ),
       child: InkWell(
+        borderRadius: BorderRadius.circular(16),
         onTap: () async {
           await service.read(n['id']);
           load();
@@ -304,80 +344,83 @@ class _State extends State<NotificationPage> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: type == "approved"
-                    ? AppTheme.success.withOpacity(0.15)
-                    : (type == "rejected"
-                        ? AppTheme.error.withOpacity(0.15)
-                        : AppTheme.primary.withOpacity(0.1)),
+                color: accentColor.withOpacity(0.12),
                 shape: BoxShape.circle,
               ),
-              child: Icon(
-                type == "approved"
-                    ? Icons.check_circle_outline
-                    : (type == "rejected"
-                        ? Icons.cancel_outlined
-                        : Icons.notifications_active_outlined),
-                color: type == "approved"
-                    ? AppTheme.success
-                    : (type == "rejected"
-                        ? AppTheme.error
-                        : AppTheme.primary),
-              ),
+              child: Icon(icon, color: accentColor, size: 20),
             ),
-
             const SizedBox(width: 12),
-
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    n['title'] ?? '',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          n['title'] ?? '',
+                          style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+                        ),
+                      ),
+                      if (!isRead)
+                        Container(
+                          width: 8,
+                          height: 8,
+                          margin: const EdgeInsets.only(left: 6),
+                          decoration: const BoxDecoration(
+                            color: AppTheme.info,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                    ],
                   ),
                   const SizedBox(height: 6),
-                  Text(n['message'] ?? ''),
-
-                  if (n['production'] != null) ...[
+                  Text(
+                    n['message'] ?? '',
+                    style: TextStyle(color: AppTheme.textPrimary.withOpacity(0.7), fontSize: 13),
+                  ),
+                  if (machineName != null || readyProduction != null) ...[
                     const SizedBox(height: 10),
-
                     Container(
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
-                        color: AppTheme.neutral,
+                        color: AppTheme.background,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Row(
                         children: [
-                          Text(
-                            "Machine ID: ${n['production']?['machine_id'] ?? '-'}",
-                          ),
-                          Text(
-                            "Machine Name: ${n['production']?['machineemploye']?['machine_name'] ?? '-'}",
-                          ),
-                          Text(
-                            "Ready Production: ${n['production']?['ready_production'] ?? '-'}",
-                          ),
+                          if (machineName != null) ...[
+                            Icon(Icons.precision_manufacturing_outlined,
+                                size: 15, color: AppTheme.primary.withOpacity(0.6)),
+                            const SizedBox(width: 6),
+                            Text(
+                              machineName.toString(),
+                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                            ),
+                          ],
+                          if (machineName != null && readyProduction != null)
+                            const SizedBox(width: 14),
+                          if (readyProduction != null) ...[
+                            Icon(Icons.check_circle_outline,
+                                size: 15, color: AppTheme.primary.withOpacity(0.6)),
+                            const SizedBox(width: 6),
+                            Text(
+                              "$readyProduction m",
+                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                            ),
+                          ],
                         ],
                       ),
                     ),
                   ],
+                  const SizedBox(height: 8),
+                  Text(
+                    _timeAgo(n),
+                    style: TextStyle(fontSize: 11, color: AppTheme.textPrimary.withOpacity(0.4)),
+                  ),
                 ],
               ),
             ),
-
-            if (!isRead)
-              const Padding(
-                padding: EdgeInsets.only(left: 8),
-                child: Icon(
-                  Icons.circle,
-                  size: 10,
-                  color: AppTheme.info,
-                ),
-              ),
           ],
         ),
       ),
@@ -385,7 +428,6 @@ class _State extends State<NotificationPage> {
   }
 }
 
-/// CHIP 
 class _Chip extends StatelessWidget {
   final String text;
   final bool selected;
@@ -403,19 +445,20 @@ class _Chip extends StatelessWidget {
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(right: 8),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: selected
-              ? AppTheme.primary
-              : AppTheme.neutral,
+          color: selected ? AppTheme.primary : Colors.white,
           borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: selected ? AppTheme.primary : AppTheme.neutral.withOpacity(0.4),
+          ),
         ),
         child: Text(
           text,
           style: TextStyle(
-            color: selected
-                ? AppTheme.secondary
-                : AppTheme.onsurface,
+            color: selected ? AppTheme.secondary : AppTheme.textPrimary,
+            fontWeight: FontWeight.w600,
+            fontSize: 12.5,
           ),
         ),
       ),

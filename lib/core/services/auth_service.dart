@@ -13,9 +13,9 @@ class AuthService {
   static Map? get user => box.read('user');
   static String get role => box.read('role') ?? '';
 
-  // ✅ Reload-safe factoryId/userId — GetStorage se persist hote hain
-  static dynamic get factoryId => box.read('factoryId') ?? box.read('user')?['factory_id'];
-  static dynamic get userId => box.read('userId') ?? box.read('user')?['id'];
+  // Reload-safe factoryId/userId — GetStorage se persist hote hain
+  static dynamic get factoryId => box.read('factoryId');
+  static dynamic get userId => box.read('userId');
 
   /// Every authenticated API call mein yahi headers use karo
   static Map<String, String> get authHeaders => {
