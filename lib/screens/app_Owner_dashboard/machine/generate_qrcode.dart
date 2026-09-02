@@ -145,7 +145,7 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
                         size: 220,
                         eyeStyle: const QrEyeStyle(
                           eyeShape: QrEyeShape.square,
-                          color: AppTheme.info
+                          color: AppTheme.onsurface
                         ),
                         dataModuleStyle: const QrDataModuleStyle(
                           dataModuleShape: QrDataModuleShape.square,

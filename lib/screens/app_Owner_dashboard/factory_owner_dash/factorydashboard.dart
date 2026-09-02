@@ -60,11 +60,11 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
 
     print("Opening production history for period = $period");
 
-    Get.toNamed(
-      AppRoutes.ownerProduction,
-      arguments: widget.factoryId,
-      parameters: {'period': period.toLowerCase()},
-    );
+    // Get.toNamed(
+    //   AppRoutes.ownerProduction,
+    //   arguments: widget.factoryId,
+    //   parameters: {'period': period.toLowerCase()},
+    // );
   }
 
   @override
