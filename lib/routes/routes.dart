@@ -8,7 +8,7 @@ import 'package:techstile_frontend/core/services/auth_service.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/factory_owner_dash/owner_production_page.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/factory_owner_dash/paymentsScreen.dart';
 import 'package:techstile_frontend/screens/forget_password_screen.dart';
-import 'package:techstile_frontend/screens/man_dashboard/manager_emloyee_detail_screen.dart';
+
 import 'package:techstile_frontend/screens/man_dashboard/notification.dart';
 
 
@@ -19,7 +19,7 @@ import 'package:techstile_frontend/screens/man_dashboard/notification.dart';
 
 import 'package:techstile_frontend/screens/splash.dart';
 import 'package:techstile_frontend/screens/login.dart';
-import 'package:techstile_frontend/screens/signup.dart';
+
 
 import 'package:techstile_frontend/screens/app_Owner_dashboard/app_owner_dash.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/add_factories.dart';
@@ -104,7 +104,7 @@ static const employeeNotifications = "/employee-notifications";
 
     GetPage(name: login, page: () => LoginScreen()),
 
-    GetPage(name: signup, page: () => SignupScreen()),
+   
     
     GetPage(name: forgotPassword, page: () => ForgotPasswordScreen(), ),
 
@@ -173,17 +173,7 @@ GetPage(
 ),
 
 // MANAGER EMPLOYEE DETAILS
-GetPage(
-  name: AppRoutes.managerEmployeeDetail,
-  page: () {
-    final args = Get.arguments as Map;
 
-    return ManagerEmployeeDetailScreen(
-      employeeId: args['employeeId'],
-      factoryId: AuthService.factoryId,
-    );
-  },
-),
 
 // MANAGER PROFILE
 GetPage(
