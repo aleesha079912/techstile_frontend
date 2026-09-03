@@ -3,7 +3,7 @@ import '../../core/services/employee_service/profile_service.dart';
 import '../../core/utils/theme.dart';
 import '../app_Owner_dashboard/employee/employee_payment_history_screen.dart';
 import '../employee_dashboard/history_screen.dart';
-import 'package:techstile_frontend/screens/app_Owner_dashboard/factory_owner_dash/paymentsScreen.dart';
+
 
 class UserProfileScreen extends StatefulWidget {
   final int userId;
@@ -75,7 +75,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     }
   }
 
-  // ================= 1. HERO PROFILE CARD =================
+  // HERO PROFILE CARD 
   Widget _buildHeroHeader() {
     final name = profile?['name']?.toString() ?? 'Production Worker';
     final email = profile?['email']?.toString() ?? '—';
@@ -172,7 +172,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
-  // ================= 2. QUICK ACTION BUTTONS =================
+  // QUICK ACTION BUTTONS 
   Widget _buildQuickActions() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
@@ -247,7 +247,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
-  // ================= 3. SECTION TITLE =================
+  //SECTION TITLE 
   Widget _sectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 14, 20, 10),
@@ -275,7 +275,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
-  // ================= 4. OVERVIEW STATS (2x2 GRID) =================
+  // OVERVIEW STATS 
   Widget _buildOverviewStats() {
     final totalMachines = "${profile?['total_machines'] ?? 0}";
     final totalProduction = "${profile?['total_production'] ?? 0} m";
@@ -377,7 +377,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
-  // ================= 5. EMPLOYMENT & PERSONAL INFO =================
+  // EMPLOYMENT & PERSONAL INFO
   Widget _buildDetailsCard() {
     final employeeId = profile?['employee_id']?.toString() ?? '';
     final factoryName = profile?['factory_name']?.toString() ?? '';
@@ -482,7 +482,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
-  // ================= MAIN BUILD =================
+  // MAIN BUILD 
   @override
   Widget build(BuildContext context) {
     return Scaffold(

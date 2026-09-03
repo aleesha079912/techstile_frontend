@@ -1040,9 +1040,9 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
+ 
   // Breakdown Chip
-  // ─────────────────────────────────────────────────────────────────────────
+ 
 
   Widget _breakdownChip(
     String label,
@@ -1116,9 +1116,9 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
+ 
   // Stat Card
-  // ─────────────────────────────────────────────────────────────────────────
+ 
 
   Widget _statCard({
     required IconData icon,
@@ -1217,9 +1217,9 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
+ 
   // Varieties List
-  // ─────────────────────────────────────────────────────────────────────────
+
 
   Widget _varietiesList() {
     final varieties =
@@ -1414,9 +1414,9 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+
 // Section Label
-// ─────────────────────────────────────────────────────────────────────────────
+
 
 class _SectionLabel extends StatelessWidget {
   final String text;

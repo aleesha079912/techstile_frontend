@@ -27,7 +27,7 @@ class _MachineDetailScreenState
   bool loading = true;
   Map<String, dynamic>? machine;
 
-  // ✅ Yahan add karo — class level pe
+  // Yahan add karo  class level pe
   bool canAdd = false;
   double remaining = 0;
 
@@ -157,7 +157,7 @@ class _MachineDetailScreenState
                   infoCard("Ready Production",
                       "${machine?["ready_production"] ?? 0}", Icons.check_circle),
                   infoCard("Remaining",
-                      "$remaining", Icons.hourglass_bottom), // ✅ remaining show
+                      "$remaining", Icons.hourglass_bottom), //  remaining show
 
                   const SizedBox(height: 20),
 

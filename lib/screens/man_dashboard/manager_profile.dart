@@ -37,7 +37,7 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
     });
   }
 
-  // ================= 1. HERO PROFILE CARD =================
+  // HERO PROFILE CARD 
   Widget _buildHeroHeader() {
     final name = profile?['name']?.toString() ?? 'Plant Manager';
     final email = profile?['email']?.toString() ?? '—';
@@ -134,7 +134,7 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
     );
   }
 
-  // ================= 2. QUICK ACTION BUTTONS =================
+  // QUICK ACTION BUTTONS 
   Widget _buildQuickActions() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
@@ -217,7 +217,7 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
     );
   }
 
-  // ================= 3. SECTION TITLE =================
+  // SECTION TITLE 
   Widget _sectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 14, 20, 10),
@@ -245,7 +245,7 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
     );
   }
 
-  // ================= 4. OVERVIEW STATS (2x2 GRID) =================
+  //OVERVIEW STATS 
   Widget _buildOverviewStats() {
     final factoryName = profile?['factory_name']?.toString() ?? 'Assigned Factory';
     final totalEmployees = "${profile?['total_employees'] ?? 0}";
@@ -347,7 +347,7 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
     );
   }
 
-  // ================= 5. PERSONAL & PLANT INFO =================
+  // PERSONAL & PLANT INFO 
   Widget _buildDetailsCard() {
     final factoryName = profile?['factory_name']?.toString() ?? '';
     final phone = profile?['phone_no']?.toString() ?? '';
@@ -428,7 +428,7 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
     );
   }
 
-  // ================= MAIN BUILD =================
+  //  MAIN BUILD 
   @override
   Widget build(BuildContext context) {
     final bool canPop = Navigator.canPop(context);
