@@ -138,10 +138,18 @@ class _State extends State<NotificationPage> {
       backgroundColor: AppTheme.background,
       drawer: widget.drawer,
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(
+          widget.title,
+          style: const TextStyle(
+            color: AppTheme.primary,
+            fontWeight: FontWeight.w900,
+            fontSize: 22,
+          ),
+        ),
         elevation: 0,
-        backgroundColor: AppTheme.primary,
-        foregroundColor: AppTheme.secondary,
+        backgroundColor: AppTheme.secondary,
+        iconTheme: const IconThemeData(color: AppTheme.primary),
+        actionsPadding: EdgeInsets.zero,
         leading: widget.drawer != null
             ? Builder(
                 builder: (context) => IconButton(
@@ -150,6 +158,28 @@ class _State extends State<NotificationPage> {
                 ),
               )
             : null,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 10),
+            child: Container(
+              height: 36,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              decoration: BoxDecoration(
+                color: AppTheme.primary,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                unreadCount == 0 ? "All caught up" : "$unreadCount to read",
+                style: const TextStyle(
+                  color: AppTheme.secondary,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 11.5,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       body: loading
           ? const Center(child: CircularProgressIndicator())
@@ -158,8 +188,6 @@ class _State extends State<NotificationPage> {
               child: ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
-                  _topSummaryCard(unreadCount),
-                  const SizedBox(height: 18),
                   _searchBar(),
                   const SizedBox(height: 14),
                   _filterRow(),
@@ -204,60 +232,6 @@ class _State extends State<NotificationPage> {
                 ],
               ),
             ),
-    );
-  }
-
-  Widget _topSummaryCard(int unreadCount) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [AppTheme.primary, AppTheme.primary.withOpacity(0.75)],
-        ),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.primary.withOpacity(0.25),
-            blurRadius: 16,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.15),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(Icons.notifications_rounded, color: Colors.white, size: 28),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  unreadCount == 0 ? "You're all caught up" : "You have",
-                  style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 12.5),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  unreadCount == 0 ? "No new notifications" : "$unreadCount unread notifications",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 17,
-                    fontWeight: FontWeight.w800,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -321,14 +295,14 @@ class _State extends State<NotificationPage> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(16),
         border: isRead ? null : Border.all(color: accentColor.withOpacity(0.25)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: AppTheme.primary.withOpacity(0.1),
+            blurRadius: 12,
+            offset: const Offset(0, 5),
           ),
         ],
       ),
@@ -359,7 +333,11 @@ class _State extends State<NotificationPage> {
                       Expanded(
                         child: Text(
                           n['title'] ?? '',
-                          style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14),
+                          style: const TextStyle(
+                            color: AppTheme.primary,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 14.5,
+                          ),
                         ),
                       ),
                       if (!isRead)
