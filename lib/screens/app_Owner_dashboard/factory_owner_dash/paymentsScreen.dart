@@ -256,7 +256,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
   Future<void> _loadFactoryName() async {
     try {
       final response = await http.get(
-        Uri.parse("http://localhost:8000/api/factories/editfactory/${widget.factoryId}"),
+        Uri.parse("http://techstile.sandbox.pk/api/factories/editfactory/${widget.factoryId}"),
         headers: AuthService.authHeaders,
       );
 

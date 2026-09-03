@@ -9,7 +9,7 @@ class FactoryUsersService {
   FactoryUsersService._();
 
   final String baseUrl =
-      "http://localhost:8000/api";
+      "http://techstile.sandbox.pk/api";
 
   Future<Map<String, dynamic>> getUsersByFactory(
       int factoryId) async {
