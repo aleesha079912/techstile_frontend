@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
@@ -34,137 +33,132 @@ class _SplashScreenState extends State<SplashScreen> {
                     children: [
 
                       // =====================================================
-                      // TOP SECTION
+                      // TOP SECTION (CENTERED)
                       // =====================================================
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                        ),
-
-                        child: Column(
-                          children: [
-
-                            SizedBox(
-                              height: constraints.maxHeight < 600
-                                  ? 22
-                                  : 30,
+                      Expanded(
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
                             ),
 
-                            // INDUSTRIAL INTELLIGENCE
-                            Row(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(
-                                  Icons.precision_manufacturing,
-                                  size: 18,
-                                  color: AppTheme.primary,
+
+                                // INDUSTRIAL INTELLIGENCE
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Icon(
+                                      Icons.precision_manufacturing,
+                                      size: 18,
+                                      color: AppTheme.primary,
+                                    ),
+
+                                    const SizedBox(width: 6),
+
+                                    Flexible(
+                                      child: Text(
+                                        "INDUSTRIAL INTELLIGENCE",
+                                        textAlign: TextAlign.center,
+                                        style: theme.textTheme.bodyMedium?.copyWith(
+                                          color: AppTheme.primary,
+                                          fontWeight: FontWeight.w600,
+                                          letterSpacing: 1.1,
+                                          fontSize: 11.5,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
 
-                                const SizedBox(width: 6),
+                                SizedBox(
+                                  height: constraints.maxHeight < 600
+                                      ? 28
+                                      : 45,
+                                ),
 
-                                Flexible(
-                                  child: Text(
-                                    "INDUSTRIAL INTELLIGENCE",
-                                    textAlign: TextAlign.center,
-                                    style: theme.textTheme.bodyMedium?.copyWith(
-                                      color: AppTheme.primary,
-                                      fontWeight: FontWeight.w600,
-                                      letterSpacing: 1.1,
-                                      fontSize: 11.5,
-                                    ),
+                                // =================================================
+                                // LOGO ICON (commented out, kept as-is)
+                                // =================================================
+                                // Container(
+                                //   height: constraints.maxWidth < 380
+                                //       ? 78
+                                //       : 88,
+
+                                //   width: constraints.maxWidth < 380
+                                //       ? 78
+                                //       : 88,
+
+                                //   decoration: BoxDecoration(
+                                //     color: AppTheme.secondary,
+                                //     borderRadius: BorderRadius.circular(22),
+                                //     boxShadow: AppTheme.softShadow,
+                                //   ),
+
+                                //   child: const Icon(
+                                //     Icons.tune,
+                                //     size: 40,
+                                //     color: AppTheme.primary,
+                                //   ),
+                                // ),
+
+                                // SizedBox(
+                                //   height: constraints.maxHeight < 600
+                                //       ? 20
+                                //       : 28,
+                                // ),
+
+                                // =================================================
+                                // APP NAME
+                                // =================================================
+                                Text(
+                                  "TECHstile",
+                                  style: theme.textTheme.headlineMedium?.copyWith(
+                                    color: AppTheme.primary,
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: constraints.maxWidth < 380
+                                        ? 27
+                                        : 30,
+                                  ),
+                                ),
+
+                                const SizedBox(height: 8),
+
+                                // =================================================
+                                // DESCRIPTION
+                                // =================================================
+                                Text(
+                                  "Precision orchestration for high-performance "
+                                  "textile manufacturing.",
+                                  textAlign: TextAlign.center,
+                                  style: theme.textTheme.bodyMedium?.copyWith(
+                                    color: AppTheme.textPrimary.withOpacity(0.7),
+                                    height: 1.45,
+                                    fontSize: 13,
+                                  ),
+                                ),
+
+                                const SizedBox(height: 16),
+
+                                // =================================================
+                                // SMALL LINE
+                                // =================================================
+                                Container(
+                                  width: 40,
+                                  height: 3,
+                                  decoration: BoxDecoration(
+                                    color: AppTheme.primary,
+                                    borderRadius: BorderRadius.circular(2),
                                   ),
                                 ),
                               ],
                             ),
-
-                            SizedBox(
-                              height: constraints.maxHeight < 600
-                                  ? 28
-                                  : 45,
-                            ),
-
-                            // =================================================
-                            // LOGO ICON
-                            // =================================================
-                            Container(
-                              height: constraints.maxWidth < 380
-                                  ? 78
-                                  : 88,
-
-                              width: constraints.maxWidth < 380
-                                  ? 78
-                                  : 88,
-
-                              decoration: BoxDecoration(
-                                color: AppTheme.secondary,
-                                borderRadius: BorderRadius.circular(22),
-                                boxShadow: AppTheme.softShadow,
-                              ),
-
-                              child: const Icon(
-                                Icons.tune,
-                                size: 40,
-                                color: AppTheme.primary,
-                              ),
-                            ),
-
-                            SizedBox(
-                              height: constraints.maxHeight < 600
-                                  ? 20
-                                  : 28,
-                            ),
-
-                            // =================================================
-                            // APP NAME
-                            // =================================================
-                            Text(
-                              "TECHstile",
-                              style: theme.textTheme.headlineMedium?.copyWith(
-                                color: AppTheme.primary,
-                                fontWeight: FontWeight.w700,
-                                fontSize: constraints.maxWidth < 380
-                                    ? 27
-                                    : 30,
-                              ),
-                            ),
-
-                            const SizedBox(height: 8),
-
-                            // =================================================
-                            // DESCRIPTION
-                            // =================================================
-                            Text(
-                              "Precision orchestration for high-performance "
-                              "textile manufacturing.",
-                              textAlign: TextAlign.center,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: AppTheme.textPrimary.withOpacity(0.7),
-                                height: 1.45,
-                                fontSize: 13,
-                              ),
-                            ),
-
-                            const SizedBox(height: 16),
-
-                            // =================================================
-                            // SMALL LINE
-                            // =================================================
-                            Container(
-                              width: 40,
-                              height: 3,
-                              decoration: BoxDecoration(
-                                color: AppTheme.primary,
-                                borderRadius: BorderRadius.circular(2),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ),
-
-                      // =====================================================
-                      // FLEXIBLE SPACE
-                      // =====================================================
-                      const Spacer(),
 
                       // =====================================================
                       // FACTORY IMAGE
@@ -187,7 +181,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(18),
                           child: Image.asset(
-                            "assets/images/machines.jpg",
+                            "assets/images/machines.png",
                             height: 150,
                             width: double.infinity,
                             fit: BoxFit.cover,
@@ -330,4 +324,3 @@ class _SplashScreenState extends State<SplashScreen> {
     );
   }
 }
-

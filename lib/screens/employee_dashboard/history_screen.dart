@@ -31,6 +31,27 @@ class _HistoryScreenState extends State<HistoryScreen>
   double weekly = 0;
   double monthly = 0;
 
+  // ─────────────────────────────────────────────────────────────────────────
+  // Common shadow / border (matches Factory Dashboard styling)
+  // ─────────────────────────────────────────────────────────────────────────
+
+  static List<BoxShadow> get _primaryShadow => [
+        BoxShadow(
+          color: AppTheme.primary.withOpacity(0.14),
+          blurRadius: 16,
+          offset: const Offset(0, 6),
+        ),
+        BoxShadow(
+          color: AppTheme.primary.withOpacity(0.06),
+          blurRadius: 4,
+          offset: const Offset(0, 1),
+        ),
+      ];
+
+  static Border get _primaryBorder => Border.all(
+        color: AppTheme.primary.withOpacity(0.10),
+        width: 1,
+      );
 
   @override
   void initState() {
@@ -72,33 +93,51 @@ class _HistoryScreenState extends State<HistoryScreen>
     final bool isEmbedded = widget.userId != null;
 
     return Scaffold(
-      backgroundColor:AppTheme.background,
+      backgroundColor: AppTheme.background,
       drawer: isEmbedded ? null : const EmployeeDrawer(),
 
-      // AppBar 
+      // ── AppBar (matches Factory Dashboard style) ──────────────────────
       appBar: AppBar(
-        backgroundColor:AppTheme.primary,
+        backgroundColor: AppTheme.secondary,
         elevation: 0,
+        iconTheme: const IconThemeData(
+          color: AppTheme.primary,
+        ),
+        titleSpacing: 4,
         leading: isEmbedded
             ? IconButton(
-                icon: const Icon(Icons.arrow_back, color: AppTheme.secondary),
+                icon: const Icon(Icons.arrow_back_rounded, color: AppTheme.primary),
                 onPressed: () => Navigator.pop(context),
               )
             : Builder(
                 builder: (ctx) => IconButton(
-                  icon: const Icon(Icons.menu_rounded, color: AppTheme.secondary),
+                  icon: const Icon(Icons.menu_rounded, color: AppTheme.primary),
                   onPressed: () => Scaffold.of(ctx).openDrawer(),
                 ),
               ),
-        title: Text(
-          widget.userName != null && widget.userName!.isNotEmpty
-              ? "${widget.userName}'s History"
-              : 'Production History',
-          style: const TextStyle(
-            color:   AppTheme.textSecondary,
-            fontWeight: FontWeight.w700,
-            fontSize: 18,
-          ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Production History',
+              style: TextStyle(
+                color: AppTheme.primary,
+                fontWeight: FontWeight.w800,
+                fontSize: 19,
+              ),
+            ),
+            const SizedBox(height: 1),
+            Text(
+              widget.userName != null && widget.userName!.isNotEmpty
+                  ? "${widget.userName}'s records"
+                  : 'All your records',
+              style: TextStyle(
+                color: AppTheme.primary.withOpacity(0.65),
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
         ),
       ),
 
@@ -107,30 +146,31 @@ class _HistoryScreenState extends State<HistoryScreen>
               child: CircularProgressIndicator(color: AppTheme.primary, strokeWidth: 2.5))
           : Column(
               children: [
-                //Summary strip 
-                Container(
-                  color: AppTheme.primary,
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+
+                // ── Summary strip — small stat cards ─────────────────
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
                   child: Row(
                     children: [
-                      _summaryChip('Daily',   daily),
-                      const SizedBox(width: 8),
-                      _summaryChip('Weekly',  weekly),
-                      const SizedBox(width: 8),
-                      _summaryChip('Monthly', monthly),
+                      _summaryChip('Daily',   daily,   Icons.today_rounded,        AppTheme.success),
+                      const SizedBox(width: 10),
+                      _summaryChip('Weekly',  weekly,  Icons.calendar_month_rounded, AppTheme.primary),
+                      const SizedBox(width: 10),
+                      _summaryChip('Monthly', monthly, Icons.calendar_today_rounded, AppTheme.active),
                     ],
                   ),
                 ),
 
-                //  Tab bar, outside appBar, below summary
-                Container(
-                  color:AppTheme.primary,
+                // ── Tab bar — card styled ─────────────────────────────
+                Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                   child: Container(
                     height: 48,
                     decoration: BoxDecoration(
-                      color:AppTheme.secondary.withOpacity(0.12),
+                      color: AppTheme.secondary,
                       borderRadius: BorderRadius.circular(30),
+                      boxShadow: _primaryShadow,
+                      border: _primaryBorder,
                     ),
                     child: TabBar(
                       controller: _tabController,
@@ -140,7 +180,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                       ),
                       indicatorSize: TabBarIndicatorSize.tab,
                       labelColor: AppTheme.secondary,
-                      unselectedLabelColor: AppTheme.secondary.withOpacity(0.6),
+                      unselectedLabelColor: AppTheme.textPrimary.withOpacity(0.6),
                       labelStyle: const TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 13,
@@ -170,34 +210,44 @@ class _HistoryScreenState extends State<HistoryScreen>
     );
   }
 
-  // Summary chip 
-  Widget _summaryChip(String label, double value) {
+  // Summary chip — restyled as a Factory-Dashboard-style stat card
+  Widget _summaryChip(String label, double value, IconData icon, Color color) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
         decoration: BoxDecoration(
-          color: AppTheme.secondary.withOpacity(0.10),
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppTheme.secondary.withOpacity(0.18)),
+          color: AppTheme.secondary,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: _primaryShadow,
+          border: _primaryBorder,
         ),
         child: Column(
           children: [
-            Text(
-              label,
-              style: TextStyle(
-                color: AppTheme.textSecondary.withOpacity(0.7),
-                fontSize: 11,
-                fontWeight: FontWeight.w500,
-                letterSpacing: 0.8,
+            Container(
+              padding: const EdgeInsets.all(7),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.12),
+                borderRadius: BorderRadius.circular(9),
               ),
+              child: Icon(icon, color: color, size: 15),
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 8),
             Text(
               value.toStringAsFixed(1),
               style: const TextStyle(
-                color: AppTheme.active,
+                color: AppTheme.textPrimary,
                 fontSize: 16,
                 fontWeight: FontWeight.w800,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              label,
+              style: TextStyle(
+                color: AppTheme.textPrimary.withOpacity(0.6),
+                fontSize: 11,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 0.4,
               ),
             ),
           ],
@@ -239,7 +289,7 @@ class _HistoryScreenState extends State<HistoryScreen>
     );
   }
 
-  // Production card
+  // Production card — restyled with Factory Dashboard shadow/border
   Widget _productionCard(dynamic item, {required bool isApproved}) {
     final accent = isApproved ? AppTheme.success : AppTheme.surface;
 
@@ -248,13 +298,8 @@ class _HistoryScreenState extends State<HistoryScreen>
       decoration: BoxDecoration(
         color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.primary.withOpacity(0.06),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        boxShadow: _primaryShadow,
+        border: _primaryBorder,
       ),
       child: Column(
         children: [

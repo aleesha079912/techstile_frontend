@@ -65,11 +65,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           margin: const EdgeInsets.only(top: 40, left: 20, right: 20),
           padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: AppTheme.secondary,
             borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.06),
+                color: AppTheme.onsurface.withOpacity(0.06),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
@@ -81,10 +81,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
               Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 4),
+                  border: Border.all(color: AppTheme.secondary, width: 4),
                   boxShadow: [
                     BoxShadow(
-                      color: const Color(0xFF1E3A8A).withOpacity(0.2),
+                      color: AppTheme.primary.withOpacity(0.2),
                       blurRadius: 12,
                       offset: const Offset(0, 6),
                     ),
@@ -92,13 +92,13 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 ),
                 child: CircleAvatar(
                   radius: 36,
-                  backgroundColor: const Color(0xFF2563EB),
+                  backgroundColor: AppTheme.info,
                   child: Text(
                     firstLetter,
                     style: const TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: AppTheme.secondary,
                     ),
                   ),
                 ),
@@ -118,7 +118,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 email,
                 style: TextStyle(
                   fontSize: 13,
-                  color: Colors.grey.shade600,
+                  color:AppTheme.neutral,
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -135,12 +135,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:AppTheme.secondary,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFF1F5F9)),
+        border: Border.all(color: AppTheme.secondary),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: AppTheme.onsurface.withOpacity(0.02),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -165,7 +165,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   title,
                   style: TextStyle(
                     fontSize: 12,
-                    color: Colors.grey.shade500,
+                    color: AppTheme.textneutral,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -175,7 +175,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                   style: const TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.w600,
-                    color: Color(0xFF1E293B),
+                    color: AppTheme.textPrimary,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -219,12 +219,12 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: const Color(0xFFF1F5F9)),
+        border: Border.all(color: AppTheme.secondary),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: AppTheme.onsurface.withOpacity(0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -272,7 +272,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                 title,
                 style: TextStyle(
                   fontSize: 12,
-                  color: Colors.grey.shade600,
+                  color: AppTheme.textneutral,
                   fontWeight: FontWeight.w500,
                 ),
                 maxLines: 1,

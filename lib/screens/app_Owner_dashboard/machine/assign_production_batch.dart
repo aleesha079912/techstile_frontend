@@ -59,7 +59,7 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
       Get.back();
       widget.onSuccess();
       Get.snackbar("Success", "Production assign ho gayi",
-          backgroundColor: AppTheme.active, colorText:AppTheme.textSecondary);
+          backgroundColor: AppTheme.success, colorText:AppTheme.textSecondary);
     } else {
       print(success);
       Get.snackbar("Error", "Kuch galat hua",

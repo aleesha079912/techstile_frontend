@@ -26,6 +26,28 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
   double dailyApproved = 0;
   double weeklyApproved = 0;
 
+  // ─────────────────────────────────────────────────────────────────────────
+  // Common shadow / border (matches Factory Dashboard styling)
+  // ─────────────────────────────────────────────────────────────────────────
+
+  static List<BoxShadow> get _primaryShadow => [
+        BoxShadow(
+          color: AppTheme.primary.withOpacity(0.14),
+          blurRadius: 16,
+          offset: const Offset(0, 6),
+        ),
+        BoxShadow(
+          color: AppTheme.primary.withOpacity(0.06),
+          blurRadius: 4,
+          offset: const Offset(0, 1),
+        ),
+      ];
+
+  static Border get _primaryBorder => Border.all(
+        color: AppTheme.primary.withOpacity(0.10),
+        width: 1,
+      );
+
   @override
   void initState() {
     super.initState();
@@ -59,212 +81,115 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
       backgroundColor: AppTheme.background,
 
       appBar: AppBar(
-        backgroundColor: AppTheme.primary,
+        backgroundColor: AppTheme.secondary,
         elevation: 0,
         iconTheme: const IconThemeData(
-          color: AppTheme.secondary,
+          color: AppTheme.primary,
         ),
-        title: const Text(
-          "TECHstile",
-          style: TextStyle(
-            color: AppTheme.textSecondary,
-            fontWeight: FontWeight.bold,
-          ),
+        titleSpacing: 4,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Employee Dashboard",
+              style: TextStyle(
+                color: AppTheme.primary,
+                fontWeight: FontWeight.w800,
+                fontSize: 19,
+              ),
+            ),
+            const SizedBox(height: 1),
+            Text(
+              loading ? 'Loading...' : (employeeName.isNotEmpty ? employeeName : 'Employee'),
+              style: TextStyle(
+                color: AppTheme.primary.withOpacity(0.65),
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
         ),
       ),
 
-      body: loading ? const Center(child: CircularProgressIndicator()) : RefreshIndicator(
+      body: loading
+          ? const Center(
+              child: CircularProgressIndicator(
+                color: AppTheme.primary,
+              ),
+            )
+          : RefreshIndicator(
+              color: AppTheme.primary,
               onRefresh: loadDashboard,
-              child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-              Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 12,
-                  ),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Production Overview",
-                      style: TextStyle(
-                        color: AppTheme.textPrimary,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
 
-                /// DAILY and WEEKLY APPROVED PRODUCTION
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: _statTile(
+                    // ─────────────────────────────────────────────
+                    // Overview — 4 small stat cards, 2 per row
+                    // (sized like the Factory Dashboard's compact cards)
+                    // ─────────────────────────────────────────────
+
+                    const _SectionLabel(text: 'Overview'),
+
+                    const SizedBox(height: 12),
+
+                    Row(
+                      children: [
+                        _compactStatCard(
+                          icon: Icons.precision_manufacturing_rounded,
+                          label: "My Machines",
+                          value: "$totalMachines",
+                          color: AppTheme.primary,
+                        ),
+                        const SizedBox(width: 10),
+                        _compactStatCard(
+                          icon: Icons.check_circle_rounded,
+                          label: "Ready (all-time)",
+                          value: totalReadyProduction.toStringAsFixed(0),
+                          color: AppTheme.success,
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 10),
+
+                    Row(
+                      children: [
+                        _compactStatCard(
                           icon: Icons.today_rounded,
                           label: "Today (Approved)",
                           value: dailyApproved.toStringAsFixed(0),
                           color: AppTheme.success,
                         ),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: _statTile(
+                        const SizedBox(width: 10),
+                        _compactStatCard(
                           icon: Icons.calendar_month_rounded,
                           label: "This Week (Approved)",
                           value: weeklyApproved.toStringAsFixed(0),
-                          color: AppTheme.surface,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 12),
-
-                /// 2 BUTTONS IN ONE LINE
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: _buildOverviewButton(
-                          icon: Icons.precision_manufacturing,
-                          label: "My Machines",
-                          value: "$totalMachines",
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: _buildOverviewButton(
-                          icon: Icons.check_circle,
-                          label: "Ready (all-time)",
-                          value: "${totalReadyProduction.toStringAsFixed(0)}",
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 12),
-
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "My Assigned Machines",
-                      style: TextStyle(
-                        color: AppTheme.textPrimary,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ),
-                ),
-
-                /// LIST
-                if (machines.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 40),
-                    child: Column(
-                      children: [
-                        Icon(Icons.precision_manufacturing_outlined,
-                            size: 40, color: AppTheme.primary.withOpacity(0.5)),
-                        const SizedBox(height: 10),
-                        Text(
-                          "No machines assigned yet",
-                          style: TextStyle(color: AppTheme.textPrimary),
+                          color: AppTheme.primary,
                         ),
                       ],
                     ),
-                  )
-                else
-                  ...machines.map((machine) {
-                      return Container(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 8,
-                        ),
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: AppTheme.secondary,
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppTheme.primary.withOpacity(0.08),
-                              blurRadius: 10,
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Icon(Icons.memory, color: AppTheme.primary),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  child: Text(
-                                    (machine["machine_name"] ?? '').toString().isNotEmpty
-                                        ? machine["machine_name"].toString()
-                                        : "Machine #${machine["machine_id"]}",
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppTheme.primary,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 10),
 
-                            Row(
-                              children: [
-                                Icon(Icons.category, color: AppTheme.primary, size: 18),
-                                const SizedBox(width: 8),
-                                Text(machine["variety_type"] ?? ""),
-                              ],
-                            ),
-                            const SizedBox(height: 12),
+                    const SizedBox(height: 24),
 
-                            Text(
-                              "Ready Production: ${machine["ready_production"]}",
-                            ),
+                    // ─────────────────────────────────────────────
+                    // Assigned machines
+                    // ─────────────────────────────────────────────
 
-                            const SizedBox(height: 5),
+                    _SectionLabel(text: 'My Assigned Machines (${machines.length})'),
 
-                            Text("Total Length: ${machine["total_length"]}"),
+                    const SizedBox(height: 12),
 
-                            const SizedBox(height: 10),
-
-                            LinearProgressIndicator(
-                              value: (machine["progress"] ?? 0) / 100,
-                              minHeight: 10,
-                              color: AppTheme.primary,
-                              backgroundColor: AppTheme.primary.withOpacity(
-                                0.2,
-                              ),
-                            ),
-
-                            const SizedBox(height: 8),
-
-                            Text(
-                              "Progress: ${machine["progress"]}%",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: AppTheme.textPrimary,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }),
-                const SizedBox(height: 20),
-              ],
+                    if (machines.isEmpty)
+                      _emptyMachinesView()
+                    else
+                      ...machines.map((machine) => _machineCard(machine)),
+                  ],
+                ),
               ),
             ),
 
@@ -272,83 +197,334 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
     );
   }
 
-  /// SMALL STAT TILE
-  Widget _statTile({
-    required IconData icon,
-    required String label,
-    required String value,
-    required Color color,
-  }) {
+  // ─────────────────────────────────────────────────────────────────────────
+  // Empty state
+  // ─────────────────────────────────────────────────────────────────────────
+
+  Widget _emptyMachinesView() {
     return Container(
-      padding: const EdgeInsets.all(14),
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 32),
       decoration: BoxDecoration(
-        color:  AppTheme.secondary,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(color: AppTheme.primary.withOpacity(0.06), blurRadius: 8),
-        ],
+        color: AppTheme.secondary,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: _primaryShadow,
+        border: _primaryBorder,
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.15),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Icon(icon, color: color, size: 18),
+          Icon(
+            Icons.precision_manufacturing_outlined,
+            size: 40,
+            color: AppTheme.primary.withOpacity(0.5),
           ),
           const SizedBox(height: 10),
-          Text(value,
-              style: TextStyle(
-                  color: AppTheme.textPrimary, fontSize: 20, fontWeight: FontWeight.w800)),
-          const SizedBox(height: 2),
-          Text(label,
-              style: TextStyle(color: AppTheme.textPrimary, fontSize: 11)),
+          const Text(
+            "No machines assigned yet",
+            style: TextStyle(
+              color: AppTheme.textPrimary,
+              fontSize: 13,
+            ),
+          ),
         ],
       ),
     );
   }
 
-  /// BUTTON WIDGET
-  Widget _buildOverviewButton({
-    required IconData icon,
-    required String label,
-    required String value,
-  }) {
+  // ─────────────────────────────────────────────────────────────────────────
+  // Machine card
+  // ─────────────────────────────────────────────────────────────────────────
+
+  Widget _machineCard(dynamic machine) {
+    final progress = (machine["progress"] ?? 0);
+
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12),
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppTheme.success,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(color: AppTheme.primary.withOpacity(0.08), blurRadius: 8),
-        ],
+        color: AppTheme.secondary,
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: _primaryShadow,
+        border: _primaryBorder,
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: AppTheme.primary),
-          const SizedBox(height: 6),
+          Row(
+            children: [
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: AppTheme.primary.withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Icon(
+                  Icons.memory_rounded,
+                  color: AppTheme.primary,
+                  size: 16,
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  (machine["machine_name"] ?? '').toString().isNotEmpty
+                      ? machine["machine_name"].toString()
+                      : "Machine #${machine["machine_id"]}",
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w800,
+                    color: AppTheme.textPrimary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 12),
+
+          Row(
+            children: [
+              _infoChip(
+                icon: Icons.category_rounded,
+                label: (machine["variety_type"] ?? "").toString(),
+                color: AppTheme.info,
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 12),
+
+          Row(
+            children: [
+              _breakdownChip(
+                'Ready Production',
+                machine["ready_production"] ?? 0,
+                AppTheme.success,
+              ),
+              const SizedBox(width: 8),
+              _breakdownChip(
+                'Total Length',
+                machine["total_length"] ?? 0,
+                AppTheme.neutral,
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 14),
+
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: LinearProgressIndicator(
+              value: (progress ?? 0) / 100,
+              minHeight: 10,
+              color: AppTheme.primary,
+              backgroundColor: AppTheme.primary.withOpacity(0.15),
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          Text(
+            "Progress: $progress%",
+            style: const TextStyle(
+              fontWeight: FontWeight.w700,
+              fontSize: 12,
+              color: AppTheme.textPrimary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Small info chip (pill)
+  // ─────────────────────────────────────────────────────────────────────────
+
+  Widget _infoChip({
+    required IconData icon,
+    required String label,
+    required Color color,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.10),
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: AppTheme.primary.withOpacity(0.18),
+          width: 0.8,
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: color, size: 14),
+          const SizedBox(width: 6),
           Text(
             label,
             style: TextStyle(
-              color:   AppTheme.textSecondary,
-              fontWeight: FontWeight.w600,
-              fontSize: 12,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: TextStyle(
-              color:   AppTheme.textSecondary,
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
+              color: color,
+              fontWeight: FontWeight.w700,
+              fontSize: 11,
             ),
           ),
         ],
       ),
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Breakdown chip (matches Factory Dashboard style)
+  // ─────────────────────────────────────────────────────────────────────────
+
+  Widget _breakdownChip(
+    String label,
+    dynamic value,
+    Color color,
+  ) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 9, horizontal: 6),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.10),
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: AppTheme.primary.withOpacity(0.08),
+              blurRadius: 8,
+              offset: const Offset(0, 3),
+            ),
+          ],
+          border: Border.all(
+            color: AppTheme.primary.withOpacity(0.18),
+            width: 0.8,
+          ),
+        ),
+        child: Column(
+          children: [
+            Text(
+              '$value',
+              style: TextStyle(
+                color: color,
+                fontWeight: FontWeight.w800,
+                fontSize: 14,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: color,
+                fontWeight: FontWeight.w600,
+                fontSize: 10,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Compact stat card — small size, matching the Factory Dashboard's
+  // "Total Machines / Total Employees" style cards (smaller padding,
+  // smaller icon box, smaller text than the main stat cards).
+  // ─────────────────────────────────────────────────────────────────────────
+
+  Widget _compactStatCard({
+    required IconData icon,
+    required String label,
+    required String value,
+    required Color color,
+  }) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        decoration: BoxDecoration(
+          color: AppTheme.secondary,
+          borderRadius: BorderRadius.circular(14),
+          boxShadow: _primaryShadow,
+          border: _primaryBorder,
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(7),
+              decoration: BoxDecoration(
+                color: color.withOpacity(0.12),
+                borderRadius: BorderRadius.circular(9),
+              ),
+              child: Icon(icon, color: color, size: 15),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    value,
+                    style: const TextStyle(
+                      color: AppTheme.textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                  const SizedBox(height: 1),
+                  Text(
+                    label,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: AppTheme.textPrimary,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Section label (matches Factory Dashboard style)
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _SectionLabel extends StatelessWidget {
+  final String text;
+
+  const _SectionLabel({required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 4,
+          height: 17,
+          decoration: BoxDecoration(
+            color: AppTheme.success,
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          text,
+          style: const TextStyle(
+            color: AppTheme.textPrimary,
+            fontWeight: FontWeight.w700,
+            fontSize: 15,
+          ),
+        ),
+      ],
     );
   }
 }

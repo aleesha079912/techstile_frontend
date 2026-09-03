@@ -5,9 +5,10 @@ import '../../core/services/employee_service/machine_detail_service.dart';
 import '../../core/utils/theme.dart';
 import 'package:get/get.dart';
 import '../../routes/routes.dart';
- 
- final attendanceService = AttendanceService();
- bool alreadyMarkedToday = false;
+
+final attendanceService = AttendanceService();
+bool alreadyMarkedToday = false;
+
 class MachineDetailScreen extends StatefulWidget {
   final String machineId;
   const MachineDetailScreen({
@@ -30,6 +31,28 @@ class _MachineDetailScreenState
   // Yahan add karo  class level pe
   bool canAdd = false;
   double remaining = 0;
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Common shadow / border (matches Factory Dashboard styling)
+  // ─────────────────────────────────────────────────────────────────────────
+
+  static List<BoxShadow> get _primaryShadow => [
+        BoxShadow(
+          color: AppTheme.primary.withOpacity(0.14),
+          blurRadius: 16,
+          offset: const Offset(0, 6),
+        ),
+        BoxShadow(
+          color: AppTheme.primary.withOpacity(0.06),
+          blurRadius: 4,
+          offset: const Offset(0, 1),
+        ),
+      ];
+
+  static Border get _primaryBorder => Border.all(
+        color: AppTheme.primary.withOpacity(0.10),
+        width: 1,
+      );
 
   @override
   void initState() {
@@ -57,59 +80,119 @@ class _MachineDetailScreenState
     }
   }
 
-  Widget infoCard(String title, String value, IconData icon) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(15),
-      decoration: BoxDecoration(
-        color: AppTheme.secondary,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: const [
-          BoxShadow(color:AppTheme.onsurface, blurRadius: 5, offset: Offset(0, 2)),
-        ],
-      ),
-      child: Row(
-        children: [
-          Icon(icon, color: AppTheme.primary),
-          const SizedBox(width: 15),
-          Expanded(
-            child: Text(title,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w600, color: AppTheme.textPrimary)),
+  // ─────────────────────────────────────────────────────────────────────────
+  // Equal, symmetric action card (replaces the old full-width buttons for
+  // Enter Production / Mark Attendance)
+  // ─────────────────────────────────────────────────────────────────────────
+
+  Widget _actionCard({
+    required String title,
+    required String subtitle,
+    required IconData icon,
+    required Color accentColor,
+    required VoidCallback? onTap,
+  }) {
+    return Expanded(
+      child: AspectRatio(
+        aspectRatio: 1,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(18),
+            onTap: onTap,
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: AppTheme.secondary,
+                borderRadius: BorderRadius.circular(18),
+                boxShadow: _primaryShadow,
+                border: _primaryBorder,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: accentColor.withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: Icon(icon, color: accentColor, size: 28),
+                  ),
+                  const SizedBox(height: 14),
+                  Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      color: AppTheme.textPrimary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 15,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: AppTheme.textPrimary.withOpacity(0.6),
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-          Text(value,
-              style: const TextStyle(
-                  color: AppTheme.textPrimary, fontWeight: FontWeight.w500)),
-        ],
+        ),
       ),
     );
   }
 
-  Widget statCard(String title, String value) {
+  // ─────────────────────────────────────────────────────────────────────────
+  // Shared full-width action-button style (kept for Scan Next Machine)
+  // ─────────────────────────────────────────────────────────────────────────
+
+  Widget _actionButton({
+    required String label,
+    required IconData icon,
+    required Color backgroundColor,
+    required Color foregroundColor,
+    required VoidCallback? onPressed,
+  }) {
     return Container(
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppTheme.secondary,
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: const [
-          BoxShadow(color:AppTheme.onsurface, blurRadius: 5, offset: Offset(0, 2)),
-        ],
+        borderRadius: BorderRadius.circular(18),
+        boxShadow: _primaryShadow,
+        border: _primaryBorder,
       ),
-      child: Column(
-        children: [
-          Text(title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                  color: AppTheme.textPrimary,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15)),
-          const SizedBox(height: 10),
-          Text(value,
-              style: const TextStyle(
-                  color: AppTheme.textPrimary,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20)),
-        ],
+      child: SizedBox(
+        width: double.infinity,
+        height: 58,
+        child: ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: backgroundColor,
+            foregroundColor: foregroundColor,
+            elevation: 0,
+            shadowColor: Colors.transparent,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18),
+            ),
+          ),
+          onPressed: onPressed,
+          icon: Icon(icon, size: 22),
+          label: Text(
+            label,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -121,190 +204,206 @@ class _MachineDetailScreenState
       backgroundColor: AppTheme.background,
 
       appBar: AppBar(
-        backgroundColor: AppTheme.primary,
-        title: const Text("Machine Details",
-            style: TextStyle(color:   AppTheme.textSecondary)),
+        backgroundColor: AppTheme.secondary,
+        elevation: 0,
+        iconTheme: const IconThemeData(
+          color: AppTheme.primary,
+        ),
+        titleSpacing: 4,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppTheme.secondary),
+          icon: const Icon(Icons.arrow_back_rounded, color: AppTheme.primary),
           onPressed: () => Get.back(),
+        ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Machine Details",
+              style: TextStyle(
+                color: AppTheme.primary,
+                fontWeight: FontWeight.w800,
+                fontSize: 19,
+              ),
+            ),
+            const SizedBox(height: 1),
+            Text(
+              loading
+                  ? 'Loading...'
+                  : "Machine #${machine?["machine_id"] ?? widget.machineId}",
+              style: TextStyle(
+                color: AppTheme.primary.withOpacity(0.65),
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
         ),
       ),
 
       body: loading
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  infoCard("Machine ID",
-                      "${machine?["machine_id"] ?? ""}", Icons.qr_code),
-                  infoCard("Machine Type",
-                      machine?["machine_type"] ?? "", Icons.precision_manufacturing),
-                  infoCard("Employee Name",
-                      machine?["employee_name"] ?? "", Icons.person),
-                  infoCard("Employee ID",
-                      "${machine?["employee_id"] ?? ""}", Icons.badge),
-                  infoCard("Status",
-                      machine?["status"] ?? "", Icons.power_settings_new),
-                  infoCard("Variety",
-                      machine?["variety_type"] ?? "", Icons.category),
-                  infoCard("Shift Start",
-                      machine?["shift_start"] ?? "", Icons.login),
-                  infoCard("Shift End",
-                      machine?["shift_end"] ?? "", Icons.logout),
-                  infoCard("Assigned Length",
-                      "${machine?["total_length"] ?? 0}", Icons.straighten),
-                  infoCard("Ready Production",
-                      "${machine?["ready_production"] ?? 0}", Icons.check_circle),
-                  infoCard("Remaining",
-                      "$remaining", Icons.hourglass_bottom), //  remaining show
+          ? const Center(
+              child: CircularProgressIndicator(
+                color: AppTheme.primary,
+              ),
+            )
+          : Center(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
 
-                  const SizedBox(height: 20),
+                    const _SectionLabel(text: 'Actions'),
 
-                  Row(
-                    children: [
-                      Expanded(
-                        child: statCard("Daily",
-                            (machine?['daily_production'] ?? 0).toString()),
-                      ),
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: statCard("Weekly",
-                            (machine?['weekly_production'] ?? 0).toString()),
-                      ),
-                    ],
-                  ),
+                    const SizedBox(height: 16),
 
-                  const SizedBox(height: 12),
+                    // ─────────────────────────────────────────
+                    // Enter Production + Mark Attendance
+                    // — equal-size, symmetric cards side by side
+                    // ─────────────────────────────────────────
 
-                  statCard("Yearly Production",
-                      (machine?['yearly_production'] ?? 0).toString()),
-
-                  const SizedBox(height: 30),
-
-                  SizedBox(
-                    width: double.infinity,
-                    height: 55,
-                    child: ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            canAdd ? AppTheme.primary : AppTheme.active,
-                        foregroundColor: AppTheme.background,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                      ),
-                     onPressed: canAdd
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        _actionCard(
+                          title: "Enter Production",
+                          subtitle: canAdd
+                              ? "Remaining: $remaining"
+                              : "Production Complete",
+                          icon: canAdd ? Icons.add : Icons.lock,
+                          accentColor:
+                              canAdd ? AppTheme.primary : AppTheme.active,
+                          onTap: canAdd
                               ? () async {
                                   await Get.toNamed(
                                     AppRoutes.enterProduction,
                                     arguments: {
-                                      'machineId':   widget.machineId,
-                                      'varietyType': machine?['variety_type'] ?? '',
-                                      'totalLength': machine?['total_length']?.toString() ?? '',
-                                      'remaining':   remaining.toString(),
+                                      'machineId': widget.machineId,
+                                      'varietyType':
+                                          machine?['variety_type'] ?? '',
+                                      'totalLength': machine?['total_length']
+                                              ?.toString() ??
+                                          '',
+                                      'remaining': remaining.toString(),
                                     },
                                   );
                                   // after fresh prduction is enter fresh load
                                   loadData();
                                 }
-                          : () {
-                              Get.snackbar(
-                                "Complete",
-                                "The Production is Completed of this Machine",
-                                backgroundColor: AppTheme.surface,
-                                colorText: AppTheme.textSecondary,
-                              );
-                            },
-                      icon: Icon(canAdd ? Icons.add : Icons.lock),
-                      label: Text(
-                        canAdd
-                            ? "Enter Production (Remaining: $remaining)"
-                            : "Production Complete",
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 16),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height:20),
-                  SizedBox(
-                    width: double.infinity,
-                    height:55,
-                child: ElevatedButton.icon(
+                              : () {
+                                  Get.snackbar(
+                                    "Complete",
+                                    "The Production is Completed of this Machine",
+                                    backgroundColor: AppTheme.surface,
+                                    colorText: AppTheme.textSecondary,
+                                  );
+                                },
+                        ),
 
-                   onPressed: alreadyMarkedToday
-                      ? () {
-                          Get.snackbar(
-                            "Already Marked",
-                            "Already Marked",
-                            backgroundColor: AppTheme.surface,
-                            colorText: AppTheme.textSecondary,
-                          );
-                        }
-                      : () async{ final success =
-                      await attendanceService.markAttendance(
+                        const SizedBox(width: 16),
 
-                        employeeId:
-                        machine?['employee_id'],
+                        _actionCard(
+                          title: "Mark Attendance",
+                          subtitle: alreadyMarkedToday
+                              ? "Already Marked"
+                              : "Tap to mark",
+                          icon: Icons.fingerprint,
+                          accentColor: AppTheme.active,
+                          onTap: alreadyMarkedToday
+                              ? () {
+                                  Get.snackbar(
+                                    "Already Marked",
+                                    "Already Marked",
+                                    backgroundColor: AppTheme.surface,
+                                    colorText: AppTheme.textSecondary,
+                                  );
+                                }
+                              : () async {
+                                  final success =
+                                      await attendanceService.markAttendance(
+                                    employeeId: machine?['employee_id'],
+                                    machineId: int.parse(widget.machineId),
+                                  );
 
-                        machineId:
-                        int.parse(widget.machineId),
-
-                      );
-
-
-                      if(success){
-
-                        Get.snackbar(
-                        "Success",
-                        "Attendance Marked",
-                        backgroundColor: AppTheme.success,
-                        colorText: AppTheme.textSecondary
-                        );
-                        loadData();
-
-                      }
-                      else{
-
-                        Get.snackbar(
-                        "Error",
-                        "Attendance Failed",
-                        backgroundColor: AppTheme.error,
-                        colorText: AppTheme.textPrimary
-                        );
-
-                      }
-
-
-                    },
-
-
-                    icon:const Icon(Icons.fingerprint),
-
-                    label: Text(
-                        alreadyMarkedToday
-                        ? "Attendance Already Marked"
-                        : "Mark Attendance",
-                    style:TextStyle(
-                    fontSize:16,
-                    fontWeight:FontWeight.bold
-                    ),
+                                  if (success) {
+                                    Get.snackbar(
+                                      "Success",
+                                      "Attendance Marked",
+                                      backgroundColor: AppTheme.success,
+                                      colorText: AppTheme.textSecondary,
+                                    );
+                                    loadData();
+                                  } else {
+                                    Get.snackbar(
+                                      "Error",
+                                      "Attendance Failed",
+                                      backgroundColor: AppTheme.error,
+                                      colorText: AppTheme.textPrimary,
+                                    );
+                                  }
+                                },
+                        ),
+                      ],
                     ),
 
+                    const SizedBox(height: 16),
 
-                    style:ElevatedButton.styleFrom(
-                    backgroundColor:AppTheme.active,
-                    foregroundColor:AppTheme.background,
-                    shape:RoundedRectangleBorder(
-                    borderRadius:BorderRadius.circular(12)
-                    )
-                    ),
+                    // ─────────────────────────────────────────
+                    // Scan Next Machine
+                    // (no existing logic for this — wire up your
+                    // scanner route/handler here)
+                    // ─────────────────────────────────────────
 
+                    _actionButton(
+                      label: "Scan Next Machine",
+                      icon: Icons.qr_code_scanner,
+                      backgroundColor: AppTheme.secondary,
+                      foregroundColor: AppTheme.primary,
+                      onPressed: () {
+                        // TODO: hook up your scan-next-machine logic/route here
+                        Get.back();
+                      },
                     ),
-
-                    ),
-                ],
+                  ],
+                ),
               ),
             ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Section label (matches Factory Dashboard style)
+// ─────────────────────────────────────────────────────────────────────────────
+
+class _SectionLabel extends StatelessWidget {
+  final String text;
+
+  const _SectionLabel({required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 4,
+          height: 17,
+          decoration: BoxDecoration(
+            color: AppTheme.success,
+            borderRadius: BorderRadius.circular(2),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          text,
+          style: const TextStyle(
+            color: AppTheme.textPrimary,
+            fontWeight: FontWeight.w700,
+            fontSize: 15,
+          ),
+        ),
+      ],
     );
   }
 }
