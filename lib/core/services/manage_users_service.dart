@@ -30,6 +30,8 @@ class UserData {
 
       if (firstRole is Map && firstRole.containsKey('name')) {
         extractedRole = firstRole['name'] ?? '';
+      } else if (firstRole is String) {
+        extractedRole = firstRole;
       }
     }
 
@@ -67,13 +69,12 @@ class ManageUsersService {
   final String baseUrl = "http://localhost:8000/api";
 
   Map<String, String> get _headers => {
-    "Content-Type": "application/json",
-    "Accept": "application/json",
-    ...AuthService.authHeaders,
-  };
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        ...AuthService.authHeaders,
+      };
 
-  //USERS
-
+  // USERS
   Future<List<UserData>> fetchUsers() async {
     try {
       final response = await http.get(
@@ -83,9 +84,7 @@ class ManageUsersService {
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
-
         final List data = decoded is List ? decoded : decoded['data'] ?? [];
-
         return data.map((e) => UserData.fromJson(e)).toList();
       }
 
@@ -143,31 +142,28 @@ class ManageUsersService {
     }
   }
 
-  //  ROLES
-
+  // ROLES (Direct API Endpoint Call)
   Future<List<String>> fetchRoles() async {
     try {
       final response = await http.get(
-        Uri.parse('$baseUrl/users/all'),
+        Uri.parse('$baseUrl/roles'),
         headers: _headers,
       );
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
+        final List rawRoles =
+            decoded is List ? decoded : (decoded['roles'] ?? decoded['data'] ?? []);
 
-        final List users = decoded is List ? decoded : decoded['data'] ?? [];
-
-        final Set<String> roles = {};
-
-        for (final user in users) {
-          if (user['roles'] != null &&
-              user['roles'] is List &&
-              (user['roles'] as List).isNotEmpty) {
-            roles.add(user['roles'][0]['name'].toString());
+        List<String> rolesList = [];
+        for (var item in rawRoles) {
+          if (item is Map && item.containsKey('name')) {
+            rolesList.add(item['name'].toString());
+          } else if (item is String) {
+            rolesList.add(item);
           }
         }
-
-        return roles.toList();
+        return rolesList;
       }
 
       return [];
@@ -177,8 +173,7 @@ class ManageUsersService {
     }
   }
 
-  //FACTORIES
-
+  // FACTORIES
   Future<List<dynamic>> getFactories() async {
     try {
       final response = await http.get(
@@ -202,8 +197,7 @@ class ManageUsersService {
     }
   }
 
-  //  MACHINES
-
+  // MACHINES
   Future<List<dynamic>> getFactoryMachines(int factoryId) async {
     try {
       final response = await http.get(
@@ -227,8 +221,7 @@ class ManageUsersService {
     }
   }
 
-  //ASSIGN MACHINES
-
+  // ASSIGN MACHINES
   Future<bool> assignMachines({
     required int userId,
     required int factoryId,
@@ -244,8 +237,6 @@ class ManageUsersService {
           "machine_ids": machineIds,
         }),
       );
-
-      print("assignMachines: ${response.body}");
 
       return response.statusCode == 200 || response.statusCode == 201;
     } catch (e) {

@@ -6,6 +6,7 @@ import 'package:techstile_frontend/screens/app_Owner_dashboard/role_management.d
 import '../../../../core/services/manage_users_service.dart';
 import '../../../../core/utils/theme.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/user/register_user_rolebased.dart';
+
 class ManageUsersScreen extends StatefulWidget {
   final String factoryId;
   const ManageUsersScreen({super.key, this.factoryId = '0'});
@@ -73,7 +74,6 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppTheme.background,
-
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppTheme.primary,
         onPressed: () {
@@ -91,7 +91,6 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
           color: AppTheme.secondary,
         ),
       ),
-
       body: SafeArea(
         child: Column(
           children: [
@@ -105,12 +104,9 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                   bottomRight: Radius.circular(25),
                 ),
               ),
-
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
-                  // USERS TITLE
                   const Text(
                     "Users",
                     style: TextStyle(
@@ -119,15 +115,11 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                       color: AppTheme.primary,
                     ),
                   ),
-
                   const SizedBox(height: 12),
-
-                  // SEARCH BAR
                   SizedBox(
                     height: 42,
                     child: TextField(
                       controller: searchCtrl,
-                      onChanged: (_) => setState(() {}),
                       style: const TextStyle(fontSize: 13),
                       decoration: InputDecoration(
                         hintText: "Search user...",
@@ -144,10 +136,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 12),
-
-                  // ACTION BUTTONS
                   Column(
                     children: [
                       Row(
@@ -160,7 +149,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => AssignShiftsScreen(),
+                                    builder: (_) => const AssignShiftsScreen(),
                                   ),
                                 );
                               },
@@ -184,9 +173,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                           ),
                         ],
                       ),
-
                       const SizedBox(height: 6),
-
                       Row(
                         children: [
                           Expanded(
@@ -198,7 +185,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (_) =>
-                                        RoleManagementScreen(),
+                                         RoleManagementScreen(),
                                   ),
                                 );
                               },
@@ -224,10 +211,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 10),
-
-                  // FILTERS
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
                     child: Row(
@@ -242,21 +226,17 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                 ],
               ),
             ),
-
-            // USERS LIST
             Expanded(
               child: FutureBuilder<List<UserData>>(
                 future: _usersFuture,
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState ==
-                      ConnectionState.waiting) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
                       child: CircularProgressIndicator(),
                     );
                   }
 
-                  if (!snapshot.hasData ||
-                      snapshot.data!.isEmpty) {
+                  if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return const Center(
                       child: Text("No Users Found"),
                     );
@@ -305,7 +285,6 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
     );
   }
 
-  /// CHIP
   Widget _chip(String label) {
     final isSelected = selectedFilter == label;
 
@@ -317,27 +296,22 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
       },
       child: Container(
         margin: const EdgeInsets.only(right: 8),
-        padding:
-            const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected
-              ? AppTheme.primary
-              : AppTheme.secondary,
+          color: isSelected ? AppTheme.primary : AppTheme.secondary,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: isSelected ?AppTheme.secondary: AppTheme.onsurface,
+            color: isSelected ? AppTheme.secondary : AppTheme.onsurface,
           ),
         ),
       ),
     );
   }
 
-  /// BUTTON
-  Widget _actionBtn(
-      String text, IconData icon, VoidCallback onTap) {
+  Widget _actionBtn(String text, IconData icon, VoidCallback onTap) {
     return SizedBox(
       height: 36,
       child: ElevatedButton.icon(
@@ -360,7 +334,6 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
     );
   }
 
-  /// CARD
   Widget _modernCard(
     UserData user,
     VoidCallback onDelete,
@@ -374,7 +347,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color:AppTheme.onsurface.withOpacity(0.05),
+            color: AppTheme.onsurface.withOpacity(0.05),
             blurRadius: 10,
           )
         ],
@@ -386,9 +359,7 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
             backgroundColor: AppTheme.primary.withOpacity(0.1),
             child: const Icon(Icons.person, color: AppTheme.primary),
           ),
-
           const SizedBox(width: 12),
-
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -399,7 +370,8 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
                 ),
                 Text(
                   user.email,
-                  style: const TextStyle(fontSize: 12, color: AppTheme.textneutral),
+                  style: const TextStyle(
+                      fontSize: 12, color: AppTheme.textneutral),
                 ),
                 Text(
                   user.role,
@@ -408,8 +380,6 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
               ],
             ),
           ),
-
-          // ACTION BUTTONS 
           Row(
             children: [
               IconButton(
