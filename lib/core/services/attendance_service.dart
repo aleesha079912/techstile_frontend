@@ -4,7 +4,7 @@ import 'auth_service.dart';
 
 class AttendanceService {
   // ⚠️ Emulator ke liye
-  final String baseUrl = "http://localhost:8000/api/attendence";
+  final String baseUrl = "http://techstile.sandbox.pk/api/attendence";
 
   // 🔹 Get All
   Future<List<dynamic>> fetchAttendance() async {

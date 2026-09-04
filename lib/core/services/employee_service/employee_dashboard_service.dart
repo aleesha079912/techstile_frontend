@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../auth_service.dart';
 
 class EmployeeDashboardService {
-  final String baseUrl = "http://localhost:8000/api";
+  final String baseUrl = "http://techstile.sandbox.pk/api";
 
   Future<Map<String, dynamic>> getDashboard() async {
     final user = AuthService.box.read('user');

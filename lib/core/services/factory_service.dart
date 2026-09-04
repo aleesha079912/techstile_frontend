@@ -9,7 +9,7 @@ class FactoryController extends GetxController {
   final RxList<FactoryModel> factoryList =
     <FactoryModel>[].obs;
   var isLoading = false.obs;
-  final String baseUrl = "http://localhost:8000/api/factories";
+  final String baseUrl = "http://techstile.sandbox.pk/api/factories";
 
   @override
   void onInit() {
