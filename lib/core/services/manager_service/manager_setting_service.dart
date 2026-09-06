@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../auth_service.dart';
 
 class ManagerSettingService {
-  static const String baseUrl = "http://techstile.sandbox.pk/api";
+  static const String baseUrl = "http://localhost:8000/api";
 
   Future<bool> updateProfile({
     required String name,
@@ -52,10 +52,7 @@ class ManagerSettingService {
         };
       }
     } catch (e) {
-      return {
-        'success': false,
-        'message': e.toString(),
-      };
+      return {'success': false, 'message': e.toString()};
     }
   }
 }

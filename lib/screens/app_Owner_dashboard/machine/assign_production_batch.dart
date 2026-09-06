@@ -36,7 +36,7 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
 
   Future<void> submit() async {
     if (varietyCtrl.text.isEmpty || totalLengthCtrl.text.isEmpty) {
-      Get.snackbar("Error", "Saare fields fill karo",
+      Get.snackbar("Error", "fill all required fields",
           backgroundColor: AppTheme.background, colorText: AppTheme.secondary);
       return;
     }
@@ -58,11 +58,11 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
     if (success) {
       Get.back();
       widget.onSuccess();
-      Get.snackbar("Success", "Production assign ho gayi",
+      Get.snackbar("Success", "Production is assigned",
           backgroundColor: AppTheme.success, colorText:AppTheme.textSecondary);
     } else {
       print(success);
-      Get.snackbar("Error", "Kuch galat hua",
+      Get.snackbar("Error", "There is somethig wrong",
           backgroundColor: AppTheme.error, colorText: AppTheme.textSecondary);
     }
   }
@@ -128,7 +128,7 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
             ), 
             const SizedBox(height: 12),
 
-            // Alert threshold — owner gets notified once remaining length drops to this
+            // Alert threshold owner gets notified once remaining length drops to this
             TextField(
               controller: alertThresholdCtrl,
               keyboardType: TextInputType.number,
@@ -143,7 +143,7 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
             Padding(
               padding: const EdgeInsets.only(left: 4),
               child: Text(
-                "Optional — leave blank if you don't want an alert for this batch",
+                "Optional leave blank if you don't want an alert for this batch",
                 style: TextStyle(fontSize: 11, color: AppTheme.textPrimary.withOpacity(0.5)),
               ),
             ),

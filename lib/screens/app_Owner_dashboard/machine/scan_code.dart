@@ -141,7 +141,7 @@ Get.to(
           backgroundColor: AppTheme.primary,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            onPressed: _goBack, // ✅ camera stop + back
+            onPressed: _goBack, // camera stop + back
           ),
         ),
 
@@ -167,7 +167,7 @@ Get.to(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child: MobileScanner(
-                    controller: controller, // ✅ controller pass karo
+                    controller: controller, // controller pass karo
                     onDetect: _onDetect,
                   ),
                 ),

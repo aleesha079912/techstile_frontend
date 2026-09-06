@@ -6,10 +6,9 @@ import '../models/factory_model.dart';
 import 'auth_service.dart';
 
 class FactoryController extends GetxController {
-  final RxList<FactoryModel> factoryList =
-    <FactoryModel>[].obs;
+  final RxList<FactoryModel> factoryList = <FactoryModel>[].obs;
   var isLoading = false.obs;
-  final String baseUrl = "http://techstile.sandbox.pk/api/factories";
+  final String baseUrl = "http://localhost:8000/api/factories";
 
   @override
   void onInit() {

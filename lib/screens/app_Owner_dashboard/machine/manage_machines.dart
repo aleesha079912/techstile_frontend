@@ -11,10 +11,7 @@ import 'machine_detail.dart';
 class MachinesScreen extends StatefulWidget {
   final int factoryId;
 
-  const MachinesScreen({
-    super.key,
-    required this.factoryId,
-  });
+  const MachinesScreen({super.key, required this.factoryId});
 
   @override
   State<MachinesScreen> createState() => _MachinesScreenState();
@@ -43,7 +40,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
   Future<void> loadFactoryName() async {
     try {
       final response = await http.get(
-        Uri.parse("http://techstile.sandbox.pk/api/factories/editfactory/${widget.factoryId}"),
+        Uri.parse(
+          "http://localhost:8000/api/factories/editfactory/${widget.factoryId}",
+        ),
         headers: AuthService.authHeaders,
       );
 
@@ -128,7 +127,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
               ),
               const SizedBox(height: 20),
               Text(
-                machine == null ? "Register New Machine" : "Update Machine Info",
+                machine == null
+                    ? "Register New Machine"
+                    : "Update Machine Info",
                 style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -142,7 +143,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primary),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.primary,
+                  ),
                   onPressed: () async {
                     if (machine == null) {
                       final result = await service.addMachine(
@@ -250,7 +253,10 @@ class _MachinesScreenState extends State<MachinesScreen> {
             child: GestureDetector(
               onTap: () => _showMachineForm(context),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 10,
+                ),
                 decoration: BoxDecoration(
                   color: AppTheme.primary,
                   borderRadius: BorderRadius.circular(12),
@@ -326,11 +332,15 @@ class _MachinesScreenState extends State<MachinesScreen> {
                       fillColor: AppTheme.secondary,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: AppTheme.primary.withOpacity(0.12)),
+                        borderSide: BorderSide(
+                          color: AppTheme.primary.withOpacity(0.12),
+                        ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide(color: AppTheme.primary.withOpacity(0.12)),
+                        borderSide: BorderSide(
+                          color: AppTheme.primary.withOpacity(0.12),
+                        ),
                       ),
                     ),
                   ),
@@ -361,7 +371,12 @@ class _MachinesScreenState extends State<MachinesScreen> {
     );
   }
 
-  Widget _statCard(String title, int count, Color color, {bool isSelected = false}) {
+  Widget _statCard(
+    String title,
+    int count,
+    Color color, {
+    bool isSelected = false,
+  }) {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -385,7 +400,11 @@ class _MachinesScreenState extends State<MachinesScreen> {
           const SizedBox(height: 6),
           Text(
             "$count",
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: color),
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
           ),
         ],
       ),
@@ -413,7 +432,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
           color: AppTheme.secondary,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isActive ? AppTheme.success : AppTheme.primary.withOpacity(0.12),
+            color: isActive
+                ? AppTheme.success
+                : AppTheme.primary.withOpacity(0.12),
             width: isActive ? 1.5 : 1,
           ),
           boxShadow: [
@@ -429,7 +450,9 @@ class _MachinesScreenState extends State<MachinesScreen> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: isActive ? AppTheme.success.withOpacity(0.16) : AppTheme.primary.withOpacity(0.08),
+                color: isActive
+                    ? AppTheme.success.withOpacity(0.16)
+                    : AppTheme.primary.withOpacity(0.08),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -465,7 +488,11 @@ class _MachinesScreenState extends State<MachinesScreen> {
                 ),
                 child: const Text(
                   "ACTIVE",
-                  style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             GestureDetector(

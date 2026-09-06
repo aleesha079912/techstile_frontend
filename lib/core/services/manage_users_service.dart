@@ -66,13 +66,13 @@ class ManageUsersService {
   static final ManageUsersService instance = ManageUsersService._();
   ManageUsersService._();
 
-  final String baseUrl = "http://techstile.sandbox.pk/api";
+  final String baseUrl = "http://localhost:8000/api";
 
   Map<String, String> get _headers => {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        ...AuthService.authHeaders,
-      };
+    "Content-Type": "application/json",
+    "Accept": "application/json",
+    ...AuthService.authHeaders,
+  };
 
   // USERS
   Future<List<UserData>> fetchUsers() async {
@@ -152,8 +152,9 @@ class ManageUsersService {
 
       if (response.statusCode == 200) {
         final decoded = jsonDecode(response.body);
-        final List rawRoles =
-            decoded is List ? decoded : (decoded['roles'] ?? decoded['data'] ?? []);
+        final List rawRoles = decoded is List
+            ? decoded
+            : (decoded['roles'] ?? decoded['data'] ?? []);
 
         List<String> rolesList = [];
         for (var item in rawRoles) {

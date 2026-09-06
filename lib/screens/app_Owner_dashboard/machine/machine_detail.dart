@@ -53,7 +53,9 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
   Future<void> _loadFactoryName() async {
     try {
       final response = await http.get(
-        Uri.parse("http://techstile.sandbox.pk/api/factories/editfactory/${widget.factoryId}"),
+        Uri.parse(
+          "http://localhost:8000/api/factories/editfactory/${widget.factoryId}",
+        ),
         headers: AuthService.authHeaders,
       );
 
@@ -97,17 +99,11 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
   void _openEnterProduction() {
     final shifts = List<Map<String, dynamic>>.from(_detail['shifts'] ?? []);
     if (shifts.isEmpty) {
-      Get.snackbar(
-        "No Employees",
-        "Machine is not assign to any employee",
-      );
+      Get.snackbar("No Employees", "Machine is not assign to any employee");
       return;
     }
     if (_detail['batch_id'] == null) {
-      Get.snackbar(
-        "No Batch",
-        "First \"Assign Production\" to assign batch",
-      );
+      Get.snackbar("No Batch", "First \"Assign Production\" to assign batch");
       return;
     }
     Get.to(
@@ -157,7 +153,9 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
         ),
       ),
       body: _detailLoading
-          ? const Center(child: CircularProgressIndicator(color: AppTheme.primary))
+          ? const Center(
+              child: CircularProgressIndicator(color: AppTheme.primary),
+            )
           : RefreshIndicator(
               onRefresh: _loadDetail,
               color: AppTheme.textPrimary,
@@ -221,12 +219,19 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                         ),
                         child: Column(
                           children: [
-                            Icon(Icons.inventory_2_outlined,
-                                size: 32, color: AppTheme.neutral),
+                            Icon(
+                              Icons.inventory_2_outlined,
+                              size: 32,
+                              color: AppTheme.neutral,
+                            ),
                             const SizedBox(height: 8),
-                            Text('No production batch assigned yet',
-                                style: TextStyle(
-                                    color: AppTheme.textneutral, fontSize: 13)),
+                            Text(
+                              'No production batch assigned yet',
+                              style: TextStyle(
+                                color: AppTheme.textneutral,
+                                fontSize: 13,
+                              ),
+                            ),
                           ],
                         ),
                       )
@@ -239,18 +244,24 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                       Row(
                         children: [
                           Expanded(
-                            child: _statCard('Total Length',
-                                '${_detail['total_length'] ?? 0}'),
+                            child: _statCard(
+                              'Total Length',
+                              '${_detail['total_length'] ?? 0}',
+                            ),
                           ),
                           const SizedBox(width: 8),
                           Expanded(
-                            child: _statCard('Ready (both shifts)',
-                                '${_detail['ready_production'] ?? 0}'),
+                            child: _statCard(
+                              'Ready (both shifts)',
+                              '${_detail['ready_production'] ?? 0}',
+                            ),
                           ),
                           const SizedBox(width: 8),
                           Expanded(
-                            child: _statCard('Remaining',
-                                '${_detail['remaining'] ?? 0}'),
+                            child: _statCard(
+                              'Remaining',
+                              '${_detail['remaining'] ?? 0}',
+                            ),
                           ),
                         ],
                       ),
@@ -269,24 +280,35 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                         ),
                         child: Column(
                           children: [
-                            Icon(Icons.person_off_outlined,
-                                size: 34, color: AppTheme.neutral),
+                            Icon(
+                              Icons.person_off_outlined,
+                              size: 34,
+                              color: AppTheme.neutral,
+                            ),
                             const SizedBox(height: 8),
-                            Text('No employee assigned to this machine yet',
-                                style: TextStyle(
-                                    color: AppTheme.textneutral, fontSize: 13)),
+                            Text(
+                              'No employee assigned to this machine yet',
+                              style: TextStyle(
+                                color: AppTheme.textneutral,
+                                fontSize: 13,
+                              ),
+                            ),
                           ],
                         ),
                       )
                     else
-                      ...List<Map<String, dynamic>>.from(_detail['shifts'])
-                          .map((s) => _shiftCard(s)),
+                      ...List<Map<String, dynamic>>.from(
+                        _detail['shifts'],
+                      ).map((s) => _shiftCard(s)),
                     const SizedBox(height: 20),
                   ],
                 ),
               ),
             ),
-      bottomNavigationBar: CustomBottomNav(currentIndex: 1, factoryId: int.parse(widget.machine.id)),
+      bottomNavigationBar: CustomBottomNav(
+        currentIndex: 1,
+        factoryId: int.parse(widget.machine.id),
+      ),
     );
   }
 
@@ -317,7 +339,8 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: (isDayShift ? Colors.orange : AppTheme.primary).withOpacity(0.12),
+                  color: (isDayShift ? Colors.orange : AppTheme.primary)
+                      .withOpacity(0.12),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
@@ -333,12 +356,18 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                       ? s['employee_name'].toString()
                       : 'Employee #${s['employee_id'] ?? '-'}',
                   style: const TextStyle(
-                      color: AppTheme.primary, fontWeight: FontWeight.w700, fontSize: 14),
+                    color: AppTheme.primary,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                  ),
                 ),
               ),
               Text(
                 '$start - $end',
-                style: TextStyle(color: AppTheme.primary.withOpacity(0.55), fontSize: 11),
+                style: TextStyle(
+                  color: AppTheme.primary.withOpacity(0.55),
+                  fontSize: 11,
+                ),
               ),
             ],
           ),
@@ -346,10 +375,18 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
           Row(
             children: [
               Expanded(
-                  child: _statCard('Ready (own)', '${s['ready_production'] ?? 0}')),
+                child: _statCard(
+                  'Ready (own)',
+                  '${s['ready_production'] ?? 0}',
+                ),
+              ),
               const SizedBox(width: 8),
               Expanded(
-                  child: _statCard('Waste (own)', '${s['waste_production'] ?? 0}')),
+                child: _statCard(
+                  'Waste (own)',
+                  '${s['waste_production'] ?? 0}',
+                ),
+              ),
             ],
           ),
         ],

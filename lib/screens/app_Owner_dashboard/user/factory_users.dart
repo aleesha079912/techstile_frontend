@@ -36,12 +36,8 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
   final TextEditingController searchCtrl = TextEditingController();
 
   bool showActiveOnly = false;
-
-  // ---------------------------------------------------------------------------
   // Common Shadow
-  // ---------------------------------------------------------------------------
-
-  static List<BoxShadow> get _primaryShadow => [
+ static List<BoxShadow> get _primaryShadow => [
         BoxShadow(
           color: AppTheme.primary.withOpacity(0.14),
           blurRadius: 16,
@@ -66,11 +62,8 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
     super.dispose();
   }
 
-  // ---------------------------------------------------------------------------
   // LOAD DATA
-  // ---------------------------------------------------------------------------
-
-  Future<void> loadData() async {
+ Future<void> loadData() async {
     setState(() {
       loading = true;
       error = null;
@@ -120,9 +113,8 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
     }
   }
 
-  // ---------------------------------------------------------------------------
   // SEARCH / FILTER
-  // ---------------------------------------------------------------------------
+ 
 
   void applyFilter() {
     final query =
@@ -169,9 +161,8 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
     applyFilter();
   }
 
-  // ---------------------------------------------------------------------------
   // INFO ROW
-  // ---------------------------------------------------------------------------
+
 
   Widget infoRow(
     IconData icon,

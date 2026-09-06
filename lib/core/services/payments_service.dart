@@ -4,12 +4,12 @@ import 'package:http/http.dart' as http;
 import 'package:techstile_frontend/core/services/auth_service.dart';
 
 class PaymentService {
-  final String baseUrl = "http://techstile.sandbox.pk/api/payments";
+  final String baseUrl = "http://localhost:8000/api/payments";
 
   Future<Map<String, dynamic>> fetchvarietytypePayments(int factoryId) async {
     try {
       print("TOKEN: ${AuthService.token}");
-print("HEADERS: ${AuthService.authHeaders}");
+      print("HEADERS: ${AuthService.authHeaders}");
       final response = await http.get(
         Uri.parse("$baseUrl/view-payments/$factoryId"),
         headers: AuthService.authHeaders,
@@ -33,9 +33,9 @@ print("HEADERS: ${AuthService.authHeaders}");
 
   Future<Map<String, dynamic>> addPayment({
     required int employeeId,
-    
+
     required double amountPaid,
-    // required int productionId, 
+    // required int productionId,
   }) async {
     try {
       final response = await http.post(
@@ -66,6 +66,7 @@ print("HEADERS: ${AuthService.authHeaders}");
       rethrow;
     }
   }
+
   Future<Map<String, dynamic>> fetchAllPayments(int factoryId) async {
     try {
       final response = await http.get(
@@ -88,11 +89,13 @@ print("HEADERS: ${AuthService.authHeaders}");
       rethrow;
     }
   }
-   
+
   Future<Map<String, dynamic>> getEarnedAmount(int employeeId) async {
     try {
       final response = await http.get(
-        Uri.parse("http://techstile.sandbox.pk/api/employees/$employeeId/earned-amount"),
+        Uri.parse(
+          "http://localhost:8000/api/employees/$employeeId/earned-amount",
+        ),
         headers: AuthService.authHeaders,
       );
 
@@ -103,7 +106,9 @@ print("HEADERS: ${AuthService.authHeaders}");
         return jsonDecode(response.body) as Map<String, dynamic>;
       }
 
-      throw Exception("Failed to fetch earned amount. Status: ${response.statusCode}");
+      throw Exception(
+        "Failed to fetch earned amount. Status: ${response.statusCode}",
+      );
     } catch (e) {
       debugPrint("Get Earned Amount Error: $e");
       rethrow;
@@ -130,6 +135,7 @@ print("HEADERS: ${AuthService.authHeaders}");
       rethrow;
     }
   }
+
   Future<Map<String, dynamic>> updatePayment({
     required int paymentId,
     required double amountPaid,
@@ -141,9 +147,7 @@ print("HEADERS: ${AuthService.authHeaders}");
           ...AuthService.authHeaders,
           'Content-Type': 'application/json',
         },
-        body: jsonEncode({
-          "amount_paid": amountPaid,
-        }),
+        body: jsonEncode({"amount_paid": amountPaid}),
       );
 
       debugPrint("Update Payment Status: ${response.statusCode}");
@@ -161,9 +165,4 @@ print("HEADERS: ${AuthService.authHeaders}");
       rethrow;
     }
   }
-
-
-
-
-
-}  
+}
