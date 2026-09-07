@@ -11,7 +11,7 @@ class HistoryScreen extends StatefulWidget {
 
   const HistoryScreen({
     super.key,
-    this.userId,
+    this.userId, 
     this.userName,
   });
 

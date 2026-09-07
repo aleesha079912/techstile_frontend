@@ -293,7 +293,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
         Text(
           title,
           style: TextStyle(
-            color: Colors.grey.shade700,
+            color:AppTheme.textneutral,
             fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
           ),
         ),
@@ -321,7 +321,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: AppTheme.background,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(20),
@@ -442,13 +442,13 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                             width: double.infinity,
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: Colors.red.withOpacity(0.08),
+                              color: AppTheme.error.withOpacity(0.08),
                               borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: Colors.red.withOpacity(0.3)),
+                              border: Border.all(color: AppTheme.error.withOpacity(0.3)),
                             ),
                             child: Text(
                               summaryError!,
-                              style: const TextStyle(fontSize: 12, color: Colors.red),
+                              style: const TextStyle(fontSize: 12, color: AppTheme.error),
                             ),
                           )
                         else if (earnedSummary != null) ...[
@@ -456,7 +456,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                             width: double.infinity,
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              color: AppTheme.background,
+                              color: AppTheme.secondary,
                               borderRadius: BorderRadius.circular(14),
                               border: Border.all(
                                 color: AppTheme.primary.withOpacity(0.08),
@@ -574,7 +574,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text('Payment saved successfully'),
-                                      backgroundColor: Colors.green,
+                                      backgroundColor:  AppTheme.success,
                                     ),
                                   );
 
@@ -585,14 +585,14 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
                                       content: Text('Failed to save payment: $e'),
-                                      backgroundColor: Colors.red,
+                                      backgroundColor: AppTheme.error,
                                     ),
                                   );
                                 }
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppTheme.primary,
-                                foregroundColor: Colors.white,
+                                foregroundColor: AppTheme.secondary,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
