@@ -8,7 +8,7 @@ import '../manager_profile.dart';
 class ManagerSettingsScreen extends StatefulWidget {
   final String roleLabel;
 
-  /// Where the profile card 
+  /// Where the profile card
   final Widget Function()? profilePageBuilder;
 
   const ManagerSettingsScreen({
@@ -26,6 +26,20 @@ class _ManagerSettingsScreenState
     extends State<ManagerSettingsScreen> {
   bool autoBackup = true;
 
+  // ✅ Common primary-tinted shadow reused across all cards on this page
+  static List<BoxShadow> get _primaryShadow => [
+        BoxShadow(
+          color: AppTheme.primary.withOpacity(0.14),
+          blurRadius: 16,
+          offset: const Offset(0, 6),
+        ),
+        BoxShadow(
+          color: AppTheme.primary.withOpacity(0.06),
+          blurRadius: 4,
+          offset: const Offset(0, 1),
+        ),
+      ];
+
   @override
   Widget build(BuildContext context) {
     final user = AuthService.user ?? {};
@@ -33,15 +47,23 @@ class _ManagerSettingsScreenState
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        title: const Text("Settings"),
-        backgroundColor: AppTheme.primary,
-        foregroundColor:  AppTheme.textSecondary,
+        title: const Text(
+          "Settings",
+          style: TextStyle(
+            color: AppTheme.primary,
+            fontWeight: FontWeight.w800,
+            fontSize: 24,
+          ),
+        ),
+        backgroundColor: AppTheme.secondary,
+        iconTheme: const IconThemeData(color: AppTheme.primary),
+        elevation: 0,
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
 
-          // PROFILE CARD 
+          // PROFILE CARD
 
           GestureDetector(
             onTap: () {
@@ -55,15 +77,26 @@ class _ManagerSettingsScreenState
             child: Container(
               padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
-                color: AppTheme.primary,
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [AppTheme.primary, AppTheme.primary.withOpacity(0.78)],
+                ),
                 borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: AppTheme.primary.withOpacity(0.28),
+                    blurRadius: 18,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
               ),
               child: Row(
                 children: [
 
                   CircleAvatar(
                     radius: 28,
-                    backgroundColor:  AppTheme.background,
+                    backgroundColor: AppTheme.secondary.withOpacity(0.18),
                     child: Text(
                       (user['name'] ?? 'M')
                           .toString()
@@ -71,7 +104,7 @@ class _ManagerSettingsScreenState
                           .toUpperCase(),
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: AppTheme.textPrimary,
+                        color: AppTheme.secondary,
                         fontSize: 22,
                       ),
                     ),
@@ -97,12 +130,13 @@ class _ManagerSettingsScreenState
 
                         Text(
                           user['email'] ?? '',
-                          style: const TextStyle(
-                            color:  AppTheme.textPrimary,
+                          style: TextStyle(
+                            color: AppTheme.textSecondary.withOpacity(0.8),
+                            fontSize: 12.5,
                           ),
                         ),
 
-                        const SizedBox(height: 6),
+                        const SizedBox(height: 8),
 
                         Container(
                           padding:
@@ -111,7 +145,7 @@ class _ManagerSettingsScreenState
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color:  AppTheme.primary,
+                            color: AppTheme.secondary.withOpacity(0.18),
                             borderRadius:
                                 BorderRadius.circular(20),
                           ),
@@ -124,6 +158,7 @@ class _ManagerSettingsScreenState
                             style: const TextStyle(
                               color: AppTheme.textSecondary,
                               fontSize: 11,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
                         ),
@@ -131,7 +166,8 @@ class _ManagerSettingsScreenState
                     ),
                   ),
 
-                
+                  Icon(Icons.chevron_right_rounded,
+                      color: AppTheme.secondary.withOpacity(0.6)),
                 ],
               ),
             ),
@@ -145,6 +181,7 @@ class _ManagerSettingsScreenState
 
           _tile(
             icon: Icons.person_outline,
+            iconColor: AppTheme.primary,
             title: "Edit Profile",
             onTap: () {
               Get.toNamed('/edit-profile');
@@ -153,6 +190,7 @@ class _ManagerSettingsScreenState
 
           _tile(
             icon: Icons.lock_outline,
+            iconColor: AppTheme.primary,
             title: "Reset Password",
             onTap: () {
               Get.toNamed('/change-password');
@@ -161,22 +199,43 @@ class _ManagerSettingsScreenState
 
           const SizedBox(height: 20),
 
-          //PREFERENCES 
+          //PREFERENCES
 
           _sectionTitle("PREFERENCES"),
 
-          SwitchListTile(
-            value: autoBackup,
-            activeColor: AppTheme.primary,
-            title: const Text("Backup"),
-            secondary: const Icon(
-              Icons.backup_outlined,
+          Container(
+            decoration: BoxDecoration(
+              color: AppTheme.secondary,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: _primaryShadow,
             ),
-            onChanged: (v) {
-              setState(() {
-                autoBackup = v;
-              });
-            },
+            child: SwitchListTile(
+              value: autoBackup,
+              activeColor: AppTheme.primary,
+              title: const Text(
+                "Backup",
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: AppTheme.textPrimary,
+                ),
+              ),
+              secondary: Container(
+                width: 38,
+                height: 38,
+                decoration: BoxDecoration(
+                  color: AppTheme.primary.withOpacity(0.12),
+                  borderRadius: BorderRadius.circular(11),
+                ),
+                child: const Icon(Icons.backup_outlined,
+                    color: AppTheme.primary, size: 18),
+              ),
+              onChanged: (v) {
+                setState(() {
+                  autoBackup = v;
+                });
+              },
+            ),
           ),
 
           const SizedBox(height: 20),
@@ -187,6 +246,7 @@ class _ManagerSettingsScreenState
 
           _tile(
             icon: Icons.help_outline,
+            iconColor: AppTheme.info,
             title: "Help & FAQ",
             onTap: () {
               Get.toNamed('/help-faq');
@@ -195,6 +255,7 @@ class _ManagerSettingsScreenState
 
           _tile(
             icon: Icons.privacy_tip_outlined,
+            iconColor: AppTheme.info,
             title: "Privacy Policy",
             onTap: () {
               _showPrivacyDialog();
@@ -203,6 +264,7 @@ class _ManagerSettingsScreenState
 
           _tile(
             icon: Icons.info_outline,
+            iconColor: AppTheme.info,
             title: "About App",
             onTap: () {
               _showAboutDialog();
@@ -217,18 +279,22 @@ class _ManagerSettingsScreenState
 
           _tile(
             icon: Icons.logout,
+            iconColor: AppTheme.error,
             title: "Logout",
-            textColor:  AppTheme.error,
+            textColor: AppTheme.error,
+            showChevron: false,
             onTap: _logout,
           ),
 
-          const SizedBox(height: 30),
+          const SizedBox(height: 26),
 
-          const Center(
+          Center(
             child: Text(
               "TechStile v1.0.0",
               style: TextStyle(
-                color:   AppTheme.textPrimary,
+                fontSize: 11,
+                color: AppTheme.textPrimary.withOpacity(0.35),
+                fontWeight: FontWeight.w500,
               ),
             ),
           ),
@@ -245,10 +311,11 @@ class _ManagerSettingsScreenState
       ),
       child: Text(
         text,
-        style: const TextStyle(
-          fontWeight: FontWeight.bold,
-          color:   AppTheme.textPrimary,
-          letterSpacing: 1,
+        style: TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w700,
+          color: AppTheme.textPrimary.withOpacity(0.45),
+          letterSpacing: 0.9,
         ),
       ),
     );
@@ -258,22 +325,57 @@ class _ManagerSettingsScreenState
     required IconData icon,
     required String title,
     required VoidCallback onTap,
-    Color textColor =  AppTheme.onsurface,
+    Color iconColor = AppTheme.primary,
+    Color textColor = AppTheme.textPrimary,
+    bool showChevron = true,
   }) {
-    return Card(
+    return Container(
       margin: const EdgeInsets.only(bottom: 10),
-      elevation: 0.5,
-      child: ListTile(
-        leading: Icon(icon),
-        title: Text(
-          title,
-          style: TextStyle(
-            color: textColor,
+      decoration: BoxDecoration(
+        color: AppTheme.secondary,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: _primaryShadow,
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(16),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(16),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+            child: Row(
+              children: [
+                Container(
+                  width: 38,
+                  height: 38,
+                  decoration: BoxDecoration(
+                    color: iconColor.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(11),
+                  ),
+                  child: Icon(icon, color: iconColor, size: 18),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      color: textColor,
+                    ),
+                  ),
+                ),
+                if (showChevron)
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    color: AppTheme.primary.withOpacity(0.30),
+                    size: 20,
+                  ),
+              ],
+            ),
           ),
         ),
-        // trailing:
-            // const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: onTap,
       ),
     );
   }
@@ -319,10 +421,10 @@ class _ManagerSettingsScreenState
           "Are you sure you want to logout?",
       textCancel: "No",
       textConfirm: "Yes",
-      confirmTextColor:  AppTheme.secondary,
+      confirmTextColor: AppTheme.secondary,
       cancelTextColor: AppTheme.primary,
       buttonColor: AppTheme.primary,
-    
+
       onConfirm: () {
         AuthService.logout();
 

@@ -4,7 +4,7 @@ import 'package:techstile_frontend/widgets/man_drawer.dart';
 import '../../core/services/manager_service/manager_service.dart';
 import '../../core/utils/theme.dart';
 import '../../widgets/man_bottom_navbar.dart';
-import 'manager_emloyee_detail_screen.dart';
+import 'package:techstile_frontend/screens/employee_dashboard/profile.dart';
 import 'package:techstile_frontend/core/services/auth_service.dart';
 
 class ManagerEmployeesScreen extends StatefulWidget {
@@ -379,10 +379,10 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
       borderRadius: AppTheme.cardRadius,
       onTap: () {
         Get.to(
-          () => ManagerEmployeeDetailScreen(
-            employeeId: int.parse(e['id'].toString()),
-            factoryId: widget.factoryId,
-          ),
+          () => UserProfileScreen( 
+      userId: int.parse(e['id'].toString()),
+      factoryId: widget.factoryId,
+    ),
         );
       },
       child: Container(

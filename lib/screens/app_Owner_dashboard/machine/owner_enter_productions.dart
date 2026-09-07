@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import '../../../core/utils/theme.dart';
 import '../../../core/services/employee_service/employee_production_service.dart';
 
-/// Owner-side production entry.
+/// Owner side production entry.
 class OwnerEnterProductionScreen extends StatefulWidget {
   final int machineId;
   final int factoryId;
@@ -46,11 +46,11 @@ class _OwnerEnterProductionScreenState
 
   Future<void> _submit() async {
     if (_selectedShift == null) {
-      Get.snackbar("Error", "Pehle employee select karein");
+      Get.snackbar("Error", "first select the employee");
       return;
     }
     if (readyController.text.trim().isEmpty) {
-      Get.snackbar("Error", "Ready production enter karein");
+      Get.snackbar("Error", "Enter ready production");
       return;
     }
 
@@ -63,7 +63,7 @@ class _OwnerEnterProductionScreenState
     if (ready + waste > widget.remaining) {
       Get.snackbar(
         "Error",
-        "Maximum ${widget.remaining} allowed (ready + waste) — ye remaining dono shifts mila kar hai",
+        "Maximum ${widget.remaining} allowed (ready + waste) collect remaining both shifts",
         backgroundColor: AppTheme.error,
         colorText:  AppTheme.textSecondary,
       );
@@ -72,7 +72,7 @@ class _OwnerEnterProductionScreenState
 
     final userId = _selectedShift?['user_id'];
     if (userId == null) {
-      Get.snackbar("Error", "Is employee ka user record nahi mila");
+      Get.snackbar("Error", "There is no user record of this employee");
       return;
     }
 
@@ -92,7 +92,7 @@ class _OwnerEnterProductionScreenState
         Get.back(result: true);
         Get.snackbar(
           "Success",
-          "Production submitted for approval",
+          "Production submitted and show in approved production page.",
           backgroundColor: AppTheme.success,
           colorText:   AppTheme.textSecondary,
         );

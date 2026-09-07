@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:techstile_frontend/core/services/manager_service/manager_profile_service.dart';
-import 'package:techstile_frontend/routes/routes.dart';
 import 'package:techstile_frontend/widgets/man_drawer.dart';
 import 'package:techstile_frontend/core/services/auth_service.dart';
 import '../../../core/utils/theme.dart';
@@ -9,13 +7,18 @@ import '../../../core/utils/theme.dart';
 class ManagerProfileScreen extends StatefulWidget {
   final int userId;
 
-  const ManagerProfileScreen({super.key, required this.userId});
+  const ManagerProfileScreen({
+    super.key,
+    required this.userId,
+  });
 
   @override
-  State<ManagerProfileScreen> createState() => _ManagerProfileScreenState();
+  State<ManagerProfileScreen> createState() =>
+      _ManagerProfileScreenState();
 }
 
-class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
+class _ManagerProfileScreenState
+    extends State<ManagerProfileScreen> {
   final service = ManagerProfileService();
 
   Map<String, dynamic>? profile;
@@ -28,8 +31,13 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
   }
 
   Future<void> load() async {
-    setState(() => loading = true);
+    if (mounted) {
+      setState(() => loading = true);
+    }
+
     final res = await service.getProfile(widget.userId);
+
+    if (!mounted) return;
 
     setState(() {
       profile = res?['data'];
@@ -38,25 +46,44 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
   }
 
   // ================= 1. HERO PROFILE CARD =================
+
   Widget _buildHeroHeader() {
-    final name = profile?['name']?.toString() ?? 'Plant Manager';
-    final email = profile?['email']?.toString() ?? '—';
-    final firstLetter = name.trim().isNotEmpty ? name.trim()[0].toUpperCase() : 'M';
+    final name =
+        profile?['name']?.toString() ?? 'Plant Manager';
+
+    final email =
+        profile?['email']?.toString() ?? '—';
+
+    final firstLetter = name.trim().isNotEmpty
+        ? name.trim()[0].toUpperCase()
+        : 'M';
 
     return Container(
       width: double.infinity,
-      margin: const EdgeInsets.fromLTRB(16, 16, 16, 12),
-      padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
+      margin: const EdgeInsets.fromLTRB(
+        16,
+        16,
+        16,
+        12,
+      ),
+      padding: const EdgeInsets.symmetric(
+        vertical: 24,
+        horizontal: 16,
+      ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [AppTheme.primary, AppTheme.info],
+          colors: [
+            AppTheme.primary,
+            AppTheme.info,
+          ],
         ),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.primary.withOpacity(0.3),
+            color:
+                AppTheme.primary.withOpacity(0.3),
             blurRadius: 16,
             offset: const Offset(0, 6),
           ),
@@ -69,22 +96,30 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
             padding: const EdgeInsets.all(3.5),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.white.withOpacity(0.7), width: 2),
+              border: Border.all(
+                color:
+                    Colors.white.withOpacity(0.7),
+                width: 2,
+              ),
             ),
             child: CircleAvatar(
               radius: 36,
-              backgroundColor: Colors.white.withOpacity(0.2),
+              backgroundColor:
+                  Colors.white.withOpacity(0.2),
               child: Text(
                 firstLetter,
                 style: const TextStyle(
                   fontSize: 32,
-                  fontWeight: FontWeight.w800,
+                  fontWeight:
+                      FontWeight.w800,
                   color: Colors.white,
                 ),
               ),
             ),
           ),
+
           const SizedBox(height: 12),
+
           Text(
             name,
             textAlign: TextAlign.center,
@@ -95,35 +130,54 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
               letterSpacing: 0.2,
             ),
           ),
+
           const SizedBox(height: 3),
+
           Text(
             email,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 12.5,
-              color: Colors.white.withOpacity(0.85),
+              color:
+                  Colors.white.withOpacity(0.85),
             ),
           ),
+
           const SizedBox(height: 10),
+
           // Badge chip
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+            padding:
+                const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 4,
+            ),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.18),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.white.withOpacity(0.3)),
+              color:
+                  Colors.white.withOpacity(0.18),
+              borderRadius:
+                  BorderRadius.circular(20),
+              border: Border.all(
+                color:
+                    Colors.white.withOpacity(0.3),
+              ),
             ),
             child: const Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.shield_outlined, color: Color(0xFF64B5F6), size: 14),
+                Icon(
+                  Icons.shield_outlined,
+                  color: Color(0xFF64B5F6),
+                  size: 14,
+                ),
                 SizedBox(width: 5),
                 Text(
                   "Plant Manager",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 11.5,
-                    fontWeight: FontWeight.w700,
+                    fontWeight:
+                        FontWeight.w700,
                   ),
                 ),
               ],
@@ -135,32 +189,46 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
   }
 
   // ================= 2. QUICK ACTION BUTTONS =================
+  //
+  // IMPORTANT:
+  // Ye boxes sirf DATA/ACTION DISPLAY ke liye hain.
+  // In par tap karne se koi page open NAHI hoga.
+  //
+
   Widget _buildQuickActions() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
+      padding: const EdgeInsets.fromLTRB(
+        16,
+        0,
+        16,
+        14,
+      ),
       child: Row(
         children: [
           Expanded(
             child: _actionButton(
-              icon: Icons.precision_manufacturing_outlined,
+              icon:
+                  Icons.precision_manufacturing_outlined,
               label: "Machines",
-              onTap: () => Get.toNamed(AppRoutes.managerMachines),
             ),
           ),
+
           const SizedBox(width: 10),
+
           Expanded(
             child: _actionButton(
-              icon: Icons.people_outline_rounded,
+              icon:
+                  Icons.people_outline_rounded,
               label: "Employees",
-              onTap: () => Get.toNamed(AppRoutes.managerEmployees),
             ),
           ),
+
           const SizedBox(width: 10),
+
           Expanded(
             child: _actionButton(
               icon: Icons.assignment_outlined,
               label: "Productions",
-              onTap: () => Get.toNamed(AppRoutes.managerProduction),
             ),
           ),
         ],
@@ -171,73 +239,61 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
   Widget _actionButton({
     required IconData icon,
     required String label,
-    required VoidCallback onTap,
   }) {
-    return Material(
-      color: Colors.white,
-      borderRadius: BorderRadius.circular(16),
-      elevation: 1,
-      shadowColor: AppTheme.primary.withOpacity(0.08),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: onTap,
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppTheme.primary.withOpacity(0.08)),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: AppTheme.primary.withOpacity(0.08),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(icon, color: AppTheme.primary, size: 20),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                label,
-                textAlign: TextAlign.center,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  fontSize: 11.5,
-                  fontWeight: FontWeight.w700,
-                  color: AppTheme.textPrimary,
-                ),
-              ),
-            ],
-          ),
-        ),
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        vertical: 14,
+        horizontal: 8,
       ),
-    );
-  }
-
-  // ================= 3. SECTION TITLE =================
-  Widget _sectionTitle(String title) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 14, 20, 10),
-      child: Row(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius:
+            BorderRadius.circular(16),
+        border: Border.all(
+          color:
+              AppTheme.primary.withOpacity(0.08),
+        ),
+        boxShadow: [
+          BoxShadow(
+            color:
+                AppTheme.primary.withOpacity(0.08),
+            blurRadius: 6,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 4,
-            height: 18,
+            padding:
+                const EdgeInsets.all(8),
             decoration: BoxDecoration(
+              color:
+                  AppTheme.primary.withOpacity(0.08),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              icon,
               color: AppTheme.primary,
-              borderRadius: BorderRadius.circular(4),
+              size: 20,
             ),
           ),
-          const SizedBox(width: 8),
+
+          const SizedBox(height: 6),
+
           Text(
-            title,
+            label,
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            overflow:
+                TextOverflow.ellipsis,
             style: const TextStyle(
-              fontSize: 15.5,
-              fontWeight: FontWeight.w800,
-              color: AppTheme.textPrimary,
+              fontSize: 11.5,
+              fontWeight:
+                  FontWeight.w700,
+              color:
+                  AppTheme.textPrimary,
             ),
           ),
         ],
@@ -245,19 +301,72 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
     );
   }
 
-  // ================= 4. OVERVIEW STATS (2x2 GRID) =================
+  // ================= 3. SECTION TITLE =================
+
+  Widget _sectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        20,
+        14,
+        20,
+        10,
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 4,
+            height: 18,
+            decoration: BoxDecoration(
+              color: AppTheme.primary,
+              borderRadius:
+                  BorderRadius.circular(4),
+            ),
+          ),
+
+          const SizedBox(width: 8),
+
+          Text(
+            title,
+            style: const TextStyle(
+              fontSize: 15.5,
+              fontWeight:
+                  FontWeight.w800,
+              color:
+                  AppTheme.textPrimary,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ================= 4. OVERVIEW STATS =================
+
   Widget _buildOverviewStats() {
-    final factoryName = profile?['factory_name']?.toString() ?? 'Assigned Factory';
-    final totalEmployees = "${profile?['total_employees'] ?? 0}";
-    final totalMachines = "${profile?['total_machines'] ?? 0}";
-    final totalProduction = "${profile?['total_production'] ?? 0} m";
+    final factoryName =
+        profile?['factory_name']
+                ?.toString() ??
+            'Assigned Factory';
+
+    final totalEmployees =
+        "${profile?['total_employees'] ?? 0}";
+
+    final totalMachines =
+        "${profile?['total_machines'] ?? 0}";
+
+    final totalProduction =
+        "${profile?['total_production'] ?? 0} m";
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding:
+          const EdgeInsets.symmetric(
+        horizontal: 16,
+      ),
       child: GridView.count(
         crossAxisCount: 2,
         shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
+        physics:
+            const NeverScrollableScrollPhysics(),
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
         childAspectRatio: 1.35,
@@ -268,18 +377,21 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
             factoryName,
             AppTheme.primary,
           ),
+
           _statCard(
             Icons.groups_rounded,
             "Total Employees",
             totalEmployees,
             AppTheme.info,
           ),
+
           _statCard(
             Icons.precision_manufacturing_rounded,
             "Active Machines",
             totalMachines,
             AppTheme.surface,
           ),
+
           _statCard(
             Icons.check_circle_rounded,
             "Ready Output",
@@ -291,55 +403,84 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
     );
   }
 
-  Widget _statCard(IconData icon, String title, String value, Color color) {
+  Widget _statCard(
+    IconData icon,
+    String title,
+    String value,
+    Color color,
+  ) {
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding:
+          const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius:
+            BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.06),
+            color:
+                color.withOpacity(0.06),
             blurRadius: 8,
-            offset: const Offset(0, 3),
+            offset:
+                const Offset(0, 3),
           ),
         ],
-        border: Border.all(color: color.withOpacity(0.12)),
+        border: Border.all(
+          color:
+              color.withOpacity(0.12),
+        ),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment:
+            CrossAxisAlignment.start,
+        mainAxisAlignment:
+            MainAxisAlignment.center,
         children: [
           Container(
-            padding: const EdgeInsets.all(8),
+            padding:
+                const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.12),
+              color:
+                  color.withOpacity(0.12),
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: color, size: 20),
+            child: Icon(
+              icon,
+              color: color,
+              size: 20,
+            ),
           ),
+
           const SizedBox(height: 8),
+
           FittedBox(
             fit: BoxFit.scaleDown,
-            alignment: Alignment.centerLeft,
+            alignment:
+                Alignment.centerLeft,
             child: Text(
               value,
               style: TextStyle(
                 fontSize: 17,
-                fontWeight: FontWeight.w800,
+                fontWeight:
+                    FontWeight.w800,
                 color: color,
               ),
             ),
           ),
+
           const SizedBox(height: 2),
+
           Text(
             title,
             maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+            overflow:
+                TextOverflow.ellipsis,
             style: TextStyle(
               fontSize: 11.5,
-              fontWeight: FontWeight.w600,
-              color: AppTheme.onsurface.withOpacity(0.7),
+              fontWeight:
+                  FontWeight.w600,
+              color: AppTheme.onsurface
+                  .withOpacity(0.7),
             ),
           ),
         ],
@@ -348,76 +489,173 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
   }
 
   // ================= 5. PERSONAL & PLANT INFO =================
+
   Widget _buildDetailsCard() {
-    final factoryName = profile?['factory_name']?.toString() ?? '';
-    final phone = profile?['phone_no']?.toString() ?? '';
-    final cnic = profile?['cnic']?.toString() ?? '';
-    final address = profile?['address']?.toString() ?? '';
+    final factoryName =
+        profile?['factory_name']
+                ?.toString() ??
+            '';
+
+    final phone =
+        profile?['phone_no']
+                ?.toString() ??
+            '';
+
+    final cnic =
+        profile?['cnic']
+                ?.toString() ??
+            '';
+
+    final address =
+        profile?['address']
+                ?.toString() ??
+            '';
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(14),
+      margin:
+          const EdgeInsets.symmetric(
+        horizontal: 16,
+      ),
+      padding:
+          const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
+        borderRadius:
+            BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.primary.withOpacity(0.05),
+            color:
+                AppTheme.primary
+                    .withOpacity(0.05),
             blurRadius: 10,
-            offset: const Offset(0, 4),
+            offset:
+                const Offset(0, 4),
           ),
         ],
-        border: Border.all(color: AppTheme.primary.withOpacity(0.06)),
+        border: Border.all(
+          color:
+              AppTheme.primary
+                  .withOpacity(0.06),
+        ),
       ),
       child: Column(
         children: [
-          _infoRow(Icons.factory_outlined, "Assigned Plant / Factory", factoryName),
-          const Divider(height: 14, thickness: 0.6),
-          _infoRow(Icons.phone_outlined, "Phone Number", phone),
-          const Divider(height: 14, thickness: 0.6),
-          _infoRow(Icons.badge_outlined, "CNIC Number", cnic),
-          const Divider(height: 14, thickness: 0.6),
-          _infoRow(Icons.location_on_outlined, "Residential Address", address),
-          const Divider(height: 14, thickness: 0.6),
-          _infoRow(Icons.verified_outlined, "Managerial Role", "Floor Supervisor & Operations Manager"),
+          _infoRow(
+            Icons.factory_outlined,
+            "Assigned Plant / Factory",
+            factoryName,
+          ),
+
+          const Divider(
+            height: 14,
+            thickness: 0.6,
+          ),
+
+          _infoRow(
+            Icons.phone_outlined,
+            "Phone Number",
+            phone,
+          ),
+
+          const Divider(
+            height: 14,
+            thickness: 0.6,
+          ),
+
+          _infoRow(
+            Icons.badge_outlined,
+            "CNIC Number",
+            cnic,
+          ),
+
+          const Divider(
+            height: 14,
+            thickness: 0.6,
+          ),
+
+          _infoRow(
+            Icons.location_on_outlined,
+            "Residential Address",
+            address,
+          ),
+
+          const Divider(
+            height: 14,
+            thickness: 0.6,
+          ),
+
+          _infoRow(
+            Icons.verified_outlined,
+            "Managerial Role",
+            "Floor Supervisor & Operations Manager",
+          ),
         ],
       ),
     );
   }
 
-  Widget _infoRow(IconData icon, String label, String value) {
+  Widget _infoRow(
+    IconData icon,
+    String label,
+    String value,
+  ) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding:
+          const EdgeInsets.symmetric(
+        vertical: 4,
+      ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(7),
+            padding:
+                const EdgeInsets.all(7),
             decoration: BoxDecoration(
-              color: AppTheme.primary.withOpacity(0.07),
-              borderRadius: BorderRadius.circular(8),
+              color:
+                  AppTheme.primary
+                      .withOpacity(0.07),
+              borderRadius:
+                  BorderRadius.circular(8),
             ),
-            child: Icon(icon, color: AppTheme.primary, size: 16),
+            child: Icon(
+              icon,
+              color:
+                  AppTheme.primary,
+              size: 16,
+            ),
           ),
+
           const SizedBox(width: 12),
+
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
               children: [
                 Text(
                   label,
                   style: TextStyle(
                     fontSize: 11,
-                    color: AppTheme.onsurface.withOpacity(0.6),
-                    fontWeight: FontWeight.w500,
+                    color: AppTheme
+                        .onsurface
+                        .withOpacity(0.6),
+                    fontWeight:
+                        FontWeight.w500,
                   ),
                 ),
+
                 const SizedBox(height: 1),
+
                 Text(
-                  value.isNotEmpty ? value : '—',
-                  style: const TextStyle(
+                  value.isNotEmpty
+                      ? value
+                      : '—',
+                  style:
+                      const TextStyle(
                     fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                    color: AppTheme.textPrimary,
+                    fontWeight:
+                        FontWeight.w700,
+                    color: AppTheme
+                        .textPrimary,
                   ),
                 ),
               ],
@@ -429,64 +667,128 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
   }
 
   // ================= MAIN BUILD =================
+
   @override
   Widget build(BuildContext context) {
-    final bool canPop = Navigator.canPop(context);
+    final bool canPop =
+        Navigator.canPop(context);
 
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor:
+          AppTheme.background,
+
+      // Drawer same as before
       drawer: canPop
           ? null
           : ManagerDrawer(
-              userId: AuthService.userId,
-              factoryId: AuthService.factoryId,
+              userId:
+                  AuthService.userId,
+              factoryId:
+                  AuthService.factoryId,
             ),
+
+      // App Bar same as before
       appBar: AppBar(
-        backgroundColor: AppTheme.primary,
+        backgroundColor:
+            AppTheme.primary,
         elevation: 0,
+
         leading: canPop
             ? IconButton(
-                icon: const Icon(Icons.arrow_back, color: AppTheme.secondary),
-                onPressed: () => Navigator.pop(context),
+                icon: const Icon(
+                  Icons.arrow_back,
+                  color:
+                      AppTheme.secondary,
+                ),
+                onPressed: () =>
+                    Navigator.pop(context),
               )
             : Builder(
-                builder: (ctx) => IconButton(
-                  icon: const Icon(Icons.menu_rounded, color: AppTheme.secondary),
-                  onPressed: () => Scaffold.of(ctx).openDrawer(),
+                builder: (ctx) =>
+                    IconButton(
+                  icon: const Icon(
+                    Icons.menu_rounded,
+                    color:
+                        AppTheme.secondary,
+                  ),
+                  onPressed: () =>
+                      Scaffold.of(ctx)
+                          .openDrawer(),
                 ),
               ),
+
         title: const Text(
           "Manager Profile",
           style: TextStyle(
-            color: AppTheme.textSecondary,
+            color:
+                AppTheme.textSecondary,
             fontSize: 17,
-            fontWeight: FontWeight.w700,
+            fontWeight:
+                FontWeight.w700,
           ),
         ),
+
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh_rounded, color: AppTheme.secondary),
+            icon: const Icon(
+              Icons.refresh_rounded,
+              color:
+                  AppTheme.secondary,
+            ),
             onPressed: load,
           ),
         ],
       ),
+
       body: loading
-          ? const Center(child: CircularProgressIndicator(color: AppTheme.primary))
+          ? const Center(
+              child:
+                  CircularProgressIndicator(
+                color:
+                    AppTheme.primary,
+              ),
+            )
           : RefreshIndicator(
-              color: AppTheme.primary,
+              color:
+                  AppTheme.primary,
               onRefresh: load,
-              child: SingleChildScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
+              child:
+                  SingleChildScrollView(
+                physics:
+                    const AlwaysScrollableScrollPhysics(),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment:
+                      CrossAxisAlignment
+                          .start,
                   children: [
+                    // Profile
                     _buildHeroHeader(),
+
+                    // Machines / Employees /
+                    // Productions
+                    //
+                    // NOTE:
+                    // Ab ye buttons clickable nahi hain.
+                    // Kisi page par redirect nahi karenge.
                     _buildQuickActions(),
-                    _sectionTitle("Plant Overview"),
+
+                    // Overview
+                    _sectionTitle(
+                      "Plant Overview",
+                    ),
+
                     _buildOverviewStats(),
-                    _sectionTitle("Account & Plant Info"),
+
+                    // Account info
+                    _sectionTitle(
+                      "Account & Plant Info",
+                    ),
+
                     _buildDetailsCard(),
-                    const SizedBox(height: 28),
+
+                    const SizedBox(
+                      height: 28,
+                    ),
                   ],
                 ),
               ),

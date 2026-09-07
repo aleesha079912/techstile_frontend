@@ -53,7 +53,9 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
   Future<void> _loadFactoryName() async {
     try {
       final response = await http.get(
-        Uri.parse("http://localhost:8000/api/factories/editfactory/${widget.factoryId}"),
+        Uri.parse(
+          "http://localhost:8000/api/factories/editfactory/${widget.factoryId}",
+        ),
         headers: AuthService.authHeaders,
       );
 
@@ -97,17 +99,11 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
   void _openEnterProduction() {
     final shifts = List<Map<String, dynamic>>.from(_detail['shifts'] ?? []);
     if (shifts.isEmpty) {
-      Get.snackbar(
-        "No Employees",
-        "Machine is not assign to any employee",
-      );
+      Get.snackbar("No Employees", "Machine is not assign to any employee");
       return;
     }
     if (_detail['batch_id'] == null) {
-      Get.snackbar(
-        "No Batch",
-        "First \"Assign Production\" to assign batch",
-      );
+      Get.snackbar("No Batch", "First \"Assign Production\" to assign batch");
       return;
     }
     Get.to(
@@ -128,18 +124,11 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
     final m = widget.machine;
 
     return Scaffold(
-      backgroundColor: AppTheme.secondary,
+      backgroundColor: AppTheme.background,
       appBar: AppBar(
         backgroundColor: AppTheme.secondary,
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back,
-            color: AppTheme.primary,
-            size: 20,
-          ),
-          onPressed: () => Get.back(),
-        ),
+        iconTheme: const IconThemeData(color: AppTheme.primary),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -147,7 +136,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
               m.machineName,
               style: const TextStyle(
                 color: AppTheme.primary,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w800,
                 fontSize: 18,
               ),
             ),
@@ -155,7 +144,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
               Text(
                 factoryName,
                 style: TextStyle(
-                  color: AppTheme.primary.withOpacity(0.7),
+                  color: AppTheme.primary.withOpacity(0.6),
                   fontWeight: FontWeight.w500,
                   fontSize: 12,
                 ),
@@ -164,7 +153,9 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
         ),
       ),
       body: _detailLoading
-          ? const Center(child: CircularProgressIndicator(color: AppTheme.primary))
+          ? const Center(
+              child: CircularProgressIndicator(color: AppTheme.primary),
+            )
           : RefreshIndicator(
               onRefresh: _loadDetail,
               color: AppTheme.textPrimary,
@@ -174,9 +165,6 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    _heroCard(m),
-                    const SizedBox(height: 20),
-
                     const _SectionLabel(text: 'Quick Actions'),
                     const SizedBox(height: 12),
                     Row(
@@ -187,6 +175,15 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                             label: 'Assign\nProduction',
                             color: AppTheme.textPrimary,
                             onTap: _openAssignProduction,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        Expanded(
+                          child: _ActionCard(
+                            icon: Icons.qr_code_2_rounded,
+                            label: 'Generate\nQR Code',
+                            color: const Color(0xFF1A73E8),
+                            onTap: _openQr,
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -222,12 +219,19 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                         ),
                         child: Column(
                           children: [
-                            Icon(Icons.inventory_2_outlined,
-                                size: 32, color: AppTheme.neutral),
+                            Icon(
+                              Icons.inventory_2_outlined,
+                              size: 32,
+                              color: AppTheme.neutral,
+                            ),
                             const SizedBox(height: 8),
-                            Text('No production batch assigned yet',
-                                style: TextStyle(
-                                    color: AppTheme.textneutral, fontSize: 13)),
+                            Text(
+                              'No production batch assigned yet',
+                              style: TextStyle(
+                                color: AppTheme.textneutral,
+                                fontSize: 13,
+                              ),
+                            ),
                           ],
                         ),
                       )
@@ -240,18 +244,24 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                       Row(
                         children: [
                           Expanded(
-                            child: _statCard('Total Length',
-                                '${_detail['total_length'] ?? 0}'),
+                            child: _statCard(
+                              'Total Length',
+                              '${_detail['total_length'] ?? 0}',
+                            ),
                           ),
                           const SizedBox(width: 8),
                           Expanded(
-                            child: _statCard('Ready (both shifts)',
-                                '${_detail['ready_production'] ?? 0}'),
+                            child: _statCard(
+                              'Ready (both shifts)',
+                              '${_detail['ready_production'] ?? 0}',
+                            ),
                           ),
                           const SizedBox(width: 8),
                           Expanded(
-                            child: _statCard('Remaining',
-                                '${_detail['remaining'] ?? 0}'),
+                            child: _statCard(
+                              'Remaining',
+                              '${_detail['remaining'] ?? 0}',
+                            ),
                           ),
                         ],
                       ),
@@ -270,87 +280,34 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                         ),
                         child: Column(
                           children: [
-                            Icon(Icons.person_off_outlined,
-                                size: 34, color: AppTheme.neutral),
+                            Icon(
+                              Icons.person_off_outlined,
+                              size: 34,
+                              color: AppTheme.neutral,
+                            ),
                             const SizedBox(height: 8),
-                            Text('No employee assigned to this machine yet',
-                                style: TextStyle(
-                                    color: AppTheme.textneutral, fontSize: 13)),
+                            Text(
+                              'No employee assigned to this machine yet',
+                              style: TextStyle(
+                                color: AppTheme.textneutral,
+                                fontSize: 13,
+                              ),
+                            ),
                           ],
                         ),
                       )
                     else
-                      ...List<Map<String, dynamic>>.from(_detail['shifts'])
-                          .map((s) => _shiftCard(s)),
+                      ...List<Map<String, dynamic>>.from(
+                        _detail['shifts'],
+                      ).map((s) => _shiftCard(s)),
                     const SizedBox(height: 20),
                   ],
                 ),
               ),
             ),
-      bottomNavigationBar: CustomBottomNav(currentIndex: 1, factoryId: int.parse(widget.machine.id)),
-    );
-  }
-
-  Widget _heroCard(Machine m) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [AppTheme.textPrimary, Color(0xFF1A3570)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.primary.withOpacity(0.3),
-            blurRadius: 16,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 60,
-            height: 60,
-            decoration: BoxDecoration(
-              color: AppTheme.secondary.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: const Icon(
-              Icons.precision_manufacturing_rounded,
-              color: AppTheme.info,
-              size: 32,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  m.machineName,
-                  style: const TextStyle(
-                    color: AppTheme.secondary,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 20,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  m.type,
-                  style: TextStyle(
-                    color: AppTheme.secondary.withOpacity(0.65),
-                    fontSize: 13,
-                  ),
-                ),
-                const SizedBox(height: 8),
-              ],
-            ),
-          ),
-        ],
+      bottomNavigationBar: CustomBottomNav(
+        currentIndex: 1,
+        factoryId: int.parse(widget.machine.id),
       ),
     );
   }
@@ -382,7 +339,8 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: (isDayShift ? Colors.orange : AppTheme.primary).withOpacity(0.12),
+                  color: (isDayShift ? Colors.orange : AppTheme.primary)
+                      .withOpacity(0.12),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
@@ -398,12 +356,18 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                       ? s['employee_name'].toString()
                       : 'Employee #${s['employee_id'] ?? '-'}',
                   style: const TextStyle(
-                      color: AppTheme.primary, fontWeight: FontWeight.w700, fontSize: 14),
+                    color: AppTheme.primary,
+                    fontWeight: FontWeight.w700,
+                    fontSize: 14,
+                  ),
                 ),
               ),
               Text(
                 '$start - $end',
-                style: TextStyle(color: AppTheme.primary.withOpacity(0.55), fontSize: 11),
+                style: TextStyle(
+                  color: AppTheme.primary.withOpacity(0.55),
+                  fontSize: 11,
+                ),
               ),
             ],
           ),
@@ -411,10 +375,18 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
           Row(
             children: [
               Expanded(
-                  child: _lightStatCard('Ready (own)', '${s['ready_production'] ?? 0}')),
+                child: _statCard(
+                  'Ready (own)',
+                  '${s['ready_production'] ?? 0}',
+                ),
+              ),
               const SizedBox(width: 8),
               Expanded(
-                  child: _lightStatCard('Waste (own)', '${s['waste_production'] ?? 0}')),
+                child: _statCard(
+                  'Waste (own)',
+                  '${s['waste_production'] ?? 0}',
+                ),
+              ),
             ],
           ),
         ],
@@ -475,50 +447,11 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 14),
       decoration: BoxDecoration(
-        color: AppTheme.primary,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: AppTheme.primary.withOpacity(0.25),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        children: [
-          Text(
-            title,
-            style: TextStyle(
-              color: AppTheme.secondary.withOpacity(0.7),
-              fontSize: 11,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            value,
-            style: const TextStyle(
-              color: AppTheme.neutral,
-              fontSize: 18,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _lightStatCard(String title, String value) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 14),
-      decoration: BoxDecoration(
         color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppTheme.primary.withOpacity(0.15)),
         boxShadow: [
           BoxShadow(
-            color: AppTheme.primary.withOpacity(0.08),
+            color: AppTheme.primary.withOpacity(0.1),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),

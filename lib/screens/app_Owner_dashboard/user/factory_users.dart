@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:techstile_frontend/core/services/factory_user_services.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/profile.dart';
-import 'package:techstile_frontend/screens/app_Owner_dashboard/user/factorymanager_profile.dart';
+import 'package:techstile_frontend/screens/man_dashboard/manager_profile.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
 
@@ -36,12 +36,8 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
   final TextEditingController searchCtrl = TextEditingController();
 
   bool showActiveOnly = false;
-
-  // ---------------------------------------------------------------------------
   // Common Shadow
-  // ---------------------------------------------------------------------------
-
-  static List<BoxShadow> get _primaryShadow => [
+ static List<BoxShadow> get _primaryShadow => [
         BoxShadow(
           color: AppTheme.primary.withOpacity(0.14),
           blurRadius: 16,
@@ -66,11 +62,8 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
     super.dispose();
   }
 
-  // ---------------------------------------------------------------------------
   // LOAD DATA
-  // ---------------------------------------------------------------------------
-
-  Future<void> loadData() async {
+ Future<void> loadData() async {
     setState(() {
       loading = true;
       error = null;
@@ -120,9 +113,8 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
     }
   }
 
-  // ---------------------------------------------------------------------------
   // SEARCH / FILTER
-  // ---------------------------------------------------------------------------
+ 
 
   void applyFilter() {
     final query =
@@ -169,9 +161,8 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
     applyFilter();
   }
 
-  // ---------------------------------------------------------------------------
   // INFO ROW
-  // ---------------------------------------------------------------------------
+
 
   Widget infoRow(
     IconData icon,

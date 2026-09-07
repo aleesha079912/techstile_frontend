@@ -1,45 +1,13 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:http/http.dart' as http;
 import 'package:techstile_frontend/core/services/auth_service.dart';
 import 'package:techstile_frontend/core/services/payments_service.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
 import 'package:techstile_frontend/widgets/emp_db_bot_nav_bar.dart';
 import 'package:techstile_frontend/widgets/own_payments_pop_up.dart';
-
-
-// Models (employee-wise payments API response)
-
-//
-// {
-//   "data": [
-//     {
-//       "employee_id": 15,
-//       "employee_name": "Ali",
-//       "factory_name": "Ansari Textile",
-//       "manager_name": null,
-//       "total_amount": 1810400,
-//       "total_length": 24970,
-//       "machines": [
-//         {
-//           "machine_id": 2, "machine_name": "MC-02", "production_count": 3,
-//           "total_length": 900, "ready_production": 0, "waste_production": 0,
-//           "remaining_production": 900, "total_amount": 90000,
-//           "productions": [
-//             { "production_id": 137, "batch_id": "BATCH-14-...", "variety_type": "cotton",
-//               "total_length": 300, "ready_production": 0, "waste_production": 0,
-//               "remaining_production": 300, "amount_per_meter": 100,
-//               "amount": 30000, "select_days": "Friday", "shift_start": "08:00:00",
-//               "shift_end": "20:00:00", "created_at": "..." },
-//             ...
-//           ]
-//         },
-//         ...
-//       ]
-//     },
-//     ...
-//   ]
-// }
 
 class EmployeePayment {
   final int employeeId;
@@ -74,7 +42,10 @@ class EmployeePayment {
 
   double get readyAmount => machines
       .expand((m) => m.productions)
-      .fold<double>(0, (sum, p) => sum + (p.readyProduction * p.amountPerMeter));
+      .fold<double>(
+        0,
+        (sum, p) => sum + (p.readyProduction * p.amountPerMeter),
+      );
 
   factory EmployeePayment.fromJson(Map<String, dynamic> json) {
     return EmployeePayment(
@@ -83,23 +54,18 @@ class EmployeePayment {
       factoryName: json['factory_name'],
       managerName: json['manager_name'],
 
-      totalExpected:
-          double.tryParse(json['total_expected'].toString()) ?? 0,
+      totalExpected: double.tryParse(json['total_expected'].toString()) ?? 0,
 
-      totalAmount:
-          double.tryParse(json['total_amount'].toString()) ?? 0,
+      totalAmount: double.tryParse(json['total_amount'].toString()) ?? 0,
 
-      totalEarned:
-          double.tryParse(json['total_earned'].toString()) ?? 0,
+      totalEarned: double.tryParse(json['total_earned'].toString()) ?? 0,
 
-      totalPaid:
-          double.tryParse(json['total_paid'].toString()) ?? 0,
+      totalPaid: double.tryParse(json['total_paid'].toString()) ?? 0,
 
       remainingAmount:
           double.tryParse(json['remaining_amount'].toString()) ?? 0,
 
-      totalLength:
-          double.tryParse(json['total_length'].toString()) ?? 0,
+      totalLength: double.tryParse(json['total_length'].toString()) ?? 0,
 
       machines: (json['machines'] as List? ?? [])
           .map((e) => MachineGroup.fromJson(e))
@@ -137,7 +103,8 @@ class MachineGroup {
 
   factory MachineGroup.fromJson(Map<String, dynamic> json) {
     final exp = double.tryParse(json['expected_amount'].toString()) ?? 0;
-    final earn = double.tryParse(json['earned_amount'].toString()) ??
+    final earn =
+        double.tryParse(json['earned_amount'].toString()) ??
         double.tryParse(json['total_amount'].toString()) ??
         0;
 
@@ -148,8 +115,10 @@ class MachineGroup {
       machineName: json['machine_name'] ?? 'Unassigned',
       productionCount: int.tryParse(json['production_count'].toString()) ?? 0,
       totalLength: double.tryParse(json['total_length'].toString()) ?? 0,
-      readyProduction: double.tryParse(json['ready_production'].toString()) ?? 0,
-      wasteProduction: double.tryParse(json['waste_production'].toString()) ?? 0,
+      readyProduction:
+          double.tryParse(json['ready_production'].toString()) ?? 0,
+      wasteProduction:
+          double.tryParse(json['waste_production'].toString()) ?? 0,
       remainingProduction:
           double.tryParse(json['remaining_production'].toString()) ?? 0,
       expectedAmount: exp,
@@ -204,8 +173,10 @@ class ProductionRecord {
   factory ProductionRecord.fromJson(Map<String, dynamic> json) {
     final tLen = double.tryParse(json['total_length'].toString()) ?? 0;
     final rate = double.tryParse(json['amount_per_meter'].toString()) ?? 0;
-    final exp = double.tryParse(json['expected_amount'].toString()) ?? (tLen * rate);
-    final earn = double.tryParse(json['earned_amount'].toString()) ??
+    final exp =
+        double.tryParse(json['expected_amount'].toString()) ?? (tLen * rate);
+    final earn =
+        double.tryParse(json['earned_amount'].toString()) ??
         double.tryParse(json['amount'].toString()) ??
         0;
 
@@ -216,7 +187,8 @@ class ProductionRecord {
       status: int.tryParse(json['status'].toString()) ?? 1,
       totalLength: tLen,
       readyProduction: int.tryParse(json['ready_production'].toString()) ?? 0,
-      wasteProduction: double.tryParse(json['waste_production'].toString()) ?? 0,
+      wasteProduction:
+          double.tryParse(json['waste_production'].toString()) ?? 0,
       remainingProduction:
           double.tryParse(json['remaining_production'].toString()) ?? 0,
       machineName: json['machine_name'],
@@ -270,23 +242,37 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     return role != 'employee' && role != 'manager';
   }
 
-
-
   List<EmployeePayment> _employees = [];
   bool _isLoading = true;
   String? _error;
+  String? _factoryName;
 
   @override
   void initState() {
     super.initState();
     _fetchPayments();
+    _loadFactoryName();
   }
 
-  Widget _paymentInfoRow(
-    String title,
-    String value, {
-    bool isBold = false,
-  }) {
+  Future<void> _loadFactoryName() async {
+    try {
+      final response = await http.get(
+        Uri.parse(
+          "http://localhost:8000/api/factories/editfactory/${widget.factoryId}",
+        ),
+        headers: AuthService.authHeaders,
+      );
+
+      if (response.statusCode == 200) {
+        final body = jsonDecode(response.body);
+        if (mounted) {
+          setState(() => _factoryName = body['data']?['name']);
+        }
+      }
+    } catch (_) {}
+  }
+
+  Widget _paymentInfoRow(String title, String value, {bool isBold = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -315,7 +301,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     EmployeePayment? selectedEmployee;
 
     bool isLoadingSummary = false;
-    Map<String, dynamic>? earnedSummary; 
+    Map<String, dynamic>? earnedSummary;
     String? summaryError;
 
     showModalBottomSheet(
@@ -323,9 +309,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       isScrollControlled: true,
       backgroundColor: AppTheme.background,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20),
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (sheetContext) {
         return StatefulBuilder(
@@ -338,13 +322,16 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
               });
 
               try {
-                final data =
-                    await _paymentService.getEarnedAmount(employee.employeeId);
+                final data = await _paymentService.getEarnedAmount(
+                  employee.employeeId,
+                );
                 setSheetState(() {
                   earnedSummary = data;
-                  final remaining = (data['remaining'] as num?)?.toDouble() ?? 0;
-                  amountToPayCtrl.text =
-                      remaining > 0 ? remaining.toStringAsFixed(0) : '';
+                  final remaining =
+                      (data['remaining'] as num?)?.toDouble() ?? 0;
+                  amountToPayCtrl.text = remaining > 0
+                      ? remaining.toStringAsFixed(0)
+                      : '';
                 });
               } catch (e) {
                 setSheetState(() {
@@ -384,9 +371,9 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
 
                       const SizedBox(height: 20),
 
-                    
+                      // ==================================================
                       // EMPLOYEE SELECT
-                     
+                      // ==================================================
                       DropdownButtonFormField<EmployeePayment>(
                         value: selectedEmployee,
                         isExpanded: true,
@@ -396,7 +383,8 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                           prefixIcon: Icon(Icons.person_outline),
                         ),
                         items: _employees.map((employee) {
-                          final name = employee.employeeName?.trim().isNotEmpty == true
+                          final name =
+                              employee.employeeName?.trim().isNotEmpty == true
                               ? employee.employeeName!
                               : 'Employee #${employee.employeeId}';
 
@@ -427,8 +415,9 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                         },
                       ),
 
-                      // EARNED SUMMARY ( replaces production select)
-                     
+                      // ==================================================
+                      // EARNED SUMMARY (✅ replaces production select)
+                      // ==================================================
                       if (selectedEmployee != null) ...[
                         const SizedBox(height: 20),
 
@@ -444,11 +433,16 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                             decoration: BoxDecoration(
                               color: AppTheme.error.withOpacity(0.08),
                               borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: AppTheme.error.withOpacity(0.3)),
+                              border: Border.all(
+                                color: Colors.red.withOpacity(0.3),
+                              ),
                             ),
                             child: Text(
                               summaryError!,
-                              style: const TextStyle(fontSize: 12, color: AppTheme.error),
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.red,
+                              ),
                             ),
                           )
                         else if (earnedSummary != null) ...[
@@ -491,9 +485,9 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
 
                           const SizedBox(height: 18),
 
-                          
+                          // ==================================================
                           // AMOUNT TO PAY
-                          
+                          // ==================================================
                           TextFormField(
                             controller: amountToPayCtrl,
                             keyboardType: const TextInputType.numberWithOptions(
@@ -511,8 +505,9 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                                 return 'Please enter amount';
                               }
 
-                              final amount =
-                                  double.tryParse(value.trim().replaceAll(',', ''));
+                              final amount = double.tryParse(
+                                value.trim().replaceAll(',', ''),
+                              );
 
                               if (amount == null) {
                                 return 'Please enter a valid amount';
@@ -532,9 +527,9 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
 
                           const SizedBox(height: 20),
 
-                          
+                          // ==================================================
                           // SAVE
-                          
+                          // ==================================================
                           SizedBox(
                             width: double.infinity,
                             height: 50,
@@ -547,13 +542,18 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                                 final employee = selectedEmployee!;
 
                                 final amount = double.parse(
-                                  amountToPayCtrl.text.trim().replaceAll(',', ''),
+                                  amountToPayCtrl.text.trim().replaceAll(
+                                    ',',
+                                    '',
+                                  ),
                                 );
 
-                                debugPrint('Employee ID: ${employee.employeeId}');
+                                debugPrint(
+                                  'Employee ID: ${employee.employeeId}',
+                                );
                                 debugPrint('Amount Paying Now: $amount');
 
-                                //  Loading indicator
+                                // ✅ Loading indicator
                                 showDialog(
                                   context: sheetContext,
                                   barrierDismissible: false,
@@ -569,12 +569,16 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                                   );
 
                                   Navigator.pop(sheetContext); // loading band
-                                  Navigator.pop(sheetContext); // bottom sheet band
+                                  Navigator.pop(
+                                    sheetContext,
+                                  ); // bottom sheet band
 
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
-                                      content: Text('Payment saved successfully'),
-                                      backgroundColor:  AppTheme.success,
+                                      content: Text(
+                                        'Payment saved successfully',
+                                      ),
+                                      backgroundColor: Colors.green,
                                     ),
                                   );
 
@@ -584,8 +588,10 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
 
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                      content: Text('Failed to save payment: $e'),
-                                      backgroundColor: AppTheme.error,
+                                      content: Text(
+                                        'Failed to save payment: $e',
+                                      ),
+                                      backgroundColor: Colors.red,
                                     ),
                                   );
                                 }
@@ -619,7 +625,6 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     );
   }
 
-  
   Widget _buildFPB(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
@@ -654,7 +659,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     );
   }
 
-    Widget _buildViewPaymentsButton(BuildContext context) {
+  Widget _buildViewPaymentsButton(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
@@ -672,7 +677,11 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.visibility_outlined, color: AppTheme.primary, size: 20),
+              Icon(
+                Icons.visibility_outlined,
+                color: AppTheme.primary,
+                size: 20,
+              ),
               SizedBox(width: 6),
               Text(
                 "View Payments",
@@ -688,6 +697,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       ),
     );
   }
+
   void _confirmDeletePayment(
     BuildContext context,
     BuildContext sheetContext,
@@ -698,7 +708,9 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       builder: (dialogContext) {
         return AlertDialog(
           title: const Text('Delete Payment'),
-          content: const Text('Are you sure you want to delete this payment record?'),
+          content: const Text(
+            'Are you sure you want to delete this payment record?',
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext),
@@ -730,7 +742,10 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                   );
                 }
               },
-              child: const Text('Delete', style: TextStyle(color: AppTheme.error)),
+              child: const Text(
+                'Delete',
+                style: TextStyle(color: AppTheme.error),
+              ),
             ),
           ],
         );
@@ -738,7 +753,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     );
   }
 
-    void _showEditPaymentDialog(
+  void _showEditPaymentDialog(
     BuildContext context,
     BuildContext sheetContext,
     Map<String, dynamic> payment,
@@ -748,8 +763,9 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
         double.tryParse(payment['amount_paid'].toString()) ?? 0;
 
     final editFormKey = GlobalKey<FormState>();
-    final editAmountCtrl =
-        TextEditingController(text: currentAmount.toStringAsFixed(0));
+    final editAmountCtrl = TextEditingController(
+      text: currentAmount.toStringAsFixed(0),
+    );
 
     showModalBottomSheet(
       context: context,
@@ -779,7 +795,9 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                 const SizedBox(height: 20),
                 TextFormField(
                   controller: editAmountCtrl,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
                   decoration: const InputDecoration(
                     labelText: 'Amount Paid',
                     hintText: 'Enter amount',
@@ -791,7 +809,9 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                     if (value == null || value.trim().isEmpty) {
                       return 'Please enter amount';
                     }
-                    final amount = double.tryParse(value.trim().replaceAll(',', ''));
+                    final amount = double.tryParse(
+                      value.trim().replaceAll(',', ''),
+                    );
                     if (amount == null) {
                       return 'Please enter a valid amount';
                     }
@@ -818,7 +838,8 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                       showDialog(
                         context: editSheetContext,
                         barrierDismissible: false,
-                        builder: (_) => const Center(child: CircularProgressIndicator()),
+                        builder: (_) =>
+                            const Center(child: CircularProgressIndicator()),
                       );
 
                       try {
@@ -829,7 +850,9 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
 
                         Navigator.pop(editSheetContext); // loading band
                         Navigator.pop(editSheetContext); // edit sheet band
-                        Navigator.pop(sheetContext); // payment history sheet band
+                        Navigator.pop(
+                          sheetContext,
+                        ); // payment history sheet band
 
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
@@ -853,11 +876,16 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.primary,
                       foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                     child: const Text(
                       'Update Payment',
-                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
                 ),
@@ -869,21 +897,19 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     );
   }
 
-
-
   void _showViewPaymentsDialog(BuildContext context) {
-     showModalBottomSheet(
+    showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(20),
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (sheetContext) {
         return FutureBuilder<Map<String, dynamic>>(
-          future: _paymentService.fetchAllPayments(widget.factoryId), 
+          future: _paymentService.fetchAllPayments(
+            widget.factoryId,
+          ), // ✅ service mein add karna hoga
           builder: (context, snapshot) {
             return Padding(
               padding: EdgeInsets.only(
@@ -908,9 +934,12 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                     Expanded(
                       child: Builder(
                         builder: (_) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return const Center(
-                              child: CircularProgressIndicator(color: AppTheme.primary),
+                              child: CircularProgressIndicator(
+                                color: AppTheme.primary,
+                              ),
                             );
                           }
 
@@ -923,7 +952,8 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                             );
                           }
 
-                          final List list = snapshot.data?['data'] as List? ?? [];
+                          final List list =
+                              snapshot.data?['data'] as List? ?? [];
 
                           if (list.isEmpty) {
                             return const Center(
@@ -936,19 +966,27 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
 
                           return ListView.separated(
                             itemCount: list.length,
-                            separatorBuilder: (_, __) => const Divider(height: 20),
+                            separatorBuilder: (_, __) =>
+                                const Divider(height: 20),
                             itemBuilder: (context, index) {
-                              final payment = list[index] as Map<String, dynamic>;
+                              final payment =
+                                  list[index] as Map<String, dynamic>;
 
-                              final employeeName = payment['employee']?['user']?['name'] ??
-                              'Employee #${payment['employee_id']}';
+                              final employeeName =
+                                  payment['employee']?['user']?['name'] ??
+                                  'Employee #${payment['employee_id']}';
                               final amountPaid =
-                              double.tryParse(payment['amount_paid'].toString()) ?? 0;
-                              final createdAt = payment['created_at']?.toString() ?? '';
-                              final batchId =
-                              payment['production']?['batch_id']?.toString();
+                                  double.tryParse(
+                                    payment['amount_paid'].toString(),
+                                  ) ??
+                                  0;
+                              final createdAt =
+                                  payment['created_at']?.toString() ?? '';
+                              final batchId = payment['production']?['batch_id']
+                                  ?.toString();
 
-                              final paymentId = int.tryParse(payment['id'].toString()) ?? 0;
+                              final paymentId =
+                                  int.tryParse(payment['id'].toString()) ?? 0;
 
                               return ListTile(
                                 contentPadding: EdgeInsets.zero,
@@ -958,14 +996,19 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                                     color: AppTheme.primary.withOpacity(0.08),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
-                                  child: const Icon(Icons.receipt_long_rounded,
-                                      color: AppTheme.primary, size: 18),
+                                  child: const Icon(
+                                    Icons.receipt_long_rounded,
+                                    color: AppTheme.primary,
+                                    size: 18,
+                                  ),
                                 ),
                                 title: Text(
                                   employeeName,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
-                                      fontWeight: FontWeight.w700, fontSize: 14),
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 14,
+                                  ),
                                 ),
                                 subtitle: Text(
                                   batchId != null
@@ -973,8 +1016,9 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                                       : createdAt,
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                      color: AppTheme.primary.withOpacity(0.55),
-                                      fontSize: 11),
+                                    color: AppTheme.primary.withOpacity(0.55),
+                                    fontSize: 11,
+                                  ),
                                 ),
                                 trailing: Row(
                                   mainAxisSize: MainAxisSize.min,
@@ -985,9 +1029,10 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                                         child: Text(
                                           'Rs ${_formatAmount(amountPaid)}',
                                           style: const TextStyle(
-                                              color: AppTheme.success,
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.w800),
+                                            color: AppTheme.success,
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w800,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -1041,6 +1086,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       },
     );
   }
+
   Future<void> _fetchPayments() async {
     setState(() {
       _isLoading = true;
@@ -1049,8 +1095,13 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
 
     try {
       // PaymentService just needs to hit the employee-wise endpoint and
-      
-      final raw = await _paymentService.fetchvarietytypePayments(widget.factoryId);
+      // return the decoded JSON body (e.g. Dio's `response.data` or
+      // `jsonDecode(response.body)`), a Map like: { "data": [ {...}, ... ] }.
+      // All parsing into EmployeePayment happens right here, so no separate
+      // model file is required.
+      final raw = await _paymentService.fetchvarietytypePayments(
+        widget.factoryId,
+      );
       final List list = raw['data'] as List? ?? [];
       final data = list
           .map((e) => EmployeePayment.fromJson(e as Map<String, dynamic>))
@@ -1088,50 +1139,68 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       _grandTotalLength == 0 ? 0 : _grandTotalAmount / _grandTotalLength;
 
   @override
-
   Widget build(BuildContext context) {
     final box = GetStorage();
     final userData = box.read('user');
-    final String role = (box.read('role') ?? '').toString().toLowerCase().trim();
+    final String role = (box.read('role') ?? '')
+        .toString()
+        .toLowerCase()
+        .trim();
 
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        backgroundColor: AppTheme.primary,
+        backgroundColor: AppTheme.secondary,
+        iconTheme: const IconThemeData(color: AppTheme.primary),
         automaticallyImplyLeading: false,
         elevation: 0,
-        title: const Text(
-          'Employee Payments',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w800, fontSize: 17),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Employee Payments',
+              style: TextStyle(
+                color: AppTheme.primary,
+                fontWeight: FontWeight.w800,
+                fontSize: 17,
+              ),
+            ),
+            if (_factoryName != null && _factoryName!.isNotEmpty)
+              Text(
+                _factoryName!,
+                style: TextStyle(
+                  color: AppTheme.primary.withOpacity(0.6),
+                  fontWeight: FontWeight.w500,
+                  fontSize: 12,
+                ),
+              ),
+          ],
         ),
-      
       ),
       body: _buildBody(),
       floatingActionButton: _canManagePayments
-    ? Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          _buildViewPaymentsButton(context),
-          const SizedBox(height: 12),
-          _buildFPB(context),
-        ],
-      )
-      : null,
+          ? Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                _buildViewPaymentsButton(context),
+                const SizedBox(height: 12),
+                _buildFPB(context),
+              ],
+            )
+          : null,
 
-           bottomNavigationBar: role == 'employee'
-        ? const EmployeeBottomNav(currentIndex: 3)
-        : CustomBottomNav(
-            currentIndex: 2,
-            factoryId: widget.factoryId,
-          ),
-
+      bottomNavigationBar: role == 'employee'
+          ? const EmployeeBottomNav(currentIndex: 3)
+          : CustomBottomNav(currentIndex: 2, factoryId: widget.factoryId),
     );
   }
 
   Widget _buildBody() {
     if (_isLoading) {
-      return const Center(child: CircularProgressIndicator(color: AppTheme.primary));
+      return const Center(
+        child: CircularProgressIndicator(color: AppTheme.primary),
+      );
     }
 
     if (_error != null) {
@@ -1148,7 +1217,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: AppTheme.primary,
+              color: AppTheme.secondary,
               borderRadius: AppTheme.cardRadius,
               boxShadow: AppTheme.softShadow,
             ),
@@ -1160,17 +1229,24 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                     Container(
                       padding: const EdgeInsets.all(9),
                       decoration: BoxDecoration(
-                        color: AppTheme.secondary.withOpacity(0.12),
+                        color: AppTheme.primary.withOpacity(0.10),
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Icon(Icons.payments_rounded,
-                          color: AppTheme.secondary, size: 18),
+                      child: const Icon(
+                        Icons.payments_rounded,
+                        color: AppTheme.primary,
+                        size: 18,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     const Expanded(
                       child: Text(
                         'Total Payment (All Employees)',
-                        style: TextStyle(color: AppTheme.secondary, fontSize: 12, fontWeight: FontWeight.w600),
+                        style: TextStyle(
+                          color: AppTheme.primary,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ],
@@ -1179,7 +1255,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                 Text(
                   'Rs ${_formatAmount(_grandTotalAmount)}',
                   style: const TextStyle(
-                    color: AppTheme.secondary,
+                    color: AppTheme.primary,
                     fontSize: 28,
                     fontWeight: FontWeight.w800,
                   ),
@@ -1214,11 +1290,17 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
               const Text(
                 'Employee Wise Calculation',
                 style: TextStyle(
-                    color: AppTheme.textPrimary, fontSize: 15, fontWeight: FontWeight.w700),
+                  color: AppTheme.primary,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w800,
+                ),
               ),
               const Spacer(),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: AppTheme.primary.withOpacity(.08),
                   borderRadius: BorderRadius.circular(20),
@@ -1226,7 +1308,10 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                 child: Text(
                   '${_employees.length}',
                   style: const TextStyle(
-                      color: AppTheme.primary, fontSize: 11, fontWeight: FontWeight.w700),
+                    color: AppTheme.primary,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
             ],
@@ -1236,43 +1321,61 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
           if (_employees.isEmpty)
             _emptyView()
           else
-          ...List.generate(_employees.length, (index) {
-            final employee = _employees[index];
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: _EmployeePaymentTile(record: employee),
-            );
-          }),
+            ...List.generate(_employees.length, (index) {
+              final employee = _employees[index];
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: _EmployeePaymentTile(record: employee),
+              );
+            }),
         ],
       ),
     );
   }
 
   Widget _emptyView() => Center(
-    child: Column(mainAxisSize: MainAxisSize.min, children: [
-      const SizedBox(height: 28),
-      Icon(Icons.inbox_rounded, size: 52, color: AppTheme.neutral),
-      const SizedBox(height: 12),
-      const Text('No employee payments found',
-          style: TextStyle(color: AppTheme.primary, fontSize: 14, fontWeight: FontWeight.w600)),
-    ]),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const SizedBox(height: 28),
+        Icon(Icons.inbox_rounded, size: 52, color: AppTheme.neutral),
+        const SizedBox(height: 12),
+        const Text(
+          'No employee payments found',
+          style: TextStyle(
+            color: AppTheme.primary,
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    ),
   );
 
   Widget _errorView() => Center(
-    child: Column(mainAxisSize: MainAxisSize.min, children: [
-      const Icon(Icons.error_outline_rounded, size: 48, color: AppTheme.error),
-      const SizedBox(height: 12),
-      Text(_error ?? 'Something went wrong',
-          style: const TextStyle(color: AppTheme.primary)),
-      const SizedBox(height: 16),
-      ElevatedButton(onPressed: _fetchPayments, child: const Text('Retry')),
-    ]),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const Icon(
+          Icons.error_outline_rounded,
+          size: 48,
+          color: AppTheme.error,
+        ),
+        const SizedBox(height: 12),
+        Text(
+          _error ?? 'Something went wrong',
+          style: const TextStyle(color: AppTheme.primary),
+        ),
+        const SizedBox(height: 16),
+        ElevatedButton(onPressed: _fetchPayments, child: const Text('Retry')),
+      ],
+    ),
   );
 }
 
-
+// ============================================================
 // Helpers
-
+// ============================================================
 
 String _formatAmount(double value) {
   final str = value.toStringAsFixed(0);
@@ -1301,16 +1404,20 @@ class _SummaryStat extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 7),
         decoration: BoxDecoration(
-          color: AppTheme.secondary.withOpacity(0.08),
+          color: AppTheme.primary,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: AppTheme.secondary.withOpacity(0.10)),
+          border: Border.all(color: AppTheme.primary.withOpacity(0.10)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               label,
-              style: TextStyle(color: AppTheme.secondary, fontSize: 9, fontWeight: FontWeight.w600),
+              style: TextStyle(
+                color: AppTheme.secondary,
+                fontSize: 9,
+                fontWeight: FontWeight.w600,
+              ),
             ),
             const SizedBox(height: 2),
             FittedBox(
@@ -1333,63 +1440,65 @@ class _SummaryStat extends StatelessWidget {
   }
 }
 
-/// Expandable card for a single employee
-
+/// Expandable card for a single employee: header shows name + total earned,
+/// plus factory/manager context, and expands to a list of every machine
+/// that contributed to that total.
+///
+/// FIX: previously this had BOTH a boxed Earned/Paid/Remaining row inside
+/// `subtitle` AND a duplicate unwrapped three-line `trailing` column. The
+/// `trailing` slot of a ListTile/ExpansionTile is laid out at its intrinsic
+/// width (it is NOT wrapped in an Expanded like `subtitle` is), so three
+/// long unbounded strings like "Remaining: Rs 1,810,400" forced the row
+/// wider than the screen on smaller devices -> RenderFlex overflow
+/// (the black/yellow striped error). The duplicate trailing column has been
+/// removed and long text in title/subtitle is now clamped with
+/// `overflow: TextOverflow.ellipsis` so the tile can never overflow again.
 class _EmployeePaymentTile extends StatelessWidget {
   final EmployeePayment record;
-  Widget _employeeAmountStat(
-  String label,
-  double amount,
-  Color color,
-) {
-  return Container(
-    padding: const EdgeInsets.symmetric(
-      horizontal: 7,
-      vertical: 6,
-    ),
-    decoration: BoxDecoration(
-      color: color.withOpacity(0.06),
-      borderRadius: BorderRadius.circular(8),
-      border: Border.all(
-        color: color.withOpacity(0.10),
+  Widget _employeeAmountStat(String label, double amount, Color color) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 6),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.06),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withOpacity(0.10)),
       ),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: color.withOpacity(0.65),
-            fontSize: 9,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        const SizedBox(height: 2),
-        FittedBox(
-          fit: BoxFit.scaleDown,
-          alignment: Alignment.centerLeft,
-          child: Text(
-            'Rs ${_formatAmount(amount)}',
-            maxLines: 1,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
             style: TextStyle(
-              color: color,
-              fontSize: 11,
-              fontWeight: FontWeight.w800,
+              color: color.withOpacity(0.65),
+              fontSize: 9,
+              fontWeight: FontWeight.w600,
             ),
           ),
-        ),
-      ],
-    ),
-  );
-}
-
+          const SizedBox(height: 2),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text(
+              'Rs ${_formatAmount(amount)}',
+              maxLines: 1,
+              style: TextStyle(
+                color: color,
+                fontSize: 11,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   const _EmployeePaymentTile({required this.record});
 
   @override
   Widget build(BuildContext context) {
-    final displayName = (record.employeeName == null || record.employeeName!.isEmpty)
+    final displayName =
+        (record.employeeName == null || record.employeeName!.isEmpty)
         ? 'Employee #${record.employeeId}'
         : record.employeeName!;
 
@@ -1407,7 +1516,13 @@ class _EmployeePaymentTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppTheme.secondary,
         borderRadius: AppTheme.cardRadius,
-        boxShadow: AppTheme.softShadow,
+        boxShadow: [
+          BoxShadow(
+            color: AppTheme.primary.withOpacity(0.12),
+            blurRadius: 14,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
       clipBehavior: Clip.antiAlias,
       child: Theme(
@@ -1422,14 +1537,21 @@ class _EmployeePaymentTile extends StatelessWidget {
               color: AppTheme.primary.withOpacity(0.08),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Icon(Icons.person_rounded, color: AppTheme.primary, size: 18),
+            child: const Icon(
+              Icons.person_rounded,
+              color: AppTheme.primary,
+              size: 18,
+            ),
           ),
           title: Text(
             displayName,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
-                color: AppTheme.textPrimary, fontWeight: FontWeight.w700, fontSize: 14),
+              color: AppTheme.primary,
+              fontWeight: FontWeight.w800,
+              fontSize: 14,
+            ),
           ),
           subtitle: Padding(
             padding: const EdgeInsets.only(top: 6),
@@ -1495,27 +1617,35 @@ class _EmployeePaymentTile extends StatelessWidget {
               ],
             ),
           ),
-        
+          // Duplicate Earned/Paid/Remaining trailing column removed — it was
+          // unbounded and caused the overflow. The stat boxes in `subtitle`
+          // already surface this info without needing to expand the tile.
+          // If you want a compact indicator here, keep it width-bounded, e.g.:
+          // trailing: const Icon(Icons.expand_more_rounded, color: AppTheme.primary),
           children: [
             if (record.machines.isEmpty)
               const Padding(
                 padding: EdgeInsets.only(bottom: 8),
-                child: Text('No machine records',
-                    style: TextStyle(color: AppTheme.textPrimary, fontSize: 12)),
+                child: Text(
+                  'No machine records',
+                  style: TextStyle(color: AppTheme.textPrimary, fontSize: 12),
+                ),
               )
             else
-              ...record.machines.map((m) => Padding(
-                padding: const EdgeInsets.only(bottom: 10),
-                child: _MachineGroupTile(machine: m),
-              )),
+              ...record.machines.map(
+                (m) => Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: _MachineGroupTile(machine: m),
+                ),
+              ),
           ],
         ),
       ),
     );
   }
-} 
+}
 
-
+/// One machine's aggregated totals for this employee. Expands to show
 /// the individual production rows that make up the total.
 class _MachineGroupTile extends StatelessWidget {
   final MachineGroup machine;
@@ -1541,7 +1671,10 @@ class _MachineGroupTile extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
-                color: AppTheme.textPrimary, fontSize: 13, fontWeight: FontWeight.w700),
+              color: AppTheme.textPrimary,
+              fontSize: 13,
+              fontWeight: FontWeight.w700,
+            ),
           ),
           subtitle: Padding(
             padding: const EdgeInsets.only(top: 4),
@@ -1549,7 +1682,10 @@ class _MachineGroupTile extends StatelessWidget {
               '${machine.productionCount} batch${machine.productionCount == 1 ? '' : 'es'} • ${_formatAmount(machine.totalLength)} m',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: AppTheme.primary.withOpacity(0.55), fontSize: 11),
+              style: TextStyle(
+                color: AppTheme.primary.withOpacity(0.55),
+                fontSize: 11,
+              ),
             ),
           ),
           trailing: ConstrainedBox(
@@ -1573,14 +1709,17 @@ class _MachineGroupTile extends StatelessWidget {
                     'Rs ${_formatAmount(machine.earnedAmount)}',
                     maxLines: 1,
                     style: const TextStyle(
-                        color: AppTheme.success, fontSize: 12, fontWeight: FontWeight.w800),
+                      color: AppTheme.success,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
           children: [
-            //  Expected vs Earned Amount
+            // Row 1: Expected vs Earned Amount
             Row(
               children: [
                 _machineStatBox(
@@ -1600,22 +1739,35 @@ class _MachineGroupTile extends StatelessWidget {
             // Row 2: Ready, Waste, Remaining meters
             Row(
               children: [
-                _machineMiniStat('Ready', '${_formatAmount(machine.readyProduction)} m'),
+                _machineMiniStat(
+                  'Ready',
+                  '${_formatAmount(machine.readyProduction)} m',
+                ),
                 const SizedBox(width: 6),
-                _machineMiniStat('Waste', '${_formatAmount(machine.wasteProduction)} m'),
+                _machineMiniStat(
+                  'Waste',
+                  '${_formatAmount(machine.wasteProduction)} m',
+                ),
                 const SizedBox(width: 6),
-                _machineMiniStat('Remaining', '${_formatAmount(machine.remainingProduction)} m'),
+                _machineMiniStat(
+                  'Remaining',
+                  '${_formatAmount(machine.remainingProduction)} m',
+                ),
               ],
             ),
             const SizedBox(height: 10),
             if (machine.productions.isEmpty)
-              const Text('No production records',
-                  style: TextStyle(color: AppTheme.textPrimary, fontSize: 12))
+              const Text(
+                'No production records',
+                style: TextStyle(color: AppTheme.textPrimary, fontSize: 12),
+              )
             else
-              ...machine.productions.map((p) => Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: _ProductionRow(record: p),
-              )),
+              ...machine.productions.map(
+                (p) => Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: _ProductionRow(record: p),
+                ),
+              ),
           ],
         ),
       ),
@@ -1667,17 +1819,27 @@ class _MachineGroupTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label,
-              style: TextStyle(
-                  color: AppTheme.primary.withOpacity(0.5), fontSize: 9, fontWeight: FontWeight.w600)),
+          Text(
+            label,
+            style: TextStyle(
+              color: AppTheme.primary.withOpacity(0.5),
+              fontSize: 9,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           const SizedBox(height: 2),
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
-            child: Text(value,
-                maxLines: 1,
-                style: const TextStyle(
-                    color: AppTheme.textPrimary, fontSize: 11, fontWeight: FontWeight.w700)),
+            child: Text(
+              value,
+              maxLines: 1,
+              style: const TextStyle(
+                color: AppTheme.textPrimary,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ),
         ],
       ),
@@ -1685,7 +1847,8 @@ class _MachineGroupTile extends StatelessWidget {
   }
 }
 
-/// A single production entry
+/// A single production entry. Tappable — opens a bottom sheet with the full
+/// detail (machine, remaining production, shift, timestamps, etc).
 class _ProductionRow extends StatelessWidget {
   final ProductionRecord record;
 
@@ -1749,10 +1912,16 @@ class _ProductionRow extends StatelessWidget {
                   Text(
                     'Production #${record.productionId}',
                     style: const TextStyle(
-                        color: AppTheme.textPrimary, fontSize: 16, fontWeight: FontWeight.w800),
+                      color: AppTheme.textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 3,
+                    ),
                     decoration: BoxDecoration(
                       color: _statusColor.withOpacity(0.12),
                       borderRadius: BorderRadius.circular(6),
@@ -1771,22 +1940,46 @@ class _ProductionRow extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 record.batchId.isEmpty ? 'No batch' : record.batchId,
-                style: TextStyle(color: AppTheme.primary.withOpacity(0.55), fontSize: 12),
+                style: TextStyle(
+                  color: AppTheme.primary.withOpacity(0.55),
+                  fontSize: 12,
+                ),
               ),
               const SizedBox(height: 16),
               _detailRow('Variety', record.varietyType),
               _detailRow('Machine', record.machineName ?? '—'),
-              _detailRow('Total Length', '${_formatAmount(record.totalLength)} m'),
+              _detailRow(
+                'Total Length',
+                '${_formatAmount(record.totalLength)} m',
+              ),
               _detailRow('Ready Production', '${record.readyProduction} m'),
-              _detailRow('Waste Production', '${_formatAmount(record.wasteProduction)} m'),
-              _detailRow('Remaining Production', '${_formatAmount(record.remainingProduction)} m'),
-              _detailRow('Rate / meter', 'Rs ${record.amountPerMeter.toStringAsFixed(2)}'),
-              _detailRow('Expected Amount', 'Rs ${_formatAmount(record.expectedAmount)}'),
-              _detailRow('Earned Amount', 'Rs ${_formatAmount(record.earnedAmount)}'),
+              _detailRow(
+                'Waste Production',
+                '${_formatAmount(record.wasteProduction)} m',
+              ),
+              _detailRow(
+                'Remaining Production',
+                '${_formatAmount(record.remainingProduction)} m',
+              ),
+              _detailRow(
+                'Rate / meter',
+                'Rs ${record.amountPerMeter.toStringAsFixed(2)}',
+              ),
+              _detailRow(
+                'Expected Amount',
+                'Rs ${_formatAmount(record.expectedAmount)}',
+              ),
+              _detailRow(
+                'Earned Amount',
+                'Rs ${_formatAmount(record.earnedAmount)}',
+              ),
               if (record.selectDays != null && record.selectDays != 'null')
                 _detailRow('Day', record.selectDays!),
               if (record.shiftStart != null)
-                _detailRow('Shift', '${record.shiftStart} - ${record.shiftEnd}'),
+                _detailRow(
+                  'Shift',
+                  '${record.shiftStart} - ${record.shiftEnd}',
+                ),
               if (record.createdAt != null)
                 _detailRow('Created', record.createdAt!),
             ],
@@ -1802,15 +1995,25 @@ class _ProductionRow extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Text(label,
-                style: TextStyle(color: AppTheme.primary.withOpacity(0.6), fontSize: 12)),
+            child: Text(
+              label,
+              style: TextStyle(
+                color: AppTheme.primary.withOpacity(0.6),
+                fontSize: 12,
+              ),
+            ),
           ),
           Flexible(
-            child: Text(value,
-                textAlign: TextAlign.right,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                    color: AppTheme.textPrimary, fontSize: 12, fontWeight: FontWeight.w700)),
+            child: Text(
+              value,
+              textAlign: TextAlign.right,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: AppTheme.textPrimary,
+                fontSize: 12,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ),
         ],
       ),
@@ -1839,11 +2042,17 @@ class _ProductionRow extends StatelessWidget {
                     '${record.varietyType} • ${record.batchId}',
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                        color: AppTheme.textPrimary, fontSize: 12, fontWeight: FontWeight.w700),
+                      color: AppTheme.textPrimary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 6,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
                     color: _statusColor.withOpacity(0.12),
                     borderRadius: BorderRadius.circular(4),
@@ -1864,9 +2073,12 @@ class _ProductionRow extends StatelessWidget {
                     child: Text(
                       'Rs ${_formatAmount(record.earnedAmount)}',
                       style: TextStyle(
-                          color: record.status == 4 ? AppTheme.success : AppTheme.primary,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w800),
+                        color: record.status == 4
+                            ? AppTheme.success
+                            : AppTheme.primary,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ),
                 ),
@@ -1877,7 +2089,10 @@ class _ProductionRow extends StatelessWidget {
               children: [
                 _miniStat('Length', '${_formatAmount(record.totalLength)} m'),
                 const SizedBox(width: 6),
-                _miniStat('Rate/m', 'Rs ${record.amountPerMeter.toStringAsFixed(2)}'),
+                _miniStat(
+                  'Rate/m',
+                  'Rs ${record.amountPerMeter.toStringAsFixed(2)}',
+                ),
                 const SizedBox(width: 6),
                 _miniStat('Ready', '${record.readyProduction} m'),
               ],
@@ -1885,19 +2100,33 @@ class _ProductionRow extends StatelessWidget {
             const SizedBox(height: 6),
             Row(
               children: [
-                _miniStat('Expected', 'Rs ${_formatAmount(record.expectedAmount)}'),
+                _miniStat(
+                  'Expected',
+                  'Rs ${_formatAmount(record.expectedAmount)}',
+                ),
                 const SizedBox(width: 6),
-                _miniStat('Waste', '${_formatAmount(record.wasteProduction)} m'),
+                _miniStat(
+                  'Waste',
+                  '${_formatAmount(record.wasteProduction)} m',
+                ),
                 const SizedBox(width: 6),
-                _miniStat('Remaining', '${_formatAmount(record.remainingProduction)} m'),
+                _miniStat(
+                  'Remaining',
+                  '${_formatAmount(record.remainingProduction)} m',
+                ),
               ],
             ),
-            if (record.selectDays != null && record.selectDays!.isNotEmpty && record.selectDays != 'null') ...[
+            if (record.selectDays != null &&
+                record.selectDays!.isNotEmpty &&
+                record.selectDays != 'null') ...[
               const SizedBox(height: 6),
               Text(
                 'Days: ${record.selectDays}',
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(color: AppTheme.primary.withOpacity(0.5), fontSize: 10),
+                style: TextStyle(
+                  color: AppTheme.primary.withOpacity(0.5),
+                  fontSize: 10,
+                ),
               ),
             ],
           ],
@@ -1911,17 +2140,27 @@ class _ProductionRow extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label,
-              style: TextStyle(
-                  color: AppTheme.primary.withOpacity(0.5), fontSize: 9, fontWeight: FontWeight.w600)),
+          Text(
+            label,
+            style: TextStyle(
+              color: AppTheme.primary.withOpacity(0.5),
+              fontSize: 9,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
           const SizedBox(height: 2),
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: Alignment.centerLeft,
-            child: Text(value,
-                maxLines: 1,
-                style: const TextStyle(
-                    color: AppTheme.textPrimary, fontSize: 11, fontWeight: FontWeight.w700)),
+            child: Text(
+              value,
+              maxLines: 1,
+              style: const TextStyle(
+                color: AppTheme.textPrimary,
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ),
         ],
       ),

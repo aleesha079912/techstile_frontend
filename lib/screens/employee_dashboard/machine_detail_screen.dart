@@ -28,7 +28,7 @@ class _MachineDetailScreenState
   bool loading = true;
   Map<String, dynamic>? machine;
 
-  // ✅ Yahan add karo — class level pe
+  // Yahan add karo  class level pe
   bool canAdd = false;
   double remaining = 0;
 

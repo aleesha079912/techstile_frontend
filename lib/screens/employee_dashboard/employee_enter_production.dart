@@ -146,7 +146,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
 
-                // ── Variety ──
+                //Variety 
                 const Text("Variety Type",
                     style: TextStyle(fontSize: 12, color:  AppTheme.textneutral)),
                 const SizedBox(height: 6),
@@ -161,7 +161,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
 
                 const SizedBox(height: 15),
 
-                // ── Total Length ──
+                // Total Length 
                 const Text("Total Length",
                     style: TextStyle(fontSize: 12, color:  AppTheme.textneutral)),
                 const SizedBox(height: 6),
@@ -176,7 +176,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
 
                 const SizedBox(height: 15),
 
-                // ── Remaining (NEW) ──
+                // Remaining 
                 const Text("Remaining",
                     style: TextStyle(fontSize: 12, color:  AppTheme.textneutral)),
                 const SizedBox(height: 6),
@@ -206,7 +206,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
 
                 const SizedBox(height: 15),
 
-                // ── Waste (NEW) ──
+                //  Waste 
                 const Text("Waste Production",
                     style: TextStyle(fontSize: 12, color: AppTheme.textneutral)),
                 const SizedBox(height: 6),

@@ -363,7 +363,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                 _infoRow(Icons.straighten_rounded,    'Total Length',     item['total_length']),
                 _infoRow(Icons.check_circle_outline,  'Ready Production', item['ready_production']),
                 if (isApproved)
-                  _infoRow(Icons.done_all_rounded, 'Status', 'Approved ✅'),
+                  _infoRow(Icons.done_all_rounded, 'Status', 'Approved '),
               ],
             ),
           ),
