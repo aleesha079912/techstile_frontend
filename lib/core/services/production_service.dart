@@ -15,23 +15,28 @@ class ProductionService {
   static const String _base = AuthService.baseUrl;
 
   // Manager fetch all productions for factory 
-  Future<List<Map<String, dynamic>>> getManagerProductions(dynamic factoryId) async {
-    if (factoryId == null || AuthService.token.isEmpty) {
-      throw ProductionAuthException();
-    }
-    final res = await http.get(
-      Uri.parse('$_base/manager/productions/$factoryId'),
-      headers: AuthService.authHeaders,  
-    );
-    if (res.statusCode == 200) {
-      final body = jsonDecode(res.body);
-      return List<Map<String, dynamic>>.from(body['productions'] ?? []);
-    }
-    if (res.statusCode == 401) {
-      throw ProductionAuthException();
-    }
-    throw Exception('Failed to load productions (${res.statusCode})');
+ Future<Map<String, dynamic>> getManagerProductions(
+  dynamic factoryId, {
+  String? period,
+}) async {
+  if (factoryId == null || AuthService.token.isEmpty) {
+    throw ProductionAuthException();
   }
+
+  final uri = Uri.parse('$_base/manager/productions/$factoryId').replace(
+    queryParameters: period != null ? {'period': period} : null,
+  );
+
+  final res = await http.get(uri, headers: AuthService.authHeaders);
+
+  if (res.statusCode == 200) {
+    return jsonDecode(res.body) as Map<String, dynamic>;
+  }
+  if (res.statusCode == 401) {
+    throw ProductionAuthException();
+  }
+  throw Exception('Failed to load productions (${res.statusCode})');
+}
 
   //Manager: approve or reject
   Future<void> managerAction(dynamic productionId, String action) async {
@@ -44,11 +49,15 @@ class ProductionService {
   }
 
   //  Owner fetch all productions for factory
- Future<Map<String, dynamic>> getOwnerProductionsGrouped(dynamic factoryId) async {
-  final response = await http.get(
-    Uri.parse('$_base/owner/productions/$factoryId'),
-    headers: AuthService.authHeaders,
+Future<Map<String, dynamic>> getOwnerProductionsGrouped(
+  dynamic factoryId, {
+  String? period,
+}) async {
+  final uri = Uri.parse('$_base/owner/productions/$factoryId').replace(
+    queryParameters: period != null ? {'period': period} : null,
   );
+
+  final response = await http.get(uri, headers: AuthService.authHeaders);
   if (response.statusCode == 200) {
     return jsonDecode(response.body) as Map<String, dynamic>;
   }
