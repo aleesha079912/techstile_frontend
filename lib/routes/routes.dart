@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:techstile_frontend/screens/app_Owner_dashboard/setting_screen.dart';
+
 import 'package:techstile_frontend/screens/employee_dashboard/employee_enter_production.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/history_screen.dart';
 import 'package:techstile_frontend/screens/employee_dashboard/machine_detail_screen.dart';
@@ -244,11 +244,7 @@ GetPage(
       transition: Transition.rightToLeftWithFade,
     ),
 
-    GetPage(
-      name: settings,
-      page: () => const SettingsScreen(),
-      transition: Transition.rightToLeftWithFade,
-    ),
+   
     GetPage(
       name: scanMachine,
       page: () => const ScanQRCodeScreen(factoryId: 0),

@@ -92,7 +92,7 @@ class _OwnerEnterProductionScreenState
         Get.back(result: true);
         Get.snackbar(
           "Success",
-          "Production submitted for approval",
+          "Production submitted and show in approved production page.",
           backgroundColor: AppTheme.success,
           colorText:   AppTheme.textSecondary,
         );
