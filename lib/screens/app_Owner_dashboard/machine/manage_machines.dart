@@ -231,7 +231,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
             const Text(
               "All Machines",
               style: TextStyle(
-                color: AppTheme.primary,
+                color: AppTheme.textPrimary,
                 fontSize: 21,
                 fontWeight: FontWeight.w800,
               ),
@@ -240,7 +240,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
               Text(
                 factoryName,
                 style: TextStyle(
-                  color: AppTheme.primary.withOpacity(0.55),
+                  color: AppTheme.textPrimary.withOpacity(0.55),
                   fontSize: 13,
                   fontWeight: FontWeight.w500,
                 ),
@@ -264,12 +264,12 @@ class _MachinesScreenState extends State<MachinesScreen> {
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.add, color: Colors.white, size: 20),
+                    Icon(Icons.add, color: AppTheme.secondary, size: 20),
                     SizedBox(width: 6),
                     Text(
                       "Add Machine",
                       style: TextStyle(
-                        color: Colors.white,
+                        color: AppTheme.textPrimary,
                         fontWeight: FontWeight.w600,
                         fontSize: 13,
                       ),
@@ -314,7 +314,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
                           child: _statCard(
                             "Active",
                             data?.activeMachines ?? 0,
-                            AppTheme.success,
+                            AppTheme.active,
                             isSelected: showOnlyActive,
                           ),
                         ),
@@ -433,7 +433,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isActive
-                ? AppTheme.success
+                ? AppTheme.active
                 : AppTheme.primary.withOpacity(0.12),
             width: isActive ? 1.5 : 1,
           ),
@@ -451,13 +451,13 @@ class _MachinesScreenState extends State<MachinesScreen> {
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: isActive
-                    ? AppTheme.success.withOpacity(0.16)
+                    ? AppTheme.active.withOpacity(0.16)
                     : AppTheme.primary.withOpacity(0.08),
                 shape: BoxShape.circle,
               ),
               child: Icon(
                 Icons.precision_manufacturing,
-                color: isActive ? AppTheme.success : AppTheme.primary,
+                color: isActive ? AppTheme.active : AppTheme.primary,
                 size: 20,
               ),
             ),
@@ -471,7 +471,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
-                      color: isActive ? AppTheme.success : AppTheme.primary,
+                      color: isActive ? AppTheme.active: AppTheme.primary,
                     ),
                   ),
                   Text(m.type, style: const TextStyle(color: AppTheme.neutral)),
@@ -483,13 +483,13 @@ class _MachinesScreenState extends State<MachinesScreen> {
                 margin: const EdgeInsets.only(right: 10),
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                 decoration: BoxDecoration(
-                  color: AppTheme.success,
+                  color: AppTheme.active,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Text(
                   "ACTIVE",
                   style: TextStyle(
-                    color: Colors.white,
+                    color: AppTheme.textSecondary,
                     fontSize: 10,
                     fontWeight: FontWeight.bold,
                   ),

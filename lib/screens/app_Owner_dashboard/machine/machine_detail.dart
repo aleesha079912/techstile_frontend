@@ -339,13 +339,13 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: (isDayShift ? Colors.orange : AppTheme.primary)
+                  color: (isDayShift ? AppTheme.surface : AppTheme.primary)
                       .withOpacity(0.12),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Icon(
                   isDayShift ? Icons.wb_sunny_rounded : Icons.nightlight_round,
-                  color: isDayShift ? Colors.orange : AppTheme.primary,
+                  color: isDayShift ?  AppTheme.surface : AppTheme.primary,
                   size: 16,
                 ),
               ),

@@ -972,7 +972,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                                     const TextStyle(
                                   color:
                                       AppTheme
-                                          .primary,
+                                          .textPrimary,
                                   fontSize: 10,
                                   fontWeight:
                                       FontWeight
@@ -1019,7 +1019,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                             statBox(
                               'Active Users',
                               '$activeUsers',
-                              AppTheme.success,
+                              AppTheme.active,
                               Icons.bolt_rounded,
                               showActiveOnly,
                               () {
