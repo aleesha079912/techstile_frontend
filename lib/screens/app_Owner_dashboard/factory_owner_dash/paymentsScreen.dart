@@ -1154,6 +1154,13 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
         iconTheme: const IconThemeData(color: AppTheme.primary),
         automaticallyImplyLeading: false,
         elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          color: AppTheme.primary,
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

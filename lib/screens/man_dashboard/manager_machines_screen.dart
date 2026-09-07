@@ -170,7 +170,7 @@ class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
                             child: _statBox(
                               "Total Machines",
                               "$totalCount",
-                              AppTheme.textPrimary,
+                              AppTheme.primary,
                               Icons.precision_manufacturing_rounded,
                               !showActiveOnly,
                               () {
@@ -428,7 +428,7 @@ class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
                   Text(
                     m.type,
                     style: const TextStyle(
-                      color: AppTheme.textSecondary,
+                      color: AppTheme.textneutral,
                       fontSize: 12,
                     ),
                   ),
@@ -449,7 +449,7 @@ class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
               child: Text(
                 isActive ? "Active" : "Inactive",
                 style: TextStyle(
-                  color: isActive ? AppTheme.success : AppTheme.primary,
+                  color: isActive ? AppTheme.active : AppTheme.primary,
                   fontSize: 11,
                   fontWeight: FontWeight.w700,
                 ),

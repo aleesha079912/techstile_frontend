@@ -16,8 +16,8 @@ class ManagerBottomNav extends StatelessWidget {
   static const _items = [
     (Icons.grid_view_rounded,                'HOME'),
     (Icons.precision_manufacturing_outlined, 'MACHINES'),
-    (Icons.people_outline_rounded,           'EMPLOYEES'),
-    (Icons.credit_card_outlined,             'PAYMENTS'),
+    (Icons.credit_card_outlined,             'EMPLOYEES'),
+    (Icons.people_outline_rounded,           'PAYMENTS'),
   ];
 
   void _onTap(int index) {
@@ -33,7 +33,7 @@ class ManagerBottomNav extends StatelessWidget {
       break;
 
     case 2:
-      Get.offNamed(AppRoutes.managerEmployees);
+      Get.offNamed(AppRoutes.managerEmployees );
       break;
 
     case 3:
