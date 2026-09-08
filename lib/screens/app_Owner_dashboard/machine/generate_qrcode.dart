@@ -32,16 +32,16 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
       drawer: const OwnerDrawer(),
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        backgroundColor:AppTheme.primary,
+        backgroundColor:AppTheme.background,
         elevation: 0.5,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppTheme.secondary, size: 20),
+          icon: const Icon(Icons.arrow_back, color: AppTheme.primary, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
           "Machine QR Code",
           style: TextStyle(
-            color:AppTheme.secondary,
+            color:AppTheme.textPrimary,
             fontWeight: FontWeight.w600,
             fontSize: 18,
           ),

@@ -855,6 +855,13 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
       backgroundColor:
           AppTheme.secondary,
       elevation: 0,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        color: AppTheme.primary,
+        onPressed: () {
+          Navigator.of (context).pop();
+        },
+      ),
 
       titleSpacing: 16,
 

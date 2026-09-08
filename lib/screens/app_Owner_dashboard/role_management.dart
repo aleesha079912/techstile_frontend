@@ -35,10 +35,10 @@ class _RoleManagementScreenState extends State<RoleManagementScreen> {
       backgroundColor:  AppTheme.background,
 
       appBar: AppBar(
-        backgroundColor: AppTheme.primary,
+        backgroundColor: AppTheme.background,
   title: const Text("Role Management",
   style: TextStyle(
-    color: AppTheme.secondary
+    color: AppTheme.textPrimary
   ),
   ),
  
@@ -46,7 +46,7 @@ class _RoleManagementScreenState extends State<RoleManagementScreen> {
 
   leading: IconButton(
     icon: const Icon(Icons.arrow_back,
-    color: AppTheme.secondary,
+    color: AppTheme.primary,
     ),
     onPressed: () {
       Navigator.pop(context);

@@ -107,17 +107,17 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             padding: const EdgeInsets.all(3.5),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.white.withOpacity(0.7), width: 2),
+              border: Border.all(color:AppTheme.secondary.withOpacity(0.7), width: 2),
             ),
             child: CircleAvatar(
               radius: 36,
-              backgroundColor: Colors.white.withOpacity(0.2),
+              backgroundColor:AppTheme.background.withOpacity(0.2),
               child: Text(
                 firstLetter,
                 style: const TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.w800,
-                  color: Colors.white,
+                  color: AppTheme.textSecondary,
                 ),
               ),
             ),
@@ -129,7 +129,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w800,
-              color: Colors.white,
+              color:  AppTheme.textSecondary,
               letterSpacing: 0.2,
             ),
           ),
@@ -139,7 +139,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 12.5,
-              color: Colors.white.withOpacity(0.85),
+              color: AppTheme.textSecondary.withOpacity(0.85),
             ),
           ),
           const SizedBox(height: 10),
@@ -147,19 +147,19 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.18),
+              color: AppTheme.secondary.withOpacity(0.18),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.white.withOpacity(0.3)),
+              border: Border.all(color:  AppTheme.secondary.withOpacity(0.3)),
             ),
             child: const Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.engineering_outlined, color: Color(0xFF64B5F6), size: 14),
+                Icon(Icons.engineering_outlined, color: AppTheme.info, size: 14),
                 SizedBox(width: 5),
                 Text(
                   "Production Staff",
                   style: TextStyle(
-                    color: Colors.white,
+                    color:  AppTheme.textSecondary,
                     fontSize: 11.5,
                     fontWeight: FontWeight.w700,
                   ),
@@ -204,7 +204,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     required VoidCallback onTap,
   }) {
     return Material(
-      color: Colors.white,
+      color:  AppTheme.secondary,
       borderRadius: BorderRadius.circular(16),
       elevation: 1,
       shadowColor: AppTheme.primary.withOpacity(0.08),
@@ -325,7 +325,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:  AppTheme.secondary,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -396,7 +396,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       margin: const EdgeInsets.symmetric(horizontal: 16),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:  AppTheme.secondary,
         borderRadius: BorderRadius.circular(18),
         boxShadow: [
           BoxShadow(
@@ -488,16 +488,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        backgroundColor: AppTheme.primary,
+        backgroundColor: AppTheme.background,
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppTheme.secondary),
+          icon: const Icon(Icons.arrow_back, color: AppTheme.primary),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
           "Employee Profile",
           style: TextStyle(
-            color: AppTheme.textSecondary,
+            color: AppTheme.textPrimary,
             fontSize: 17,
             fontWeight: FontWeight.w700,
           ),
