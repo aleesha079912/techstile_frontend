@@ -13,24 +13,20 @@ class AssignShiftsScreen extends StatefulWidget {
 
 class _AssignShiftsScreenState extends State<AssignShiftsScreen> {
   final service = EmployeeService();
-
   List data = [];
   bool loading = true;
   List factories = [];
   List employees = [];
-
   @override
   void initState() {
     super.initState();
     load();
     loadDropdowns();
   }
-
   Future<void> loadDropdowns() async {
     factories = await service.fetchFactories();
     employees = await service.fetchUsers();
-
-    setState(() {});
+setState(() {});
   }
 
   Future<void> load() async {

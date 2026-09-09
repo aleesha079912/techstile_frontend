@@ -1,15 +1,7 @@
-// lib/features/manager/pages/manager_productions_page.dart
-
 import 'package:flutter/material.dart';
 import '../../../core/services/production_service.dart';
 import '../../../core/utils/theme.dart';
 import '../../../widgets/man_bottom_navbar.dart';
-
-// ============================================================
-// Models (prefixed with Manager to avoid clashing with the
-// owner page's ProductionItem / MachineProductionGroup / etc.
-// if both files ever get imported together, e.g. in routes.dart)
-// ============================================================
 
 class ManagerProductionItem {
   final int id;

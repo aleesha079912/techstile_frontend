@@ -3,14 +3,7 @@ import '../../core/services/manager_service/manager_service.dart';
 import '../../../core/utils/theme.dart';
 import '../../../widgets/man_bottom_navbar.dart';
 
-// ============================================================
-// Models
-// ------------------------------------------------------------
-// Same shape as the owner-side models (PaymentsScreen). Duplicated
-// here so this screen stays self-contained and doesn't depend on
-// the owner screen's UI file. If you later move these into a shared
-// models file, just delete this block and import that instead.
-// ============================================================
+
 
 class EmployeePayment {
   final int employeeId;
@@ -448,7 +441,7 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
       // Manager is view-only: no FAB, no add/edit/delete affordances.
       body: _buildBody(),
       bottomNavigationBar: ManagerBottomNav(
-        currentIndex: 3,
+        currentIndex: 2,
         factoryId: widget.factoryId,
       ),
     );
