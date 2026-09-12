@@ -489,7 +489,7 @@ class _SummaryStat extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 7),
         decoration: BoxDecoration(
-          color: AppTheme.primary,
+          color: AppTheme.info,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: AppTheme.primary.withOpacity(0.10)),
         ),

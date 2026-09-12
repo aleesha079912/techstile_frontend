@@ -355,7 +355,7 @@ class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
             Text(
               'No machines found',
               style: TextStyle(
-                color: AppTheme.textSecondary,
+                color:AppTheme.textPrimary,
                 fontSize: 14,
               ),
             ),
