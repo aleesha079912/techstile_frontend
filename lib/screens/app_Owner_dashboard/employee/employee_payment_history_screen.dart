@@ -158,10 +158,10 @@ class _EmployeePaymentHistoryScreenState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text('Total Earned',
-                    style: TextStyle(color: AppTheme.secondary, fontSize: 12, fontWeight: FontWeight.w600)),
+                    style: TextStyle(color: AppTheme.textSecondary, fontSize: 12, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 6),
                 Text('Rs ${_fmt(r.totalEarned)}',
-                    style: const TextStyle(color: AppTheme.secondary, fontSize: 26, fontWeight: FontWeight.w800)),
+                    style: const TextStyle(color: AppTheme.textSecondary, fontSize: 26, fontWeight: FontWeight.w800)),
                 const SizedBox(height: 16),
                 Row(
                   children: [
@@ -205,10 +205,10 @@ class _EmployeePaymentHistoryScreenState
         child: Column(
           children: [
             Text(value,
-                style: const TextStyle(color: AppTheme.secondary, fontSize: 13, fontWeight: FontWeight.w800)),
+                style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13, fontWeight: FontWeight.w800)),
             const SizedBox(height: 3),
             Text(label,
-                style: TextStyle(color: AppTheme.secondary.withOpacity(0.75), fontSize: 10.5)),
+                style: TextStyle(color: AppTheme.textSecondary.withOpacity(0.75), fontSize: 10.5)),
           ],
         ),
       ),
@@ -264,7 +264,7 @@ class _EmployeePaymentHistoryScreenState
             ),
           ),
           Text('Rs ${_fmt(p.earnedAmount)}',
-              style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: AppTheme.primary)),
+              style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700, color: AppTheme.textPrimary)),
         ],
       ),
     );
