@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import '../../core/services/manager_service/manager_service.dart';
 import '../../../core/utils/theme.dart';
 import '../../../widgets/man_bottom_navbar.dart';
-
-
+import '../../../widgets/man_drawer.dart';
+// ============================================================
+// Models
+// ============================================================
 
 class EmployeePayment {
   final int employeeId;
@@ -41,9 +43,11 @@ class EmployeePayment {
       totalExpected: double.tryParse(json['total_expected'].toString()) ?? 0,
       totalAmount: double.tryParse(json['total_amount'].toString()) ?? 0,
       totalEarned: double.tryParse(json['total_earned'].toString()) ?? 0,
-      totalPaid: double.tryParse(json['total_paid'].toString()) ?? 0,
+      // Manager's endpoint doesn't expose paid-amount data yet.
+      totalPaid: double.tryParse(json['total_paid']?.toString() ?? '') ?? 0,
       remainingAmount:
-          double.tryParse(json['remaining_amount'].toString()) ?? 0,
+          double.tryParse(json['remaining_amount']?.toString() ?? '') ??
+              (double.tryParse(json['total_earned'].toString()) ?? 0),
       totalLength: double.tryParse(json['total_length'].toString()) ?? 0,
       machines: (json['machines'] as List? ?? [])
           .map((e) => MachineGroup.fromJson(e))
@@ -181,170 +185,6 @@ class ProductionRecord {
 }
 
 // ============================================================
-// Grouping helper
-// ------------------------------------------------------------
-// ManagerDashboardService.getPayments() returns a FLAT list of production
-// records (one row per production, not grouped by employee/machine like
-// the owner-side endpoint does). We group it client-side here into the
-// same EmployeePayment -> MachineGroup -> ProductionRecord shape the UI
-// below expects.
-//
-// Field names are guessed defensively with fallbacks based on what the
-// original _paymentCard() used (employeedetails.user.name, variety_type,
-// total_length, ready_production, status). If amounts/grouping look wrong,
-// share one sample record from the getPayments response and these getters
-// can be tightened up.
-// ============================================================
-
-dynamic _pick(Map<String, dynamic> json, List<String> keys) {
-  for (final k in keys) {
-    if (json.containsKey(k) && json[k] != null) return json[k];
-  }
-  return null;
-}
-
-List<EmployeePayment> _groupProductionsByEmployee(List raw) {
-  // employeeId -> machineId -> list of production maps
-  final Map<int, Map<String, dynamic>> employeeMeta = {};
-  final Map<int, Map<int, Map<String, dynamic>>> employeeMachineMeta = {};
-  final Map<int, Map<int, List<ProductionRecord>>> buckets = {};
-
-  for (final item in raw) {
-    final p = item as Map<String, dynamic>;
-
-    final employeeDetails = p['employeedetails'] ?? p['employee'];
-    final employeeId = int.tryParse(
-          (_pick(p, ['employee_id']) ?? employeeDetails?['id'])
-                  ?.toString() ??
-              '',
-        ) ??
-        0;
-    final employeeName = employeeDetails?['user']?['name'] ??
-        p['employee_name'] ??
-        'Employee #$employeeId';
-
-    final machineObj = p['machine'] ?? p['machinedetails'];
-    final machineId = int.tryParse(
-      (_pick(p, ['machine_id']) ?? machineObj?['id'])?.toString() ?? '',
-    );
-    final machineName =
-        machineObj?['name'] ?? p['machine_name'] ?? 'Unassigned';
-
-    final tLen = double.tryParse(_pick(p, ['total_length'])?.toString() ?? '') ?? 0;
-    final rate =
-        double.tryParse(_pick(p, ['amount_per_meter'])?.toString() ?? '') ?? 0;
-    final exp = double.tryParse(_pick(p, ['expected_amount'])?.toString() ?? '') ??
-        (tLen * rate);
-    final earn = double.tryParse(
-          _pick(p, ['earned_amount', 'amount'])?.toString() ?? '',
-        ) ??
-        0;
-
-    final record = ProductionRecord(
-      productionId:
-          int.tryParse(_pick(p, ['production_id', 'id'])?.toString() ?? '') ?? 0,
-      batchId: p['batch_id']?.toString() ?? '',
-      varietyType: p['variety_type']?.toString() ?? '',
-      status: int.tryParse(p['status']?.toString() ?? '') ?? 1,
-      totalLength: tLen,
-      readyProduction:
-          int.tryParse(p['ready_production']?.toString() ?? '') ?? 0,
-      wasteProduction:
-          double.tryParse(p['waste_production']?.toString() ?? '') ?? 0,
-      remainingProduction:
-          double.tryParse(p['remaining_production']?.toString() ?? '') ?? 0,
-      machineName: machineName,
-      amountPerMeter: rate,
-      expectedAmount: exp,
-      earnedAmount: earn,
-      amount: earn,
-      selectDays: p['select_days']?.toString(),
-      shiftStart: p['shift_start']?.toString(),
-      shiftEnd: p['shift_end']?.toString(),
-      createdAt: p['created_at']?.toString(),
-    );
-
-    employeeMeta[employeeId] = {
-      'name': employeeName,
-      'factory_name': p['factory_name'],
-      'manager_name': p['manager_name'],
-    };
-
-    final machineKey = machineId ?? -1;
-    employeeMachineMeta.putIfAbsent(employeeId, () => {});
-    employeeMachineMeta[employeeId]![machineKey] = {
-      'machine_id': machineId,
-      'machine_name': machineName,
-    };
-
-    buckets.putIfAbsent(employeeId, () => {});
-    buckets[employeeId]!.putIfAbsent(machineKey, () => []);
-    buckets[employeeId]![machineKey]!.add(record);
-  }
-
-  final List<EmployeePayment> result = [];
-
-  buckets.forEach((employeeId, machineBuckets) {
-    final machines = <MachineGroup>[];
-    double empExpected = 0, empEarned = 0, empLength = 0;
-
-    machineBuckets.forEach((machineId, records) {
-      final meta = employeeMachineMeta[employeeId]![machineId]!;
-      double mExpected = 0, mEarned = 0, mLength = 0, mReady = 0, mWaste = 0, mRemaining = 0;
-
-      for (final r in records) {
-        mExpected += r.expectedAmount;
-        mEarned += r.earnedAmount;
-        mLength += r.totalLength;
-        mReady += r.readyProduction;
-        mWaste += r.wasteProduction;
-        mRemaining += r.remainingProduction;
-      }
-
-      machines.add(MachineGroup(
-        machineId: meta['machine_id'],
-        machineName: meta['machine_name'],
-        productionCount: records.length,
-        totalLength: mLength,
-        readyProduction: mReady,
-        wasteProduction: mWaste,
-        remainingProduction: mRemaining,
-        expectedAmount: mExpected,
-        earnedAmount: mEarned,
-        totalAmount: mEarned,
-        productions: records,
-      ));
-
-      empExpected += mExpected;
-      empEarned += mEarned;
-      empLength += mLength;
-    });
-
-    final meta = employeeMeta[employeeId]!;
-
-    result.add(EmployeePayment(
-      employeeId: employeeId,
-      employeeName: meta['name'],
-      factoryName: meta['factory_name'],
-      managerName: meta['manager_name'],
-      totalExpected: empExpected,
-      totalAmount: empEarned,
-      totalLength: empLength,
-      machines: machines,
-      totalEarned: empEarned,
-      // Manager's getPayments() doesn't return actual paid-amount data
-      // (that lives in the payments table, which is an owner-only action
-      // anyway). Showing 0 paid / full remaining until that data is
-      // exposed to the manager endpoint, if ever needed.
-      totalPaid: 0,
-      remainingAmount: empEarned,
-    ));
-  });
-
-  return result;
-}
-
-// ============================================================
 // Screen
 // ============================================================
 
@@ -378,10 +218,13 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
 
     try {
       // Manager-scoped endpoint (backend already restricts this to the
-      // logged-in manager's own factory). Returns a flat production list,
-      // which we group into employee -> machine -> production below.
+      // logged-in manager's own factory). Expected to return the same
+      // grouped shape as the owner-side endpoint: employee -> machines ->
+      // productions.
       final res = await _service.getPayments(widget.factoryId);
-      final data = _groupProductionsByEmployee(res);
+      final data = (res as List)
+          .map((e) => EmployeePayment.fromJson(e as Map<String, dynamic>))
+          .toList();
 
       // Factory name still comes from the manager dashboard API, same as
       // before.
@@ -412,33 +255,33 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       drawer: ManagerDrawer(
+        // factoryId: factoryId,
+      ),
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        backgroundColor: AppTheme.primary,
-        iconTheme: const IconThemeData(color: AppTheme.secondary),
-        elevation: 0,
-        automaticallyImplyLeading: false,
+        backgroundColor: AppTheme.secondary,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
               'Payments',
               style: TextStyle(
-                  color: AppTheme.secondary,
+                  color: AppTheme.textPrimary,
                   fontWeight: FontWeight.w700,
                   fontSize: 17),
             ),
             Text(
               loading ? 'Loading...' : (factoryName ?? 'Factory'),
               style: TextStyle(
-                color: AppTheme.secondary.withOpacity(0.65),
+                color: AppTheme.textPrimary.withOpacity(0.65),
                 fontSize: 12,
               ),
             ),
           ],
         ),
-      ),
-      // Manager is view-only: no FAB, no add/edit/delete affordances.
+        ),
+     
       body: _buildBody(),
       bottomNavigationBar: ManagerBottomNav(
         currentIndex: 2,

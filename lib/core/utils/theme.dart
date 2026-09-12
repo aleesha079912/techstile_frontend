@@ -11,7 +11,7 @@ class AppTheme {
   static const Color onsurface  = Color(0xFF202020); 
 
 
-  static const Color active  = Color(0xFF0D9B8A); // Teal — active / selected / success
+  static const Color active  =  Color.fromRGBO(76, 175, 80, 1); // Green — active / selected / active
   static const Color success = Color(0xFF0D9B8A); // Teal (alias)
    static const Color info= Color(0xFF64B5F6);
   static const Color error   = Color(0xFFE74C3C); // Red — error / reject
@@ -103,7 +103,7 @@ class AppTheme {
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(18),
-        borderSide:   const BorderSide(color: active, width: 2), // teal on focus
+        borderSide:   const BorderSide(color: info, width: 2), // teal on focus
       ),
       errorBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(18),
@@ -150,7 +150,7 @@ class AppTheme {
         return primary;
       }),
       trackColor: WidgetStateProperty.resolveWith((states) {
-        if (states.contains(WidgetState.selected)) return active;
+        if (states.contains(WidgetState.selected)) return success;
         return primary.withOpacity(0.2);
       }),
     ),

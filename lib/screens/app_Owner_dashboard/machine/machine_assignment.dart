@@ -191,18 +191,18 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
                     Container(
                       padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.blue.shade50,
+                        color:AppTheme.secondary,
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color:AppTheme.info),
                       ),
                       child: const Row(
                         children: [
-                          Icon(Icons.info_outline, color: Colors.blueGrey, size: 18),
+                          Icon(Icons.info_outline, color: AppTheme.neutral, size: 18),
                           SizedBox(width: 8),
                           Expanded(
                             child: Text(
                               "Variety & Total Length is set separately from the machine's page using \"Assign Production Batch\".",
-                              style: TextStyle(fontSize: 12, color: Colors.blueGrey),
+                              style: TextStyle(fontSize: 12, color: AppTheme.neutral),
                             ),
                           ),
                         ],

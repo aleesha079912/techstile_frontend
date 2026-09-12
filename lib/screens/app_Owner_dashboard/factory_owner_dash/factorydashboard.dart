@@ -1044,7 +1044,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                 ),
 
                 _breakdownChip(
-                  'Mgr ✓',
+                  'Manager Approved',
                   mgrOk,
                   AppTheme.info,
                 ),

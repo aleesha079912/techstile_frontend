@@ -98,21 +98,21 @@ class _ManagerProfileScreenState
               shape: BoxShape.circle,
               border: Border.all(
                 color:
-                    Colors.white.withOpacity(0.7),
+                    AppTheme.secondary.withOpacity(0.7),
                 width: 2,
               ),
             ),
             child: CircleAvatar(
               radius: 36,
               backgroundColor:
-                  Colors.white.withOpacity(0.2),
+                  AppTheme.background.withOpacity(0.2),
               child: Text(
                 firstLetter,
                 style: const TextStyle(
                   fontSize: 32,
                   fontWeight:
                       FontWeight.w800,
-                  color: Colors.white,
+                  color: AppTheme.secondary,
                 ),
               ),
             ),
@@ -126,7 +126,7 @@ class _ManagerProfileScreenState
             style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w800,
-              color: Colors.white,
+              color: AppTheme.textSecondary,
               letterSpacing: 0.2,
             ),
           ),
@@ -139,7 +139,7 @@ class _ManagerProfileScreenState
             style: TextStyle(
               fontSize: 12.5,
               color:
-                  Colors.white.withOpacity(0.85),
+                AppTheme.textSecondary.withOpacity(0.85),
             ),
           ),
 
@@ -154,12 +154,12 @@ class _ManagerProfileScreenState
             ),
             decoration: BoxDecoration(
               color:
-                  Colors.white.withOpacity(0.18),
+                  AppTheme.secondary.withOpacity(0.18),
               borderRadius:
                   BorderRadius.circular(20),
               border: Border.all(
                 color:
-                    Colors.white.withOpacity(0.3),
+                    AppTheme.secondary.withOpacity(0.3),
               ),
             ),
             child: const Row(
@@ -167,14 +167,14 @@ class _ManagerProfileScreenState
               children: [
                 Icon(
                   Icons.shield_outlined,
-                  color: Color(0xFF64B5F6),
+                  color:AppTheme.info,
                   size: 14,
                 ),
                 SizedBox(width: 5),
                 Text(
                   "Plant Manager",
                   style: TextStyle(
-                    color: Colors.white,
+                    color: AppTheme.textSecondary,
                     fontSize: 11.5,
                     fontWeight:
                         FontWeight.w700,
@@ -246,7 +246,7 @@ class _ManagerProfileScreenState
         horizontal: 8,
       ),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppTheme.secondary,
         borderRadius:
             BorderRadius.circular(16),
         border: Border.all(
@@ -413,7 +413,7 @@ class _ManagerProfileScreenState
       padding:
           const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:  AppTheme.secondary,
         borderRadius:
             BorderRadius.circular(16),
         boxShadow: [
@@ -519,7 +519,7 @@ class _ManagerProfileScreenState
       padding:
           const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:  AppTheme.secondary,
         borderRadius:
             BorderRadius.circular(18),
         boxShadow: [
@@ -690,7 +690,7 @@ class _ManagerProfileScreenState
       // App Bar same as before
       appBar: AppBar(
         backgroundColor:
-            AppTheme.primary,
+            AppTheme.background,
         elevation: 0,
 
         leading: canPop
@@ -698,7 +698,7 @@ class _ManagerProfileScreenState
                 icon: const Icon(
                   Icons.arrow_back,
                   color:
-                      AppTheme.secondary,
+                      AppTheme.primary,
                 ),
                 onPressed: () =>
                     Navigator.pop(context),
@@ -709,7 +709,7 @@ class _ManagerProfileScreenState
                   icon: const Icon(
                     Icons.menu_rounded,
                     color:
-                        AppTheme.secondary,
+                        AppTheme.primary,
                   ),
                   onPressed: () =>
                       Scaffold.of(ctx)
@@ -721,7 +721,7 @@ class _ManagerProfileScreenState
           "Manager Profile",
           style: TextStyle(
             color:
-                AppTheme.textSecondary,
+                AppTheme.textPrimary,
             fontSize: 17,
             fontWeight:
                 FontWeight.w700,

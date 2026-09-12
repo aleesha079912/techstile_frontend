@@ -1,11 +1,9 @@
-import 'dart:io';
+
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/rendering.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:cross_file/cross_file.dart';
+
 
 class GenerateQrService {
 
@@ -22,48 +20,6 @@ class GenerateQrService {
     } catch (e) {
       debugPrint("QR Capture error: $e");
       return null;
-    }
-  }
-
-  /// Save QR image into device storage 
-  /// [machineDbId] = primary key from DB
-  static Future<String?> downloadQr(GlobalKey qrKey, String machineDbId) async {
-    try {
-      final bytes = await captureQrAsImage(qrKey);
-      if (bytes == null) return null;
-
-      final dir = await getApplicationDocumentsDirectory();
-      final filePath = '${dir.path}/machine_qr_id_$machineDbId.png';
-      final file = File(filePath);
-      await file.writeAsBytes(bytes);
-
-      debugPrint("QR saved at: $filePath");
-      return filePath;
-    } catch (e) {
-      debugPrint("QR Download error: $e");
-      return null;
-    }
-  }
-
-  /// QR share/print 
-  /// [machineDbId] = primary key from DB (e.g. "3")
-  static Future<void> printQr(GlobalKey qrKey, String machineDbId) async {
-    try {
-      final bytes = await captureQrAsImage(qrKey);
-      if (bytes == null) return;
-
-      final dir = await getTemporaryDirectory();
-      final filePath = '${dir.path}/machine_qr_id_$machineDbId.png';
-      final file = File(filePath);
-      await file.writeAsBytes(bytes);
-
-      await Share.shareXFiles(
-        [XFile(filePath)],
-        text: 'Machine QR Code (DB ID: $machineDbId)',
-        subject: 'Machine QR - ID $machineDbId',
-      );
-    } catch (e) {
-      debugPrint("QR Print/Share error: $e");
     }
   }
 }

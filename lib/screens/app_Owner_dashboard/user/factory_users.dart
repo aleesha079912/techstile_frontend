@@ -855,6 +855,13 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
       backgroundColor:
           AppTheme.secondary,
       elevation: 0,
+      leading: IconButton(
+        icon: const Icon(Icons.arrow_back),
+        color: AppTheme.primary,
+        onPressed: () {
+          Navigator.of (context).pop();
+        },
+      ),
 
       titleSpacing: 16,
 
@@ -972,7 +979,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                                     const TextStyle(
                                   color:
                                       AppTheme
-                                          .primary,
+                                          .textPrimary,
                                   fontSize: 10,
                                   fontWeight:
                                       FontWeight
@@ -1019,7 +1026,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                             statBox(
                               'Active Users',
                               '$activeUsers',
-                              AppTheme.success,
+                              AppTheme.active,
                               Icons.bolt_rounded,
                               showActiveOnly,
                               () {

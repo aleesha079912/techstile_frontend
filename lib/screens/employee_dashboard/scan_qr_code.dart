@@ -76,13 +76,13 @@ class _ScanqrCodeScreenState extends State<ScanqrCodeScreen>
         backgroundColor: AppTheme.background,
       
         appBar: AppBar(
-          backgroundColor: AppTheme.primary,
-          title: Text("Scan Machine QR", style: TextStyle(color: AppTheme.textSecondary),),
+          backgroundColor: AppTheme.background,
+          title: Text("Scan Machine QR", style: TextStyle(color: AppTheme.textPrimary),),
           elevation: 0,
-          iconTheme: IconThemeData(color: AppTheme.secondary),
+          iconTheme: IconThemeData(color: AppTheme.primary),
           leading: Builder(
             builder: (ctx) => IconButton(
-              icon: const Icon(Icons.menu_rounded, color: AppTheme.secondary),
+              icon: const Icon(Icons.menu_rounded, color: AppTheme.primary),
               onPressed: () => Scaffold.of(ctx).openDrawer(),
             ),
           ),

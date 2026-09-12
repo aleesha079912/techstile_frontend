@@ -91,7 +91,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              "Employee Dashboard",
+              "Employee",
               style: TextStyle(
                 color: AppTheme.primary,
                 fontWeight: FontWeight.w800,

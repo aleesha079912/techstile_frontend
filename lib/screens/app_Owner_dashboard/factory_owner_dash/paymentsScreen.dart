@@ -279,7 +279,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
         Text(
           title,
           style: TextStyle(
-            color: Colors.grey.shade700,
+            color: AppTheme.textneutral,
             fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
           ),
         ),
@@ -307,7 +307,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor: AppTheme.background,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -431,7 +431,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                             width: double.infinity,
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: Colors.red.withOpacity(0.08),
+                              color: AppTheme.error.withOpacity(0.08),
                               borderRadius: BorderRadius.circular(10),
                               border: Border.all(
                                 color: Colors.red.withOpacity(0.3),
@@ -450,7 +450,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                             width: double.infinity,
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
-                              color: AppTheme.background,
+                              color: AppTheme.secondary,
                               borderRadius: BorderRadius.circular(14),
                               border: Border.all(
                                 color: AppTheme.primary.withOpacity(0.08),
@@ -598,7 +598,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppTheme.primary,
-                                foregroundColor: Colors.white,
+                                foregroundColor: AppTheme.secondary,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),
@@ -1154,6 +1154,13 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
         iconTheme: const IconThemeData(color: AppTheme.primary),
         automaticallyImplyLeading: false,
         elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          color: AppTheme.primary,
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1404,7 +1411,7 @@ class _SummaryStat extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 7),
         decoration: BoxDecoration(
-          color: AppTheme.primary,
+          color: AppTheme.info,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: AppTheme.primary.withOpacity(0.10)),
         ),
