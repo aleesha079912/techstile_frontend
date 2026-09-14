@@ -276,7 +276,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
                     Text(
                       "Add Machine",
                       style: TextStyle(
-                        color: AppTheme.textPrimary,
+                        color: AppTheme.textSecondary,
                         fontWeight: FontWeight.w600,
                         fontSize: 13,
                       ),
