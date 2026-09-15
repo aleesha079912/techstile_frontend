@@ -222,7 +222,8 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
       // grouped shape as the owner-side endpoint: employee -> machines ->
       // productions.
       final res = await _service.getPayments(widget.factoryId);
-      final data = (res as List)
+      final List rawList = (res is Map ? res['data'] : res) as List? ?? [];
+      final data = rawList
           .map((e) => EmployeePayment.fromJson(e as Map<String, dynamic>))
           .toList();
 
@@ -251,6 +252,11 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
 
   double get _overallRatePerMeter =>
       _grandTotalLength == 0 ? 0 : _grandTotalAmount / _grandTotalLength;
+      int get _grandTotalMachines =>
+    _employees.fold(0, (sum, e) => sum + e.machines.length);
+
+double get _grandTotalPaid =>
+    _employees.fold(0, (sum, e) => sum + e.totalPaid);
 
   @override
   Widget build(BuildContext context) {
@@ -314,6 +320,7 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
         children: [
           // ---- Overall summary card ----
+          // ---- Overall summary card ----
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -360,13 +367,13 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
                 Row(
                   children: [
                     _SummaryStat(
-                      label: 'Total Length',
-                      value: '${_formatAmount(_grandTotalLength)} m',
+                      label: 'Total Machines',
+                      value: '$_grandTotalMachines',
                     ),
                     const SizedBox(width: 8),
                     _SummaryStat(
-                      label: 'Avg Rate / m',
-                      value: 'Rs ${_overallRatePerMeter.toStringAsFixed(1)}',
+                      label: 'Paid',
+                      value: 'Rs ${_formatAmount(_grandTotalPaid)}',
                     ),
                     const SizedBox(width: 8),
                     _SummaryStat(
@@ -419,7 +426,8 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
                 padding: const EdgeInsets.only(bottom: 12),
                 child: _EmployeePaymentTile(record: employee),
               );
-            }),
+            }
+          ),
         ],
       ),
     );

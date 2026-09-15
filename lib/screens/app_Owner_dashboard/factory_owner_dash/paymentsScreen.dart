@@ -645,7 +645,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                     ),
                     const SizedBox(width: 8),
                     _SummaryStat(
-                      label: 'Total Payment',
+                      label: 'Paid',
                       value: 'Rs ${formatAmount(_grandTotalPaid)}',
                     ),
                     const SizedBox(width: 8),

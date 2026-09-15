@@ -64,13 +64,13 @@ class ManagerDashboardService {
     throw Exception("Could not load employees");
   }
 
-  Future<List<dynamic>> getPayments(dynamic factoryId) async {
+  Future<Map<String, dynamic>> getPayments(dynamic factoryId) async {
     final response = await http.get(
       Uri.parse("$baseUrl/payments/$factoryId"),
       headers: AuthService.authHeaders,
     );
     if (response.statusCode == 200) {
-      return jsonDecode(response.body)['productions'] ?? [];
+      return jsonDecode(response.body);
     }
     throw Exception("Could not load payments");
   }
