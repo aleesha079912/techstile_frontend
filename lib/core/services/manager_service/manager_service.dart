@@ -72,6 +72,13 @@ class ManagerDashboardService {
     if (response.statusCode == 200) {
       return jsonDecode(response.body);
     }
-    throw Exception("Could not load payments");
+    String msg = "Could not load payments";
+    try {
+      final body = jsonDecode(response.body);
+      if (body is Map && body['message'] != null) {
+        msg = body['message'];
+      }
+    } catch (_) {}
+    throw Exception(msg);
   }
 }

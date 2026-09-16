@@ -391,7 +391,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                 Text(
                   "Add Payments",
                   style: TextStyle(
-                    color: AppTheme.secondary,
+                    color: AppTheme.textSecondary,
                     fontWeight: FontWeight.w700,
                     fontSize: 13,
                   ),
@@ -407,7 +407,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
   Widget _buildViewPaymentsButton(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color:  AppTheme.secondary,
         borderRadius: BorderRadius.circular(14),
         boxShadow: AppTheme.softShadow,
         border: Border.all(color: AppTheme.primary.withOpacity(0.15)),
@@ -642,16 +642,19 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                     _SummaryStat(
                       label: 'Total Machines',
                       value: '$_grandTotalMachines',
+                      color: AppTheme.primary,
                     ),
                     const SizedBox(width: 8),
                     _SummaryStat(
                       label: 'Paid',
                       value: 'Rs ${formatAmount(_grandTotalPaid)}',
+                      color: AppTheme.success,
                     ),
                     const SizedBox(width: 8),
                     _SummaryStat(
                       label: 'Employees',
                       value: '${_employees.length}',
+                      color: AppTheme.primary,
                     ),
                   ],
                 ),
@@ -787,8 +790,13 @@ String formatAmount(double value) {
 class _SummaryStat extends StatelessWidget {
   final String label;
   final String value;
+  final Color color;
 
-  const _SummaryStat({required this.label, required this.value});
+  const _SummaryStat({
+    required this.label,
+    required this.value,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -796,9 +804,9 @@ class _SummaryStat extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 7),
         decoration: BoxDecoration(
-          color: AppTheme.info,
+          color: color.withOpacity(0.10),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: AppTheme.primary.withOpacity(0.10)),
+          border: Border.all(color: color.withOpacity(0.25)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -806,7 +814,7 @@ class _SummaryStat extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                color: AppTheme.secondary,
+                color: color,
                 fontSize: 9,
                 fontWeight: FontWeight.w600,
               ),
@@ -818,8 +826,8 @@ class _SummaryStat extends StatelessWidget {
               child: Text(
                 value,
                 maxLines: 1,
-                style: const TextStyle(
-                  color: AppTheme.secondary,
+                style: TextStyle(
+                  color: color,
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
                 ),
