@@ -222,7 +222,8 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
       // grouped shape as the owner-side endpoint: employee -> machines ->
       // productions.
       final res = await _service.getPayments(widget.factoryId);
-      final data = (res as List)
+      final List rawList = (res is Map ? res['data'] : res) as List? ?? [];
+      final data = rawList
           .map((e) => EmployeePayment.fromJson(e as Map<String, dynamic>))
           .toList();
 
@@ -251,6 +252,11 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
 
   double get _overallRatePerMeter =>
       _grandTotalLength == 0 ? 0 : _grandTotalAmount / _grandTotalLength;
+      int get _grandTotalMachines =>
+    _employees.fold(0, (sum, e) => sum + e.machines.length);
+
+double get _grandTotalPaid =>
+    _employees.fold(0, (sum, e) => sum + e.totalPaid);
 
   @override
   Widget build(BuildContext context) {
@@ -307,6 +313,7 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
         children: [
           // ---- Overall summary card ----
+          // ---- Overall summary card ----
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -353,18 +360,21 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
                 Row(
                   children: [
                     _SummaryStat(
-                      label: 'Total Length',
-                      value: '${_formatAmount(_grandTotalLength)} m',
+                      label: 'Total Machines',
+                      value: '$_grandTotalMachines',
+                      color: AppTheme.primary,
                     ),
                     const SizedBox(width: 8),
                     _SummaryStat(
-                      label: 'Avg Rate / m',
-                      value: 'Rs ${_overallRatePerMeter.toStringAsFixed(1)}',
+                      label: 'Paid',
+                      value: 'Rs ${_formatAmount(_grandTotalPaid)}',
+                      color: AppTheme.success,
                     ),
                     const SizedBox(width: 8),
                     _SummaryStat(
                       label: 'Employees',
                       value: '${_employees.length}',
+                      color: AppTheme.primary,
                     ),
                   ],
                 ),
@@ -412,7 +422,8 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
                 padding: const EdgeInsets.only(bottom: 12),
                 child: _EmployeePaymentTile(record: employee),
               );
-            }),
+            }
+          ),
         ],
       ),
     );
@@ -473,8 +484,13 @@ String _formatAmount(double value) {
 class _SummaryStat extends StatelessWidget {
   final String label;
   final String value;
+  final Color color;
 
-  const _SummaryStat({required this.label, required this.value});
+  const _SummaryStat({
+    required this.label,
+    required this.value,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -482,9 +498,9 @@ class _SummaryStat extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 7),
         decoration: BoxDecoration(
-          color: AppTheme.info,
+          color: color.withOpacity(0.10),
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: AppTheme.primary.withOpacity(0.10)),
+          border: Border.all(color: color.withOpacity(0.10)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -492,7 +508,7 @@ class _SummaryStat extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                  color: AppTheme.secondary,
+                  color: color,
                   fontSize: 9,
                   fontWeight: FontWeight.w600),
             ),
@@ -503,8 +519,8 @@ class _SummaryStat extends StatelessWidget {
               child: Text(
                 value,
                 maxLines: 1,
-                style: const TextStyle(
-                  color: AppTheme.secondary,
+                style: TextStyle(
+                  color: color,
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
                 ),

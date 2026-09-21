@@ -26,7 +26,7 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
   final cnicCtrl = TextEditingController();
   final addressCtrl = TextEditingController();
   final roleCtrl = TextEditingController();
-  final detailsCtrl = TextEditingController();
+ 
 
   @override
   void initState() {
@@ -39,7 +39,7 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
       cnicCtrl.text = widget.user!.cnic;
       addressCtrl.text = widget.user!.address;
       roleCtrl.text = widget.user!.role;
-      detailsCtrl.text = widget.user!.details;
+    
     }
     _loadRoles();
   }
@@ -72,7 +72,7 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
           cnic: cnicCtrl.text,
           address: addressCtrl.text,
           role: selectedRole ?? '',
-          details: detailsCtrl.text,
+         
         ),
         passwordCtrl.text,
       );
@@ -85,7 +85,7 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
         "cnic": cnicCtrl.text,
         "address": addressCtrl.text,
         "role": selectedRole,
-        "employee_details": detailsCtrl.text,
+      
       };
       if (passwordCtrl.text.isNotEmpty) data['password'] = passwordCtrl.text;
       
@@ -155,8 +155,7 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
                     validator: (value) =>
                         value == null ? "Select Role" : null,
                   ),
-                   const SizedBox(height: 20),
-                  _buildField(detailsCtrl, "Notes", Icons.description, maxLines: 3),
+                  
                   const SizedBox(height: 20),
                   SizedBox(
                     width: double.infinity,

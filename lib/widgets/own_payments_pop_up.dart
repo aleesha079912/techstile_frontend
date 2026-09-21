@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:techstile_frontend/core/services/payments_service.dart';
 
-class AddPaymentDialog extends StatefulWidget {
+class AddPaymentPage extends StatefulWidget {
   final int factoryId;
-  final VoidCallback onSuccess;
 
-  const AddPaymentDialog({
+  const AddPaymentPage({
     super.key,
     required this.factoryId,
-    required this.onSuccess,
   });
 
   @override
-  State<AddPaymentDialog> createState() => _AddPaymentDialogState();
+  State<AddPaymentPage> createState() => _AddPaymentPageState();
 }
 
-class _AddPaymentDialogState extends State<AddPaymentDialog> {
+class _AddPaymentPageState extends State<AddPaymentPage> {
   final _formKey = GlobalKey<FormState>();
   final PaymentService _paymentService = PaymentService();
 
@@ -95,11 +93,12 @@ class _AddPaymentDialogState extends State<AddPaymentDialog> {
       );
 
       if (mounted) {
-        Navigator.of(context).pop();
-        widget.onSuccess();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Payment added successfully')),
         );
+        // Pop with `true` so PaymentsScreen knows a payment was added
+        // and refreshes its list (see _openAddPaymentPage there).
+        Navigator.of(context).pop(true);
       }
     } catch (e) {
       if (mounted) {
@@ -186,53 +185,44 @@ class _AddPaymentDialogState extends State<AddPaymentDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.9,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Form(
-            key: _formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Add Payment',
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
-                  ),
-                  const SizedBox(height: 16),
-                  _field('Employee ID', _employeeIdCtrl,
-                      type: TextInputType.number, focusNode: _employeeIdFocus),
-                  _earnedInfo(),
-                  _field('Amount Paid', _amountPaidCtrl, type: TextInputType.number),
-                  const SizedBox(height: 8),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      TextButton(
-                        onPressed: _isSubmitting ? null : () => Navigator.pop(context),
-                        child: const Text('Cancel'),
-                      ),
-                      const SizedBox(width: 8),
-                      ElevatedButton(
-                        onPressed: _isSubmitting ? null : _submit,
-                        child: _isSubmitting
-                            ? const SizedBox(
-                                width: 16,
-                                height: 16,
-                                child: CircularProgressIndicator(strokeWidth: 2),
-                              )
-                            : const Text('Save'),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Add Payment'),
+      ),
+      body: SafeArea(
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _field('Employee ID', _employeeIdCtrl,
+                    type: TextInputType.number, focusNode: _employeeIdFocus),
+                _earnedInfo(),
+                _field('Amount Paid', _amountPaidCtrl, type: TextInputType.number),
+                const SizedBox(height: 20),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: _isSubmitting ? null : () => Navigator.pop(context),
+                      child: const Text('Cancel'),
+                    ),
+                    const SizedBox(width: 8),
+                    ElevatedButton(
+                      onPressed: _isSubmitting ? null : _submit,
+                      child: _isSubmitting
+                          ? const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Text('Save'),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
         ),

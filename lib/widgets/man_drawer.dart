@@ -40,8 +40,6 @@ class _ManagerDrawerState extends State<ManagerDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    
-
     return Drawer(
       backgroundColor: AppTheme.background,
 
@@ -104,34 +102,23 @@ class _ManagerDrawerState extends State<ManagerDrawer> {
 
                   Get.toNamed(AppRoutes.managersettings);
                 }),
-               ListTile(
+                ListTile(
+                  leading: Badge(
+                    isLabelVisible: unread > 0,
+                    label: Text(unread.toString()),
+                    child: Icon(Icons.notifications, color: AppTheme.primary),
+                  ),
 
-                      leading: Badge(
-                        isLabelVisible: unread > 0,
-                        label: Text(
-                          unread.toString(),
-                        ),
-                        child: Icon(
-                          Icons.notifications,
-                          color: AppTheme.primary,
-                        ),
-                      ),
+                  title: const Text("Notifications"),
 
-                      title: const Text("Notifications"),
+                  onTap: () async {
+                    Get.back();
 
-                      onTap: () async {
+                    await Get.toNamed(AppRoutes.managerNotifications);
 
-                      Get.back();
-
-                      await Get.toNamed(
-                        AppRoutes.managerNotifications
-                      );
-
-                      getUnread();
-
-                      },
-
-                      ),
+                    getUnread();
+                  },
+                ),
 
                 _item(context, Icons.qr_code_scanner, "Scan Machine", () {
                   Get.back();
@@ -142,6 +129,7 @@ class _ManagerDrawerState extends State<ManagerDrawer> {
                 const Divider(),
 
                 _item(context, Icons.logout, "Logout", () {
+                  AuthService.logoutRemote();
                   Get.offAllNamed(AppRoutes.login);
                 }),
               ],
