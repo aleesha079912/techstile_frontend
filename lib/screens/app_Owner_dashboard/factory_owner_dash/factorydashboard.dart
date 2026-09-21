@@ -56,6 +56,11 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
 
   static const List<Map<String, String>> periodOptions = [
     {
+      'key': 'today',
+      'label': 'Today',
+    },
+
+    {
       'key': 'this_week',
       'label': 'This Week',
     },
@@ -475,6 +480,17 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                               color:
                                   AppTheme.success,
                             ),
+                            if (selectedPeriodKey != 'today') ...[
+                              const SizedBox(width: 12),
+                              _statCard(
+                                icon: Icons.calendar_month_rounded,
+                                label: selectedPeriodLabel,
+                                value: "${data['period_units'] ?? data['weekly_units'] ?? 0}",
+                                unit: 'yards',
+                                color: AppTheme.primary,
+                              ),
+                            ],
+
 
                             const SizedBox(width: 12),
 
