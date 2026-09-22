@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../core/services/manager_service/manager_setting_service.dart';
 import '../core/utils/theme.dart';
-
+import 'package:techstile_frontend/core/utils/password_rules.dart';
 class ChangePasswordScreen extends StatefulWidget {
   const ChangePasswordScreen({super.key});
 
@@ -196,7 +196,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
               // New Password
               _buildPasswordField(
                 label: "New Password",
-                hint: "Enter at least 6 characters",
+                hint: "Min 8: upper, lower, number, symbol",
                 controller: _newPasswordController,
                 obscureText: _obscureNew,
                 onToggleObscure: () {
@@ -206,9 +206,8 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   if (val == null || val.trim().isEmpty) {
                     return "New password is required";
                   }
-                  if (val.trim().length < 6) {
-                    return "Password must be at least 6 characters";
-                  }
+                 final err = PasswordRules.validate(val.trim());
+                  if (err != null) return err;
                   if (val.trim() == _currentPasswordController.text.trim()) {
                     return "New password must be different from current password";
                   }
