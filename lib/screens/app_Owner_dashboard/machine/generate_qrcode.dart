@@ -23,8 +23,6 @@ class GenerateQrCodeScreen extends StatefulWidget {
 
 class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
   final GlobalKey _qrKey = GlobalKey();
-  bool _isDownloading = false;
-  bool _isPrinting = false;
 
   @override
   Widget build(BuildContext context) {
@@ -54,20 +52,7 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
           children: [
             // Header Info Card 
             Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              decoration: BoxDecoration(
-                color: AppTheme.secondary,
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: AppTheme.onsurface.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Row(
+             child: Row(
                 children: [
                   Container(
                     padding: const EdgeInsets.all(10),
@@ -75,30 +60,10 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
                       color: AppTheme.info.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(10),
                     ),
-                    child: const Icon(Icons.precision_manufacturing_outlined,
-                        color: AppTheme.info, size: 26),
+                    
                   ),
                   const SizedBox(width: 14),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.machineLabel,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                          color:AppTheme.primary,
-                        ),
-                      ),
-                      Text(
-                        "ID: ${widget.machineDbId}",
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: AppTheme.primary,
-                        ),
-                      ),
-                    ],
-                  ),
+                 
                 ],
               ),
             ),
@@ -179,69 +144,6 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
             ),
 
             const SizedBox(height: 32),
-
-            // ── Action Buttons ──
-            Row(
-              children: [
-                // Download Button
-                Expanded(
-                  child: _ActionButton(
-                    label: _isDownloading ? "Saving..." : "Download",
-                    icon: Icons.download_rounded,
-                    color: AppTheme.info,
-                    isLoading: _isDownloading,
-                    onTap: () async {
-                      setState(() => _isDownloading = true);
-                      final path = await GenerateQrService.downloadQr(
-                        _qrKey,
-                        widget.machineDbId,
-                      );
-                      setState(() => _isDownloading = false);
-
-                      if (!mounted) return;
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            path != null
-                                ? " QR saved to device"
-                                : " Failed to save QR",
-                          ),
-                          backgroundColor:
-                              path != null ? AppTheme.success :AppTheme.error,
-                          behavior: SnackBarBehavior.floating,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
-                          margin: const EdgeInsets.all(16),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-
-                const SizedBox(width: 14),
-
-                // Print / Share Button
-                Expanded(
-                  child: _ActionButton(
-                    label: _isPrinting ? "Opening..." : "Print / Share",
-                    icon: Icons.print_rounded,
-                    color: AppTheme.success,
-                    isLoading: _isPrinting,
-                    onTap: () async {
-                      setState(() => _isPrinting = true);
-                      await GenerateQrService.printQr(
-                        _qrKey,
-                        widget.machineDbId,
-                      );
-                      if (mounted) setState(() => _isPrinting = false);
-                    },
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 20),
-
             //Info Note 
             Container(
               padding: const EdgeInsets.all(14),
@@ -275,66 +177,3 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
   }
 }
 
-//Reusable Action Button Widget 
-class _ActionButton extends StatelessWidget {
-  final String label;
-  final IconData icon;
-  final Color color;
-  final bool isLoading;
-  final VoidCallback onTap;
-
-  const _ActionButton({
-    required this.label,
-    required this.icon,
-    required this.color,
-    required this.isLoading,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: isLoading ? null : onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        decoration: BoxDecoration(
-          color: isLoading ? color.withOpacity(0.6) : color,
-          borderRadius: BorderRadius.circular(14),
-          boxShadow: [
-            BoxShadow(
-              color: color.withOpacity(0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (isLoading)
-              const SizedBox(
-                width: 16,
-                height: 16,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color:AppTheme.secondary,
-                ),
-              )
-            else
-              Icon(icon, color: AppTheme.secondary, size: 20),
-            const SizedBox(width: 8),
-            Text(
-              label,
-              style: const TextStyle(
-                color: AppTheme.textSecondary,
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

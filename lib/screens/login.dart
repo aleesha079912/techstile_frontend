@@ -150,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final Uri url = Uri.parse("https://wa.me/$phone");
 
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-      Get.snackbar("Error", "WhatsApp open nahi ho saka");
+      Get.snackbar("Error", "Something went wrong while opening WhatsApp");
     }
   }
 

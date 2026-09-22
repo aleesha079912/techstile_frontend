@@ -1024,7 +1024,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
                 ),
 
                 _breakdownChip(
-                  'Mgr ✓',
+                  'Manager Approved',
                   mgrOk,
                   AppTheme.info,
                 ),

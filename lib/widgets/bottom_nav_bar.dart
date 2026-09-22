@@ -5,8 +5,6 @@ import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/factory_owner_dash/paymentsScreen.dart';
 import '../screens/app_Owner_dashboard/factory_owner_dash/factorydashboard.dart';
 import 'package:get/get.dart';
-
-
 import '../screens/app_Owner_dashboard/machine/manage_machines.dart';
 import '../screens/app_Owner_dashboard/user/factory_users.dart';
 
@@ -48,7 +46,7 @@ class CustomBottomNav extends StatelessWidget {
       (Icons.grid_view_rounded, 'Productions'),
       (Icons.precision_manufacturing_outlined, 'MACHINES'),
       (Icons.credit_card_outlined, 'PAYMENTS'),
-      (Icons.group_outlined, 'USERS'),
+      (Icons.group_outlined, 'EMPLOYEES'),
     ];
 
     return Container(

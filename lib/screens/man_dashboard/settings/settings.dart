@@ -18,27 +18,25 @@ class ManagerSettingsScreen extends StatefulWidget {
   });
 
   @override
-  State<ManagerSettingsScreen> createState() =>
-      _ManagerSettingsScreenState();
+  State<ManagerSettingsScreen> createState() => _ManagerSettingsScreenState();
 }
 
-class _ManagerSettingsScreenState
-    extends State<ManagerSettingsScreen> {
+class _ManagerSettingsScreenState extends State<ManagerSettingsScreen> {
   bool autoBackup = true;
 
-  // ✅ Common primary-tinted shadow reused across all cards on this page
+  //  Common primary-tinted shadow reused across all cards on this page
   static List<BoxShadow> get _primaryShadow => [
-        BoxShadow(
-          color: AppTheme.primary.withOpacity(0.14),
-          blurRadius: 16,
-          offset: const Offset(0, 6),
-        ),
-        BoxShadow(
-          color: AppTheme.primary.withOpacity(0.06),
-          blurRadius: 4,
-          offset: const Offset(0, 1),
-        ),
-      ];
+    BoxShadow(
+      color: AppTheme.primary.withOpacity(0.14),
+      blurRadius: 16,
+      offset: const Offset(0, 6),
+    ),
+    BoxShadow(
+      color: AppTheme.primary.withOpacity(0.06),
+      blurRadius: 4,
+      offset: const Offset(0, 1),
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -62,16 +60,12 @@ class _ManagerSettingsScreenState
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-
           // PROFILE CARD
-
           GestureDetector(
             onTap: () {
               Get.to(
                 widget.profilePageBuilder ??
-                    () => ManagerProfileScreen(
-                          userId: AuthService.userId,
-                        ),
+                    () => ManagerProfileScreen(userId: AuthService.userId),
               );
             },
             child: Container(
@@ -80,7 +74,10 @@ class _ManagerSettingsScreenState
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [AppTheme.primary, AppTheme.primary.withOpacity(0.78)],
+                  colors: [
+                    AppTheme.primary,
+                    AppTheme.primary.withOpacity(0.78),
+                  ],
                 ),
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
@@ -93,7 +90,6 @@ class _ManagerSettingsScreenState
               ),
               child: Row(
                 children: [
-
                   CircleAvatar(
                     radius: 28,
                     backgroundColor: AppTheme.secondary.withOpacity(0.18),
@@ -114,8 +110,7 @@ class _ManagerSettingsScreenState
 
                   Expanded(
                     child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           user['name'] ?? '',
@@ -139,22 +134,20 @@ class _ManagerSettingsScreenState
                         const SizedBox(height: 8),
 
                         Container(
-                          padding:
-                              const EdgeInsets.symmetric(
+                          padding: const EdgeInsets.symmetric(
                             horizontal: 10,
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
                             color: AppTheme.secondary.withOpacity(0.18),
-                            borderRadius:
-                                BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
                             widget.roleLabel.isNotEmpty
                                 ? widget.roleLabel
                                 : (AuthService.role.isNotEmpty
-                                    ? AuthService.role.capitalizeFirst!
-                                    : 'Manager'),
+                                      ? AuthService.role.capitalizeFirst!
+                                      : 'Manager'),
                             style: const TextStyle(
                               color: AppTheme.textSecondary,
                               fontSize: 11,
@@ -166,8 +159,10 @@ class _ManagerSettingsScreenState
                     ),
                   ),
 
-                  Icon(Icons.chevron_right_rounded,
-                      color: AppTheme.secondary.withOpacity(0.6)),
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    color: AppTheme.secondary.withOpacity(0.6),
+                  ),
                 ],
               ),
             ),
@@ -176,7 +171,6 @@ class _ManagerSettingsScreenState
           const SizedBox(height: 25),
 
           // ACCOUNT
-
           _sectionTitle("ACCOUNT"),
 
           _tile(
@@ -200,7 +194,6 @@ class _ManagerSettingsScreenState
           const SizedBox(height: 20),
 
           //PREFERENCES
-
           _sectionTitle("PREFERENCES"),
 
           Container(
@@ -227,8 +220,11 @@ class _ManagerSettingsScreenState
                   color: AppTheme.primary.withOpacity(0.12),
                   borderRadius: BorderRadius.circular(11),
                 ),
-                child: const Icon(Icons.backup_outlined,
-                    color: AppTheme.primary, size: 18),
+                child: const Icon(
+                  Icons.backup_outlined,
+                  color: AppTheme.primary,
+                  size: 18,
+                ),
               ),
               onChanged: (v) {
                 setState(() {
@@ -241,7 +237,6 @@ class _ManagerSettingsScreenState
           const SizedBox(height: 20),
 
           // SUPPORT
-
           _sectionTitle("SUPPORT"),
 
           _tile(
@@ -274,7 +269,6 @@ class _ManagerSettingsScreenState
           const SizedBox(height: 20),
 
           // SECURITY
-
           _sectionTitle("SECURITY"),
 
           _tile(
@@ -305,10 +299,7 @@ class _ManagerSettingsScreenState
 
   Widget _sectionTitle(String text) {
     return Padding(
-      padding: const EdgeInsets.only(
-        left: 4,
-        bottom: 8,
-      ),
+      padding: const EdgeInsets.only(left: 4, bottom: 8),
       child: Text(
         text,
         style: TextStyle(
@@ -387,12 +378,7 @@ class _ManagerSettingsScreenState
         content: const Text(
           "TechStile keeps your production and factory data secure. Data is only accessible to authorized users.",
         ),
-        actions: [
-          TextButton(
-            onPressed: Get.back,
-            child: const Text("OK"),
-          ),
-        ],
+        actions: [TextButton(onPressed: Get.back, child: const Text("OK"))],
       ),
     );
   }
@@ -404,12 +390,7 @@ class _ManagerSettingsScreenState
         content: const Text(
           "TechStile Production Management System\n\nVersion 1.0\n\nManage employees, machines and production efficiently.",
         ),
-        actions: [
-          TextButton(
-            onPressed: Get.back,
-            child: const Text("OK"),
-          ),
-        ],
+        actions: [TextButton(onPressed: Get.back, child: const Text("OK"))],
       ),
     );
   }
@@ -417,8 +398,7 @@ class _ManagerSettingsScreenState
   void _logout() {
     Get.defaultDialog(
       title: "Logout",
-      middleText:
-          "Are you sure you want to logout?",
+      middleText: "Are you sure you want to logout?",
       textCancel: "No",
       textConfirm: "Yes",
       confirmTextColor: AppTheme.secondary,
@@ -427,6 +407,7 @@ class _ManagerSettingsScreenState
 
       onConfirm: () {
         AuthService.logout();
+        _logout();
 
         Get.offAllNamed('/login');
       },

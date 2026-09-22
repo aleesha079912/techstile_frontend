@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/services/manager_service/manager_service.dart';
 import '../../../core/utils/theme.dart';
 import '../../../widgets/man_bottom_navbar.dart';
-
+import '../../../widgets/man_drawer.dart';
 // ============================================================
 // Models
 // ============================================================
@@ -261,19 +261,12 @@ double get _grandTotalPaid =>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+       drawer: ManagerDrawer(
+        // factoryId: factoryId,
+      ),
       backgroundColor: AppTheme.background,
       appBar: AppBar(
         backgroundColor: AppTheme.secondary,
-        iconTheme: const IconThemeData(color: AppTheme.primary),
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          color: AppTheme.primary,
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -293,11 +286,11 @@ double get _grandTotalPaid =>
             ),
           ],
         ),
-      ),
-      // Manager is view-only: no FAB, no add/edit/delete affordances.
+        ),
+     
       body: _buildBody(),
       bottomNavigationBar: ManagerBottomNav(
-        currentIndex: 3,
+        currentIndex: 2,
         factoryId: widget.factoryId,
       ),
     );

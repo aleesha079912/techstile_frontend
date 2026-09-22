@@ -12,11 +12,7 @@ class NotificationService {
     try {
       final url = Uri.parse("$baseUrl/notifications/$userId");
       final res = await http.get(url, headers: AuthService.authHeaders);
-
-      debugPrint("NOTIFICATION STATUS => ${res.statusCode}");
-      debugPrint("NOTIFICATION BODY => ${res.body}");
-
-      if (res.statusCode == 200) {
+ if (res.statusCode == 200) {
         final decoded = jsonDecode(res.body);
         if (decoded is List) {
           return decoded;

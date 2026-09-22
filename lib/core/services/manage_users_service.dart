@@ -4,7 +4,7 @@ import 'auth_service.dart';
 
 class UserData {
   final int? id;
-  final String name, email, phone, cnic, address, role, details, pic;
+  final String name, email, phone, cnic, address, role;
 
   UserData({
     this.id,
@@ -14,8 +14,8 @@ class UserData {
     required this.cnic,
     required this.address,
     required this.role,
-    required this.details,
-    this.pic = "",
+  
+  
   });
 
   factory UserData.fromJson(Map<String, dynamic> json) {
@@ -43,8 +43,8 @@ class UserData {
       cnic: json['cnic'] ?? '',
       address: json['address'] ?? '',
       role: extractedRole,
-      details: json['employee_details'] ?? '',
-      pic: json['pic'] ?? '',
+    
+    
     );
   }
 
@@ -56,8 +56,7 @@ class UserData {
       "cnic": cnic,
       "address": address,
       "role": role,
-      "employee_details": details,
-      "pic": pic,
+     
     };
   }
 }

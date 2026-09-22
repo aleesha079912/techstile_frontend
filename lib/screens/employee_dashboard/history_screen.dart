@@ -186,8 +186,8 @@ class _HistoryScreenState extends State<HistoryScreen>
                         fontSize: 13,
                       ),
                       tabs: const [
-                        Tab(text: '⏳  Pending'),
-                        Tab(text: '✅  Completed'),
+                        Tab(text: '  Pending'),
+                        Tab(text: ' Completed'),
                       ],
                     ),
                   ),

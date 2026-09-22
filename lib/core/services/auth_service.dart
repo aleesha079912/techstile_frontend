@@ -64,14 +64,7 @@ class AuthService {
     }
   }
 
-  // static loginemail(String email) async {
-  //   final response = await http.post(
-  //     Uri.parse('$baseUrl/login-email'),
-  //     headers: {'Content-Type': 'application/json'},
-  //     body: jsonEncode({'email': email}),
-  //   );
-  //   print(response);
-  // }
+ 
 
   // manually save the factory id
   static Future<void> saveFactoryInfo(dynamic factoryId, dynamic userId) async {
@@ -118,4 +111,13 @@ class AuthService {
       return {'success': false, 'message': e.toString()};
     }
   }
+
+  static Future<void> logoutRemote() async {
+  try {
+
+    await http.post(Uri.parse('$baseUrl/logout'), headers: authHeaders);
+
+  } catch (_) {}
+  logout();   // local storage clear
+}
 }

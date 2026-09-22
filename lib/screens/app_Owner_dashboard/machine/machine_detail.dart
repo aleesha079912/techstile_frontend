@@ -198,15 +198,6 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                       ],
                     ),
                     const SizedBox(height: 20),
-
-                    const _SectionLabel(text: 'Machine Info'),
-                    const SizedBox(height: 12),
-                    _infoCard(Icons.tag_rounded, 'Machine ID', m.id),
-                    _infoCard(
-                      Icons.precision_manufacturing_outlined,
-                      'Machine Type',
-                      m.type,
-                    ),
                     const _SectionLabel(text: 'Current Batch'),
                     const SizedBox(height: 12),
                     if (_detail['batch_id'] == null)
@@ -345,7 +336,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                 ),
                 child: Icon(
                   isDayShift ? Icons.wb_sunny_rounded : Icons.nightlight_round,
-                  color: isDayShift ?  AppTheme.surface : AppTheme.primary,
+                  color: isDayShift ? AppTheme.surface : AppTheme.primary,
                   size: 16,
                 ),
               ),

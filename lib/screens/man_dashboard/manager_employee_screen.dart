@@ -214,7 +214,7 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
                       ],
                     ),
       bottomNavigationBar: ManagerBottomNav(
-        currentIndex: 2,
+        currentIndex: 3,
         factoryId: widget.factoryId,
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/services/manage_users_service.dart';
 import '../../../../core/utils/theme.dart';
+import 'package:techstile_frontend/core/utils/password_rules.dart';
 
 class RegisterUserRoleBased extends StatefulWidget {
   final UserData? user; // Null matlab Add, Not Null matlab Edit
@@ -26,7 +27,7 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
   final cnicCtrl = TextEditingController();
   final addressCtrl = TextEditingController();
   final roleCtrl = TextEditingController();
-  final detailsCtrl = TextEditingController();
+ 
 
   @override
   void initState() {
@@ -39,7 +40,7 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
       cnicCtrl.text = widget.user!.cnic;
       addressCtrl.text = widget.user!.address;
       roleCtrl.text = widget.user!.role;
-      detailsCtrl.text = widget.user!.details;
+    
     }
     _loadRoles();
   }
@@ -72,7 +73,7 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
           cnic: cnicCtrl.text,
           address: addressCtrl.text,
           role: selectedRole ?? '',
-          details: detailsCtrl.text,
+         
         ),
         passwordCtrl.text,
       );
@@ -85,7 +86,7 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
         "cnic": cnicCtrl.text,
         "address": addressCtrl.text,
         "role": selectedRole,
-        "employee_details": detailsCtrl.text,
+      
       };
       if (passwordCtrl.text.isNotEmpty) data['password'] = passwordCtrl.text;
       
@@ -128,7 +129,12 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
                 children: [
                   _buildField(nameCtrl, "Full Name", Icons.person),
                   _buildField(emailCtrl, "Email Address", Icons.email),
-                  _buildField(passwordCtrl, "Password", Icons.lock, obscure: true, isRequired: widget.user == null),
+                 _buildField(passwordCtrl, "Password", Icons.lock, obscure: true,
+                  isRequired: widget.user == null,
+                  validator: (v) {
+                    if (v == null || v.isEmpty) return widget.user == null ? "Required" : null;
+                    return PasswordRules.validate(v);
+                  }),
                   _buildField(phoneCtrl, "Phone Number", Icons.phone),
                   _buildField(cnicCtrl, "CNIC Number", Icons.credit_card),
                   _buildField(addressCtrl, "Home Address", Icons.home),
@@ -155,8 +161,7 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
                     validator: (value) =>
                         value == null ? "Select Role" : null,
                   ),
-                   const SizedBox(height: 20),
-                  _buildField(detailsCtrl, "Notes", Icons.description, maxLines: 3),
+                  
                   const SizedBox(height: 20),
                   SizedBox(
                     width: double.infinity,
@@ -173,7 +178,7 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
     );
   }
 
-  Widget _buildField(TextEditingController ctrl, String hint, IconData icon, {bool obscure = false, int maxLines = 1, bool isRequired = true}) {
+  Widget _buildField(TextEditingController ctrl, String hint, IconData icon, {bool obscure = false, int maxLines = 1, bool isRequired = true, String? Function(String?)? validator})  {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: TextFormField(
@@ -181,7 +186,7 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
         obscureText: obscure,
         maxLines: maxLines,
         decoration: InputDecoration(prefixIcon: Icon(icon, color: AppTheme.primary), hintText: hint, border: OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
-        validator: (value) => (isRequired && value!.isEmpty) ? "Required" : null,
+       validator: validator ?? (value) => (isRequired && value!.isEmpty) ? "Required" : null,
       ),
     );
   }
