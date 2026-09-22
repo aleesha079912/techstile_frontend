@@ -7,7 +7,7 @@ class FactoryUsersService {
 
   FactoryUsersService._();
 
-  final String baseUrl = "http://localhost:8000/api";
+  final String baseUrl = "http://textile2.sandbox.pk/api";
 
   Future<Map<String, dynamic>> getUsersByFactory(int factoryId) async {
     final response = await http.get(

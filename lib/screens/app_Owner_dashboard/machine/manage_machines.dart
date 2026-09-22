@@ -41,7 +41,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
     try {
       final response = await http.get(
         Uri.parse(
-          "http://localhost:8000/api/factories/editfactory/${widget.factoryId}",
+          "http://textile2.sandbox.pk/api/factories/editfactory/${widget.factoryId}",
         ),
         headers: AuthService.authHeaders,
       );

@@ -7,7 +7,6 @@ import '../screens/app_Owner_dashboard/factory_owner_dash/factorydashboard.dart'
 import 'package:get/get.dart';
 
 
-import 'package:get/get_core/src/get_main.dart';
 import '../screens/app_Owner_dashboard/machine/manage_machines.dart';
 import '../screens/app_Owner_dashboard/user/factory_users.dart';
 
