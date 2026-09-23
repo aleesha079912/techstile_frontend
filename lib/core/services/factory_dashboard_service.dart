@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'auth_service.dart';
 
 class FactoryDashboardService {
-  final String baseUrl = "http://textile2.sandbox.pk/api/factories";
+  final String baseUrl = "http://localhost:8000/api/factories";
 
   Future<Map<String, dynamic>> getDashboard(
     String factoryId, {

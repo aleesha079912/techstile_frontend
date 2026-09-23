@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:techstile_frontend/core/services/auth_service.dart';
 
 class PaymentService {
-  final String baseUrl = "http://textile2.sandbox.pk/api/payments";
+  final String baseUrl = "http://localhost:8000/api/payments";
 
   Future<Map<String, dynamic>> fetchvarietytypePayments(int factoryId) async {
     try {
@@ -94,7 +94,7 @@ class PaymentService {
     try {
       final response = await http.get(
         Uri.parse(
-          "http://textile2.sandbox.pk/api/employees/$employeeId/earned-amount",
+          "http://localhost:8000/api/employees/$employeeId/earned-amount",
         ),
         headers: AuthService.authHeaders,
       );

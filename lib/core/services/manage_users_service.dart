@@ -65,7 +65,7 @@ class ManageUsersService {
   static final ManageUsersService instance = ManageUsersService._();
   ManageUsersService._();
 
-  final String baseUrl = "http://textile2.sandbox.pk/api";
+  final String baseUrl = "http://localhost:8000/api";
 
   Map<String, String> get _headers => {
     "Content-Type": "application/json",

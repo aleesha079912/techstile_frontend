@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import './auth_service.dart';
 
 class NotificationService {
-  static const String baseUrl = "http://textile2.sandbox.pk/api";
+  static const String baseUrl = "http://localhost:8000/api";
 
   Future<List> getNotifications(dynamic userId) async {
     if (userId == null) return [];
