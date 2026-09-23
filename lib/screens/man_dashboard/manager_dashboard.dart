@@ -24,6 +24,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
   final _service = ManagerDashboardService();
 
   bool loading = true;
+  bool noFactoryAssigned = false;   
   Map data = {};
   String? error;
 
@@ -126,35 +127,73 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
     setState(() {
       loading = true;
       error = null;
+      noFactoryAssigned = false;
     });
 
+    final id = int.tryParse(widget.factoryId?.toString() ?? '');
+
+    if (id == null || id == 0) {
+      if (!mounted) return;
+      setState(() {
+        noFactoryAssigned = true;
+        loading = false;
+      });
+      return; // don't even hit the API
+    }
+
     try {
-      final id = int.tryParse(widget.factoryId.toString());
-
-      if (id == null || id == 0) {
-        throw Exception("Invalid factoryId");
-      }
-
-      final res = await _service.getDashboard(
-        id,
-        period: selectedPeriodKey,
-      );
+      final res = await _service.getDashboard(id, period: selectedPeriodKey);
 
       if (!mounted) return;
-
       setState(() {
         data = res;
         loading = false;
       });
     } catch (e) {
       if (!mounted) return;
-
       setState(() {
         error = e.toString();
         loading = false;
       });
     }
   }
+
+  Widget _noFactoryView() {
+  return Center(
+    child: Padding(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.factory_outlined,
+            size: 48,
+            color: AppTheme.primary.withOpacity(0.5),
+          ),
+          const SizedBox(height: 12),
+          const Text(
+            'No factory assigned',
+            style: TextStyle(
+              color: AppTheme.textPrimary,
+              fontWeight: FontWeight.w700,
+              fontSize: 15,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            'You haven\'t been assigned to a factory yet. '
+            'Please contact your admin to get access.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: AppTheme.textPrimary.withOpacity(0.6),
+              fontSize: 13,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
 
   // ─────────────────────────────────────────────────────────────────────────
   // Period changed
@@ -356,6 +395,10 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
                 color: AppTheme.primary,
               ),
             )
+          : noFactoryAssigned
+        ? _noFactoryView()
+
+
           : error != null
               ? _errorView()
               : RefreshIndicator(
