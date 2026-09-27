@@ -754,16 +754,15 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
   // Productions Button
   // ─────────────────────────────────────────────────────────────────────────
 
-  Widget _viewProductionsButton() {
-    return ElevatedButton.icon(
-      onPressed: () {
-        Get.toNamed(
-          AppRoutes.managerProduction,
-          arguments: {
-            'factoryId': widget.factoryId,
-          },
-        );
-      },
+ Widget _viewProductionsButton() {
+  return ElevatedButton.icon(
+    onPressed: () async {
+      await Get.toNamed(
+        AppRoutes.managerProduction,
+        arguments: {'factoryId': widget.factoryId},
+      );
+      load();   // wapas aate hi dashboard dobara load ho
+    },
 
       icon: const Icon(
         Icons.list_alt_rounded,

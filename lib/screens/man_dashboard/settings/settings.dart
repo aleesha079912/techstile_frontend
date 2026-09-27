@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import '../../../core/services/auth_service.dart';
 import '../../../core/utils/theme.dart';
 import '../manager_profile.dart';
+import '../../../core/services/backup_service.dart';
+import 'backup_screen.dart';
 
 class ManagerSettingsScreen extends StatefulWidget {
   final String roleLabel;
@@ -22,7 +24,44 @@ class ManagerSettingsScreen extends StatefulWidget {
 }
 
 class _ManagerSettingsScreenState extends State<ManagerSettingsScreen> {
-  bool autoBackup = true;
+  bool autoBackup = false;
+  bool backupLoading = false;
+
+  // Owner check — apni AuthService.role ki actual value ke hisaab se yahan match karein
+  // (e.g. agar role 'owner' lowercase mein store hoti hai to yahi sahi hai)
+  bool get isOwner => AuthService.role.toLowerCase() == 'owner';
+
+  @override
+  void initState() {
+    super.initState();
+    if (isOwner) {
+      _loadBackupStatus();
+    }
+  }
+
+  Future<void> _loadBackupStatus() async {
+    try {
+      final data = await BackupService.list();
+      if (!mounted) return;
+      setState(() => autoBackup = data['auto_backup'] == true);
+    } catch (_) {}
+  }
+
+  Future<void> _toggleBackup(bool v) async {
+    setState(() => backupLoading = true);
+    try {
+      await BackupService.toggle(v);
+      if (!mounted) return;
+      setState(() => autoBackup = v);
+      Get.snackbar(
+        'Backup',
+        v ? 'Backup ON , Already backup is created' : 'Auto backup off',
+      );
+    } catch (e) {
+      Get.snackbar('Error', e.toString().replaceFirst('Exception: ', ''));
+    }
+    if (mounted) setState(() => backupLoading = false);
+  }
 
   //  Common primary-tinted shadow reused across all cards on this page
   static List<BoxShadow> get _primaryShadow => [
@@ -193,48 +232,53 @@ class _ManagerSettingsScreenState extends State<ManagerSettingsScreen> {
 
           const SizedBox(height: 20),
 
-          //PREFERENCES
-          _sectionTitle("PREFERENCES"),
+          // PREFERENCES — Backup sirf Owner ko dikhega
+          if (isOwner) ...[
+            _sectionTitle("PREFERENCES"),
 
-          Container(
-            decoration: BoxDecoration(
-              color: AppTheme.secondary,
-              borderRadius: BorderRadius.circular(16),
-              boxShadow: _primaryShadow,
-            ),
-            child: SwitchListTile(
-              value: autoBackup,
-              activeColor: AppTheme.primary,
-              title: const Text(
-                "Backup",
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: AppTheme.textPrimary,
-                ),
+            Container(
+              decoration: BoxDecoration(
+                color: AppTheme.secondary,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: _primaryShadow,
               ),
-              secondary: Container(
-                width: 38,
-                height: 38,
-                decoration: BoxDecoration(
-                  color: AppTheme.primary.withOpacity(0.12),
-                  borderRadius: BorderRadius.circular(11),
+              child: SwitchListTile(
+                value: autoBackup,
+                activeColor: AppTheme.primary,
+                title: const Text(
+                  "Backup",
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: AppTheme.textPrimary,
+                  ),
                 ),
-                child: const Icon(
-                  Icons.backup_outlined,
-                  color: AppTheme.primary,
-                  size: 18,
+                secondary: Container(
+                  width: 38,
+                  height: 38,
+                  decoration: BoxDecoration(
+                    color: AppTheme.primary.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(11),
+                  ),
+                  child: const Icon(
+                    Icons.backup_outlined,
+                    color: AppTheme.primary,
+                    size: 18,
+                  ),
                 ),
+                onChanged: backupLoading ? null : _toggleBackup,
               ),
-              onChanged: (v) {
-                setState(() {
-                  autoBackup = v;
-                });
-              },
             ),
-          ),
+            const SizedBox(height: 10),
+            _tile(
+              icon: Icons.history,
+              iconColor: AppTheme.primary,
+              title: "Manage Backups",
+              onTap: () => Get.to(() => const BackupScreen()),
+            ),
 
-          const SizedBox(height: 20),
+            const SizedBox(height: 20),
+          ],
 
           // SUPPORT
           _sectionTitle("SUPPORT"),
@@ -407,8 +451,6 @@ class _ManagerSettingsScreenState extends State<ManagerSettingsScreen> {
 
       onConfirm: () {
         AuthService.logout();
-        _logout();
-
         Get.offAllNamed('/login');
       },
     );

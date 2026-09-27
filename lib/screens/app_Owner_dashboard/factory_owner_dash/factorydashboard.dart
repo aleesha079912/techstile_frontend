@@ -707,12 +707,10 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
 
   Widget _viewProductionsButton() {
     return ElevatedButton.icon(
-      onPressed: () {
-        Get.toNamed(
-          AppRoutes.ownerProduction,
-          arguments: widget.factoryId,
-        );
-      },
+      onPressed: () async {
+  await Get.toNamed(AppRoutes.ownerProduction, arguments: widget.factoryId);
+  load();
+},
 
       icon: const Icon(
         Icons.list_alt_rounded,
