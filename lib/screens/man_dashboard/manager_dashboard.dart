@@ -26,12 +26,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
   bool loading = true;
   Map data = {};
   String? error;
-
-  // ─────────────────────────────────────────────────────────────────────────
-  // Common shadow - same style as Factory Dashboard
-  // ─────────────────────────────────────────────────────────────────────────
-
-  static List<BoxShadow> get _primaryShadow => [
+ static List<BoxShadow> get _primaryShadow => [
         BoxShadow(
           color: AppTheme.primary.withOpacity(0.14),
           blurRadius: 16,
@@ -50,11 +45,8 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
         width: 1,
       );
 
-  // ─────────────────────────────────────────────────────────────────────────
   // Period options
-  // ─────────────────────────────────────────────────────────────────────────
-
-  static const List<Map<String, String>> periodOptions = [
+ static const List<Map<String, String>> periodOptions = [
     {
       'key': 'this_week',
       'label': 'This Week',
