@@ -59,7 +59,6 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
       'key': 'today',
       'label': 'Today',
     },
-
     {
       'key': 'this_week',
       'label': 'This Week',
@@ -480,31 +479,21 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                               color:
                                   AppTheme.success,
                             ),
+
                             if (selectedPeriodKey != 'today') ...[
                               const SizedBox(width: 12),
                               _statCard(
-                                icon: Icons.calendar_month_rounded,
-                                label: selectedPeriodLabel,
-                                value: "${data['period_units'] ?? data['weekly_units'] ?? 0}",
+                                icon: Icons
+                                    .calendar_month_rounded,
+                                label:
+                                    selectedPeriodLabel,
+                                value:
+                                    "${data['period_units'] ?? data['weekly_units'] ?? 0}",
                                 unit: 'yards',
-                                color: AppTheme.primary,
+                                color:
+                                    AppTheme.primary,
                               ),
                             ],
-
-
-                            const SizedBox(width: 12),
-
-                            _statCard(
-                              icon: Icons
-                                  .calendar_month_rounded,
-                              label:
-                                  selectedPeriodLabel,
-                              value:
-                                  "${data['period_units'] ?? data['weekly_units'] ?? 0}",
-                              unit: 'yards',
-                              color:
-                                  AppTheme.primary,
-                            ),
                           ],
                         ),
 
@@ -523,13 +512,10 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                         // This week breakdown
                         // ─────────────────────────────────────────────
 
-                        if (selectedPeriodKey ==
-                            'this_week')
+                        if (selectedPeriodKey != 'today')
                           _pipelineBreakdown(
-                            title: 'This Week',
-                            breakdown:
-                                data['period_breakdown']
-                                    as Map?,
+                            title: selectedPeriodLabel,
+                            breakdown: data['period_breakdown'] as Map?,
                           ),
 
                         const SizedBox(height: 20),

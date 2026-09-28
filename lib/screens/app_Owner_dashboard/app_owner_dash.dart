@@ -1385,7 +1385,7 @@ class _FactoryCard extends StatelessWidget {
                   AppTheme.error,
 
               foregroundColor:
-                  Colors.white,
+                AppTheme.secondary ,
 
               shape:
                   RoundedRectangleBorder(
