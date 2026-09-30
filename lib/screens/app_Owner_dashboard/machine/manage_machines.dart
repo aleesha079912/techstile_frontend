@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/variety_sheet.dart';
 import '../../../../core/services/machines_service.dart';
 import '../../../../core/services/auth_service.dart';
 import '../../../../core/utils/theme.dart';
@@ -37,11 +38,17 @@ class _MachinesScreenState extends State<MachinesScreen> {
     loadFactoryName();
   }
 
+  @override
+  void dispose() {
+    searchCtrl.dispose();
+    super.dispose();
+  }
+
   Future<void> loadFactoryName() async {
     try {
       final response = await http.get(
         Uri.parse(
-          "http://techstile.sandbox.pk/api/factories/editfactory/${widget.factoryId}",
+          "http://localhost:8000/api/factories/editfactory/${widget.factoryId}",
         ),
         headers: AuthService.authHeaders,
       );
@@ -93,6 +100,19 @@ class _MachinesScreenState extends State<MachinesScreen> {
         return (nameMatch || typeMatch) && activeMatch;
       }).toList();
     });
+  }
+
+  void _showVarieties() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: AppTheme.background,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+      ),
+      builder: (_) => const VarietiesSheet(),
+    );
   }
 
   void _showMachineForm(BuildContext context, {Machine? machine}) {
@@ -328,6 +348,32 @@ class _MachinesScreenState extends State<MachinesScreen> {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 12),
+
+                  // Varieties button
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: _showVarieties,
+                      icon: const Icon(Icons.category_outlined,
+                          color: AppTheme.primary),
+                      label: const Text(
+                        "Varieties",
+                        style: TextStyle(
+                          color: AppTheme.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: AppTheme.primary),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ),
+
                   const SizedBox(height: 16),
                   TextField(
                     controller: searchCtrl,
@@ -481,14 +527,16 @@ class _MachinesScreenState extends State<MachinesScreen> {
                       color: isActive ? AppTheme.active : AppTheme.primary,
                     ),
                   ),
-                  Text(m.type, style: const TextStyle(color: AppTheme.textneutral)),
+                  Text(m.type,
+                      style: const TextStyle(color: AppTheme.textneutral)),
                 ],
               ),
             ),
             if (isActive)
               Container(
                 margin: const EdgeInsets.only(right: 10),
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                 decoration: BoxDecoration(
                   color: AppTheme.active,
                   borderRadius: BorderRadius.circular(20),

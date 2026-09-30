@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:techstile_frontend/core/services/auth_service.dart';
 
 class AssignProductionService {
-  final String baseUrl = "http://techstile.sandbox.pk/api";
+  String get baseUrl => AuthService.baseUrl;
 
   Future<bool> assign({
     required int machineId,
@@ -23,7 +24,7 @@ class AssignProductionService {
         'alert_threshold': alertThreshold,
       }),
     );
-    print(response.body);
+    debugPrint("ASSIGN ${response.statusCode}: ${response.body}");
     return response.statusCode == 200 || response.statusCode == 201;
   }
 }

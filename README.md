@@ -27,7 +27,7 @@ Make sure you have the following installed on your machine:
 3. **Configure Backend API Base URL:**
    Open `lib/core/services/auth_service.dart` and verify or update the backend endpoint:
    ```dart
-   static const String baseUrl = "http://techstile.sandbox.pk/api"; // or your local API IP
+   static const String baseUrl = "http://localhost:8000/api"; // or your local API IP
    ```
 
 4. **Run the App:**

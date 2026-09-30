@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:techstile_frontend/core/services/auth_service.dart';
 
 class AttendanceService {
-  final String baseUrl = "http://techstile.sandbox.pk/api/attendence";
+  final String baseUrl = "http://localhost:8000/api/attendence";
 
   Future<bool> markAttendance({
     required int employeeId,
