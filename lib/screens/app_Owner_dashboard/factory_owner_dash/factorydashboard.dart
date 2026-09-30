@@ -27,9 +27,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
   Map data = {};
   String? error;
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Common shadow
-  // ─────────────────────────────────────────────────────────────────────────
+ 
 
   static List<BoxShadow> get _primaryShadow => [
         BoxShadow(
@@ -44,15 +42,13 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
         ),
       ];
 
-  // Very light primary outline used on all boxes
+ 
   static Border get _primaryBorder => Border.all(
         color: AppTheme.primary.withOpacity(0.10),
         width: 1,
       );
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Period options
-  // ─────────────────────────────────────────────────────────────────────────
+  
 
   static const List<Map<String, String>> periodOptions = [
     {
@@ -105,20 +101,14 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
 
   int get factoryId => int.parse(widget.factoryId);
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Lifecycle
-  // ─────────────────────────────────────────────────────────────────────────
-
+  
   @override
   void initState() {
     super.initState();
     load();
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Load dashboard
-  // ─────────────────────────────────────────────────────────────────────────
-
+  
   Future<void> load() async {
     setState(() {
       loading = true;
@@ -147,9 +137,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
     }
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Period changed
-  // ─────────────────────────────────────────────────────────────────────────
+  
 
   Future<void> onPeriodChanged(String periodKey) async {
     if (periodKey == selectedPeriodKey) return;
@@ -161,20 +149,13 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
     await load();
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Back to owner home
-  // ─────────────────────────────────────────────────────────────────────────
-
   void _goBackToOwnerHome() {
     Get.offAllNamed(
       AppRoutes.ownerDashboard,
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Week start picker
-  // ─────────────────────────────────────────────────────────────────────────
-
+  
   Future<void> _openWeekStartDayPicker() async {
     final current = (data['week_start_day'] as int?) ?? 1;
 
@@ -334,10 +315,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
     }
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Today label
-  // ─────────────────────────────────────────────────────────────────────────
-
+ 
   String _todayLabel() {
     final dayName =
         data['today_day_name']?.toString();
@@ -373,9 +351,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
     }
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Build
-  // ─────────────────────────────────────────────────────────────────────────
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -395,7 +371,10 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
               : RefreshIndicator(
                   color: AppTheme.primary,
                   onRefresh: load,
-                  child: SingleChildScrollView(
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 1300),
+                      child: SingleChildScrollView(
                     physics:
                         const AlwaysScrollableScrollPhysics(),
                     padding: const EdgeInsets.fromLTRB(
@@ -408,10 +387,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                       crossAxisAlignment:
                           CrossAxisAlignment.start,
                       children: [
-                        // ─────────────────────────────────────────────
-                        // Period header
-                        // ─────────────────────────────────────────────
-
+                       
                         Row(
                           crossAxisAlignment:
                               CrossAxisAlignment.start,
@@ -463,9 +439,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
 
                         const SizedBox(height: 12),
 
-                        // ─────────────────────────────────────────────
-                        // Main stats
-                        // ─────────────────────────────────────────────
+                       
 
                         Row(
                           children: [
@@ -475,7 +449,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                               label: _todayLabel(),
                               value:
                                   "${data['today_units'] ?? 0}",
-                              unit: 'yards',
+                              unit: 'units',
                               color:
                                   AppTheme.success,
                             ),
@@ -489,7 +463,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                                     selectedPeriodLabel,
                                 value:
                                     "${data['period_units'] ?? data['weekly_units'] ?? 0}",
-                                unit: 'yards',
+                                unit: 'units',
                                 color:
                                     AppTheme.primary,
                               ),
@@ -497,9 +471,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                           ],
                         ),
 
-                        // ─────────────────────────────────────────────
-                        // Today breakdown
-                        // ─────────────────────────────────────────────
+                        
 
                         _pipelineBreakdown(
                           title: 'Today',
@@ -508,9 +480,6 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                                   as Map?,
                         ),
 
-                        // ─────────────────────────────────────────────
-                        // This week breakdown
-                        // ─────────────────────────────────────────────
 
                         if (selectedPeriodKey != 'today')
                           _pipelineBreakdown(
@@ -520,12 +489,9 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
 
                         const SizedBox(height: 20),
 
-                        // ─────────────────────────────────────────────
-                        // Floor Assets
-                        // ─────────────────────────────────────────────
-
+                       
                         const _SectionLabel(
-                          text: 'Floor Assets',
+                          text: 'Factory Assets',
                         ),
 
                         const SizedBox(height: 12),
@@ -561,9 +527,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
 
                         const SizedBox(height: 24),
 
-                        // ─────────────────────────────────────────────
-                        // Varieties
-                        // ─────────────────────────────────────────────
+                        
 
                         _SectionLabel(
                           text:
@@ -577,17 +541,19 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                     ),
                   ),
                 ),
+              ),
+            ),
 
-      bottomNavigationBar: CustomBottomNav(
-        currentIndex: 0,
-        factoryId: factoryId,
-      ),
+      bottomNavigationBar: MediaQuery.of(context).size.width >= 850
+          ? null
+          : CustomBottomNav(
+              currentIndex: 0,
+              factoryId: factoryId,
+            ),
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // AppBar
-  // ─────────────────────────────────────────────────────────────────────────
+  
 
   PreferredSizeWidget _buildAppBar() {
     final factory = data['factory'];
@@ -658,9 +624,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Error view
-  // ─────────────────────────────────────────────────────────────────────────
+  
 
   Widget _errorView() {
     return Center(
@@ -701,9 +665,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Productions button
-  // ─────────────────────────────────────────────────────────────────────────
+  
 
   Widget _viewProductionsButton() {
     return ElevatedButton.icon(
@@ -757,9 +719,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Period filter dropdown
-  // ─────────────────────────────────────────────────────────────────────────
+  
 
   Widget _periodFilterDropdown() {
     return PopupMenuButton<String>(
@@ -903,9 +863,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Week start button
-  // ─────────────────────────────────────────────────────────────────────────
+  
 
   Widget _weekStartButton() {
     return InkWell(
@@ -928,11 +886,10 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
           borderRadius:
               BorderRadius.circular(10),
 
-          // Outer shadow
           boxShadow:
               _primaryShadow,
 
-          // Light primary outline
+
           border:
               _primaryBorder,
         ),
@@ -961,9 +918,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Pipeline breakdown
-  // ─────────────────────────────────────────────────────────────────────────
+  
 
   Widget _pipelineBreakdown({
     required String title,
@@ -1034,7 +989,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
             Row(
               children: [
                 _breakdownChip(
-                  'Added',
+                  'Employee Added',
                   added,
                   AppTheme.neutral,
                 ),
@@ -1056,9 +1011,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Breakdown chip
-  // ─────────────────────────────────────────────────────────────────────────
+  
 
   Widget _breakdownChip(
     String label,
@@ -1132,9 +1085,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Stat card
-  // ─────────────────────────────────────────────────────────────────────────
+ 
 
   Widget _statCard({
     required IconData icon,
@@ -1231,15 +1182,12 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Varieties list
-  // ─────────────────────────────────────────────────────────────────────────
-
+  
   Widget _varietiesList() {
     final varieties =
         (data['varieties'] as List?) ?? [];
 
-    // Empty state
+
     if (varieties.isEmpty) {
       return Container(
         width: double.infinity,
@@ -1426,9 +1374,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Section label
-// ─────────────────────────────────────────────────────────────────────────────
+
 
 class _SectionLabel
     extends StatelessWidget {

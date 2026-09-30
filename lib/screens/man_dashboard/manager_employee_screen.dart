@@ -99,7 +99,7 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
       ),
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        backgroundColor: AppTheme.secondary,
+        backgroundColor: AppTheme.background,
         iconTheme: const IconThemeData(color: AppTheme.primary),
         elevation: 0,
         automaticallyImplyLeading: true,
@@ -109,7 +109,7 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
             const Text(
               'All Employees',
               style: TextStyle(
-                color: AppTheme.primary,
+                color: AppTheme.textPrimary,
                 fontWeight: FontWeight.w800,
                 fontSize: 17,
               ),
@@ -410,7 +410,7 @@ class _ManagerEmployeesScreenState extends State<ManagerEmployeesScreen> {
               child: Text(
                 name.isNotEmpty ? name[0].toUpperCase() : 'E',
                 style: const TextStyle(
-                  color: AppTheme.secondary,
+                  color: AppTheme.textSecondary,
                   fontWeight: FontWeight.bold,
                   fontSize: 13,
                 ),

@@ -9,10 +9,10 @@ class HelpFaqScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color:  AppTheme.secondary),
         title: const Text("Help & FAQ",
         style: TextStyle(
-          color: AppTheme.secondary
+          color: AppTheme.textSecondary
         ),
         ),
       ),

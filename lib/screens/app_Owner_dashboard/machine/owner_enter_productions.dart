@@ -7,13 +7,13 @@ class OwnerEnterProductionScreen extends StatefulWidget {
   final int machineId;
   final int factoryId;
 
-  /// Shared batch info 
+  
   final String? batchId;
   final String varietyType;
   final double totalLength;
   final double remaining;
 
-  /// Employees currently assigned to this machine's shifts.
+ 
 
   final List<Map<String, dynamic>> shifts;
 

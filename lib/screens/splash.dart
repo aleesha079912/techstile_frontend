@@ -19,9 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
       body: Stack(
         children: [
-          // =====================================================
-          // FULL SCREEN BACKGROUND IMAGE (30% OPACITY)
-          // =====================================================
+          
           Positioned.fill(
             child: Opacity(
               opacity: 0.3,
@@ -32,17 +30,14 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
           ),
 
-          // Optional: a subtle overlay so text stays readable
-          // over the background image regardless of image content.
+          
           Positioned.fill(
             child: Container(
-              color: AppTheme.background.withOpacity(0.4),
+              color: AppTheme.secondary.withOpacity(0.4),
             ),
           ),
 
-          // =====================================================
-          // FOREGROUND CONTENT
-          // =====================================================
+         
           SafeArea(
             child: LayoutBuilder(
               builder: (context, constraints) {
@@ -58,9 +53,9 @@ class _SplashScreenState extends State<SplashScreen> {
                       child: Column(
                         children: [
 
-                          // =====================================================
+                          
                           // TOP SECTION (CENTERED)
-                          // =====================================================
+                          
                           Expanded(
                             child: Center(
                               child: Padding(
@@ -106,77 +101,57 @@ class _SplashScreenState extends State<SplashScreen> {
                                           : 45,
                                     ),
                                     
-                                    // =================================================
-                                    // LOGO ICON (commented out, kept as-is)
-                                    // =================================================
-                                    Container(
-                                      height: constraints.maxWidth < 380
-                                          ? 78
-                                          : 88,
-
-                                      width: constraints.maxWidth < 380
-                                          ? 78
-                                          : 88,
-
-                                      decoration: BoxDecoration(
-                                        color: AppTheme.secondary,
-                                        borderRadius: BorderRadius.circular(22),
-                                        boxShadow: AppTheme.softShadow,
+                                   
+                                    
+                                 // LOGO ICON
+                                 Container(
+                                    height: constraints.maxWidth < 280 ? 100 : 150,
+                                    width: constraints.maxWidth < 280 ? 100 : 150,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(38),
+                                      border: Border.all(
+                                        color: const Color(0xFF122B7A),
+                                        width: 3,
                                       ),
-
-                                      child: const Icon(
-                                        Icons.tune,
-                                        size: 40,
-                                        color: AppTheme.primary,
-                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: AppTheme.onsurface.withOpacity(0.25),
+                                          blurRadius: 24,
+                                          offset: const Offset(0, 10),
+                                        ),
+                                      ],
                                     ),
-
-                                    SizedBox(
-                                      height: constraints.maxHeight < 600
-                                          ? 20
-                                          : 28,
-                                    ),
-
-
-
-
-
-
-                                    // =================================================
-                                    // APP NAME
-                                    // =================================================
-                                    Text(
-                                      "TECHstile",
-                                      style: theme.textTheme.headlineMedium?.copyWith(
-                                        color: AppTheme.primary,
-                                        fontWeight: FontWeight.w700,
-                                        fontSize: constraints.maxWidth < 380
-                                            ? 27
-                                            : 30,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(35),
+                                      child: Image.asset(
+                                        'assets/images/logo2.jpg',
+                                        fit: BoxFit.cover,
+                                        filterQuality: FilterQuality.high,
+                                        errorBuilder: (context, error, stackTrace) =>
+                                            const Icon(Icons.image_not_supported, size: 32),
                                       ),
                                     ),
-
-                                    const SizedBox(height: 8),
-
-                                    // =================================================
-                                    // DESCRIPTION
-                                    // =================================================
-                                    Text(
-                                      "Precision orchestration for high-performance "
-                                      "textile manufacturing.",
-                                      textAlign: TextAlign.center,
-                                      style: theme.textTheme.bodyMedium?.copyWith(
-                                        color: AppTheme.textPrimary.withOpacity(0.7),
-                                        height: 1.45,
-                                        fontSize: 13,
-                                      ),
+                                  ), 
+                                      
+                                      
+                                 const SizedBox(height: 28), 
+                                 Text(
+                                    "TECHstile",
+                                    style: theme.textTheme.headlineMedium?.copyWith(
+                                      color: AppTheme.textPrimary,
+                                      fontWeight: FontWeight.w700,
+                                      fontSize: constraints.maxWidth < 380
+                                          ? 27
+                                          : 30,
                                     ),
+                                  ),
+                                   const SizedBox(height: 8),
 
-                                    const SizedBox(height: 16),
-
-                                    // =================================================
+                                    
+                                    
+                                   
                                     // SMALL LINE
-                                    // =================================================
+                                   
                                     Container(
                                       width: 40,
                                       height: 3,
@@ -191,9 +166,8 @@ class _SplashScreenState extends State<SplashScreen> {
                             ),
                           ),
 
-                          // =====================================================
-                          // GET STARTED BUTTON
-                          // =====================================================
+                          
+                        
                           Padding(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 20,

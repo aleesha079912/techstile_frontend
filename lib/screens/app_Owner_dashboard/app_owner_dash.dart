@@ -13,6 +13,8 @@ import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/scan_code
 
 import 'package:techstile_frontend/core/models/factory_model.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/factory_owner_dash/factorydashboard.dart';
+import 'package:techstile_frontend/widgets/desktop_admin_shell.dart';
+import 'package:techstile_frontend/widgets/owner_drawer.dart';
 
 class OwnerDashboardScreen extends StatefulWidget {
   final int factoryId;
@@ -56,28 +58,28 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.background,
-
+    return DesktopAdminShell(
+      currentIndex: _currentIndex,
+      onTabSelected: (index) {
+        setState(() {
+          _currentIndex = index;
+        });
+      },
+      floatingActionButton: _currentIndex == 0
+          ? _buildFAB(context)
+          : null,
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.endFloat,
+      bottomNavigationBar: _buildBottomNav(context),
+      mobileDrawer: const OwnerDrawer(),
       body: IndexedStack(
         index: _currentIndex,
         children: _pages,
       ),
-
-      floatingActionButton: _currentIndex == 0
-          ? _buildFAB(context)
-          : null,
-
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.endFloat,
-
-      bottomNavigationBar: _buildBottomNav(context),
     );
   }
 
-  // ============================================================
-  // FLOATING ACTION BUTTON
-  // ============================================================
+ 
 
   Widget _buildFAB(BuildContext context) {
     return Container(
@@ -122,7 +124,7 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
               Text(
                 "Add Factory",
                 style: TextStyle(
-                  color: AppTheme.secondary,
+                  color: AppTheme.textSecondary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -133,10 +135,7 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
     );
   }
 
-  // ============================================================
-  // BOTTOM NAVIGATION
-  // ============================================================
-
+  
   Widget _buildBottomNav(BuildContext context) {
     return BottomNavigationBar(
       currentIndex: _currentIndex,
@@ -180,9 +179,7 @@ class _OwnerDashboardState extends State<OwnerDashboardScreen> {
   }
 }
 
-// ============================================================
-// HOME TAB
-// ============================================================
+
 
 class _HomeTab extends StatefulWidget {
   const _HomeTab();
@@ -204,9 +201,6 @@ class _HomeTabState extends State<_HomeTab> {
     super.dispose();
   }
 
-  // ==========================================================
-  // SCANNER
-  // ==========================================================
 
   void _openScanner(List<FactoryModel> factories) {
     if (factories.isEmpty) {
@@ -305,45 +299,30 @@ class _HomeTabState extends State<_HomeTab> {
     );
   }
 
-  // ==========================================================
-  // FILTERS
-  // ==========================================================
+ 
 
   List<FactoryModel> _applyFilters(
     List<FactoryModel> factories,
   ) {
-    final search = query.trim().toLowerCase();
+      final search = query.trim().toLowerCase();
 
-    return factories.where(
+      return factories.where(
       (factory) {
-        final matchesQuery =
-            search.isEmpty ||
-            factory.name
-                .toLowerCase()
-                .contains(search) ||
-            factory.city
-                .toLowerCase()
-                .contains(search) ||
-            factory.address
-                .toLowerCase()
-                .contains(search);
+          return search.isEmpty ||
+              factory.name
+                  .toLowerCase()
+                  .contains(search) ||
+              factory.city
+                  .toLowerCase()
+                  .contains(search) ||
+              factory.address
+                  .toLowerCase()
+                  .contains(search);
+        },
+      ).toList();
+    }
 
-        final matchesStatus =
-            statusFilter == "All" ||
-            (statusFilter == "Online" &&
-                factory.isActive) ||
-            (statusFilter == "Offline" &&
-                !factory.isActive);
-
-        return matchesQuery && matchesStatus;
-      },
-    ).toList();
-  }
-
-  // ==========================================================
-  // BUILD
-  // ==========================================================
-
+ 
   @override
   Widget build(BuildContext context) {
     final controller =
@@ -357,6 +336,7 @@ class _HomeTabState extends State<_HomeTab> {
 
           final filtered =
               _applyFilters(factories);
+          final isDesktop = MediaQuery.of(context).size.width >= 850;
 
           return CustomScrollView(
             slivers: [
@@ -372,10 +352,7 @@ class _HomeTabState extends State<_HomeTab> {
                 child: _buildSearchBar(),
               ),
 
-              SliverToBoxAdapter(
-                child: _buildFilterChips(),
-              ),
-
+              
               if (filtered.isEmpty)
                 SliverFillRemaining(
                   hasScrollBody: false,
@@ -383,41 +360,53 @@ class _HomeTabState extends State<_HomeTab> {
                 )
               else
                 SliverPadding(
-                  padding: const EdgeInsets.only(
-                    top: 2,
-                    bottom: 100,
+                  padding: EdgeInsets.fromLTRB(
+                    isDesktop ? 20 : 16,
+                    isDesktop ? 12 : 2,
+                    isDesktop ? 20 : 16,
+                    100,
                   ),
-                  sliver: SliverList(
-                    delegate:
-                        SliverChildBuilderDelegate(
-                      (
-                        context,
-                        index,
-                      ) {
-                        final factory =
-                            filtered[index];
-
-                        return Padding(
-                          padding:
-                              const EdgeInsets
-                                  .symmetric(
-                            horizontal: 16,
-                            vertical: 4,
+                  sliver: isDesktop
+                      ? SliverGrid(
+                          gridDelegate:
+                              const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 440,
+                            mainAxisExtent: 220,
+                            crossAxisSpacing: 16,
+                            mainAxisSpacing: 16,
                           ),
-                          child: _FactoryCard(
-                            factory: factory,
-                            onDelete: () {
-                              controller
-                                  .deleteFactory(
-                                factory.id,
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              final factory = filtered[index];
+                              return _FactoryCard(
+                                factory: factory,
+                                onDelete: () {
+                                  controller.deleteFactory(factory.id);
+                                },
                               );
                             },
+                            childCount: filtered.length,
                           ),
-                        );
-                      },
-                      childCount: filtered.length,
-                    ),
-                  ),
+                        )
+                      : SliverList(
+                          delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              final factory = filtered[index];
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 4,
+                                ),
+                                child: _FactoryCard(
+                                  factory: factory,
+                                  onDelete: () {
+                                    controller.deleteFactory(factory.id);
+                                  },
+                                ),
+                              );
+                            },
+                            childCount: filtered.length,
+                          ),
+                        ),
                 ),
             ],
           );
@@ -426,9 +415,7 @@ class _HomeTabState extends State<_HomeTab> {
     );
   }
 
-  // ==========================================================
-  // HEADER
-  // ==========================================================
+  
 
   Widget _buildHeader(
     FactoryController controller,
@@ -465,7 +452,7 @@ class _HomeTabState extends State<_HomeTab> {
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w800,
-                    color: AppTheme.primary,
+                    color: AppTheme.textPrimary,
                   ),
                 ),
               ],
@@ -504,9 +491,7 @@ class _HomeTabState extends State<_HomeTab> {
     );
   }
 
-  // ==========================================================
-  // STATS
-  // ==========================================================
+ 
 
   Widget _buildStatsRow(
     FactoryController controller,
@@ -514,13 +499,7 @@ class _HomeTabState extends State<_HomeTab> {
     final factories =
         controller.factoryList;
 
-    final onlineCount =
-        factories
-            .where(
-              (factory) => factory.isActive,
-            )
-            .length;
-
+    
     final citiesCount =
         factories
             .map(
@@ -552,15 +531,6 @@ class _HomeTabState extends State<_HomeTab> {
           const SizedBox(width: 10),
 
           _StatCard(
-            label: "Online",
-            value: "$onlineCount",
-            icon: Icons.bolt_rounded,
-            color: AppTheme.success,
-          ),
-
-          const SizedBox(width: 10),
-
-          _StatCard(
             label: "Cities",
             value: "$citiesCount",
             icon: Icons.location_city,
@@ -571,10 +541,7 @@ class _HomeTabState extends State<_HomeTab> {
     );
   }
 
-  // ==========================================================
-  // SEARCH BAR
-  // ==========================================================
-
+  
   Widget _buildSearchBar() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(
@@ -585,7 +552,7 @@ class _HomeTabState extends State<_HomeTab> {
       ),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color:  AppTheme.secondary,
           borderRadius:
               BorderRadius.circular(14),
 
@@ -673,93 +640,9 @@ class _HomeTabState extends State<_HomeTab> {
     );
   }
 
-  // ==========================================================
-  // FILTER CHIPS
-  // ==========================================================
+  
 
-  Widget _buildFilterChips() {
-    const options = [
-      "All",
-      "Online",
-      "Offline",
-    ];
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        16,
-        14,
-        16,
-        6,
-      ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: options.map(
-            (option) {
-              final selected =
-                  statusFilter == option;
-
-              return Padding(
-                padding:
-                    const EdgeInsets.only(
-                  right: 10,
-                ),
-                child: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      statusFilter = option;
-                    });
-                  },
-                  child: Container(
-                    padding:
-                        const EdgeInsets
-                            .symmetric(
-                      horizontal: 18,
-                      vertical: 8,
-                    ),
-                    decoration: BoxDecoration(
-                      color: selected
-                          ? AppTheme.primary
-                          : Colors.white,
-
-                      borderRadius:
-                          BorderRadius.circular(
-                        20,
-                      ),
-
-                      border: Border.all(
-                        color: selected
-                            ? AppTheme.primary
-                            : AppTheme.neutral,
-                      ),
-                    ),
-                    child: Text(
-                      option,
-                      style: TextStyle(
-                        color: selected
-                            ? AppTheme.secondary
-                            : AppTheme.textPrimary,
-
-                        fontWeight:
-                            FontWeight.w600,
-
-                        fontSize: 12.5,
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            },
-          ).toList(),
-        ),
-      ),
-    );
-  }
-
-  // ==========================================================
-  // EMPTY STATE
-  // ==========================================================
-
+  
   Widget _buildEmptyState() {
     final hasSearch =
         query.trim().isNotEmpty;
@@ -824,9 +707,7 @@ class _HomeTabState extends State<_HomeTab> {
   }
 }
 
-// ============================================================
-// STAT CARD
-// ============================================================
+
 
 class _StatCard extends StatelessWidget {
   final String label;
@@ -847,7 +728,7 @@ class _StatCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: AppTheme.secondary,
 
           borderRadius:
               BorderRadius.circular(16),
@@ -913,9 +794,6 @@ class _StatCard extends StatelessWidget {
   }
 }
 
-// ============================================================
-// FACTORY CARD
-// ============================================================
 
 class _FactoryCard extends StatelessWidget {
   final FactoryModel factory;
@@ -929,7 +807,7 @@ class _FactoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.white,
+      color:  AppTheme.secondary,
 
       borderRadius:
           BorderRadius.circular(16),
@@ -948,9 +826,9 @@ class _FactoryCard extends StatelessWidget {
         },
 
         child: Container(
-          // =================================================
+         
           // COMPACT CARD PADDING
-          // =================================================
+    
 
           padding:
               const EdgeInsets.all(12),
@@ -961,9 +839,7 @@ class _FactoryCard extends StatelessWidget {
             borderRadius:
                 BorderRadius.circular(16),
 
-            // =================================================
-            // PRIMARY COLOR BORDER
-            // =================================================
+            
 
             border: Border.all(
               color:
@@ -971,9 +847,7 @@ class _FactoryCard extends StatelessWidget {
               width: 1.1,
             ),
 
-            // =================================================
-            // SOFT SHADOW
-            // =================================================
+            
 
             boxShadow: [
               BoxShadow(
@@ -991,17 +865,17 @@ class _FactoryCard extends StatelessWidget {
                 CrossAxisAlignment.start,
 
             children: [
-              // =================================================
+              
               // FACTORY AVATAR
-              // =================================================
+              
 
               _buildAvatar(),
 
               const SizedBox(width: 10),
 
-              // =================================================
+              
               // FACTORY INFORMATION
-              // =================================================
+            
 
               Expanded(
                 child: Column(
@@ -1009,9 +883,9 @@ class _FactoryCard extends StatelessWidget {
                       CrossAxisAlignment.start,
 
                   children: [
-                    // =================================================
+                   
                     // NAME + STATUS
-                    // =================================================
+                   
 
                     Row(
                       crossAxisAlignment:
@@ -1038,18 +912,12 @@ class _FactoryCard extends StatelessWidget {
                             ),
                           ),
                         ),
-
-                        const SizedBox(width: 6),
-
-                        _buildStatus(),
                       ],
                     ),
 
                     const SizedBox(height: 6),
 
-                    // =================================================
-                    // LOCATION
-                    // =================================================
+                    
 
                     Row(
                       crossAxisAlignment:
@@ -1095,7 +963,7 @@ class _FactoryCard extends StatelessWidget {
 
                     // =================================================
                     // DIVIDER
-                    // =================================================
+                  
 
                     Container(
                       height: 1,
@@ -1210,37 +1078,6 @@ class _FactoryCard extends StatelessWidget {
         // ONLINE INDICATOR
         // =================================================
 
-        Positioned(
-          bottom: 0,
-          right: 0,
-
-          child: Container(
-            width: 13,
-            height: 13,
-
-            decoration: BoxDecoration(
-              color: factory.isActive
-                  ? AppTheme.success
-                  : AppTheme.neutral,
-
-              shape: BoxShape.circle,
-
-              border: Border.all(
-                color: Colors.white,
-                width: 2,
-              ),
-
-              boxShadow: [
-                if (factory.isActive)
-                  BoxShadow(
-                    color: AppTheme.success
-                        .withOpacity(0.35),
-                    blurRadius: 5,
-                  ),
-              ],
-            ),
-          ),
-        ),
       ],
     );
   }
@@ -1249,74 +1086,7 @@ class _FactoryCard extends StatelessWidget {
   // STATUS
   // ==========================================================
 
-  Widget _buildStatus() {
-    final active = factory.isActive;
-
-    return Container(
-      padding:
-          const EdgeInsets.symmetric(
-        horizontal: 7,
-        vertical: 4,
-      ),
-
-      decoration: BoxDecoration(
-        color: active
-            ? AppTheme.success
-                .withOpacity(0.10)
-            : AppTheme.neutral
-                .withOpacity(0.15),
-
-        borderRadius:
-            BorderRadius.circular(20),
-
-        border: Border.all(
-          color: active
-              ? AppTheme.success
-                  .withOpacity(0.25)
-              : AppTheme.neutral
-                  .withOpacity(0.30),
-        ),
-      ),
-
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 5,
-            height: 5,
-
-            decoration: BoxDecoration(
-              color: active
-                  ? AppTheme.success
-                  : AppTheme.neutral,
-
-              shape: BoxShape.circle,
-            ),
-          ),
-
-          const SizedBox(width: 4),
-
-          Text(
-            active
-                ? "Online"
-                : "Offline",
-
-            style: TextStyle(
-              fontSize: 9.5,
-
-              fontWeight:
-                  FontWeight.w700,
-
-              color: active
-                  ? AppTheme.success
-                  : AppTheme.textPrimary
-                      .withOpacity(0.55),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+ 
 
   // ==========================================================
   // LOCATION

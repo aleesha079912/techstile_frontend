@@ -68,11 +68,17 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
     } catch (_) {}
   }
 
+  /// Decimal value ko whole digits mein dikhata hai (null/invalid => 0)
+  String _wholeNumber(dynamic value) {
+    final n = double.tryParse(value?.toString() ?? '') ?? 0;
+    return n.round().toString();
+  }
+
   void _openAssignProduction() {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: AppTheme.secondary,
+      backgroundColor: AppTheme.background,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
@@ -126,7 +132,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        backgroundColor: AppTheme.secondary,
+        backgroundColor: AppTheme.background,
         elevation: 0,
         iconTheme: const IconThemeData(color: AppTheme.primary),
         title: Column(
@@ -135,7 +141,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
             Text(
               m.machineName,
               style: const TextStyle(
-                color: AppTheme.primary,
+                color: AppTheme.textPrimary,
                 fontWeight: FontWeight.w800,
                 fontSize: 18,
               ),
@@ -144,7 +150,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
               Text(
                 factoryName,
                 style: TextStyle(
-                  color: AppTheme.primary.withOpacity(0.6),
+                  color: AppTheme.textPrimary.withOpacity(0.6),
                   fontWeight: FontWeight.w500,
                   fontSize: 12,
                 ),
@@ -237,21 +243,21 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                           Expanded(
                             child: _statCard(
                               'Total Length',
-                              '${_detail['total_length'] ?? 0}',
+                              _wholeNumber(_detail['total_length']),
                             ),
                           ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: _statCard(
                               'Ready (both shifts)',
-                              '${_detail['ready_production'] ?? 0}',
+                              _wholeNumber(_detail['ready_production']),
                             ),
                           ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: _statCard(
                               'Remaining',
-                              '${_detail['remaining'] ?? 0}',
+                              _wholeNumber(_detail['remaining']),
                             ),
                           ),
                         ],
@@ -347,7 +353,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                       ? s['employee_name'].toString()
                       : 'Employee #${s['employee_id'] ?? '-'}',
                   style: const TextStyle(
-                    color: AppTheme.primary,
+                    color: AppTheme.textPrimary,
                     fontWeight: FontWeight.w700,
                     fontSize: 14,
                   ),
@@ -356,7 +362,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
               Text(
                 '$start - $end',
                 style: TextStyle(
-                  color: AppTheme.primary.withOpacity(0.55),
+                  color: AppTheme.textPrimary.withOpacity(0.55),
                   fontSize: 11,
                 ),
               ),
@@ -368,14 +374,14 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
               Expanded(
                 child: _statCard(
                   'Ready (own)',
-                  '${s['ready_production'] ?? 0}',
+                  _wholeNumber(s['ready_production']),
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: _statCard(
                   'Waste (own)',
-                  '${s['waste_production'] ?? 0}',
+                  _wholeNumber(s['waste_production']),
                 ),
               ),
             ],
@@ -415,7 +421,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
             child: Text(
               title,
               style: TextStyle(
-                color: AppTheme.primary.withOpacity(0.6),
+                color: AppTheme.textPrimary.withOpacity(0.6),
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
               ),
@@ -424,7 +430,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
           Text(
             value,
             style: const TextStyle(
-              color: AppTheme.primary,
+              color: AppTheme.textPrimary,
               fontSize: 14,
               fontWeight: FontWeight.w700,
             ),
@@ -452,8 +458,9 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
         children: [
           Text(
             title,
+            textAlign: TextAlign.center,
             style: TextStyle(
-              color: AppTheme.primary.withOpacity(0.6),
+              color: AppTheme.textPrimary.withOpacity(0.6),
               fontSize: 11,
               fontWeight: FontWeight.w500,
             ),
@@ -462,7 +469,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
           Text(
             value,
             style: const TextStyle(
-              color: AppTheme.primary,
+              color: AppTheme.textPrimary,
               fontSize: 18,
               fontWeight: FontWeight.w800,
             ),
@@ -512,7 +519,7 @@ class _ActionCard extends StatelessWidget {
               label,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                color: AppTheme.secondary,
+                color: AppTheme.textSecondary,
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
                 height: 1.3,
@@ -545,7 +552,7 @@ class _SectionLabel extends StatelessWidget {
         Text(
           text,
           style: const TextStyle(
-            color: AppTheme.primary,
+            color: AppTheme.textPrimary,
             fontWeight: FontWeight.w700,
             fontSize: 16,
           ),

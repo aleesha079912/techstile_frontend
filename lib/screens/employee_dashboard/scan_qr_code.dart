@@ -110,7 +110,7 @@ class _ScanqrCodeScreenState extends State<ScanqrCodeScreen>
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child: MobileScanner(
-                    controller: controller, // ✅ controller pass karo
+                    controller: controller,
                     onDetect: _onDetect,
                   ),
                 ),

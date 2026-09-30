@@ -6,9 +6,9 @@ import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
 import 'package:techstile_frontend/widgets/owner_drawer.dart';
 
 class GenerateQrCodeScreen extends StatefulWidget {
-  final String machineDbId;   // primary id from DB 
-  final String machineLabel;  // display label 
-  final int factoryId;        // factory identifier for navigation
+  final String machineDbId;   
+  final String machineLabel;  
+  final int factoryId;        
 
   const GenerateQrCodeScreen({
     super.key,
@@ -98,14 +98,14 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // QR wrapped in RepaintBoundary for capture
+                  
                   RepaintBoundary(
                     key: _qrKey,
                     child: Container(
                       color:AppTheme.secondary,
                       padding: const EdgeInsets.all(12),
                       child: QrImageView(
-                        //  Primary DB ID stored in QR
+                        
                         data: widget.machineDbId,
                         version: QrVersions.auto,
                         size: 220,
@@ -135,7 +135,7 @@ class _GenerateQrCodeScreenState extends State<GenerateQrCodeScreen> {
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 15,
-                        color:AppTheme.primary,
+                        color:AppTheme.textPrimary,
                       ),
                     ),
                   ),

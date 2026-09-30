@@ -36,7 +36,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
   final TextEditingController searchCtrl = TextEditingController();
 
   bool showActiveOnly = false;
-  // Common Shadow
+  
  static List<BoxShadow> get _primaryShadow => [
         BoxShadow(
           color: AppTheme.primary.withOpacity(0.14),
@@ -62,7 +62,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
     super.dispose();
   }
 
-  // LOAD DATA
+  
  Future<void> loadData() async {
     setState(() {
       loading = true;
@@ -161,7 +161,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
     applyFilter();
   }
 
-  // INFO ROW
+  
 
 
   Widget infoRow(
@@ -196,9 +196,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
     );
   }
 
-  // ---------------------------------------------------------------------------
-  // STAT BOX
-  // ---------------------------------------------------------------------------
+ 
 
   Widget statBox(
     String title,
@@ -262,7 +260,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                         fontWeight:
                             FontWeight.w800,
                         color: selected
-                            ? AppTheme.secondary
+                            ? AppTheme.textSecondary
                             : color,
                       ),
                     ),
@@ -294,9 +292,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
     );
   }
 
-  // ---------------------------------------------------------------------------
-  // MANAGER CARD
-  // ---------------------------------------------------------------------------
+  
 
   Widget managerCard() {
     if (manager == null) {
@@ -379,7 +375,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                         'Manager',
                         style: TextStyle(
                           fontSize: 10,
-                          color: AppTheme.neutral,
+                          color: AppTheme.textneutral,
                           fontWeight:
                               FontWeight.w600,
                         ),
@@ -404,7 +400,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                           'MANAGER',
                           style: TextStyle(
                             color:
-                                AppTheme.primary,
+                                AppTheme.textPrimary,
                             fontSize: 8,
                             fontWeight:
                                 FontWeight.w800,
@@ -420,7 +416,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                     managerName,
                     style: const TextStyle(
                       color:
-                          AppTheme.primary,
+                          AppTheme.textPrimary,
                       fontSize: 15,
                       fontWeight:
                           FontWeight.w800,
@@ -455,9 +451,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
     );
   }
 
-  // ---------------------------------------------------------------------------
-  // USER CARD
-  // ---------------------------------------------------------------------------
+ 
 
   Widget userCard(dynamic user) {
     String role = 'Unknown';
@@ -631,7 +625,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                             style: TextStyle(
                               color:
                                   AppTheme
-                                      .secondary,
+                                      .textSecondary,
                               fontSize: 8,
                               fontWeight:
                                   FontWeight
@@ -735,9 +729,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
     );
   }
 
-  // ---------------------------------------------------------------------------
-  // EMPTY VIEW
-  // ---------------------------------------------------------------------------
+ 
 
   Widget emptyUsersWidget() {
     return Center(
@@ -768,7 +760,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                 fontWeight:
                     FontWeight.w700,
                 color:
-                    AppTheme.neutral,
+                    AppTheme.textneutral,
               ),
             ),
 
@@ -781,7 +773,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                 style: TextStyle(
                   fontSize: 11,
                   color:
-                      AppTheme.neutral,
+                      AppTheme.textneutral,
                 ),
               ),
             ],
@@ -791,10 +783,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
     );
   }
 
-  // ---------------------------------------------------------------------------
-  // ERROR VIEW
-  // ---------------------------------------------------------------------------
-
+  
   Widget errorView() {
     return Center(
       child: Padding(
@@ -845,10 +834,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
     );
   }
 
-  // ---------------------------------------------------------------------------
-  // APP BAR
-  // ---------------------------------------------------------------------------
-
+  
   PreferredSizeWidget _buildAppBar() {
     return AppBar(
       automaticallyImplyLeading: false,
@@ -872,7 +858,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
           const Text(
             'All Users',
             style: TextStyle(
-              color: AppTheme.primary,
+              color: AppTheme.textPrimary,
               fontWeight:
                   FontWeight.w800,
               fontSize: 18,
@@ -898,9 +884,6 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
     );
   }
 
-  // ---------------------------------------------------------------------------
-  // BUILD
-  // ---------------------------------------------------------------------------
 
   @override
   Widget build(BuildContext context) {
@@ -939,9 +922,9 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
                       crossAxisAlignment:
                           CrossAxisAlignment.start,
                       children: [
-                        // ---------------------------------------------------
+                        
                         // HEADER
-                        // ---------------------------------------------------
+                      
 
                         Row(
                           children: [
@@ -992,15 +975,12 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
 
                         const SizedBox(height: 12),
 
-                        // ---------------------------------------------------
-                        // MANAGER
-                        // ---------------------------------------------------
-
+                       
                         managerCard(),
 
-                        // ---------------------------------------------------
+                        
                         // TOTAL / ACTIVE
-                        // ---------------------------------------------------
+                        
 
                         Row(
                           children: [
@@ -1042,9 +1022,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
 
                         const SizedBox(height: 14),
 
-                        // ---------------------------------------------------
-                        // SEARCH
-                        // ---------------------------------------------------
+                        
 
                         TextField(
                           controller:
@@ -1129,9 +1107,8 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
 
                         const SizedBox(height: 16),
 
-                        // ---------------------------------------------------
                         // USERS
-                        // ---------------------------------------------------
+                        
 
                         if (filteredUsers
                             .isEmpty)
@@ -1172,9 +1149,7 @@ class _FactoryUsersScreenState extends State<FactoryUsersScreen> {
   }
 }
 
-// -----------------------------------------------------------------------------
-// SECTION LABEL
-// -----------------------------------------------------------------------------
+
 
 class _SectionLabel
     extends StatelessWidget {

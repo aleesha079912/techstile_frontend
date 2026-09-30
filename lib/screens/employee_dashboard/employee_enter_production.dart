@@ -40,7 +40,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
       varietyController.text = args['varietyType']?.toString() ?? '';
       lengthController.text = args['totalLength']?.toString() ?? '';
 
-      // ADD remaining from backend
+      
       remainingController.text = args['remaining']?.toString() ?? '0';
     }
   }
@@ -229,7 +229,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
 
                 const SizedBox(height: 15),
 
-                // ── Ready ──
+                
                 const Text("Ready Production",
                     style: TextStyle(fontSize: 12, color: AppTheme.textneutral)),
                 const SizedBox(height: 6),
@@ -259,7 +259,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
 
                 const SizedBox(height: 30),
 
-                // ── Submit ──
+                
                 SizedBox(
                   width: double.infinity,
                   height: 55,

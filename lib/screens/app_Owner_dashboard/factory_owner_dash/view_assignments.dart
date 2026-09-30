@@ -32,14 +32,14 @@ class _ViewAssignmentsState extends State<ViewAssignments> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const OwnerDrawer(), // ✅ PASS FACTORY ID HERE
+      drawer: const OwnerDrawer(), 
       appBar: AppBar(title: const Text("View Assignments")),
       body: isLoading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: DataTable(
-               // Columns Section
+               
 columns: const [
   DataColumn(label: Text("Factory")),
   DataColumn(label: Text("User")),

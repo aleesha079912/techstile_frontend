@@ -28,13 +28,9 @@ class _MachineDetailScreenState
   bool loading = true;
   Map<String, dynamic>? machine;
 
-  // Yahan add karo  class level pe
   bool canAdd = false;
   double remaining = 0;
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Common shadow / border (matches Factory Dashboard styling)
-  // ─────────────────────────────────────────────────────────────────────────
 
   static List<BoxShadow> get _primaryShadow => [
         BoxShadow(
@@ -80,10 +76,7 @@ class _MachineDetailScreenState
     }
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Equal, symmetric action card (replaces the old full-width buttons for
-  // Enter Production / Mark Attendance)
-  // ─────────────────────────────────────────────────────────────────────────
+  
 
   Widget _actionCard({
     required String title,
@@ -151,9 +144,6 @@ class _MachineDetailScreenState
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Shared full-width action-button style (kept for Scan Next Machine)
-  // ─────────────────────────────────────────────────────────────────────────
 
   Widget _actionButton({
     required String label,
@@ -258,10 +248,7 @@ class _MachineDetailScreenState
 
                     const SizedBox(height: 16),
 
-                    // ─────────────────────────────────────────
-                    // Enter Production + Mark Attendance
-                    // — equal-size, symmetric cards side by side
-                    // ─────────────────────────────────────────
+                   
 
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -288,7 +275,7 @@ class _MachineDetailScreenState
                                       'remaining': remaining.toString(),
                                     },
                                   );
-                                  // after fresh prduction is enter fresh load
+                                
                                   loadData();
                                 }
                               : () {
@@ -349,19 +336,15 @@ class _MachineDetailScreenState
 
                     const SizedBox(height: 16),
 
-                    // ─────────────────────────────────────────
-                    // Scan Next Machine
-                    // (no existing logic for this — wire up your
-                    // scanner route/handler here)
-                    // ─────────────────────────────────────────
+                    
 
                     _actionButton(
                       label: "Scan Next Machine",
                       icon: Icons.qr_code_scanner,
-                      backgroundColor: AppTheme.secondary,
+                      backgroundColor: AppTheme.background,
                       foregroundColor: AppTheme.primary,
                       onPressed: () {
-                        // TODO: hook up your scan-next-machine logic/route here
+                        
                         Get.back();
                       },
                     ),
@@ -373,9 +356,6 @@ class _MachineDetailScreenState
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Section label (matches Factory Dashboard style)
-// ─────────────────────────────────────────────────────────────────────────────
 
 class _SectionLabel extends StatelessWidget {
   final String text;

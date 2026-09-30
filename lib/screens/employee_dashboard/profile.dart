@@ -39,7 +39,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     });
   }
 
-  // ================= ACTION HANDLERS =================
+  
   void onViewProductionHistory() {
     Navigator.push(
       context,
@@ -75,7 +75,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     }
   }
 
-  // HERO PROFILE CARD 
+  
   Widget _buildHeroHeader() {
     final name = profile?['name']?.toString() ?? 'Production Worker';
     final email = profile?['email']?.toString() ?? '—';
@@ -102,7 +102,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       ),
       child: Column(
         children: [
-          // Avatar with ring border
+         
           Container(
             padding: const EdgeInsets.all(3.5),
             decoration: BoxDecoration(
@@ -143,7 +143,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             ),
           ),
           const SizedBox(height: 10),
-          // Badge chip
+          
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             decoration: BoxDecoration(
@@ -172,7 +172,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
-  // QUICK ACTION BUTTONS 
+  
   Widget _buildQuickActions() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 14),
@@ -247,7 +247,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
-  //SECTION TITLE 
+ 
   Widget _sectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 14, 20, 10),
@@ -275,7 +275,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
-  // OVERVIEW STATS 
+ 
   Widget _buildOverviewStats() {
     final totalMachines = "${profile?['total_machines'] ?? 0}";
     final totalProduction = "${profile?['total_production'] ?? 0} m";
@@ -377,7 +377,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
-  // EMPLOYMENT & PERSONAL INFO
+  
   Widget _buildDetailsCard() {
     final employeeId = profile?['employee_id']?.toString() ?? '';
     final factoryName = profile?['factory_name']?.toString() ?? '';
@@ -482,7 +482,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     );
   }
 
-  // MAIN BUILD 
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(

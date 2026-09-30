@@ -52,14 +52,14 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           "Success",
           res['message'] ?? "Password updated successfully!",
           backgroundColor: AppTheme.success,
-          colorText: Colors.white,
+          colorText:  AppTheme.textSecondary,
           snackPosition: SnackPosition.BOTTOM,
           margin: const EdgeInsets.all(16),
           borderRadius: 12,
           duration: const Duration(seconds: 2),
         );
 
-        // Clear fields and go back to settings
+        
         _currentPasswordController.clear();
         _newPasswordController.clear();
         _confirmPasswordController.clear();
@@ -72,7 +72,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
           "Error",
           res['message'] ?? "Failed to change password",
           backgroundColor: AppTheme.error,
-          colorText: Colors.white,
+          colorText:  AppTheme.textSecondary,
           snackPosition: SnackPosition.BOTTOM,
           margin: const EdgeInsets.all(16),
           borderRadius: 12,
@@ -85,7 +85,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         "Error",
         "An unexpected error occurred: $e",
         backgroundColor: AppTheme.error,
-        colorText: Colors.white,
+        colorText:  AppTheme.textSecondary,
         snackPosition: SnackPosition.BOTTOM,
         margin: const EdgeInsets.all(16),
         borderRadius: 12,
@@ -174,7 +174,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
               const SizedBox(height: 24),
 
-              // Current Password
+          
               _buildPasswordField(
                 label: "Current Password",
                 hint: "Enter your current password",
@@ -193,7 +193,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
               const SizedBox(height: 16),
 
-              // New Password
+            
               _buildPasswordField(
                 label: "New Password",
                 hint: "Min 8: upper, lower, number, symbol",
@@ -217,7 +217,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
               const SizedBox(height: 16),
 
-              // Confirm New Password
+              
               _buildPasswordField(
                 label: "Confirm New Password",
                 hint: "Re-enter new password",
@@ -239,7 +239,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
 
               const SizedBox(height: 32),
 
-              // Submit Button
+              
               SizedBox(
                 width: double.infinity,
                 height: 50,
@@ -265,7 +265,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                       : const Text(
                           "Update Password",
                           style: TextStyle(
-                            color: AppTheme.secondary,
+                            color: AppTheme.textSecondary,
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
                           ),

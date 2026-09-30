@@ -115,9 +115,7 @@ class ManagerEmployeeProductions {
   }
 }
 
-// ============================================================
-// Page
-// ============================================================
+
 
 class ManagerProductionsPage extends StatefulWidget {
   final dynamic factoryId;
@@ -204,10 +202,7 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage> {
     }
   }
 
-  // ------------------------------------------------------------
-  // Bulk action — approves/rejects every record passed in (used
-  // for the machine-level "Approve All / Reject All" buttons).
-  // ------------------------------------------------------------
+ 
   Future<void> _doBulkAction(List<dynamic> ids, String action) async {
     try {
       for (final id in ids) {
@@ -255,9 +250,7 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage> {
     );
   }
 
-  // ------------------------------------------------------------
-  // Confirmation dialog for machine-level bulk approve/reject
-  // ------------------------------------------------------------
+  
   void _confirmBulkAction(List<dynamic> ids, String action, String machineName) {
     if (ids.isEmpty) return;
     showDialog(
@@ -288,14 +281,12 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage> {
   int get _totalPending => _employees.fold(0, (s, e) => s + e.pendingCount);
   int get _totalApproved => _employees.fold(0, (s, e) => s + e.approvedCount);
 
-  // ------------------------------------------------------------
-  // Sliding Pending/Approved toggle — separate from AppBar
-  // ------------------------------------------------------------
+  
   Widget _slidingToggle() {
     return Container(
       height: 44,
       decoration: BoxDecoration(
-        color: AppTheme.background,
+        color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppTheme.primary.withOpacity(0.10)),
       ),
@@ -355,7 +346,7 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage> {
             label,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
-              color: selected ? AppTheme.secondary : AppTheme.primary.withOpacity(0.6),
+              color: selected ? AppTheme.textSecondary : AppTheme.primary.withOpacity(0.6),
               fontWeight: FontWeight.w700,
               fontSize: 12.5,
             ),
@@ -365,9 +356,7 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage> {
     );
   }
 
-  // ------------------------------------------------------------
-  // Period filter
-  // ------------------------------------------------------------
+  
   Widget _periodFilterDropdown() {
     return PopupMenuButton<String>(
       initialValue: selectedPeriodKey,
@@ -402,7 +391,7 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage> {
         height: 44,
         width: 44,
         decoration: BoxDecoration(
-          color: AppTheme.background,
+          color: AppTheme.secondary,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: AppTheme.primary.withOpacity(0.10)),
         ),
@@ -417,12 +406,12 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage> {
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        backgroundColor: AppTheme.secondary,
+        backgroundColor: AppTheme.background,
         elevation: 0,
         iconTheme: const IconThemeData(color: AppTheme.primary),
         title: const Text(
           'Manager Productions',
-          style: TextStyle(color: AppTheme.primary, fontWeight: FontWeight.w800, fontSize: 17),
+          style: TextStyle(color: AppTheme.textPrimary, fontWeight: FontWeight.w800, fontSize: 17),
         ),
       ),
       body: Column(
@@ -471,7 +460,7 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage> {
               padding: const EdgeInsets.only(bottom: 8),
               child: Text(
                 selectedPeriodLabel,
-                style: TextStyle(color: AppTheme.primary.withOpacity(0.5), fontSize: 12),
+                style: TextStyle(color: AppTheme.textPrimary.withOpacity(0.5), fontSize: 12),
               ),
             ),
           ),
@@ -500,7 +489,7 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage> {
             child: Text(
               selectedPeriodLabel,
               style: TextStyle(
-                color: AppTheme.primary.withOpacity(0.55),
+                color: AppTheme.textPrimary.withOpacity(0.55),
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
               ),
@@ -529,9 +518,7 @@ class _ManagerProductionsPageState extends State<ManagerProductionsPage> {
       );
 }
 
-// ============================================================
-// Employee tile
-// ============================================================
+
 
 class _ManagerEmployeeTile extends StatelessWidget {
   final ManagerEmployeeProductions employee;
@@ -607,10 +594,6 @@ class _ManagerEmployeeTile extends StatelessWidget {
   }
 }
 
-// ============================================================
-// Machine tile — stat cards for count + collective ready production
-// + machine-level Approve All / Reject All (only for Pending view)
-// ============================================================
 
 class _ManagerMachineTile extends StatelessWidget {
   final ManagerMachineProductionGroup machine;
@@ -659,9 +642,7 @@ class _ManagerMachineTile extends StatelessWidget {
     );
   }
 
-  // ------------------------------------------------------------
-  // Machine-level bulk Approve All / Reject All row
-  // ------------------------------------------------------------
+ 
   Widget _bulkActionRow(List<ManagerProductionItem> items) {
     final ids = items.map((e) => e.id).toList();
     return Padding(
@@ -710,7 +691,7 @@ class _ManagerMachineTile extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.background,
+        color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: AppTheme.primary.withOpacity(0.06)),
       ),
@@ -747,7 +728,7 @@ class _ManagerMachineTile extends StatelessWidget {
                     ),
                   ],
                 ),
-                // Bulk actions only make sense for pending records
+               
                 if (!showApproved && items.isNotEmpty) _bulkActionRow(items),
               ],
             ),
@@ -776,11 +757,6 @@ class _ManagerMachineTile extends StatelessWidget {
   }
 }
 
-// ============================================================
-// Single production card
-// showActions sirf pending (status 1) ke liye true hoga.
-// Agar owner ne pehle hi approve kar diya (status 4) to "Owner ✓" note.
-// ============================================================
 
 class _ManagerProductionCard extends StatelessWidget {
   final ManagerProductionItem item;
@@ -884,7 +860,7 @@ class _ManagerProductionCard extends StatelessWidget {
           _infoBox(label: dateLabel, value: _fmtDateTime(dateValue)),
         ]),
 
-        // Agar owner ne pehle hi approve kar diya hai to batado
+        
         if (item.isOwnerApproved) ...[
           const SizedBox(height: 8),
           Container(

@@ -84,12 +84,12 @@ class _ManagerSettingsScreenState extends State<ManagerSettingsScreen> {
         title: const Text(
           "Settings",
           style: TextStyle(
-            color: AppTheme.primary,
+            color: AppTheme.textPrimary,
             fontWeight: FontWeight.w800,
             fontSize: 24,
           ),
         ),
-        backgroundColor: AppTheme.secondary,
+        backgroundColor: AppTheme.background,
         iconTheme: const IconThemeData(color: AppTheme.primary),
         elevation: 0,
       ),
@@ -128,7 +128,7 @@ class _ManagerSettingsScreenState extends State<ManagerSettingsScreen> {
                 children: [
                   CircleAvatar(
                     radius: 28,
-                    backgroundColor: AppTheme.secondary.withOpacity(0.18),
+                    backgroundColor: AppTheme.background.withOpacity(0.18),
                     child: Text(
                       (user['name'] ?? 'M')
                           .toString()
@@ -136,7 +136,7 @@ class _ManagerSettingsScreenState extends State<ManagerSettingsScreen> {
                           .toUpperCase(),
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: AppTheme.secondary,
+                        color: AppTheme.textSecondary,
                         fontSize: 22,
                       ),
                     ),
@@ -229,7 +229,7 @@ class _ManagerSettingsScreenState extends State<ManagerSettingsScreen> {
 
           const SizedBox(height: 20),
 
-          // PREFERENCES — Backup sirf Owner ko dikhega
+          // PREFERENCES ,Backup 
           if (isOwner) ...[
             _sectionTitle("PREFERENCES"),
 
@@ -442,8 +442,8 @@ class _ManagerSettingsScreenState extends State<ManagerSettingsScreen> {
       middleText: "Are you sure you want to logout?",
       textCancel: "No",
       textConfirm: "Yes",
-      confirmTextColor: AppTheme.secondary,
-      cancelTextColor: AppTheme.primary,
+      confirmTextColor: AppTheme.textSecondary,
+      cancelTextColor: AppTheme.textPrimary,
       buttonColor: AppTheme.primary,
 
       onConfirm: () {

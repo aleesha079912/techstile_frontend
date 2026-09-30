@@ -31,11 +31,7 @@ class _ViewPaymentsPageState extends State<ViewPaymentsPage> {
     });
   }
 
-  // ==========================================================
-  // EDIT PAYMENT
-  // No more `sheetContext` — this page owns its own context now,
-  // and there's no outer bottom sheet to pop when we're done.
-  // ==========================================================
+  
   void _showEditPaymentDialog(
     BuildContext context,
     Map<String, dynamic> payment,
@@ -52,7 +48,7 @@ class _ViewPaymentsPageState extends State<ViewPaymentsPage> {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      backgroundColor: Colors.white,
+      backgroundColor:AppTheme.background,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -130,31 +126,31 @@ class _ViewPaymentsPageState extends State<ViewPaymentsPage> {
                           amountPaid: newAmount,
                         );
 
-                        Navigator.pop(editSheetContext); // loading dialog
-                        Navigator.pop(editSheetContext); // edit sheet
+                        Navigator.pop(editSheetContext); 
+                        Navigator.pop(editSheetContext); 
 
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
                             content: Text('Payment updated successfully'),
-                            backgroundColor: Colors.green,
+                            backgroundColor:AppTheme.success,
                           ),
                         );
 
-                        _loadPayments(); // refresh this page's list
+                        _loadPayments(); 
                       } catch (e) {
-                        Navigator.pop(editSheetContext); // loading dialog
+                        Navigator.pop(editSheetContext); 
 
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text('Failed to update payment: $e'),
-                            backgroundColor: Colors.red,
+                            backgroundColor:AppTheme.error,
                           ),
                         );
                       }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppTheme.primary,
-                      foregroundColor: Colors.white,
+                      foregroundColor: AppTheme.secondary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -176,10 +172,7 @@ class _ViewPaymentsPageState extends State<ViewPaymentsPage> {
     );
   }
 
-  // ==========================================================
-  // DELETE PAYMENT
-  // Moved over from PaymentsScreen since this page now owns the list.
-  // ==========================================================
+  
   void _confirmDeletePayment(BuildContext context, int paymentId) {
     showDialog(
       context: context,
@@ -196,7 +189,7 @@ class _ViewPaymentsPageState extends State<ViewPaymentsPage> {
             ),
             TextButton(
               onPressed: () async {
-                Navigator.pop(dialogContext); // confirm dialog
+                Navigator.pop(dialogContext); 
 
                 try {
                   await _paymentService.deletePayment(paymentId);
@@ -206,17 +199,17 @@ class _ViewPaymentsPageState extends State<ViewPaymentsPage> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Payment deleted successfully'),
-                      backgroundColor: Colors.green,
+                      backgroundColor:AppTheme.success,
                     ),
                   );
 
-                  _loadPayments(); // refresh this page's list
+                  _loadPayments(); 
                 } catch (e) {
                   if (!mounted) return;
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text('Failed to delete payment: $e'),
-                      backgroundColor: Colors.red,
+                      backgroundColor:AppTheme.error,
                     ),
                   );
                 }
@@ -321,7 +314,7 @@ class _ViewPaymentsPageState extends State<ViewPaymentsPage> {
                             : createdAt,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
-                          color: AppTheme.primary.withOpacity(0.55),
+                          color: AppTheme.textPrimary.withOpacity(0.55),
                           fontSize: 11,
                         ),
                       ),

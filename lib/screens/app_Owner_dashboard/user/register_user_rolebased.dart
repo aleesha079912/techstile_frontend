@@ -5,7 +5,7 @@ import '../../../../core/utils/theme.dart';
 import 'package:techstile_frontend/core/utils/password_rules.dart';
 
 class RegisterUserRoleBased extends StatefulWidget {
-  final UserData? user; // Null matlab Add, Not Null matlab Edit
+  final UserData? user;
   const RegisterUserRoleBased({super.key, this.user});
 
   @override
@@ -20,7 +20,7 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
   List<String> roles = [];
   String? selectedRole;
 
-  // Controllers
+
   final nameCtrl = TextEditingController();
   final emailCtrl = TextEditingController();
   final passwordCtrl = TextEditingController();
@@ -40,7 +40,7 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
   @override
   void initState() {
     super.initState();
-    // Agar Edit mode hai to purana data fill karo
+    
     if (widget.user != null) {
       nameCtrl.text = widget.user!.name;
       emailCtrl.text = widget.user!.email;

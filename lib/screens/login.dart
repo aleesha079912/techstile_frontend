@@ -145,7 +145,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> openWhatsApp() async {
-    const phone = "923216427668"; // 
+    const phone = "923216427668";  
     final Uri url = Uri.parse("https://wa.me/$phone");
 
     if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
@@ -268,7 +268,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Center(
                   child: GestureDetector(
                     onTap: () {
-                      Get.toNamed(AppRoutes.forgotPassword);
+                      Get.to('/abc');
                     },
                     child: Text(
                       "Forgot Password?",

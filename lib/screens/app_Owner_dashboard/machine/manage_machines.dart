@@ -348,7 +348,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
       backgroundColor: AppTheme.background,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: AppTheme.secondary,
+        backgroundColor: AppTheme.background,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
@@ -402,7 +402,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
                     Text(
                       "Add Machine",
                       style: TextStyle(
-                        color: AppTheme.secondary,
+                        color: AppTheme.textSecondary,
                         fontWeight: FontWeight.w600,
                         fontSize: 13,
                       ),
@@ -607,7 +607,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
                       color: isActive ? AppTheme.active : AppTheme.primary,
                     ),
                   ),
-                  Text(m.type, style: const TextStyle(color: AppTheme.neutral)),
+                  Text(m.type, style: const TextStyle(color: AppTheme.textneutral)),
                 ],
               ),
             ),

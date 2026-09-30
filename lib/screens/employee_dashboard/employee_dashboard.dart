@@ -26,9 +26,9 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
   double dailyApproved = 0;
   double weeklyApproved = 0;
 
-  // ─────────────────────────────────────────────────────────────────────────
+  
   // Common shadow / border (matches Factory Dashboard styling)
-  // ─────────────────────────────────────────────────────────────────────────
+
 
   static List<BoxShadow> get _primaryShadow => [
         BoxShadow(
@@ -81,7 +81,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
       backgroundColor: AppTheme.background,
 
       appBar: AppBar(
-        backgroundColor: AppTheme.secondary,
+        backgroundColor: AppTheme.background,
         elevation: 0,
         iconTheme: const IconThemeData(
           color: AppTheme.primary,
@@ -93,7 +93,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
             const Text(
               "Employee",
               style: TextStyle(
-                color: AppTheme.primary,
+                color: AppTheme.textPrimary,
                 fontWeight: FontWeight.w800,
                 fontSize: 19,
               ),
@@ -102,7 +102,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
             Text(
               loading ? 'Loading...' : (employeeName.isNotEmpty ? employeeName : 'Employee'),
               style: TextStyle(
-                color: AppTheme.primary.withOpacity(0.65),
+                color: AppTheme.textPrimary.withOpacity(0.65),
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
@@ -127,10 +127,9 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
 
-                    // ─────────────────────────────────────────────
-                    // Overview — 4 small stat cards, 2 per row
-                    // (sized like the Factory Dashboard's compact cards)
-                    // ─────────────────────────────────────────────
+                   
+                    
+                   
 
                     const _SectionLabel(text: 'Overview'),
 
@@ -176,9 +175,9 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
 
                     const SizedBox(height: 24),
 
-                    // ─────────────────────────────────────────────
+                  
                     // Assigned machines
-                    // ─────────────────────────────────────────────
+                  
 
                     _SectionLabel(text: 'My Assigned Machines (${machines.length})'),
 
@@ -197,9 +196,9 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
+ 
   // Empty state
-  // ─────────────────────────────────────────────────────────────────────────
+ 
 
   Widget _emptyMachinesView() {
     return Container(
@@ -231,10 +230,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Machine card
-  // ─────────────────────────────────────────────────────────────────────────
-
+ 
   Widget _machineCard(dynamic machine) {
     final progress = (machine["progress"] ?? 0);
 
@@ -338,9 +334,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Small info chip (pill)
-  // ─────────────────────────────────────────────────────────────────────────
+ 
 
   Widget _infoChip({
     required IconData icon,
@@ -374,10 +368,6 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
       ),
     );
   }
-
-  // ─────────────────────────────────────────────────────────────────────────
-  // Breakdown chip (matches Factory Dashboard style)
-  // ─────────────────────────────────────────────────────────────────────────
 
   Widget _breakdownChip(
     String label,
@@ -428,11 +418,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Compact stat card — small size, matching the Factory Dashboard's
-  // "Total Machines / Total Employees" style cards (smaller padding,
-  // smaller icon box, smaller text than the main stat cards).
-  // ─────────────────────────────────────────────────────────────────────────
+  
 
   Widget _compactStatCard({
     required IconData icon,
@@ -494,9 +480,7 @@ class _EmployeeDashboardState extends State<EmployeeDashboard> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Section label (matches Factory Dashboard style)
-// ─────────────────────────────────────────────────────────────────────────────
+
 
 class _SectionLabel extends StatelessWidget {
   final String text;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:techstile_frontend/core/services/payments_service.dart';
+import 'package:techstile_frontend/core/utils/theme.dart';
 
 class AddPaymentPage extends StatefulWidget {
   final int factoryId;
@@ -23,14 +24,14 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
 
   bool _isSubmitting = false;
   bool _isLoadingEarned = false;
-  Map<String, dynamic>? _earnedSummary; // total_earned, total_paid, remaining
+  Map<String, dynamic>? _earnedSummary; 
   String? _earnedError;
 
   @override
   void initState() {
     super.initState();
     _employeeIdFocus.addListener(() {
-      // fetch as soon as the user leaves the employee field
+      
       if (!_employeeIdFocus.hasFocus) {
         _loadEarnedAmount();
       }
@@ -66,7 +67,7 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
       if (!mounted) return;
       setState(() {
         _earnedSummary = data;
-        // pre-fill amount paid with remaining balance, user can still edit it
+        // pre-fill amount paid with remaining balance
         final remaining = (data['remaining'] as num?)?.toDouble() ?? 0;
         _amountPaidCtrl.text = remaining > 0 ? remaining.toStringAsFixed(2) : '';
       });
@@ -96,8 +97,7 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Payment added successfully')),
         );
-        // Pop with `true` so PaymentsScreen knows a payment was added
-        // and refreshes its list (see _openAddPaymentPage there).
+        
         Navigator.of(context).pop(true);
       }
     } catch (e) {
@@ -143,7 +143,7 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
     if (_earnedError != null) {
       return Padding(
         padding: const EdgeInsets.only(bottom: 12),
-        child: Text(_earnedError!, style: const TextStyle(color: Colors.red, fontSize: 12)),
+        child: Text(_earnedError!, style: const TextStyle(color:  AppTheme.error, fontSize: 12)),
       );
     }
     if (_earnedSummary == null) return const SizedBox.shrink();
@@ -156,7 +156,7 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.grey.shade100,
+        color:  AppTheme.secondary,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(

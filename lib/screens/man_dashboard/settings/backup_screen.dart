@@ -58,8 +58,8 @@ class _BackupScreenState extends State<BackupScreen> {
           'This backup data replace with new data that is currently in database.\n(Before Restore safety backup is automatically creadted.)',
       textCancel: 'No',
       textConfirm: 'Restore',
-      confirmTextColor: AppTheme.secondary,
-      cancelTextColor: AppTheme.primary,
+      confirmTextColor: AppTheme.textSecondary,
+      cancelTextColor: AppTheme.textPrimary,
       buttonColor: AppTheme.primary,
       onConfirm: () {
         Get.back();
@@ -88,9 +88,9 @@ class _BackupScreenState extends State<BackupScreen> {
   }
 
   Color _statusColor(String s) {
-    if (s == 'completed') return Colors.green;
+    if (s == 'completed') return AppTheme.active;
     if (s == 'failed') return AppTheme.error;
-    return Colors.orange;
+    return AppTheme.surface;
   }
 
   @override
@@ -101,11 +101,11 @@ class _BackupScreenState extends State<BackupScreen> {
         title: const Text(
           'Backups',
           style: TextStyle(
-              color: AppTheme.primary,
+              color: AppTheme.textPrimary,
               fontWeight: FontWeight.w800,
               fontSize: 24),
         ),
-        backgroundColor: AppTheme.secondary,
+        backgroundColor: AppTheme.background,
         iconTheme: const IconThemeData(color: AppTheme.primary),
         elevation: 0,
       ),

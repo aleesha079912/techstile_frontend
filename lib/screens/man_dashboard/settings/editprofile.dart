@@ -68,19 +68,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
       "Success",
       "Profile Updated",
      snackPosition: SnackPosition.TOP,
-        backgroundColor: Colors.blue, 
-        colorText: Colors.white,
+        backgroundColor: AppTheme.info, 
+        colorText: AppTheme.secondary,
     );
     
-    // Page se wapas jane ke liye Flutter ka native navigator use karein
+    
     Navigator.of(context).pop();
   } else {
     Get.snackbar(
       "Error",
       "Update Failed",
       snackPosition: SnackPosition.TOP,
-      backgroundColor: Colors.red,
-      colorText: Colors.white
+      backgroundColor:  AppTheme.error,
+      colorText:  AppTheme.secondary
     );
   }
 }
@@ -121,7 +121,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         ),
         title: const Text(
           "Edit Profile",
-          style: TextStyle(color: AppTheme.secondary),
+          style: TextStyle(color: AppTheme.textSecondary),
         ),
       ),
       body: SafeArea(

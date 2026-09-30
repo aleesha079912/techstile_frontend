@@ -41,7 +41,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           "Success",
           result['message'] ?? "Password reset link sent to your email",
         );
-        Get.back(); // wapas login screen py
+        Get.back(); 
       } else {
         Get.snackbar(
           "Failed",

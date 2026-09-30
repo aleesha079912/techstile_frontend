@@ -9,11 +9,7 @@ import 'package:techstile_frontend/screens/app_Owner_dashboard/factory_owner_das
 import 'package:techstile_frontend/screens/app_Owner_dashboard/factory_owner_dash/viewpayment.dart';
 import 'package:techstile_frontend/widgets/bottom_nav_bar.dart';
 import 'package:techstile_frontend/widgets/emp_db_bot_nav_bar.dart';
-// Old bottom-sheet popup widget is no longer used — replaced by full pages:
-// import 'package:techstile_frontend/widgets/own_payments_pop_up.dart';
-// NOTE: adjust these two import paths to wherever you actually saved the files.
 
-/// A single payment entry (date + amount), as recorded in the Payments table.
 class PaymentEntry {
   final double amountPaid;
   final String? paidDate;
@@ -65,7 +61,7 @@ class EmployeePayment {
       .expand((m) => m.productions)
       .fold<double>(
         0,
-        (sum, p) => sum + (p.readyProduction * p.amountPerMeter),
+        (sum, p) => sum + (p.readyProduction * p.amountPerUnit),
       );
 
   factory EmployeePayment.fromJson(Map<String, dynamic> json) {
@@ -166,7 +162,7 @@ class ProductionRecord {
   final double wasteProduction;
   final double remainingProduction;
   final String? machineName;
-  final double amountPerMeter;
+  final double amountPerUnit;
   final double expectedAmount;
   final double earnedAmount;
   final double amount;
@@ -185,7 +181,7 @@ class ProductionRecord {
     required this.wasteProduction,
     required this.remainingProduction,
     this.machineName,
-    required this.amountPerMeter,
+    required this.amountPerUnit,
     required this.expectedAmount,
     required this.earnedAmount,
     required this.amount,
@@ -197,7 +193,7 @@ class ProductionRecord {
 
   factory ProductionRecord.fromJson(Map<String, dynamic> json) {
     final tLen = double.tryParse(json['total_length'].toString()) ?? 0;
-    final rate = double.tryParse(json['amount_per_meter'].toString()) ?? 0;
+    final rate = double.tryParse(json['amount_per_unit'].toString()) ?? 0;
     final exp =
         double.tryParse(json['expected_amount'].toString()) ?? (tLen * rate);
     final earn =
@@ -217,7 +213,7 @@ class ProductionRecord {
       remainingProduction:
           double.tryParse(json['remaining_production'].toString()) ?? 0,
       machineName: json['machine_name'],
-      amountPerMeter: rate,
+      amountPerUnit: rate,
       expectedAmount: exp,
       earnedAmount: earn,
       amount: earn,
@@ -319,12 +315,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     );
   }
 
-  // ==========================================================
-  // NAVIGATION: Add Payment
-  // Replaces the old _showAddPaymentDialog bottom sheet. Pushes
-  // AddPaymentPage and refreshes the employee list if a payment
-  // was actually saved (AddPaymentPage pops with `true`).
-  // ==========================================================
+  
   Future<void> _openAddPaymentPage(BuildContext context) async {
     if (_employees.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -350,13 +341,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     }
   }
 
-  // ==========================================================
-  // NAVIGATION: View Payments
-  // Replaces the old _showViewPaymentsDialog bottom sheet. Edits/
-  // deletes now happen inside ViewPaymentsPage itself, so we just
-  // refresh the employee-wise summary here once the user comes back,
-  // since a payment there may have changed the totals shown here.
-  // ==========================================================
+ 
   Future<void> _openViewPaymentsPage(BuildContext context) async {
     await Navigator.push(
       context,
@@ -375,7 +360,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
         borderRadius: BorderRadius.circular(14),
         boxShadow: AppTheme.softShadow,
       ),
-      clipBehavior: Clip.antiAlias, // keep ripple inside rounded corners
+      clipBehavior: Clip.antiAlias,
       child: Material(
         type: MaterialType.transparency,
         child: InkWell(
@@ -451,11 +436,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     });
 
     try {
-      // PaymentService just needs to hit the employee-wise endpoint and
-      // return the decoded JSON body (e.g. Dio's `response.data` or
-      // `jsonDecode(response.body)`), a Map like: { "data": [ {...}, ... ] }.
-      // All parsing into EmployeePayment happens right here, so no separate
-      // model file is required.
+     
       final raw = await _paymentService.fetchvarietytypePayments(
         widget.factoryId,
       );
@@ -485,26 +466,24 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     }
   }
 
-  // Grand totals across all employees.
   double get _grandTotalAmount =>
       _employees.fold(0, (sum, e) => sum + e.totalAmount);
 
   double get _grandTotalLength =>
       _employees.fold(0, (sum, e) => sum + e.totalLength);
 
-  double get _overallRatePerMeter =>
+  double get _overallRatePerUnit=>
       _grandTotalLength == 0 ? 0 : _grandTotalAmount / _grandTotalLength;
 
-  // Remaining payable across all employees — this drives the summary card now.
+
   double get _grandTotalRemaining =>
       _employees.fold(0, (sum, e) => sum + e.remainingAmount);
 
-  // Already-paid total across all employees, straight from the backend
-  // (Payment table SUM), not a frontend calculation.
+  
   double get _grandTotalPaid =>
       _employees.fold(0, (sum, e) => sum + e.totalPaid);
 
-  // Total number of machine entries across all employees.
+
   int get _grandTotalMachines =>
       _employees.fold(0, (sum, e) => sum + e.machines.length);
 
@@ -519,7 +498,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        backgroundColor: AppTheme.secondary,
+        backgroundColor: AppTheme.background,
         iconTheme: const IconThemeData(color: AppTheme.primary),
         automaticallyImplyLeading: false,
         elevation: 0,
@@ -536,7 +515,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
             const Text(
               'Employee Payments',
               style: TextStyle(
-                color: AppTheme.primary,
+                color: AppTheme.textPrimary,
                 fontWeight: FontWeight.w800,
                 fontSize: 17,
               ),
@@ -545,7 +524,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
               Text(
                 _factoryName!,
                 style: TextStyle(
-                  color: AppTheme.primary.withOpacity(0.6),
+                  color: AppTheme.textPrimary.withOpacity(0.6),
                   fontWeight: FontWeight.w500,
                   fontSize: 12,
                 ),
@@ -589,7 +568,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       child: ListView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
         children: [
-          // ---- Overall summary card ----
+          // summary card
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -669,7 +648,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
               const Text(
                 'Employee Wise Calculation',
                 style: TextStyle(
-                  color: AppTheme.primary,
+                  color: AppTheme.textPrimary,
                   fontSize: 16,
                   fontWeight: FontWeight.w800,
                 ),
@@ -687,7 +666,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
                 child: Text(
                   '${_employees.length}',
                   style: const TextStyle(
-                    color: AppTheme.primary,
+                    color: AppTheme.textPrimary,
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
                   ),
@@ -722,7 +701,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
         const Text(
           'No employee payments found',
           style: TextStyle(
-            color: AppTheme.primary,
+            color: AppTheme.textPrimary,
             fontSize: 14,
             fontWeight: FontWeight.w600,
           ),
@@ -743,7 +722,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
         const SizedBox(height: 12),
         Text(
           _error ?? 'Something went wrong',
-          style: const TextStyle(color: AppTheme.primary),
+          style: const TextStyle(color: AppTheme.textPrimary),
         ),
         const SizedBox(height: 16),
         ElevatedButton(onPressed: _fetchPayments, child: const Text('Retry')),
@@ -752,12 +731,6 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
   );
 }
 
-// ============================================================
-// Helpers
-// ============================================================
-
-/// Formats a raw backend datetime string (e.g. "2026-09-10 14:35:00") into
-/// "10/9/26 2:35PM", same style used on the Owner Productions page.
 String formatDateTime(dynamic raw) {
   if (raw == null) return '-';
   try {
@@ -785,7 +758,6 @@ String formatAmount(double value) {
   }
   return buffer.toString().split('').reversed.join('');
 }
-// Small presentational widget
 
 class _SummaryStat extends StatelessWidget {
   final String label;
@@ -840,9 +812,7 @@ class _SummaryStat extends StatelessWidget {
   }
 }
 
-/// Expandable card for a single employee: header shows name + remaining
-/// amount, plus factory/manager context, and expands to a list of every
-/// machine that contributed to that total, plus payment history.
+
 class _EmployeePaymentTile extends StatelessWidget {
   final EmployeePayment record;
   Widget _employeeAmountStat(String label, double amount, Color color) {
@@ -892,8 +862,7 @@ class _EmployeePaymentTile extends StatelessWidget {
         ? 'Employee #${record.employeeId}'
         : record.employeeName!;
 
-    // Build the subtitle line dynamically so it still looks clean when
-    // factory_name / manager_name are null.
+    
     final subtitleParts = <String>[
       '${record.machines.length} machine${record.machines.length == 1 ? '' : 's'}',
       '${formatAmount(record.totalLength)} m',
@@ -916,7 +885,7 @@ class _EmployeePaymentTile extends StatelessWidget {
       ),
       clipBehavior: Clip.antiAlias,
       child: Theme(
-        // Kill the default divider ExpansionTile draws.
+        
         data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
         child: ExpansionTile(
           tilePadding: const EdgeInsets.all(16),
@@ -941,14 +910,14 @@ class _EmployeePaymentTile extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                    color: AppTheme.primary,
+                    color: AppTheme.textPrimary,
                     fontWeight: FontWeight.w800,
                     fontSize: 14,
                   ),
                 ),
               ),
               const SizedBox(width: 8),
-              // Remaining payment badge, right next to the employee name.
+              
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 8,
@@ -985,7 +954,7 @@ class _EmployeePaymentTile extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    color: AppTheme.primary.withOpacity(0.55),
+                    color: AppTheme.textPrimary.withOpacity(0.55),
                     fontSize: 11,
                   ),
                 ),
@@ -1031,7 +1000,7 @@ class _EmployeePaymentTile extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        color: AppTheme.primary.withOpacity(0.45),
+                        color: AppTheme.textPrimary.withOpacity(0.45),
                         fontSize: 10.5,
                       ),
                     ),
@@ -1040,15 +1009,14 @@ class _EmployeePaymentTile extends StatelessWidget {
             ),
           ),
           children: [
-            // Date-wise payment history — every amount that was paid, and
-            // the date it was paid on.
+           
             if (record.paymentHistory.isNotEmpty) ...[
               const Padding(
                 padding: EdgeInsets.only(bottom: 6),
                 child: Text(
                   'Payment History',
                   style: TextStyle(
-                    color: AppTheme.primary,
+                    color: AppTheme.textPrimary,
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
                   ),
@@ -1060,7 +1028,7 @@ class _EmployeePaymentTile extends StatelessWidget {
                   vertical: 4,
                 ),
                 decoration: BoxDecoration(
-                  color: AppTheme.background,
+                  color: AppTheme.secondary,
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(color: AppTheme.primary.withOpacity(0.06)),
                 ),
@@ -1075,7 +1043,7 @@ class _EmployeePaymentTile extends StatelessWidget {
                               Text(
                                 formatDateTime(p.paidDate),
                                 style: TextStyle(
-                                  color: AppTheme.primary.withOpacity(0.6),
+                                  color: AppTheme.textPrimary.withOpacity(0.6),
                                   fontSize: 12,
                                 ),
                               ),
@@ -1118,8 +1086,7 @@ class _EmployeePaymentTile extends StatelessWidget {
   }
 }
 
-/// One machine's aggregated totals for this employee. Expands to show
-/// the individual production rows that make up the total.
+
 class _MachineGroupTile extends StatelessWidget {
   final MachineGroup machine;
 
@@ -1129,7 +1096,7 @@ class _MachineGroupTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.background,
+        color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: AppTheme.primary.withOpacity(0.06)),
       ),
@@ -1156,7 +1123,7 @@ class _MachineGroupTile extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                color: AppTheme.primary.withOpacity(0.55),
+                color: AppTheme.textPrimary.withOpacity(0.55),
                 fontSize: 11,
               ),
             ),
@@ -1170,7 +1137,7 @@ class _MachineGroupTile extends StatelessWidget {
                 Text(
                   'Earned',
                   style: TextStyle(
-                    color: AppTheme.primary.withOpacity(0.5),
+                    color: AppTheme.textPrimary.withOpacity(0.5),
                     fontSize: 9,
                     fontWeight: FontWeight.w600,
                   ),
@@ -1192,7 +1159,7 @@ class _MachineGroupTile extends StatelessWidget {
             ),
           ),
           children: [
-            // Row 1: Expected vs Earned Amount
+          
             Row(
               children: [
                 _machineStatBox(
@@ -1209,7 +1176,7 @@ class _MachineGroupTile extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            // Row 2: Ready, Waste, Remaining meters
+          
             Row(
               children: [
                 _machineMiniStat(
@@ -1295,7 +1262,7 @@ class _MachineGroupTile extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-              color: AppTheme.primary.withOpacity(0.5),
+              color: AppTheme.textPrimary.withOpacity(0.5),
               fontSize: 9,
               fontWeight: FontWeight.w600,
             ),
@@ -1320,8 +1287,7 @@ class _MachineGroupTile extends StatelessWidget {
   }
 }
 
-/// A single production entry. Tappable — opens a bottom sheet with the full
-/// detail (machine, remaining production, shift, timestamps, etc).
+
 class _ProductionRow extends StatelessWidget {
   final ProductionRecord record;
 
@@ -1357,7 +1323,7 @@ class _ProductionRow extends StatelessWidget {
   void _showDetail(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppTheme.secondary,
+      backgroundColor: AppTheme.background,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -1414,7 +1380,7 @@ class _ProductionRow extends StatelessWidget {
               Text(
                 record.batchId.isEmpty ? 'No batch' : record.batchId,
                 style: TextStyle(
-                  color: AppTheme.primary.withOpacity(0.55),
+                  color: AppTheme.textPrimary.withOpacity(0.55),
                   fontSize: 12,
                 ),
               ),
@@ -1435,8 +1401,8 @@ class _ProductionRow extends StatelessWidget {
                 '${formatAmount(record.remainingProduction)} m',
               ),
               _detailRow(
-                'Rate / meter',
-                'Rs ${record.amountPerMeter.toStringAsFixed(2)}',
+                'Rate / unit',
+                'Rs ${record.amountPerUnit.toStringAsFixed(2)}',
               ),
               _detailRow(
                 'Expected Amount',
@@ -1471,7 +1437,7 @@ class _ProductionRow extends StatelessWidget {
             child: Text(
               label,
               style: TextStyle(
-                color: AppTheme.primary.withOpacity(0.6),
+                color: AppTheme.textPrimary.withOpacity(0.6),
                 fontSize: 12,
               ),
             ),
@@ -1501,7 +1467,7 @@ class _ProductionRow extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: AppTheme.background,
+          color: AppTheme.secondary,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: AppTheme.primary.withOpacity(0.06)),
         ),
@@ -1564,7 +1530,7 @@ class _ProductionRow extends StatelessWidget {
                 const SizedBox(width: 6),
                 _miniStat(
                   'Rate/m',
-                  'Rs ${record.amountPerMeter.toStringAsFixed(2)}',
+                  'Rs ${record.amountPerUnit.toStringAsFixed(2)}',
                 ),
                 const SizedBox(width: 6),
                 _miniStat('Ready', '${record.readyProduction} m'),
@@ -1597,7 +1563,7 @@ class _ProductionRow extends StatelessWidget {
                 'Days: ${record.selectDays}',
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: AppTheme.primary.withOpacity(0.5),
+                  color: AppTheme.textPrimary.withOpacity(0.5),
                   fontSize: 10,
                 ),
               ),
@@ -1616,7 +1582,7 @@ class _ProductionRow extends StatelessWidget {
           Text(
             label,
             style: TextStyle(
-              color: AppTheme.primary.withOpacity(0.5),
+              color: AppTheme.textPrimary.withOpacity(0.5),
               fontSize: 9,
               fontWeight: FontWeight.w600,
             ),

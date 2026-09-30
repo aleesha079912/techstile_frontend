@@ -42,17 +42,17 @@ class ManagerBottomNav extends StatelessWidget {
         break;
     }
   }
-// swipe detection
+
   void _onSwipe(DragEndDetails details) {
     final velocity = details.primaryVelocity ?? 0;
     if (velocity.abs() < 150) return; 
 
     if (velocity < 0) {
-      // left swipe
+      // left 
       final next = currentIndex + 1;
       if (next < _items.length) _onTap(next);
     } else {
-      // right swipe
+      // right 
       final prev = currentIndex - 1;
       if (prev >= 0) _onTap(prev);
     }

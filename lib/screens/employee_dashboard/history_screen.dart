@@ -31,9 +31,7 @@ class _HistoryScreenState extends State<HistoryScreen>
   double weekly = 0;
   double monthly = 0;
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Common shadow / border (matches Factory Dashboard styling)
-  // ─────────────────────────────────────────────────────────────────────────
+ 
 
   static List<BoxShadow> get _primaryShadow => [
         BoxShadow(
@@ -96,9 +94,9 @@ class _HistoryScreenState extends State<HistoryScreen>
       backgroundColor: AppTheme.background,
       drawer: isEmbedded ? null : const EmployeeDrawer(),
 
-      // ── AppBar (matches Factory Dashboard style) ──────────────────────
+      
       appBar: AppBar(
-        backgroundColor: AppTheme.secondary,
+        backgroundColor: AppTheme.background,
         elevation: 0,
         iconTheme: const IconThemeData(
           color: AppTheme.primary,
@@ -121,7 +119,7 @@ class _HistoryScreenState extends State<HistoryScreen>
             const Text(
               'Production History',
               style: TextStyle(
-                color: AppTheme.primary,
+                color: AppTheme.textPrimary,
                 fontWeight: FontWeight.w800,
                 fontSize: 19,
               ),
@@ -132,7 +130,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                   ? "${widget.userName}'s records"
                   : 'All your records',
               style: TextStyle(
-                color: AppTheme.primary.withOpacity(0.65),
+                color: AppTheme.textPrimary.withOpacity(0.65),
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
@@ -147,7 +145,7 @@ class _HistoryScreenState extends State<HistoryScreen>
           : Column(
               children: [
 
-                // ── Summary strip — small stat cards ─────────────────
+               
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
                   child: Row(
@@ -161,7 +159,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                   ),
                 ),
 
-                // ── Tab bar — card styled ─────────────────────────────
+               
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                   child: Container(
@@ -193,7 +191,7 @@ class _HistoryScreenState extends State<HistoryScreen>
                   ),
                 ),
 
-                //  Tab views 
+                
                 Expanded(
                   child: TabBarView(
                     controller: _tabController,
@@ -210,7 +208,7 @@ class _HistoryScreenState extends State<HistoryScreen>
     );
   }
 
-  // Summary chip — restyled as a Factory-Dashboard-style stat card
+ 
   Widget _summaryChip(String label, double value, IconData icon, Color color) {
     return Expanded(
       child: Container(
@@ -256,7 +254,7 @@ class _HistoryScreenState extends State<HistoryScreen>
     );
   }
 
-  // List builder
+  
   Widget _buildList(List data, {required bool isApproved}) {
     if (data.isEmpty) {
       return Center(
@@ -289,7 +287,7 @@ class _HistoryScreenState extends State<HistoryScreen>
     );
   }
 
-  // Production card — restyled with Factory Dashboard shadow/border
+ 
   Widget _productionCard(dynamic item, {required bool isApproved}) {
     final accent = isApproved ? AppTheme.success : AppTheme.surface;
 
@@ -303,7 +301,7 @@ class _HistoryScreenState extends State<HistoryScreen>
       ),
       child: Column(
         children: [
-          // Header
+          
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
@@ -372,7 +370,7 @@ class _HistoryScreenState extends State<HistoryScreen>
     );
   }
 
-  // Info row 
+ 
   Widget _infoRow(IconData icon, String title, dynamic value) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
