@@ -61,7 +61,7 @@ class EmployeePayment {
       .expand((m) => m.productions)
       .fold<double>(
         0,
-        (sum, p) => sum + (p.readyProduction * p.amountPerMeter),
+        (sum, p) => sum + (p.readyProduction * p.amountPerUnit),
       );
 
   factory EmployeePayment.fromJson(Map<String, dynamic> json) {
@@ -162,7 +162,7 @@ class ProductionRecord {
   final double wasteProduction;
   final double remainingProduction;
   final String? machineName;
-  final double amountPerMeter;
+  final double amountPerUnit;
   final double expectedAmount;
   final double earnedAmount;
   final double amount;
@@ -181,7 +181,7 @@ class ProductionRecord {
     required this.wasteProduction,
     required this.remainingProduction,
     this.machineName,
-    required this.amountPerMeter,
+    required this.amountPerUnit,
     required this.expectedAmount,
     required this.earnedAmount,
     required this.amount,
@@ -193,7 +193,7 @@ class ProductionRecord {
 
   factory ProductionRecord.fromJson(Map<String, dynamic> json) {
     final tLen = double.tryParse(json['total_length'].toString()) ?? 0;
-    final rate = double.tryParse(json['amount_per_meter'].toString()) ?? 0;
+    final rate = double.tryParse(json['amount_per_unit'].toString()) ?? 0;
     final exp =
         double.tryParse(json['expected_amount'].toString()) ?? (tLen * rate);
     final earn =
@@ -213,7 +213,7 @@ class ProductionRecord {
       remainingProduction:
           double.tryParse(json['remaining_production'].toString()) ?? 0,
       machineName: json['machine_name'],
-      amountPerMeter: rate,
+      amountPerUnit: rate,
       expectedAmount: exp,
       earnedAmount: earn,
       amount: earn,
@@ -360,7 +360,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
         borderRadius: BorderRadius.circular(14),
         boxShadow: AppTheme.softShadow,
       ),
-      clipBehavior: Clip.antiAlias, // keep ripple inside rounded corners
+      clipBehavior: Clip.antiAlias,
       child: Material(
         type: MaterialType.transparency,
         child: InkWell(
@@ -472,7 +472,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
   double get _grandTotalLength =>
       _employees.fold(0, (sum, e) => sum + e.totalLength);
 
-  double get _overallRatePerMeter =>
+  double get _overallRatePerUnit=>
       _grandTotalLength == 0 ? 0 : _grandTotalAmount / _grandTotalLength;
 
 
@@ -480,7 +480,6 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       _employees.fold(0, (sum, e) => sum + e.remainingAmount);
 
   
-  // (Payment table SUM), not a frontend calculation.
   double get _grandTotalPaid =>
       _employees.fold(0, (sum, e) => sum + e.totalPaid);
 
@@ -569,7 +568,7 @@ class _PaymentsScreenState extends State<PaymentsScreen> {
       child: ListView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
         children: [
-          // Overall summary card
+          // summary card
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -1402,8 +1401,8 @@ class _ProductionRow extends StatelessWidget {
                 '${formatAmount(record.remainingProduction)} m',
               ),
               _detailRow(
-                'Rate / meter',
-                'Rs ${record.amountPerMeter.toStringAsFixed(2)}',
+                'Rate / unit',
+                'Rs ${record.amountPerUnit.toStringAsFixed(2)}',
               ),
               _detailRow(
                 'Expected Amount',
@@ -1531,7 +1530,7 @@ class _ProductionRow extends StatelessWidget {
                 const SizedBox(width: 6),
                 _miniStat(
                   'Rate/m',
-                  'Rs ${record.amountPerMeter.toStringAsFixed(2)}',
+                  'Rs ${record.amountPerUnit.toStringAsFixed(2)}',
                 ),
                 const SizedBox(width: 6),
                 _miniStat('Ready', '${record.readyProduction} m'),

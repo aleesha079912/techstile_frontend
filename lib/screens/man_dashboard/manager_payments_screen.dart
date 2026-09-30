@@ -40,7 +40,7 @@ class EmployeePayment {
       totalExpected: double.tryParse(json['total_expected'].toString()) ?? 0,
       totalAmount: double.tryParse(json['total_amount'].toString()) ?? 0,
       totalEarned: double.tryParse(json['total_earned'].toString()) ?? 0,
-      // Manager's endpoint doesn't expose paid-amount data yet.
+    
       totalPaid: double.tryParse(json['total_paid']?.toString() ?? '') ?? 0,
       remainingAmount:
           double.tryParse(json['remaining_amount']?.toString() ?? '') ??
@@ -119,7 +119,7 @@ class ProductionRecord {
   final double wasteProduction;
   final double remainingProduction;
   final String? machineName;
-  final double amountPerMeter;
+  final double amountPerUnit;
   final double expectedAmount;
   final double earnedAmount;
   final double amount;
@@ -138,7 +138,7 @@ class ProductionRecord {
     required this.wasteProduction,
     required this.remainingProduction,
     this.machineName,
-    required this.amountPerMeter,
+    required this.amountPerUnit,
     required this.expectedAmount,
     required this.earnedAmount,
     required this.amount,
@@ -150,7 +150,7 @@ class ProductionRecord {
 
   factory ProductionRecord.fromJson(Map<String, dynamic> json) {
     final tLen = double.tryParse(json['total_length'].toString()) ?? 0;
-    final rate = double.tryParse(json['amount_per_meter'].toString()) ?? 0;
+    final rate = double.tryParse(json['amount_per_unit'].toString()) ?? 0;
     final exp =
         double.tryParse(json['expected_amount'].toString()) ?? (tLen * rate);
     final earn = double.tryParse(json['earned_amount'].toString()) ??
@@ -169,7 +169,7 @@ class ProductionRecord {
       remainingProduction:
           double.tryParse(json['remaining_production'].toString()) ?? 0,
       machineName: json['machine_name'],
-      amountPerMeter: rate,
+      amountPerUnit: rate,
       expectedAmount: exp,
       earnedAmount: earn,
       amount: earn,
@@ -181,7 +181,7 @@ class ProductionRecord {
   }
 }
 
-// Screen
+
 
 class ManagerPaymentsScreen extends StatefulWidget {
   final dynamic factoryId;
@@ -198,7 +198,7 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
   List<EmployeePayment> _employees = [];
   String? error;
   String? factoryName;
-  int? _factoryMachineCount; // factory ki total machines
+  int? _factoryMachineCount; 
 
   @override
   void initState() {
@@ -235,15 +235,15 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
     }
   }
 
-  /// Dashboard response se factory ki total machines nikalta hai.
+  
   int? _extractMachineCount(dynamic d) {
     if (d is! Map) return null;
 
-    // Agar machines ki list aa rahi hai
+
     final list = d['machines'] ?? d['factory']?['machines'];
     if (list is List) return list.length;
 
-    // Agar seedha count aa raha hai
+    
     final count = d['total_machines'] ??
         d['machines_count'] ??
         d['stats']?['total_machines'] ??
@@ -258,7 +258,7 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
   double get _grandTotalLength =>
       _employees.fold(0, (sum, e) => sum + e.totalLength);
 
-  double get _overallRatePerMeter =>
+  double get _overallRatePerUnit =>
       _grandTotalLength == 0 ? 0 : _grandTotalAmount / _grandTotalLength;
 
   int get _grandTotalMachines {
@@ -330,7 +330,7 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
       child: ListView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
         children: [
-          // Overall summary card
+          //  summary card
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -995,8 +995,8 @@ class _ProductionRow extends StatelessWidget {
                   '${_formatAmount(record.wasteProduction)} m'),
               _detailRow('Remaining Production',
                   '${_formatAmount(record.remainingProduction)} m'),
-              _detailRow('Rate / meter',
-                  'Rs ${record.amountPerMeter.toStringAsFixed(2)}'),
+              _detailRow('Rate / unit',
+                  'Rs ${record.amountPerUnit.toStringAsFixed(2)}'),
               _detailRow('Expected Amount',
                   'Rs ${_formatAmount(record.expectedAmount)}'),
               _detailRow(
@@ -1106,7 +1106,7 @@ class _ProductionRow extends StatelessWidget {
                 _miniStat('Length', '${_formatAmount(record.totalLength)} m'),
                 const SizedBox(width: 6),
                 _miniStat('Rate/m',
-                    'Rs ${record.amountPerMeter.toStringAsFixed(2)}'),
+                    'Rs ${record.amountPerUnit.toStringAsFixed(2)}'),
                 const SizedBox(width: 6),
                 _miniStat('Ready', '${record.readyProduction} m'),
               ],
