@@ -1,15 +1,16 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:techstile_frontend/core/services/auth_service.dart';
 
 class AssignProductionService {
-  final String baseUrl = "http://techstile.sandbox.pk/api";
+  String get baseUrl => AuthService.baseUrl;
 
   Future<bool> assign({
     required int machineId,
     required String varietyType,
     required double totalLength,
-    required double amountPerUnit,
+    required double amountPerMeter,
     double? alertThreshold,
   }) async {
     final response = await http.post(
@@ -19,11 +20,11 @@ class AssignProductionService {
         'machine_id': machineId,
         'variety_type': varietyType,
         'total_length': totalLength,
-        'amount_per_unit': amountPerUnit,
+        'amount_per_meter': amountPerMeter,
         'alert_threshold': alertThreshold,
       }),
     );
-    print(response.body);
+    debugPrint("ASSIGN ${response.statusCode}: ${response.body}");
     return response.statusCode == 200 || response.statusCode == 201;
   }
 }

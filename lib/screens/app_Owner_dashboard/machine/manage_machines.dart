@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:techstile_frontend/screens/app_Owner_dashboard/machine/variety_sheet.dart';
 import '../../../../core/services/machines_service.dart';
 import '../../../../core/services/auth_service.dart';
 import '../../../../core/utils/theme.dart';
@@ -47,7 +48,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
     try {
       final response = await http.get(
         Uri.parse(
-          "http://techstile.sandbox.pk/api/factories/editfactory/${widget.factoryId}",
+          "http://localhost:8000/api/factories/editfactory/${widget.factoryId}",
         ),
         headers: AuthService.authHeaders,
       );
@@ -70,7 +71,7 @@ class _MachinesScreenState extends State<MachinesScreen> {
 
     if (!mounted) return;
 
-    final allMachines = res.machines;
+    final allMachines = res?.machines ?? [];
 
     setState(() {
       data = res;
@@ -101,35 +102,22 @@ class _MachinesScreenState extends State<MachinesScreen> {
     });
   }
 
-  // ---------------------------------------------------------------
-  // Validation helpers
-  // ---------------------------------------------------------------
-
-  /// Extra spaces hata kar, lowercase (compare ke liye)
-  String _normalize(String s) =>
-      s.trim().replaceAll(RegExp(r'\s+'), ' ').toLowerCase();
-
-  /// Is factory mein same naam ki machine pehle se hai?
-  /// Edit mode mein [excludeId] se apni hi machine ignore hoti hai.
-  bool _isDuplicateName(String name, {String? excludeId}) {
-    final target = _normalize(name);
-    if (target.isEmpty) return false;
-
-    return (data?.machines ?? []).any(
-      (m) => m.id != excludeId && _normalize(m.machineName) == target,
+  void _showVarieties() {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useSafeArea: true,
+      backgroundColor: AppTheme.background,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+      ),
+      builder: (_) => const VarietiesSheet(),
     );
   }
-
-  static const String _duplicateMsg =
-      "This machine is already registered in this factory"; // "Ye machine pehle se is factory mein register hai";
 
   void _showMachineForm(BuildContext context, {Machine? machine}) {
     final idCtrl = TextEditingController(text: machine?.machineName);
     final typeCtrl = TextEditingController(text: machine?.type);
-
-    String? nameError;
-    String? typeError;
-    bool saving = false;
 
     showModalBottomSheet(
       context: context,
@@ -138,178 +126,84 @@ class _MachinesScreenState extends State<MachinesScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
       ),
-      builder: (sheetContext) => StatefulBuilder(
-        builder: (sheetContext, setSheet) {
-          Future<void> submit() async {
-            if (saving) return;
-
-            // Extra spaces hata kar clean naam
-            final name = idCtrl.text.trim().replaceAll(RegExp(r'\s+'), ' ');
-            final type = typeCtrl.text.trim();
-
-            String? nErr;
-            String? tErr;
-
-            if (name.isEmpty) {
-              nErr = "Machine name required hai";
-            } else if (_isDuplicateName(name, excludeId: machine?.id)) {
-              nErr = _duplicateMsg;
-            }
-
-            if (type.isEmpty) {
-              tErr = "Machine type required hai";
-            }
-
-            if (nErr != null || tErr != null) {
-              setSheet(() {
-                nameError = nErr;
-                typeError = tErr;
-              });
-              return;
-            }
-
-            setSheet(() => saving = true);
-
-            if (machine == null) {
-              final result = await service.addMachine(
-                name,
-                type,
-                widget.factoryId,
-              );
-
-              if (!mounted) return;
-
-              if (result != null && result['success'] == true) {
-                Get.back();
-                load();
-              } else {
-                setSheet(() => saving = false);
-                ScaffoldMessenger.of(this.context).showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      "Machine add nahi hui (naam pehle se maujood ho sakta hai ya network error)",
-                    ),
-                    backgroundColor: Colors.red,
-                  ),
-                );
-              }
-            } else {
-              bool success = await service.updateMachine(
-                machine.id,
-                name,
-                type,
-                widget.factoryId,
-              );
-
-              if (!mounted) return;
-
-              if (success) {
-                Get.back();
-                load();
-              } else {
-                setSheet(() => saving = false);
-                ScaffoldMessenger.of(this.context).showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      "Update nahi hua (naam pehle se maujood ho sakta hai ya network error)",
-                    ),
-                    backgroundColor: Colors.red,
-                  ),
-                );
-              }
-            }
-          }
-
-          return Padding(
-            padding: EdgeInsets.only(
-              bottom: MediaQuery.of(sheetContext).viewInsets.bottom,
-              left: 20,
-              right: 20,
-              top: 20,
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: 50,
-                    height: 5,
-                    decoration: BoxDecoration(
-                      color: AppTheme.neutral,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    machine == null
-                        ? "Register New Machine"
-                        : "Update Machine Info",
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: AppTheme.primary,
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  _buildField(
-                    idCtrl,
-                    "Machine Name",
-                    Icons.abc,
-                    errorText: nameError,
-                    // Type karte hi duplicate ka error dikhao
-                    onChanged: (v) {
-                      setSheet(() {
-                        nameError =
-                            _isDuplicateName(v, excludeId: machine?.id)
-                                ? _duplicateMsg
-                                : null;
-                      });
-                    },
-                  ),
-                  _buildField(
-                    typeCtrl,
-                    "Machine Type",
-                    Icons.category,
-                    errorText: typeError,
-                    onChanged: (_) {
-                      if (typeError != null) {
-                        setSheet(() => typeError = null);
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 25),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primary,
-                      ),
-                      onPressed: saving ? null : submit,
-                      child: saving
-                          ? const SizedBox(
-                              height: 18,
-                              width: 18,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: AppTheme.secondary,
-                              ),
-                            )
-                          : Text(
-                              machine == null
-                                  ? "Register Machine"
-                                  : "Update Machine",
-                              style: const TextStyle(
-                                color: AppTheme.secondary,
-                              ),
-                            ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                ],
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+          left: 20,
+          right: 20,
+          top: 20,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 50,
+                height: 5,
+                decoration: BoxDecoration(
+                  color: AppTheme.neutral,
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
-            ),
-          );
-        },
+              const SizedBox(height: 20),
+              Text(
+                machine == null
+                    ? "Register New Machine"
+                    : "Update Machine Info",
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: AppTheme.textPrimary,
+                ),
+              ),
+              const SizedBox(height: 20),
+              _buildField(idCtrl, "Machine Name", Icons.abc),
+              _buildField(typeCtrl, "Machine Type", Icons.category),
+              const SizedBox(height: 25),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.primary,
+                  ),
+                  onPressed: () async {
+                    if (machine == null) {
+                      final result = await service.addMachine(
+                        idCtrl.text,
+                        typeCtrl.text,
+                        widget.factoryId,
+                      );
+
+                      if (!mounted) return;
+
+                      if (result != null && result['success'] == true) {
+                        Get.back();
+                        load();
+                      }
+                    } else {
+                      bool success = await service.updateMachine(
+                        machine.id,
+                        idCtrl.text,
+                        typeCtrl.text,
+                        widget.factoryId,
+                      );
+
+                      if (success) {
+                        Get.back();
+                        load();
+                      }
+                    }
+                  },
+                  child: Text(
+                    machine == null ? "Register Machine" : "Update Machine",
+                    style: const TextStyle(color: AppTheme.textSecondary),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 10),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -454,6 +348,32 @@ class _MachinesScreenState extends State<MachinesScreen> {
                       ),
                     ],
                   ),
+                  const SizedBox(height: 12),
+
+                  // Varieties button
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: _showVarieties,
+                      icon: const Icon(Icons.category_outlined,
+                          color: AppTheme.primary),
+                      label: const Text(
+                        "Varieties",
+                        style: TextStyle(
+                          color: AppTheme.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: AppTheme.primary),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ),
+
                   const SizedBox(height: 16),
                   TextField(
                     controller: searchCtrl,
@@ -607,14 +527,16 @@ class _MachinesScreenState extends State<MachinesScreen> {
                       color: isActive ? AppTheme.active : AppTheme.primary,
                     ),
                   ),
-                  Text(m.type, style: const TextStyle(color: AppTheme.textneutral)),
+                  Text(m.type,
+                      style: const TextStyle(color: AppTheme.textneutral)),
                 ],
               ),
             ),
             if (isActive)
               Container(
                 margin: const EdgeInsets.only(right: 10),
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 5),
                 decoration: BoxDecoration(
                   color: AppTheme.active,
                   borderRadius: BorderRadius.circular(20),
@@ -643,35 +565,19 @@ class _MachinesScreenState extends State<MachinesScreen> {
     );
   }
 
-  Widget _buildField(
-    TextEditingController ctrl,
-    String hint,
-    IconData icon, {
-    String? errorText,
-    ValueChanged<String>? onChanged,
-  }) {
+  Widget _buildField(TextEditingController ctrl, String hint, IconData icon) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: TextField(
         controller: ctrl,
-        onChanged: onChanged,
         decoration: InputDecoration(
           prefixIcon: Icon(icon, color: AppTheme.primary),
           hintText: hint,
-          errorText: errorText,
           filled: true,
           fillColor: AppTheme.neutral,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide.none,
-          ),
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: AppTheme.error),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: AppTheme.error, width: 1.5),
           ),
         ),
       ),
