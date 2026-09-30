@@ -54,6 +54,11 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
     });
   }
 
+  String _wholeNumber(dynamic value) {
+    final n = double.tryParse(value?.toString() ?? '') ?? 0;
+    return n.round().toString();
+  }
+
   @override
   Widget build(BuildContext context) {
     final m = widget.machine;
@@ -130,7 +135,74 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
 
                     const SizedBox(height: 20),
 
-                    // Shift-wise Employees
+                    // Current Batch (same as owner)
+                    const _SectionLabel(text: 'Current Batch'),
+                    const SizedBox(height: 12),
+                    if (_detail['batch_id'] == null)
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(vertical: 24),
+                        decoration: BoxDecoration(
+                          color: AppTheme.secondary,
+                          borderRadius: BorderRadius.circular(14),
+                          border: Border.all(
+                            color: AppTheme.primary.withOpacity(0.12),
+                            width: 1,
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            Icon(
+                              Icons.inventory_2_outlined,
+                              size: 32,
+                              color: AppTheme.primary.withOpacity(0.5),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'No production batch assigned yet',
+                              style: TextStyle(
+                                color: AppTheme.textPrimary.withOpacity(0.7),
+                                fontSize: 13,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    else ...[
+                      _infoCard(
+                        Icons.category_outlined,
+                        'Variety Type',
+                        _detail['variety_type']?.toString() ?? '\u2014',
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _statCard(
+                              'Total Length',
+                              _wholeNumber(_detail['total_length']),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: _statCard(
+                              'Ready (both shifts)',
+                              _wholeNumber(_detail['ready_production']),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: _statCard(
+                              'Remaining',
+                              _wholeNumber(_detail['remaining']),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+
+                    const SizedBox(height: 20),
+
+                    // Shift-wise Employees (same as owner)
                     const _SectionLabel(text: 'Shift-wise Production'),
                     const SizedBox(height: 12),
                     if ((_detail['shifts'] as List?)?.isEmpty ?? true)
@@ -161,35 +233,6 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
                       ...List<Map<String, dynamic>>.from(_detail['shifts'])
                           .map((s) => _shiftCard(s)),
 
-                    const SizedBox(height: 16),
-
-                    // Stats row
-                    const _SectionLabel(text: 'Production Overview'),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _statCard(
-                            'Daily',
-                            _detail['daily_production']?.toString() ?? '0',
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: _statCard(
-                            'Weekly',
-                            _detail['weekly_production']?.toString() ?? '0',
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: _statCard(
-                            'Yearly',
-                            _detail['yearly_production']?.toString() ?? '0',
-                          ),
-                        ),
-                      ],
-                    ),
                     const SizedBox(height: 20),
                   ],
                 ),
@@ -257,7 +300,7 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
               ),
               Text(
                 '$start - $end',
-                                style: TextStyle(
+                style: TextStyle(
                     color: AppTheme.textPrimary.withOpacity(0.55),
                     fontSize: 11),
               ),
@@ -266,21 +309,21 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
           const SizedBox(height: 12),
           Row(
             children: [
-              Expanded(child: _statCard('Total length units ', '${s['total_length'] ?? 0}')),
+              Expanded(
+                child: _statCard(
+                  'Ready (own)',
+                  _wholeNumber(s['ready_production']),
+                ),
+              ),
               const SizedBox(width: 8),
               Expanded(
-                  child: _statCard('Ready production units', '${s['ready_production'] ?? 0}')),
-              const SizedBox(width: 8),
-              Expanded(
-                  child: _statCard('Remaining units ', '${s['remaining'] ?? 0}')),
+                child: _statCard(
+                  'Waste (own)',
+                  _wholeNumber(s['waste_production']),
+                ),
+              ),
             ],
           ),
-          if ((s['variety_type'] ?? '').toString().isNotEmpty) ...[
-            const SizedBox(height: 8),
-            Text('Variety: ${s['variety_type']}',
-                style:
-                    TextStyle(color: AppTheme.textPrimary.withOpacity(0.6), fontSize: 12)),
-          ],
         ],
       ),
     );
@@ -361,6 +404,7 @@ class _MachineDetailScreenState extends State<MachineDetailsScreen> {
         children: [
           Text(
             title,
+            textAlign: TextAlign.center,
             style: TextStyle(
               color: AppTheme.textPrimary.withOpacity(0.6),
               fontSize: 11,

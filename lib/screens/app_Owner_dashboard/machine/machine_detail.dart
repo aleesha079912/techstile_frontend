@@ -68,6 +68,12 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
     } catch (_) {}
   }
 
+  /// Decimal value ko whole digits mein dikhata hai (null/invalid => 0)
+  String _wholeNumber(dynamic value) {
+    final n = double.tryParse(value?.toString() ?? '') ?? 0;
+    return n.round().toString();
+  }
+
   void _openAssignProduction() {
     showModalBottomSheet(
       context: context,
@@ -237,21 +243,21 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
                           Expanded(
                             child: _statCard(
                               'Total Length',
-                              '${_detail['total_length'] ?? 0}',
+                              _wholeNumber(_detail['total_length']),
                             ),
                           ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: _statCard(
                               'Ready (both shifts)',
-                              '${_detail['ready_production'] ?? 0}',
+                              _wholeNumber(_detail['ready_production']),
                             ),
                           ),
                           const SizedBox(width: 8),
                           Expanded(
                             child: _statCard(
                               'Remaining',
-                              '${_detail['remaining'] ?? 0}',
+                              _wholeNumber(_detail['remaining']),
                             ),
                           ),
                         ],
@@ -368,14 +374,14 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
               Expanded(
                 child: _statCard(
                   'Ready (own)',
-                  '${s['ready_production'] ?? 0}',
+                  _wholeNumber(s['ready_production']),
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: _statCard(
                   'Waste (own)',
-                  '${s['waste_production'] ?? 0}',
+                  _wholeNumber(s['waste_production']),
                 ),
               ),
             ],
@@ -452,6 +458,7 @@ class _MachineDetailScreenState extends State<MachineDetailScreen> {
         children: [
           Text(
             title,
+            textAlign: TextAlign.center,
             style: TextStyle(
               color: AppTheme.textPrimary.withOpacity(0.6),
               fontSize: 11,

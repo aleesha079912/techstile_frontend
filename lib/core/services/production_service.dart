@@ -2,7 +2,7 @@
 
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../services/auth_service.dart'; // ← AuthService import
+import '../services/auth_service.dart'; 
 
 class ProductionAuthException implements Exception {
   final String message;
@@ -14,7 +14,7 @@ class ProductionAuthException implements Exception {
 class ProductionService {
   static const String _base = AuthService.baseUrl;
 
-  // Manager fetch all productions for factory 
+  
  Future<Map<String, dynamic>> getManagerProductions(
   dynamic factoryId, {
   String? period,
@@ -38,7 +38,7 @@ class ProductionService {
   throw Exception('Failed to load productions (${res.statusCode})');
 }
 
-  //Manager: approve or reject
+
   Future<void> managerAction(dynamic productionId, String action) async {
     final res = await http.post(
       Uri.parse('$_base/manager/productions/$productionId/action'),
@@ -48,7 +48,6 @@ class ProductionService {
     if (res.statusCode != 200) throw Exception('Action failed');
   }
 
-  //  Owner fetch all productions for factory
 Future<Map<String, dynamic>> getOwnerProductionsGrouped(
   dynamic factoryId, {
   String? period,
@@ -64,7 +63,6 @@ Future<Map<String, dynamic>> getOwnerProductionsGrouped(
   throw Exception('Failed to load productions (${response.statusCode})');
 }
  
-  // Owner approve or reject
   Future<void> ownerAction(dynamic productionId, String action) async {
     final res = await http.post(
       Uri.parse('$_base/owner/productions/$productionId/action'),
@@ -75,7 +73,7 @@ Future<Map<String, dynamic>> getOwnerProductionsGrouped(
   }
 }
 
-// Status constants 
+
 class ProductionStatus {
   static const int pending         = 1; 
   static const int managerApproved = 2;

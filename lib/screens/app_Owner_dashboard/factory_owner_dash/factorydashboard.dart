@@ -449,7 +449,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                               label: _todayLabel(),
                               value:
                                   "${data['today_units'] ?? 0}",
-                              unit: 'yards',
+                              unit: 'units',
                               color:
                                   AppTheme.success,
                             ),
@@ -463,7 +463,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
                                     selectedPeriodLabel,
                                 value:
                                     "${data['period_units'] ?? data['weekly_units'] ?? 0}",
-                                unit: 'yards',
+                                unit: 'units',
                                 color:
                                     AppTheme.primary,
                               ),
@@ -491,7 +491,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
 
                        
                         const _SectionLabel(
-                          text: 'Floor Assets',
+                          text: 'Factory Assets',
                         ),
 
                         const SizedBox(height: 12),
@@ -989,7 +989,7 @@ class _FactoryDashboardState extends State<FactoryDashboard> {
             Row(
               children: [
                 _breakdownChip(
-                  'Added',
+                  'Employee Added',
                   added,
                   AppTheme.neutral,
                 ),
