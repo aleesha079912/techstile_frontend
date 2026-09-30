@@ -40,7 +40,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
         ),
       ];
 
-  // Same light border as Factory Dashboard
+  // Same light border 
   static Border get _primaryBorder => Border.all(
         color: AppTheme.primary.withOpacity(0.10),
         width: 1,
@@ -103,12 +103,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
   @override
   void initState() {
     super.initState();
-
-    print("Arguments = ${Get.arguments}");
-    print("Factory from Storage = ${AuthService.factoryId}");
-    print("Stored User ID = ${AuthService.userId}");
-
-    load();
+     load();
   }
 
   // ─────────────────────────────────────────────────────────────────────────

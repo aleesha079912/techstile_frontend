@@ -380,18 +380,20 @@ class _ManageUsersScreenState extends State<ManageUsersScreen> {
               ],
             ),
           ),
-          Row(
-            children: [
-              IconButton(
-                onPressed: onEdit,
-                icon: const Icon(Icons.edit, color: AppTheme.info),
-              ),
-              IconButton(
-                onPressed: onDelete,
-                icon: const Icon(Icons.delete, color: AppTheme.error),
-              ),
-            ],
-          ),
+         Row(
+  children: [
+    IconButton(
+      onPressed: onEdit,
+      icon: const Icon(Icons.edit, color: AppTheme.info),
+    ),
+    // Owner par delete ka button nahi dikhega
+    if (user.role.toLowerCase() != 'owner')
+      IconButton(
+        onPressed: onDelete,
+        icon: const Icon(Icons.delete, color: AppTheme.error),
+      ),
+  ],
+),
         ],
       ),
     );

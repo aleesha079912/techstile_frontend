@@ -3,8 +3,6 @@ import 'package:get/get.dart';
 
 import '../../../core/utils/theme.dart';
 import '../../../core/services/employee_service/employee_production_service.dart';
-
-/// Owner side production entry.
 class OwnerEnterProductionScreen extends StatefulWidget {
   final int machineId;
   final int factoryId;

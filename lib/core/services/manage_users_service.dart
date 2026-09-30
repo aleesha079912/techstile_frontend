@@ -14,8 +14,6 @@ class UserData {
     required this.cnic,
     required this.address,
     required this.role,
-  
-  
   });
 
   factory UserData.fromJson(Map<String, dynamic> json) {
@@ -43,8 +41,6 @@ class UserData {
       cnic: json['cnic'] ?? '',
       address: json['address'] ?? '',
       role: extractedRole,
-    
-    
     );
   }
 
@@ -56,7 +52,6 @@ class UserData {
       "cnic": cnic,
       "address": address,
       "role": role,
-     
     };
   }
 }
@@ -92,6 +87,41 @@ class ManageUsersService {
       print("fetchUsers error: $e");
       return [];
     }
+  }
+
+  /// Email / phone / CNIC pehle se registered hain ya nahi.
+  /// Edit mode mein [excludeUserId] dein taake apna record ignore ho.
+  Future<Map<String, bool>> checkUnique({
+    required String email,
+    required String phone,
+    required String cnic,
+    int? excludeUserId,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/users/check-unique'),
+        headers: _headers,
+        body: jsonEncode({
+          'email': email,
+          'phone_no': phone,
+          'cnic': cnic,
+          'exclude_id': excludeUserId,
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return {
+          'emailTaken': data['emailTaken'] == true,
+          'phoneTaken': data['phoneTaken'] == true,
+          'cnicTaken': data['cnicTaken'] == true,
+        };
+      }
+    } catch (e) {
+      print("checkUnique error: $e");
+    }
+
+    return {'emailTaken': false, 'phoneTaken': false, 'cnicTaken': false};
   }
 
   Future<bool> addUser(UserData user, String password) async {

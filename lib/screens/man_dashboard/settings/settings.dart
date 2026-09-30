@@ -26,9 +26,6 @@ class ManagerSettingsScreen extends StatefulWidget {
 class _ManagerSettingsScreenState extends State<ManagerSettingsScreen> {
   bool autoBackup = false;
   bool backupLoading = false;
-
-  // Owner check — apni AuthService.role ki actual value ke hisaab se yahan match karein
-  // (e.g. agar role 'owner' lowercase mein store hoti hai to yahi sahi hai)
   bool get isOwner => AuthService.role.toLowerCase() == 'owner';
 
   @override
@@ -55,7 +52,7 @@ class _ManagerSettingsScreenState extends State<ManagerSettingsScreen> {
       setState(() => autoBackup = v);
       Get.snackbar(
         'Backup',
-        v ? 'Backup ON , Already backup is created' : 'Auto backup off',
+        v ? 'Backup ON , Backup is created' : 'Auto backup off',
       );
     } catch (e) {
       Get.snackbar('Error', e.toString().replaceFirst('Exception: ', ''));

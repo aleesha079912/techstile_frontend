@@ -6,8 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:techstile_frontend/core/services/auth_service.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/routes/routes.dart';
-// import 'package:techstile_frontend/core/services/manager_service/manager_service.dart';
-// import 'package:techstile_frontend/views/auth/forgot_password_screen.dart'; // apna actual path lagayen
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

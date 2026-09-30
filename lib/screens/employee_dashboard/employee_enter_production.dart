@@ -24,8 +24,8 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
   final varietyController = TextEditingController();
   final lengthController = TextEditingController();
   final readyController = TextEditingController();
-  final wasteController = TextEditingController(); // 🔥 NEW
-  final remainingController = TextEditingController(); // 🔥 NEW
+  final wasteController = TextEditingController();
+  final remainingController = TextEditingController();
 
   bool loading = false;
 
@@ -33,7 +33,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
   void initState() {
     super.initState();
 
-    //  auto fill from previous screen 
+    //  auto fill from previous screen
     final args = Get.arguments;
 
     if (args is Map) {
@@ -55,22 +55,64 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
     super.dispose();
   }
 
-  Future<void> submitProduction() async {
+  void _showError(String message) {
+    Get.snackbar(
+      "Error",
+      message,
+      backgroundColor: AppTheme.error,
+      colorText: AppTheme.textSecondary,
+    );
+  }
 
+  Future<void> submitProduction() async {
     if (readyController.text.trim().isEmpty) {
       Get.snackbar("Error", "Enter ready production");
       return;
     }
 
-    final remaining = double.tryParse(remainingController.text) ?? 0;
-    final ready = double.tryParse(readyController.text) ?? 0;
+    final remaining = double.tryParse(remainingController.text.trim()) ?? 0;
 
+    final ready = double.tryParse(readyController.text.trim());
+    final waste = double.tryParse(
+      wasteController.text.trim().isEmpty ? '0' : wasteController.text.trim(),
+    );
+
+    // Valid number hona chahiye
+    if (ready == null || waste == null) {
+      _showError("Please enter a valid number");
+      return;
+    }
+
+    // Ready 0 ya us se kam nahi ho sakti
+    if (ready <= 0) {
+      _showError("Ready production must be greater than 0");
+      return;
+    }
+
+    // Waste 0 ho sakti hai, negative nahi
+    if (waste < 0) {
+      _showError("Waste cannot be less than 0");
+      return;
+    }
+
+    // Ready remaining se zyada nahi ho sakti
     if (ready > remaining) {
-      Get.snackbar(
-        "Error",
-        "Maximum $remaining allowed",
-        backgroundColor:AppTheme.error,
-        colorText:AppTheme.textSecondary,
+      _showError(
+        "Ready production cannot be more than remaining ($remaining)",
+      );
+      return;
+    }
+
+    // Waste remaining se zyada nahi ho sakti
+    if (waste > remaining) {
+      _showError("Waste cannot be more than remaining ($remaining)");
+      return;
+    }
+
+    // Dono ka total bhi remaining se zyada nahi ho sakta
+    if (ready + waste > remaining) {
+      _showError(
+        "Ready + Waste (${ready + waste}) cannot be more than remaining ($remaining)",
       );
       return;
     }
@@ -83,15 +125,16 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
       final machineId = args is Map
           ? args['machineId']?.toString() ?? widget.machineId
           : widget.machineId;
+
       final result =
           await EmployeeProductionService().submitProductionWithMessage(
         machineId: int.parse(machineId),
-      userId: AuthService.userId,
-       factoryId: AuthService.factoryId,
+        userId: AuthService.userId,
+        factoryId: AuthService.factoryId,
         varietyType: varietyController.text,
-        totalLength: double.parse(lengthController.text.isEmpty ? '0' : lengthController.text),
+        totalLength: double.tryParse(lengthController.text.trim()) ?? 0,
         readyProduction: ready,
-        wasteProduction: double.parse(wasteController.text.isEmpty ? '0' : wasteController.text), 
+        wasteProduction: waste,
       );
 
       if (result['success'] == true) {
@@ -101,20 +144,15 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
           "Success",
           "Submitted Successfully",
           backgroundColor: AppTheme.success,
-          colorText:  AppTheme.textSecondary,
+          colorText: AppTheme.textSecondary,
         );
       } else {
-        Get.snackbar(
-          "Error",
-          "Production not added",
-          backgroundColor:AppTheme.error,
-          colorText:  AppTheme.textSecondary,
-        );
+        _showError(result['message']?.toString() ?? "Production not added");
       }
     } catch (e) {
       Get.snackbar("Error", "Error: $e");
     } finally {
-      setState(() => loading = false);
+      if (mounted) setState(() => loading = false);
     }
   }
 
@@ -126,7 +164,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
       appBar: AppBar(
         title: const Text("Enter Production"),
         backgroundColor: AppTheme.primary,
-        foregroundColor:   AppTheme.textSecondary,
+        foregroundColor: AppTheme.textSecondary,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Get.back(),
@@ -146,9 +184,9 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
 
-                //Variety 
+                //Variety
                 const Text("Variety Type",
-                    style: TextStyle(fontSize: 12, color:  AppTheme.textneutral)),
+                    style: TextStyle(fontSize: 12, color: AppTheme.textneutral)),
                 const SizedBox(height: 6),
                 TextField(
                   controller: varietyController,
@@ -161,9 +199,9 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
 
                 const SizedBox(height: 15),
 
-                // Total Length 
+                // Total Length
                 const Text("Total Length",
-                    style: TextStyle(fontSize: 12, color:  AppTheme.textneutral)),
+                    style: TextStyle(fontSize: 12, color: AppTheme.textneutral)),
                 const SizedBox(height: 6),
                 TextField(
                   controller: lengthController,
@@ -176,9 +214,9 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
 
                 const SizedBox(height: 15),
 
-                // Remaining 
+                // Remaining
                 const Text("Remaining",
-                    style: TextStyle(fontSize: 12, color:  AppTheme.textneutral)),
+                    style: TextStyle(fontSize: 12, color: AppTheme.textneutral)),
                 const SizedBox(height: 6),
                 TextField(
                   controller: remainingController,
@@ -193,7 +231,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
 
                 // ── Ready ──
                 const Text("Ready Production",
-                    style: TextStyle(fontSize: 12, color:  AppTheme.textneutral )),
+                    style: TextStyle(fontSize: 12, color: AppTheme.textneutral)),
                 const SizedBox(height: 6),
                 TextField(
                   controller: readyController,
@@ -206,7 +244,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
 
                 const SizedBox(height: 15),
 
-                //  Waste 
+                //  Waste
                 const Text("Waste Production",
                     style: TextStyle(fontSize: 12, color: AppTheme.textneutral)),
                 const SizedBox(height: 6),
@@ -238,7 +276,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
                         : const Text(
                             "Submit Production",
                             style: TextStyle(
-                              color:   AppTheme.textSecondary,
+                              color: AppTheme.textSecondary,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),

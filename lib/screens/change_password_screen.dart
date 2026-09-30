@@ -158,7 +158,7 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                           ),
                           SizedBox(height: 2),
                           Text(
-                            "Enter your current password and choose a new password with at least 6 characters.",
+                            "Enter your current password and choose a new password with at least 8 characters.",
                             style: TextStyle(
                               fontSize: 11.5,
                               color: AppTheme.textPrimary,
