@@ -3,9 +3,6 @@ import '../../core/services/manager_service/manager_service.dart';
 import '../../../core/utils/theme.dart';
 import '../../../widgets/man_bottom_navbar.dart';
 import '../../../widgets/man_drawer.dart';
-// ============================================================
-// Models
-// ============================================================
 
 class EmployeePayment {
   final int employeeId;
@@ -184,9 +181,7 @@ class ProductionRecord {
   }
 }
 
-// ============================================================
 // Screen
-// ============================================================
 
 class ManagerPaymentsScreen extends StatefulWidget {
   final dynamic factoryId;
@@ -203,6 +198,7 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
   List<EmployeePayment> _employees = [];
   String? error;
   String? factoryName;
+  int? _factoryMachineCount; // factory ki total machines
 
   @override
   void initState() {
@@ -217,23 +213,18 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
     });
 
     try {
-      // Manager-scoped endpoint (backend already restricts this to the
-      // logged-in manager's own factory). Expected to return the same
-      // grouped shape as the owner-side endpoint: employee -> machines ->
-      // productions.
       final res = await _service.getPayments(widget.factoryId);
       final List rawList = (res is Map ? res['data'] : res) as List? ?? [];
       final data = rawList
           .map((e) => EmployeePayment.fromJson(e as Map<String, dynamic>))
           .toList();
 
-      // Factory name still comes from the manager dashboard API, same as
-      // before.
       final dashboardData = await _service.getDashboard(widget.factoryId);
 
       setState(() {
         _employees = data;
         factoryName = dashboardData['factory']?['name'];
+        _factoryMachineCount = _extractMachineCount(dashboardData);
         loading = false;
       });
     } catch (e) {
@@ -244,6 +235,23 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
     }
   }
 
+  /// Dashboard response se factory ki total machines nikalta hai.
+  int? _extractMachineCount(dynamic d) {
+    if (d is! Map) return null;
+
+    // Agar machines ki list aa rahi hai
+    final list = d['machines'] ?? d['factory']?['machines'];
+    if (list is List) return list.length;
+
+    // Agar seedha count aa raha hai
+    final count = d['total_machines'] ??
+        d['machines_count'] ??
+        d['stats']?['total_machines'] ??
+        d['factory']?['total_machines'] ??
+        d['factory']?['machines_count'];
+    return count != null ? int.tryParse(count.toString()) : null;
+  }
+
   double get _grandTotalAmount =>
       _employees.fold(0, (sum, e) => sum + e.totalAmount);
 
@@ -252,21 +260,32 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
 
   double get _overallRatePerMeter =>
       _grandTotalLength == 0 ? 0 : _grandTotalAmount / _grandTotalLength;
-      int get _grandTotalMachines =>
-    _employees.fold(0, (sum, e) => sum + e.machines.length);
 
-double get _grandTotalPaid =>
-    _employees.fold(0, (sum, e) => sum + e.totalPaid);
+  int get _grandTotalMachines {
+    if (_factoryMachineCount != null) return _factoryMachineCount!;
+
+    // Fallback: agar API se count na mile to unique machines ginein
+    final ids = <String>{};
+    for (final e in _employees) {
+      for (final m in e.machines) {
+        ids.add(m.machineId?.toString() ?? m.machineName);
+      }
+    }
+    return ids.length;
+  }
+
+  double get _grandTotalPaid =>
+      _employees.fold(0, (sum, e) => sum + e.totalPaid);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       drawer: ManagerDrawer(
-        // factoryId: factoryId,
-      ),
+      drawer: ManagerDrawer(
+          // factoryId: factoryId,
+          ),
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        backgroundColor: AppTheme.secondary,
+        backgroundColor: AppTheme.background,
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -286,8 +305,7 @@ double get _grandTotalPaid =>
             ),
           ],
         ),
-        ),
-     
+      ),
       body: _buildBody(),
       bottomNavigationBar: ManagerBottomNav(
         currentIndex: 2,
@@ -312,8 +330,7 @@ double get _grandTotalPaid =>
       child: ListView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
         children: [
-          // ---- Overall summary card ----
-          // ---- Overall summary card ----
+          // Overall summary card
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
@@ -340,7 +357,7 @@ double get _grandTotalPaid =>
                       child: Text(
                         'Total Payment (All Employees)',
                         style: TextStyle(
-                            color: AppTheme.primary,
+                            color: AppTheme.textPrimary,
                             fontSize: 12,
                             fontWeight: FontWeight.w600),
                       ),
@@ -351,7 +368,7 @@ double get _grandTotalPaid =>
                 Text(
                   'Rs ${_formatAmount(_grandTotalAmount)}',
                   style: const TextStyle(
-                    color: AppTheme.primary,
+                    color: AppTheme.textPrimary,
                     fontSize: 28,
                     fontWeight: FontWeight.w800,
                   ),
@@ -422,8 +439,7 @@ double get _grandTotalPaid =>
                 padding: const EdgeInsets.only(bottom: 12),
                 child: _EmployeePaymentTile(record: employee),
               );
-            }
-          ),
+            }),
         ],
       ),
     );
@@ -463,9 +479,7 @@ double get _grandTotalPaid =>
       );
 }
 
-// ============================================================
 // Helpers
-// ============================================================
 
 String _formatAmount(double value) {
   final str = value.toStringAsFixed(0);
@@ -508,9 +522,7 @@ class _SummaryStat extends StatelessWidget {
             Text(
               label,
               style: TextStyle(
-                  color: color,
-                  fontSize: 9,
-                  fontWeight: FontWeight.w600),
+                  color: color, fontSize: 9, fontWeight: FontWeight.w600),
             ),
             const SizedBox(height: 2),
             FittedBox(
@@ -533,9 +545,6 @@ class _SummaryStat extends StatelessWidget {
   }
 }
 
-/// Expandable card for a single employee: header shows name + earned/paid/
-/// remaining, expands to a list of every machine assigned to that employee
-/// (view-only — no edit/delete, manager cannot approve payments here).
 class _EmployeePaymentTile extends StatelessWidget {
   final EmployeePayment record;
 
@@ -626,7 +635,7 @@ class _EmployeePaymentTile extends StatelessWidget {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
-                color: AppTheme.primary,
+                color: AppTheme.textPrimary,
                 fontWeight: FontWeight.w800,
                 fontSize: 14),
           ),
@@ -640,7 +649,7 @@ class _EmployeePaymentTile extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
-                    color: AppTheme.primary.withOpacity(0.55),
+                    color: AppTheme.textPrimary.withOpacity(0.55),
                     fontSize: 11,
                   ),
                 ),
@@ -677,7 +686,7 @@ class _EmployeePaymentTile extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        color: AppTheme.primary.withOpacity(0.45),
+                        color: AppTheme.textPrimary.withOpacity(0.45),
                         fontSize: 10.5,
                       ),
                     ),
@@ -705,8 +714,6 @@ class _EmployeePaymentTile extends StatelessWidget {
   }
 }
 
-/// One machine's aggregated totals for this employee. Expands to show the
-/// individual production rows that make up the total. View-only.
 class _MachineGroupTile extends StatelessWidget {
   final MachineGroup machine;
 
@@ -716,7 +723,7 @@ class _MachineGroupTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.background,
+        color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: AppTheme.primary.withOpacity(0.06)),
       ),
@@ -743,7 +750,7 @@ class _MachineGroupTile extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
-                  color: AppTheme.primary.withOpacity(0.55), fontSize: 11),
+                  color: AppTheme.textPrimary.withOpacity(0.55), fontSize: 11),
             ),
           ),
           trailing: ConstrainedBox(
@@ -755,7 +762,7 @@ class _MachineGroupTile extends StatelessWidget {
                 Text(
                   'Earned',
                   style: TextStyle(
-                    color: AppTheme.primary.withOpacity(0.5),
+                    color: AppTheme.textPrimary.withOpacity(0.5),
                     fontSize: 9,
                     fontWeight: FontWeight.w600,
                   ),
@@ -866,7 +873,7 @@ class _MachineGroupTile extends StatelessWidget {
         children: [
           Text(label,
               style: TextStyle(
-                  color: AppTheme.primary.withOpacity(0.5),
+                  color: AppTheme.textPrimary.withOpacity(0.5),
                   fontSize: 9,
                   fontWeight: FontWeight.w600)),
           const SizedBox(height: 2),
@@ -886,8 +893,6 @@ class _MachineGroupTile extends StatelessWidget {
   }
 }
 
-/// A single production entry. Tappable — opens a bottom sheet with the full
-/// detail (view-only, same as owner side minus any action buttons).
 class _ProductionRow extends StatelessWidget {
   final ProductionRecord record;
 
@@ -923,7 +928,7 @@ class _ProductionRow extends StatelessWidget {
   void _showDetail(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppTheme.secondary,
+      backgroundColor: AppTheme.background,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
@@ -956,8 +961,8 @@ class _ProductionRow extends StatelessWidget {
                         fontWeight: FontWeight.w800),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 8, vertical: 3),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
                       color: _statusColor.withOpacity(0.12),
                       borderRadius: BorderRadius.circular(6),
@@ -977,7 +982,8 @@ class _ProductionRow extends StatelessWidget {
               Text(
                 record.batchId.isEmpty ? 'No batch' : record.batchId,
                 style: TextStyle(
-                    color: AppTheme.primary.withOpacity(0.55), fontSize: 12),
+                    color: AppTheme.textPrimary.withOpacity(0.55),
+                    fontSize: 12),
               ),
               const SizedBox(height: 16),
               _detailRow('Variety', record.varietyType),
@@ -989,8 +995,8 @@ class _ProductionRow extends StatelessWidget {
                   '${_formatAmount(record.wasteProduction)} m'),
               _detailRow('Remaining Production',
                   '${_formatAmount(record.remainingProduction)} m'),
-              _detailRow(
-                  'Rate / meter', 'Rs ${record.amountPerMeter.toStringAsFixed(2)}'),
+              _detailRow('Rate / meter',
+                  'Rs ${record.amountPerMeter.toStringAsFixed(2)}'),
               _detailRow('Expected Amount',
                   'Rs ${_formatAmount(record.expectedAmount)}'),
               _detailRow(
@@ -998,7 +1004,8 @@ class _ProductionRow extends StatelessWidget {
               if (record.selectDays != null && record.selectDays != 'null')
                 _detailRow('Day', record.selectDays!),
               if (record.shiftStart != null)
-                _detailRow('Shift', '${record.shiftStart} - ${record.shiftEnd}'),
+                _detailRow(
+                    'Shift', '${record.shiftStart} - ${record.shiftEnd}'),
               if (record.createdAt != null)
                 _detailRow('Created', record.createdAt!),
             ],
@@ -1016,7 +1023,8 @@ class _ProductionRow extends StatelessWidget {
           Expanded(
             child: Text(label,
                 style: TextStyle(
-                    color: AppTheme.primary.withOpacity(0.6), fontSize: 12)),
+                    color: AppTheme.textPrimary.withOpacity(0.6),
+                    fontSize: 12)),
           ),
           Flexible(
             child: Text(value,
@@ -1040,7 +1048,7 @@ class _ProductionRow extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: AppTheme.background,
+          color: AppTheme.secondary,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: AppTheme.primary.withOpacity(0.06)),
         ),
@@ -1097,8 +1105,8 @@ class _ProductionRow extends StatelessWidget {
               children: [
                 _miniStat('Length', '${_formatAmount(record.totalLength)} m'),
                 const SizedBox(width: 6),
-                _miniStat(
-                    'Rate/m', 'Rs ${record.amountPerMeter.toStringAsFixed(2)}'),
+                _miniStat('Rate/m',
+                    'Rs ${record.amountPerMeter.toStringAsFixed(2)}'),
                 const SizedBox(width: 6),
                 _miniStat('Ready', '${record.readyProduction} m'),
               ],
@@ -1124,7 +1132,8 @@ class _ProductionRow extends StatelessWidget {
                 'Days: ${record.selectDays}',
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                    color: AppTheme.primary.withOpacity(0.5), fontSize: 10),
+                    color: AppTheme.textPrimary.withOpacity(0.5),
+                    fontSize: 10),
               ),
             ],
           ],
@@ -1140,7 +1149,7 @@ class _ProductionRow extends StatelessWidget {
         children: [
           Text(label,
               style: TextStyle(
-                  color: AppTheme.primary.withOpacity(0.5),
+                  color: AppTheme.textPrimary.withOpacity(0.5),
                   fontSize: 9,
                   fontWeight: FontWeight.w600)),
           const SizedBox(height: 2),

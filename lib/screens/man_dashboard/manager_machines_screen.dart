@@ -107,7 +107,7 @@ class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
       ),
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        backgroundColor: AppTheme.secondary,
+        backgroundColor: AppTheme.background,
         iconTheme: const IconThemeData(color: AppTheme.primary),
         elevation: 0,
         automaticallyImplyLeading: true,
@@ -117,7 +117,7 @@ class _ManagerMachinesScreenState extends State<ManagerMachinesScreen> {
             const Text(
               'All Machines',
               style: TextStyle(
-                color: AppTheme.primary,
+                color: AppTheme.textPrimary,
                 fontWeight: FontWeight.w800,
                 fontSize: 17,
               ),

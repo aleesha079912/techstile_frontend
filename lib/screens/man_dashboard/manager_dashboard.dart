@@ -28,9 +28,6 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
   Map data = {};
   String? error;
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Common shadow - same style as Factory Dashboard
-  // ─────────────────────────────────────────────────────────────────────────
 
   static List<BoxShadow> get _primaryShadow => [
         BoxShadow(
@@ -45,16 +42,12 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
         ),
       ];
 
-  // Same light border as Factory Dashboard
   static Border get _primaryBorder => Border.all(
         color: AppTheme.primary.withOpacity(0.10),
         width: 1,
       );
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Period options
-  // ─────────────────────────────────────────────────────────────────────────
-
+ 
   static const List<Map<String, String>> periodOptions = [
     {
       'key': 'this_week',
@@ -84,9 +77,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
 
   String selectedPeriodKey = 'this_week';
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Week days
-  // ─────────────────────────────────────────────────────────────────────────
+
 
   static const List<String> weekDayNames = [
     'Sunday',
@@ -104,9 +95,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
         orElse: () => periodOptions.first,
       )['label']!;
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Lifecycle
-  // ─────────────────────────────────────────────────────────────────────────
+ 
 
   @override
   void initState() {
@@ -119,9 +108,6 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
     load();
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Load dashboard
-  // ─────────────────────────────────────────────────────────────────────────
 
   Future<void> load() async {
     setState(() {
@@ -138,7 +124,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
         noFactoryAssigned = true;
         loading = false;
       });
-      return; // don't even hit the API
+      return; 
     }
 
     try {
@@ -195,9 +181,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
   );
 }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Period changed
-  // ─────────────────────────────────────────────────────────────────────────
+  
 
   Future<void> onPeriodChanged(String periodKey) async {
     if (periodKey == selectedPeriodKey) return;
@@ -209,16 +193,13 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
     await load();
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Week start day info
-  // ─────────────────────────────────────────────────────────────────────────
-
+  
   void _showWeekStartDayInfo() {
     final current = (data['week_start_day'] as int?) ?? 1;
 
     showModalBottomSheet(
       context: context,
-      backgroundColor: AppTheme.secondary,
+      backgroundColor: AppTheme.background,
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(
@@ -320,7 +301,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
                       child: const Text(
                         'Close',
                         style: TextStyle(
-                          color: AppTheme.secondary,
+                          color: AppTheme.textSecondary,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -335,9 +316,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Today label
-  // ─────────────────────────────────────────────────────────────────────────
+  
 
   String _todayLabel() {
     final dayName =
@@ -374,9 +353,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
     }
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Build
-  // ─────────────────────────────────────────────────────────────────────────
+  
 
   @override
   Widget build(BuildContext context) {
@@ -419,9 +396,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
                           crossAxisAlignment:
                               CrossAxisAlignment.start,
                           children: [
-                            // ─────────────────────────────────────
-                            // Responsive Period Header
-                            // ─────────────────────────────────────
+                            
 
                             _buildPeriodHeader(
                               constraints.maxWidth,
@@ -429,10 +404,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
 
                             const SizedBox(height: 12),
 
-                            // ─────────────────────────────────────
-                            // Main Stats
-                            // ─────────────────────────────────────
-
+                            
                             Row(
                               children: [
                                 _statCard(
@@ -442,7 +414,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
                                       _todayLabel(),
                                   value:
                                       "${data['today_units'] ?? 0}",
-                                  unit: 'yards',
+                                  unit: 'units',
                                   color:
                                       AppTheme.success,
                                 ),
@@ -456,16 +428,14 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
                                       selectedPeriodLabel,
                                   value:
                                       "${data['period_units'] ?? data['weekly_units'] ?? 0}",
-                                  unit: 'yards',
+                                  unit: 'units',
                                   color:
                                       AppTheme.primary,
                                 ),
                               ],
                             ),
 
-                            // ─────────────────────────────────────
-                            // Today Breakdown
-                            // ─────────────────────────────────────
+                            
 
                             _pipelineBreakdown(
                               title: 'Today',
@@ -474,10 +444,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
                                       as Map?,
                             ),
 
-                            // ─────────────────────────────────────
-                            // This Week Breakdown
-                            // ─────────────────────────────────────
-
+                            
                             if (selectedPeriodKey ==
                                 'this_week')
                               _pipelineBreakdown(
@@ -489,12 +456,9 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
 
                             const SizedBox(height: 20),
 
-                            // ─────────────────────────────────────
-                            // Floor Assets
-                            // ─────────────────────────────────────
-
+                            
                             const _SectionLabel(
-                              text: 'Floor Assets',
+                              text: 'Factory Assets',
                             ),
 
                             const SizedBox(height: 12),
@@ -530,10 +494,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
 
                             const SizedBox(height: 24),
 
-                            // ─────────────────────────────────────
-                            // Varieties
-                            // ─────────────────────────────────────
-
+                            
                             _SectionLabel(
                               text:
                                   'Varieties (${data['total_varieties'] ?? 0})',
@@ -556,9 +517,6 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Responsive Period Header
-  // ─────────────────────────────────────────────────────────────────────────
 
   Widget _buildPeriodHeader(double width) {
     final bool isSmallScreen = width < 500;
@@ -583,7 +541,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
                 fontSize: 11.5,
-                color: AppTheme.primary
+                color: AppTheme.textPrimary
                     .withOpacity(0.55),
                 fontWeight: FontWeight.w600,
               ),
@@ -604,8 +562,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
       ],
     );
 
-    // On mobile the controls go below the title.
-    // This prevents Row overflow on 360/400px screens.
+    
     if (isSmallScreen) {
       return Column(
         crossAxisAlignment:
@@ -642,15 +599,15 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
+  
   // AppBar
-  // ─────────────────────────────────────────────────────────────────────────
+  
 
   PreferredSizeWidget _buildAppBar() {
     final factory = data['factory'];
 
     return AppBar(
-      backgroundColor: AppTheme.secondary,
+      backgroundColor: AppTheme.background,
 
       iconTheme: const IconThemeData(
         color: AppTheme.primary,
@@ -671,7 +628,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
-              color: AppTheme.primary,
+              color: AppTheme.textPrimary,
               fontWeight: FontWeight.w800,
               fontSize: 18,
             ),
@@ -687,7 +644,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
               color:
-                  AppTheme.primary.withOpacity(0.65),
+                  AppTheme.textPrimary.withOpacity(0.65),
               fontSize: 12,
               fontWeight: FontWeight.w500,
             ),
@@ -708,10 +665,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Error View
-  // ─────────────────────────────────────────────────────────────────────────
-
+ 
   Widget _errorView() {
     return Center(
       child: Padding(
@@ -750,9 +704,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Productions Button
-  // ─────────────────────────────────────────────────────────────────────────
+  
 
  Widget _viewProductionsButton() {
   return ElevatedButton.icon(
@@ -761,7 +713,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
         AppRoutes.managerProduction,
         arguments: {'factoryId': widget.factoryId},
       );
-      load();   // wapas aate hi dashboard dobara load ho
+      load();   
     },
 
       icon: const Icon(
@@ -805,9 +757,6 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Period Filter Dropdown
-  // ─────────────────────────────────────────────────────────────────────────
 
   Widget _periodFilterDropdown() {
     return PopupMenuButton<String>(
@@ -919,7 +868,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
               style:
                   const TextStyle(
                 color:
-                    AppTheme.primary,
+                    AppTheme.textPrimary,
                 fontWeight:
                     FontWeight.w700,
                 fontSize: 13,
@@ -943,9 +892,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Week Start Button
-  // ─────────────────────────────────────────────────────────────────────────
+  
 
   Widget _weekStartButton() {
     return InkWell(
@@ -987,9 +934,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
     );
   }
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // Pipeline Breakdown
-  // ─────────────────────────────────────────────────────────────────────────
+  
 
   Widget _pipelineBreakdown({
     required String title,
@@ -1056,7 +1001,7 @@ class _ManagerDashboardState extends State<ManagerDashboard> {
             Row(
               children: [
                 _breakdownChip(
-                  'Added',
+                  ' Employee Added',
                   added,
                   AppTheme.neutral,
                 ),

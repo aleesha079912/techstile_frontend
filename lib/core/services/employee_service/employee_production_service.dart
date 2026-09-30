@@ -23,7 +23,7 @@ class EmployeeProductionService {
           "machine_id": machineId,
           "user_id": userId,
           "factory_id": factoryId,
-          // ✅ variety_type/total_length ab backend khud employee ke current batch se
+          //..variety_type/total_length ab backend khud employee ke current batch se
           // nikalta hai (source of truth) — client se bhejna zaroori nahi
           "ready_production": readyProduction,
           "waste_production": wasteProduction,

@@ -37,7 +37,7 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
   Future<void> submit() async {
     if (varietyCtrl.text.isEmpty || totalLengthCtrl.text.isEmpty) {
       Get.snackbar("Error", "fill all required fields",
-          backgroundColor: AppTheme.background, colorText: AppTheme.secondary);
+          backgroundColor: AppTheme.background, colorText: AppTheme.textSecondary);
       return;
     }
 
@@ -78,7 +78,7 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Handle bar
+            
             Container(
               width: 50, height: 5,
               decoration: BoxDecoration(
@@ -93,7 +93,7 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
                   fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
             const SizedBox(height: 20),
 
-            // Variety Type
+        
             TextField(
               controller: varietyCtrl,
               decoration: InputDecoration(
@@ -103,8 +103,6 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
               ),
             ),
             const SizedBox(height: 12),
-
-            // Total Length
             TextField(
               controller: totalLengthCtrl,
               keyboardType: TextInputType.number,
@@ -116,7 +114,7 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
             ),
             const SizedBox(height: 12),
 
-            // Amount per month
+            
             TextField(
               controller: amountPerMeterCtrl,
               keyboardType: TextInputType.number,
@@ -128,7 +126,7 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
             ), 
             const SizedBox(height: 12),
 
-            // Alert threshold owner gets notified once remaining length drops to this
+            
             TextField(
               controller: alertThresholdCtrl,
               keyboardType: TextInputType.number,
@@ -151,7 +149,7 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
             const SizedBox(height: 24),
 
 
-            // Submit Button
+          
             SizedBox(
               width: double.infinity,
               height: 50,

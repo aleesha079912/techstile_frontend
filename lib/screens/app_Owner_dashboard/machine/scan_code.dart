@@ -75,7 +75,7 @@ final MachineDetailsService machineService =
 
 
 
-  //get machine id from QR 
+  
   await machineService.getMachineDetails(code);
 
 final data = machineService.data;
@@ -141,7 +141,7 @@ Get.to(
           backgroundColor: AppTheme.primary,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            onPressed: _goBack, // camera stop + back
+            onPressed: _goBack, 
           ),
         ),
 

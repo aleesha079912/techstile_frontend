@@ -4,7 +4,7 @@ import '../../../../core/utils/theme.dart';
 import 'package:techstile_frontend/core/utils/password_rules.dart';
 
 class RegisterUserRoleBased extends StatefulWidget {
-  final UserData? user; // Null matlab Add, Not Null matlab Edit
+  final UserData? user;
   const RegisterUserRoleBased({super.key, this.user});
 
   @override
@@ -19,7 +19,7 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
   List<String> roles = [];
   String? selectedRole;
 
-  // Controllers
+
   final nameCtrl = TextEditingController();
   final emailCtrl = TextEditingController();
   final passwordCtrl = TextEditingController();
@@ -32,7 +32,7 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
   @override
   void initState() {
     super.initState();
-    // Agar Edit mode hai to purana data fill karo
+    
     if (widget.user != null) {
       nameCtrl.text = widget.user!.name;
       emailCtrl.text = widget.user!.email;
@@ -97,7 +97,7 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
 
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Action Successful!"), backgroundColor: Colors.green));
-      Navigator.pop(context, true); // true return karta hai taake list refresh ho
+      Navigator.pop(context, true); 
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Error! Check network or unique constraints."), backgroundColor: Colors.red));
     }
@@ -108,10 +108,10 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppTheme.primary,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: AppTheme.secondary),
         title: Text(widget.user == null ? "Register New User" : "Edit User",
         style: TextStyle(
-          color: AppTheme.secondary
+          color: AppTheme.textSecondary
         ),
 
         )
@@ -168,7 +168,7 @@ class _RegisterUserRoleBasedState extends State<RegisterUserRoleBased> {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primary, padding: const EdgeInsets.all(15)),
                       onPressed: _handleSave,
-                      child: Text(widget.user == null ? "REGISTER" : "UPDATE", style: const TextStyle(color: AppTheme.secondary)),
+                      child: Text(widget.user == null ? "REGISTER" : "UPDATE", style: const TextStyle(color: AppTheme.textSecondary)),
                     ),
                   ),
                 ],

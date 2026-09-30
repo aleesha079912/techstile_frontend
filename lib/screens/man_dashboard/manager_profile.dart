@@ -45,7 +45,7 @@ class _ManagerProfileScreenState
     });
   }
 
-  // ================= 1. HERO PROFILE CARD =================
+ 
 
   Widget _buildHeroHeader() {
     final name =
@@ -91,7 +91,7 @@ class _ManagerProfileScreenState
       ),
       child: Column(
         children: [
-          // Avatar with ring border
+         
           Container(
             padding: const EdgeInsets.all(3.5),
             decoration: BoxDecoration(
@@ -188,12 +188,8 @@ class _ManagerProfileScreenState
     );
   }
 
-  // ================= 2. QUICK ACTION BUTTONS =================
-  //
-  // IMPORTANT:
-  // Ye boxes sirf DATA/ACTION DISPLAY ke liye hain.
-  // In par tap karne se koi page open NAHI hoga.
-  //
+  
+  
 
   Widget _buildQuickActions() {
     return Padding(
@@ -301,7 +297,7 @@ class _ManagerProfileScreenState
     );
   }
 
-  // ================= 3. SECTION TITLE =================
+  
 
   Widget _sectionTitle(String title) {
     return Padding(
@@ -340,8 +336,7 @@ class _ManagerProfileScreenState
     );
   }
 
-  // ================= 4. OVERVIEW STATS =================
-
+  
   Widget _buildOverviewStats() {
     final factoryName =
         profile?['factory_name']
@@ -488,7 +483,7 @@ class _ManagerProfileScreenState
     );
   }
 
-  // ================= 5. PERSONAL & PLANT INFO =================
+  
 
   Widget _buildDetailsCard() {
     final factoryName =
@@ -666,8 +661,7 @@ class _ManagerProfileScreenState
     );
   }
 
-  // ================= MAIN BUILD =================
-
+  
   @override
   Widget build(BuildContext context) {
     final bool canPop =
@@ -677,7 +671,7 @@ class _ManagerProfileScreenState
       backgroundColor:
           AppTheme.background,
 
-      // Drawer same as before
+      // Drawer 
       drawer: canPop
           ? null
           : ManagerDrawer(
@@ -687,7 +681,6 @@ class _ManagerProfileScreenState
                   AuthService.factoryId,
             ),
 
-      // App Bar same as before
       appBar: AppBar(
         backgroundColor:
             AppTheme.background,
@@ -764,15 +757,10 @@ class _ManagerProfileScreenState
                     // Profile
                     _buildHeroHeader(),
 
-                    // Machines / Employees /
-                    // Productions
-                    //
-                    // NOTE:
-                    // Ab ye buttons clickable nahi hain.
-                    // Kisi page par redirect nahi karenge.
+                    
                     _buildQuickActions(),
 
-                    // Overview
+                  
                     _sectionTitle(
                       "Plant Overview",
                     ),

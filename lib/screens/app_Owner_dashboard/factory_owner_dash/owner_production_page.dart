@@ -1,12 +1,10 @@
-// lib/features/owner/pages/owner_productions_page.dart
+
 
 import 'package:flutter/material.dart';
 import '../../../../core/services/production_service.dart';
 import '../../../../core/utils/theme.dart';
 
-// ============================================================
-// Models (UNCHANGED)
-// ============================================================
+
 
 class ProductionItem {
   final int id;
@@ -118,9 +116,7 @@ class EmployeeProductions {
   }
 }
 
-// ============================================================
-// Page
-// ============================================================
+
 
 class OwnerProductionsPage extends StatefulWidget {
   final dynamic factoryId;
@@ -153,7 +149,7 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage> {
   String get selectedPeriodLabel => periodOptions
       .firstWhere((p) => p['key'] == selectedPeriodKey, orElse: () => periodOptions.first)['label']!;
 
-  // Soft card shadow/border reused across the page (matches payments-page feel)
+ 
   static List<BoxShadow> get _cardShadow => [
         BoxShadow(
           color: AppTheme.primary.withOpacity(0.10),
@@ -218,10 +214,7 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage> {
     }
   }
 
-  // ------------------------------------------------------------
-  // Bulk action — approves/rejects every record passed in (used
-  // for the machine-level "Approve All / Reject All" buttons).
-  // ------------------------------------------------------------
+  
   Future<void> _doBulkAction(List<dynamic> ids, String action) async {
     try {
       for (final id in ids) {
@@ -267,9 +260,7 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage> {
     );
   }
 
-  // ------------------------------------------------------------
-  // Confirmation dialog for machine-level bulk approve/reject
-  // ------------------------------------------------------------
+ 
   void _confirmBulkAction(List<dynamic> ids, String action, String machineName) {
     if (ids.isEmpty) return;
     showDialog(
@@ -300,15 +291,13 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage> {
   int get _totalPending => _employees.fold(0, (s, e) => s + e.pendingCount);
   int get _totalApproved => _employees.fold(0, (s, e) => s + e.approvedCount);
 
-  // ------------------------------------------------------------
-  // Pending/Approved sliding toggle — now a standalone card,
-  // separate from the AppBar.
-  // ------------------------------------------------------------
+  
+  
   Widget _slidingToggle() {
     return Container(
       height: 44,
       decoration: BoxDecoration(
-        color: AppTheme.background,
+        color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppTheme.primary.withOpacity(0.10)),
       ),
@@ -368,7 +357,7 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage> {
             label,
             overflow: TextOverflow.ellipsis,
             style: TextStyle(
-              color: selected ? AppTheme.secondary : AppTheme.primary.withOpacity(0.6),
+              color: selected ? AppTheme.textSecondary : AppTheme.primary.withOpacity(0.6),
               fontWeight: FontWeight.w700,
               fontSize: 12.5,
             ),
@@ -378,9 +367,6 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage> {
     );
   }
 
-  // ------------------------------------------------------------
-  // Period filter — same soft-card look
-  // ------------------------------------------------------------
   Widget _periodFilterDropdown() {
     return PopupMenuButton<String>(
       initialValue: selectedPeriodKey,
@@ -415,7 +401,7 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage> {
         height: 44,
         width: 44,
         decoration: BoxDecoration(
-          color: AppTheme.background,
+          color: AppTheme.secondary,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: AppTheme.primary.withOpacity(0.10)),
         ),
@@ -430,7 +416,7 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage> {
     return Scaffold(
       backgroundColor: AppTheme.background,
       appBar: AppBar(
-        backgroundColor: AppTheme.secondary,
+        backgroundColor: AppTheme.background,
         elevation: 0,
         automaticallyImplyLeading: true,
         iconTheme: const IconThemeData(color: AppTheme.primary),
@@ -441,7 +427,7 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage> {
       ),
       body: Column(
         children: [
-          // Toggle + filter row — separated from AppBar, own card style
+         
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 14, 16, 8),
             child: Row(
@@ -511,7 +497,7 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage> {
             child: Text(
               selectedPeriodLabel,
               style: TextStyle(
-                color: AppTheme.primary.withOpacity(0.55),
+                color: AppTheme.textPrimary.withOpacity(0.55),
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
               ),
@@ -540,9 +526,7 @@ class _OwnerProductionsPageState extends State<OwnerProductionsPage> {
       );
 }
 
-// ============================================================
-// Employee tile (dropdown: machine_count + pending/approved)
-// ============================================================
+
 
 class _EmployeeProductionTile extends StatelessWidget {
   final EmployeeProductions employee;
@@ -618,10 +602,7 @@ class _EmployeeProductionTile extends StatelessWidget {
   }
 }
 
-// ============================================================
-// Machine tile — stat cards for count + collective ready production
-// + machine-level Approve All / Reject All (only for Pending view)
-// ============================================================
+
 
 class _MachineProductionTile extends StatelessWidget {
   final MachineProductionGroup machine;
@@ -670,9 +651,7 @@ class _MachineProductionTile extends StatelessWidget {
     );
   }
 
-  // ------------------------------------------------------------
-  // Machine-level bulk Approve All / Reject All row
-  // ------------------------------------------------------------
+  
   Widget _bulkActionRow(List<ProductionItem> items) {
     final ids = items.map((e) => e.id).toList();
     return Padding(
@@ -721,7 +700,7 @@ class _MachineProductionTile extends StatelessWidget {
 
     return Container(
       decoration: BoxDecoration(
-        color: AppTheme.background,
+        color: AppTheme.secondary,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: AppTheme.primary.withOpacity(0.06)),
       ),
@@ -738,7 +717,7 @@ class _MachineProductionTile extends StatelessWidget {
             style: const TextStyle(
                 color: AppTheme.textPrimary, fontSize: 13, fontWeight: FontWeight.w700),
           ),
-          // Stat-card row: pending/approved count + collective ready production
+          
           subtitle: Padding(
             padding: const EdgeInsets.only(top: 8),
             child: Column(
@@ -759,7 +738,7 @@ class _MachineProductionTile extends StatelessWidget {
                     ),
                   ],
                 ),
-                // Bulk actions only make sense for pending records
+              
                 if (!showApproved && items.isNotEmpty) _bulkActionRow(items),
               ],
             ),
@@ -788,9 +767,7 @@ class _MachineProductionTile extends StatelessWidget {
   }
 }
 
-// ============================================================
-// Single production card (UNCHANGED logic — design refined below)
-// ============================================================
+
 
 class _ProductionCard extends StatelessWidget {
   final ProductionItem item;

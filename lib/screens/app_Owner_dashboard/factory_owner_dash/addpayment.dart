@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:techstile_frontend/core/services/payments_service.dart';
 import 'package:techstile_frontend/core/utils/theme.dart';
 import 'package:techstile_frontend/screens/app_Owner_dashboard/factory_owner_dash/paymentsScreen.dart';
-// ^ EmployeePayment model aur formatAmount() helper yahan se aa rahe hain
+
 
 class AddPaymentPage extends StatefulWidget {
   final int factoryId;
@@ -83,7 +83,7 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Payment saved successfully'),
-            backgroundColor: Colors.green,
+            backgroundColor:  AppTheme.success,
           ),
         );
         Navigator.of(context).pop(true);
@@ -93,7 +93,7 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to save payment: $e'),
-            backgroundColor: Colors.red,
+            backgroundColor:  AppTheme.error,
           ),
         );
       }
@@ -136,9 +136,7 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // ==================================================
-                // EMPLOYEE SELECT
-                // ==================================================
+                
                 DropdownButtonFormField<EmployeePayment>(
                   value: _selectedEmployee,
                   isExpanded: true,
@@ -176,9 +174,7 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
                 if (_selectedEmployee != null) ...[
                   const SizedBox(height: 20),
 
-                  // ==================================================
-                  // EARNED SUMMARY
-                  // ==================================================
+                 
                   if (_isLoadingSummary)
                     const Padding(
                       padding: EdgeInsets.symmetric(vertical: 8),
@@ -191,11 +187,11 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
                       decoration: BoxDecoration(
                         color: AppTheme.error.withOpacity(0.08),
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: Colors.red.withOpacity(0.3)),
+                        border: Border.all(color:  AppTheme.error.withOpacity(0.3)),
                       ),
                       child: Text(
                         _summaryError!,
-                        style: const TextStyle(fontSize: 12, color: Colors.red),
+                        style: const TextStyle(fontSize: 12, color:  AppTheme.error),
                       ),
                     )
                   else if (_earnedSummary != null) ...[
@@ -237,9 +233,6 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
 
                     const SizedBox(height: 18),
 
-                    // ==================================================
-                    // AMOUNT TO PAY
-                    // ==================================================
                     TextFormField(
                       controller: _amountToPayCtrl,
                       keyboardType:
@@ -268,9 +261,8 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
 
                     const SizedBox(height: 24),
 
-                    // ==================================================
-                    // SAVE
-                    // ==================================================
+                    
+              
                     SizedBox(
                       width: double.infinity,
                       height: 50,
@@ -288,7 +280,7 @@ class _AddPaymentPageState extends State<AddPaymentPage> {
                                 height: 20,
                                 child: CircularProgressIndicator(
                                   strokeWidth: 2,
-                                  color: Colors.white,
+                                  color: AppTheme.secondary,
                                 ),
                               )
                             : const Text(

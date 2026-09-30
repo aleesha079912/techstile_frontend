@@ -57,7 +57,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                 "employee_id": int.parse(empCtrl.text),
                 "type": typeCtrl.text,
                 "production_id": int.parse(prodCtrl.text),
-                "timestamp": DateTime.now().toString(), // ✅ auto time
+                "timestamp": DateTime.now().toString(), //..auto time
               };
 
               bool ok = item == null

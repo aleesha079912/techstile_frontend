@@ -36,9 +36,8 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
     });
   }
 
-  //SIMPLE HELPER WIDGETS
 
-  // Top gradient profile card 
+  
   Widget buildProfileHeader() {
     final name = profile?['name'] ?? '';
     final email = profile?['email'] ?? '';
@@ -70,7 +69,7 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
         children: [
           CircleAvatar(
             radius: 32,
-            backgroundColor: AppTheme.secondary.withOpacity(0.25),
+            backgroundColor: AppTheme.background.withOpacity(0.25),
             child: Text(
               firstLetter,
               style: const TextStyle(
@@ -86,7 +85,7 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
             style: const TextStyle(
               fontSize: 19,
               fontWeight: FontWeight.bold,
-              color:  AppTheme.secondary,
+              color:  AppTheme.textSecondary,
             ),
           ),
           const SizedBox(height: 3),
@@ -94,7 +93,7 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
             email,
             style: TextStyle(
               fontSize: 12,
-              color:  AppTheme.secondary.withOpacity(0.85),
+              color:  AppTheme.textSecondary.withOpacity(0.85),
             ),
           ),
         ],
@@ -102,7 +101,7 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
     );
   }
 
-  // Section title with small blue bar 
+
   Widget sectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
@@ -130,7 +129,7 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
     );
   }
 
-  // Colorful stat card for performance overview grid
+  
   Widget statCard(IconData icon, String title, String value, Color color) {
     return Container(
       padding: const EdgeInsets.all(15),
@@ -227,21 +226,21 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:  AppTheme.background, // light grey page background
+      backgroundColor:  AppTheme.background, 
       //  drawer: const FactoryDrawer(
 
       //  ),
-      appBar: AppBar(title: const Text("Manager Profile",style: TextStyle(color: AppTheme.secondary),),backgroundColor: AppTheme.primary,iconTheme: IconThemeData(color: AppTheme.secondary),),
+      appBar: AppBar(title: const Text("Manager Profile",style: TextStyle(color: AppTheme.textSecondary),),backgroundColor: AppTheme.primary,iconTheme: IconThemeData(color: AppTheme.secondary),),
       body: loading
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Top gradient header
+                  
                   buildProfileHeader(),
 
-                  // Basic information section
+              
                   sectionTitle("Basic Information"),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -257,7 +256,7 @@ class _ManagerProfileScreenState extends State<ManagerProfileScreen> {
                     ),
                   ),
 
-                  // Performance overview section
+                  
                   sectionTitle("Performance Overview"),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 15),

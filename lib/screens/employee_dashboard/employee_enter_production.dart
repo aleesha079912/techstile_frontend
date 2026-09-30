@@ -24,8 +24,8 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
   final varietyController = TextEditingController();
   final lengthController = TextEditingController();
   final readyController = TextEditingController();
-  final wasteController = TextEditingController(); // 🔥 NEW
-  final remainingController = TextEditingController(); // 🔥 NEW
+  final wasteController = TextEditingController(); 
+  final remainingController = TextEditingController(); 
 
   bool loading = false;
 
@@ -33,14 +33,14 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
   void initState() {
     super.initState();
 
-    //  auto fill from previous screen 
+   
     final args = Get.arguments;
 
     if (args is Map) {
       varietyController.text = args['varietyType']?.toString() ?? '';
       lengthController.text = args['totalLength']?.toString() ?? '';
 
-      // ADD remaining from backend
+      
       remainingController.text = args['remaining']?.toString() ?? '0';
     }
   }
@@ -126,7 +126,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
       appBar: AppBar(
         title: const Text("Enter Production"),
         backgroundColor: AppTheme.primary,
-        foregroundColor:   AppTheme.textSecondary,
+        foregroundColor:   AppTheme.secondary,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => Get.back(),
@@ -146,7 +146,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
 
-                //Variety 
+                
                 const Text("Variety Type",
                     style: TextStyle(fontSize: 12, color:  AppTheme.textneutral)),
                 const SizedBox(height: 6),
@@ -161,7 +161,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
 
                 const SizedBox(height: 15),
 
-                // Total Length 
+                
                 const Text("Total Length",
                     style: TextStyle(fontSize: 12, color:  AppTheme.textneutral)),
                 const SizedBox(height: 6),
@@ -176,7 +176,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
 
                 const SizedBox(height: 15),
 
-                // Remaining 
+                 
                 const Text("Remaining",
                     style: TextStyle(fontSize: 12, color:  AppTheme.textneutral)),
                 const SizedBox(height: 6),
@@ -191,7 +191,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
 
                 const SizedBox(height: 15),
 
-                // ── Ready ──
+                
                 const Text("Ready Production",
                     style: TextStyle(fontSize: 12, color:  AppTheme.textneutral )),
                 const SizedBox(height: 6),
@@ -206,7 +206,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
 
                 const SizedBox(height: 15),
 
-                //  Waste 
+                
                 const Text("Waste Production",
                     style: TextStyle(fontSize: 12, color: AppTheme.textneutral)),
                 const SizedBox(height: 6),
@@ -221,7 +221,7 @@ class _EnterProductionScreenState extends State<EnterProductionScreen> {
 
                 const SizedBox(height: 30),
 
-                // ── Submit ──
+                
                 SizedBox(
                   width: double.infinity,
                   height: 55,

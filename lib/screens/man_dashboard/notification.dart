@@ -141,13 +141,13 @@ class _State extends State<NotificationPage> {
         title: Text(
           widget.title,
           style: const TextStyle(
-            color: AppTheme.primary,
+            color: AppTheme.textPrimary,
             fontWeight: FontWeight.w900,
             fontSize: 22,
           ),
         ),
         elevation: 0,
-        backgroundColor: AppTheme.secondary,
+        backgroundColor: AppTheme.background,
         iconTheme: const IconThemeData(color: AppTheme.primary),
         actionsPadding: EdgeInsets.zero,
         leading: widget.drawer != null
@@ -172,7 +172,7 @@ class _State extends State<NotificationPage> {
               child: Text(
                 unreadCount == 0 ? "All caught up" : "$unreadCount to read",
                 style: const TextStyle(
-                  color: AppTheme.secondary,
+                  color: AppTheme.textSecondary,
                   fontWeight: FontWeight.w700,
                   fontSize: 11.5,
                 ),
@@ -245,7 +245,7 @@ class _State extends State<NotificationPage> {
         hintText: "Search notifications",
         prefixIcon: const Icon(Icons.search),
         filled: true,
-        fillColor: Colors.white,
+        fillColor:  AppTheme.secondary,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide(color: AppTheme.neutral.withOpacity(0.4)),
@@ -334,7 +334,7 @@ class _State extends State<NotificationPage> {
                         child: Text(
                           n['title'] ?? '',
                           style: const TextStyle(
-                            color: AppTheme.primary,
+                            color: AppTheme.textPrimary,
                             fontWeight: FontWeight.w800,
                             fontSize: 14.5,
                           ),
@@ -362,7 +362,7 @@ class _State extends State<NotificationPage> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                       decoration: BoxDecoration(
-                        color: AppTheme.background,
+                        color: AppTheme.secondary,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Row(
@@ -425,7 +425,7 @@ class _Chip extends StatelessWidget {
         margin: const EdgeInsets.only(right: 8),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: selected ? AppTheme.primary : Colors.white,
+          color: selected ? AppTheme.primary :  AppTheme.secondary,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: selected ? AppTheme.primary : AppTheme.neutral.withOpacity(0.4),
@@ -434,7 +434,7 @@ class _Chip extends StatelessWidget {
         child: Text(
           text,
           style: TextStyle(
-            color: selected ? AppTheme.secondary : AppTheme.textPrimary,
+            color: selected ? AppTheme.textSecondary : AppTheme.textPrimary,
             fontWeight: FontWeight.w600,
             fontSize: 12.5,
           ),

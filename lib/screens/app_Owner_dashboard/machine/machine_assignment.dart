@@ -85,7 +85,7 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           content: Text("Machine Assigned Successfully"),
-          backgroundColor: Colors.green,
+          backgroundColor:  AppTheme.success,
         ),
       );
 
@@ -107,7 +107,7 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
         backgroundColor: AppTheme.primary,
         title: const Text("Machine Assignment",
         style: TextStyle(
-          color: AppTheme.secondary
+          color: AppTheme.textSecondary
         ),
         ),
         leading: IconButton(
@@ -202,7 +202,7 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
                           Expanded(
                             child: Text(
                               "Variety & Total Length is set separately from the machine's page using \"Assign Production Batch\".",
-                              style: TextStyle(fontSize: 12, color: AppTheme.neutral),
+                              style: TextStyle(fontSize: 12, color: AppTheme.textneutral),
                             ),
                           ),
                         ],
@@ -240,7 +240,7 @@ class _MachineAssignmentPageState extends State<MachineAssignmentPage> {
           ),
         ),
 
-        // show name and shift start time
+  
         items: items.map((e) {
           return DropdownMenuItem<int>(
             value: e['id'],
