@@ -47,7 +47,7 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
       machineId:   widget.machineId,
       varietyType: varietyCtrl.text.trim(),
       totalLength: double.parse(totalLengthCtrl.text.trim()),
-      amountPerMeter:double.parse(amountPerMeterCtrl.text.trim()),
+      amountPerUnit:double.parse(amountPerMeterCtrl.text.trim()),
       alertThreshold: alertThresholdCtrl.text.trim().isEmpty
           ? null
           : double.tryParse(alertThresholdCtrl.text.trim()),
@@ -82,7 +82,7 @@ class _AssignProductionDialogState extends State<AssignProductionDialog> {
             Container(
               width: 50, height: 5,
               decoration: BoxDecoration(
-                color: AppTheme.neutral,
+                color: AppTheme.textneutral,
                 borderRadius: BorderRadius.circular(10),
               ),
             ),

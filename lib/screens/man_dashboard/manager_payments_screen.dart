@@ -452,7 +452,7 @@ class _ManagerPaymentsScreenState extends State<ManagerPaymentsScreen> {
           const SizedBox(height: 12),
           const Text('No employee payments found',
               style: TextStyle(
-                  color: AppTheme.primary,
+                  color: AppTheme.textPrimary,
                   fontSize: 14,
                   fontWeight: FontWeight.w600)),
         ]),
